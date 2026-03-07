@@ -28,15 +28,51 @@ Todo el material no original, ya sea texto o figuras, deberá ser convenientemen
 
 
 \section{Motivación}
-Introducción al tema del TFG.
+Al plantear este Trabajo de Fin de Grado, existía una premisa clara: que el resultado tuviera una aplicación real. No se trataba de resolver un problema inventado para cumplir un requisito académico, sino de utilizar los conocimientos adquiridos durante la carrera para abordar una necesidad concreta de alguien cercano. La idea era que el trabajo sirviera como ejercicio técnico y, al mismo tiempo, como solución a un problema que alguien experimentaba en su día a día profesional.
+
+Ese alguien resultó ser un amigo que trabaja como nutricionista. En una conversación sobre su rutina diaria, quedó en evidencia un problema que él mismo no percibía como tal, porque lo había normalizado: su flujo de trabajo estaba fragmentado entre cinco o más herramientas que no se comunicaban entre sí. Utilizaba formularios de Google para recoger información de sus clientes, Google Calendar para gestionar las citas, WhatsApp como canal de comunicación directa, un cuaderno físico para sus notas privadas sobre cada caso, y la plataforma de gestión de su clínica para el resto. Para hacerse una idea completa de la situación de un solo cliente, tenía que consultar todas estas fuentes manualmente y reconstruir la información por su cuenta. Además, una parte significativa de su tiempo se iba en responder consultas repetitivas ---qué comprar en el supermercado, si se podía sustituir un ingrediente, cuándo era la próxima cita--- que podrían resolverse sin su intervención directa.
+
+A partir de esa conversación surgió la idea central de este proyecto: diseñar una plataforma que centralizara todas esas herramientas dispersas en un único punto de acceso. Si toda la información de los clientes ---formularios, citas, mensajes, notas, planes nutricionales, registros diarios--- viviera en una misma base de datos, no solo se eliminaría la fragmentación, sino que se abrirían posibilidades imposibles con herramientas desconectadas: detectar patrones de forma automática, generar alertas cuando un cliente muestra señales de abandono, o construir un perfil completo sin tener que cruzar datos a mano. En definitiva, que el nutricionista pudiera dedicar su tiempo a lo que realmente importa ---diseñar dietas, acompañar a sus clientes, lograr que los tratamientos funcionen--- en lugar de invertirlo en tareas administrativas que una aplicación bien diseñada puede resolver.
 
 
 \section{Objetivos}
-Descripción de los objetivos del trabajo.
+Este Trabajo de Fin de Grado se desarrolla en el marco del Doble Grado en Ingeniería Informática y Administración y Dirección de Empresas, lo cual permite abordarlo desde dos perspectivas complementarias: la técnica, apoyada en los conocimientos adquiridos en la asignatura de Ampliación de Bases de Datos, y la de negocio, aplicando herramientas de análisis de mercado y viabilidad de producto propias de la formación en ADE. El objetivo no es simplemente cumplir un requisito académico, sino aprovechar esta doble formación para construir un proyecto con aplicación real.
+
+El objetivo general de este trabajo es diseñar e implementar la base de datos de una aplicación web orientada a la gestión integral de consultas de nutrición, que centralice el flujo de trabajo del nutricionista profesional y mejore la experiencia del cliente. Se busca llevar a la práctica, en un proyecto desarrollado desde cero, los conocimientos técnicos de diseño y gestión de bases de datos junto con la capacidad de análisis de mercado y enfoque de producto, de modo que el resultado no solo sea técnicamente sólido sino también viable como herramienta real.
+
+Para alcanzar este objetivo general, se plantean los siguientes objetivos específicos:
+
+\begin{enumerate}
+    \item Analizar el flujo de trabajo real de un nutricionista profesional para extraer los requisitos funcionales del sistema. Esto implica comprender cómo trabaja en su día a día, qué herramientas utiliza actualmente, qué problemas enfrenta y qué necesita realmente. Los requisitos no se inventan en abstracto, sino que se derivan de la observación directa de un caso real, lo que garantiza que el diseño responda a necesidades concretas y no a suposiciones.
+
+    \item Realizar un estudio de mercado y análisis de la competencia en el ámbito de las plataformas de nutrición, aplicando conocimientos propios de la formación en ADE. Esto incluye identificar los principales competidores, analizar sus fortalezas y debilidades, detectar carencias y oportunidades en el mercado, y posicionar NutriApp con funcionalidades diferenciadoras que aporten valor real. El objetivo es que la propuesta no solo sea técnicamente correcta, sino que tenga sentido como producto viable en un mercado existente.
+
+    \item Diseñar un esquema de base de datos relacional completo que refleje toda la lógica de negocio de la aplicación. Esto abarca el modelado de las entidades y sus relaciones, el uso de triggers para automatizar comportamientos ---como la generación de alertas a partir de respuestas de formularios---, consultas complejas con agregaciones temporales ---como el cálculo de rachas de check-ins consecutivos---, y relaciones avanzadas como las muchos-a-muchos auto-referenciadas del sistema de sustituciones de alimentos. El diseño de la base de datos constituye el eje central del proyecto y debe demostrar un dominio profundo de los conceptos trabajados en Ampliación de Bases de Datos.
+\end{enumerate}
 
 
 \section{Plan de trabajo}
-Aquí se describe el plan de trabajo a seguir para la consecución de los objetivos descritos en el apartado anterior.
+El desarrollo de este proyecto ha seguido un proceso iterativo en el que cada fase se apoya en los resultados de la anterior. A continuación se describe el trabajo realizado hasta el momento, organizado en las fases que han guiado el avance del proyecto.
+
+\subsection*{Fase 1 --- Investigación con nutricionistas reales}
+
+El punto de partida fue entender en profundidad el problema que se quería resolver. Para ello, se mantuvo una serie de conversaciones detalladas con el nutricionista cuyo caso motivó el proyecto, con el objetivo de conocer a fondo su método de trabajo: qué herramientas utilizaba, en qué puntos perdía más tiempo, qué tareas le resultaban más ineficientes y qué información se le escapaba por tenerla repartida entre plataformas desconectadas. Cuanto mejor se comprendiera su flujo de trabajo y sus puntos débiles, más preciso sería el diseño de la solución.
+
+Sin embargo, basar el producto únicamente en la experiencia de una persona suponía un riesgo: las necesidades de un nutricionista concreto no tienen por qué ser representativas del colectivo. Para ampliar la perspectiva, se contactó a través de LinkedIn con otros profesionales del sector, a quienes se les preguntó qué aspectos de su día a día podrían mejorar y qué funcionalidades valorarían en una herramienta de gestión integral. Esta ronda de consultas permitió contrastar las observaciones iniciales, incorporar necesidades que no habían surgido en el primer caso y construir una visión del producto mucho más amplia y fundamentada.
+
+\subsection*{Fase 2 --- Análisis de competencia y mercado}
+
+Una vez definidas las necesidades desde el lado del usuario, el siguiente paso fue investigar el estado actual del mercado. Era razonable asumir que ya existían soluciones orientadas a nutricionistas, y antes de diseñar nada convenía saber quiénes eran los competidores, qué ofrecían y dónde dejaban huecos sin cubrir.
+
+Se analizaron las principales plataformas del sector ---Nutrium, Indya, Dietopro, Nutrimeal y Practice Better, entre otras--- estudiando sus funcionalidades, sus modelos de negocio, sus puntos fuertes y sus carencias. El objetivo de este análisis no era copiar lo que otros hacían bien ni competir directamente con ellos, sino detectar qué aspectos se habían quedado fuera del radar durante la fase de investigación con nutricionistas e incorporarlos a la propuesta. Los competidores sirvieron, sobre todo, como contraste: si un problema identificado en las entrevistas no estaba resuelto por ninguna plataforma existente, eso confirmaba que había una oportunidad real. Al final de esta fase, la idea del producto estaba mucho más definida y fundamentada, con una propuesta de valor clara y diferenciada.
+
+\subsection*{Fase 3 --- Diseño visual de la aplicación}
+
+Con los requisitos funcionales extraídos y el posicionamiento del producto definido, se pasó a traducir todo ello en una interfaz concreta. Se diseñaron los mockups de la aplicación: las pantallas que reflejan todas las herramientas e interfaces que tanto el nutricionista como el cliente tendrían a su disposición. El objetivo era doble. Por un lado, que el nutricionista pudiera gestionar todo su trabajo desde un único punto de acceso ---clientes, citas, formularios, planes, mensajes y notas--- sin necesidad de recurrir a herramientas externas. Por otro, que el cliente contara con herramientas propias que le permitieran consultar su plan, registrar sus hábitos, hacer seguimiento de su progreso y resolver dudas frecuentes sin tener que contactar al nutricionista cada vez.
+
+Un aspecto clave en esta fase fue garantizar que el flujo de información entre ambos paneles fuera lo más natural posible: que los datos introducidos por el cliente llegaran al nutricionista de forma organizada, y que las indicaciones del nutricionista se reflejaran de forma clara en la interfaz del cliente. Cada pantalla se diseñó para cubrir los casos de uso identificados en las fases anteriores, de modo que el diseño visual no fuera un ejercicio estético sino una traducción directa de los requisitos funcionales.
+
+%% PENDIENTE: añadir fases restantes (diseño de base de datos, implementación, pruebas, etc.) %%
 
 
 

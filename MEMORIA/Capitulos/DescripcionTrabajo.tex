@@ -1,60 +1,81 @@
 \chapter{Descripción del Trabajo}
 \label{cap:descripcionTrabajo}
 
-El presente trabajo consiste en el desarrollo de una plataforma web dirigida a nutricionistas, con el objetivo de facilitar la gestión de sus clientes, la planificación de dietas personalizadas y el seguimiento continuo de los tratamientos nutricionales.
+NutriApp es una plataforma web diseñada para centralizar el flujo de trabajo de los nutricionistas profesionales. Como se ha descrito en la introducción, el proyecto nace de la observación directa de un problema real: un nutricionista que gestiona su práctica diaria repartiendo la información de sus clientes entre formularios de Google, Google Calendar, WhatsApp, un cuaderno físico y la plataforma de su clínica. NutriApp propone reunir todas esas herramientas en un único punto de acceso, de forma que el profesional pueda dedicar su tiempo a lo que realmente aporta valor ---diseñar planes nutricionales, acompañar a sus clientes y lograr que los tratamientos funcionen--- en lugar de invertirlo en tareas administrativas y en cruzar datos entre plataformas desconectadas.
 
-\section{Objetivo del Proyecto}
+En este capítulo se describe el alcance funcional de la plataforma: qué puede hacer, para quién y cómo se organizan sus herramientas.
 
-La plataforma tiene como finalidad centralizar todas las herramientas necesarias para que un nutricionista pueda gestionar de forma profesional y eficiente su trabajo diario, mejorando la comunicación con los clientes y automatizando tareas repetitivas.
+\section{Objetivo del proyecto}
 
-\section{Funcionalidades de la Plataforma}
+El objetivo del proyecto es diseñar e implementar una aplicación web que centralice la gestión integral de una consulta de nutrición, cubriendo tanto las necesidades del nutricionista como las del cliente. La plataforma debe sustituir las múltiples herramientas que el profesional utiliza actualmente por un sistema único donde toda la información esté conectada, organizada y accesible.
 
-A continuación se detallan las principales funcionalidades desarrolladas:
+Esto implica, por un lado, ofrecer al nutricionista un panel de gestión completo desde el que pueda administrar clientes, citas, formularios, planes nutricionales, mensajes e informes sin salir de la aplicación. Por otro lado, proporcionar al cliente una interfaz propia donde consultar su plan, registrar sus hábitos, comunicarse con su nutricionista y hacer seguimiento de su progreso. Ambos paneles comparten la misma base de datos, lo que permite que la información fluya entre ellos de forma automática y coherente.
 
-\subsection{Funcionalidades para Nutricionistas}
+Más allá de replicar herramientas existentes, NutriApp incorpora funcionalidades que solo son posibles cuando toda la información está centralizada: un sistema de alertas que detecta patrones de riesgo de forma automática, check-ins diarios gamificados que fomentan la adherencia al plan, y listas de la compra con sustituciones inteligentes basadas en equivalencia nutricional. Estas funcionalidades diferenciadoras, identificadas a partir del análisis de mercado y de las carencias detectadas en los competidores, constituyen el principal valor añadido de la propuesta.
+
+\section{Funcionalidades de la plataforma}
+
+La plataforma se estructura en dos paneles diferenciados ---uno para el nutricionista y otro para el cliente--- que comparten la misma base de datos subyacente. A continuación se describen las funcionalidades de cada panel, destacando aquellas que constituyen las innovaciones clave del proyecto.
+
+\subsection{Panel del nutricionista}
+
+El panel del nutricionista es una herramienta de gestión integral desde la que el profesional puede controlar todos los aspectos de su práctica. Las funcionalidades principales son:
 
 \begin{itemize}
-  \item Gestión de perfiles de clientes incluyendo historial clínico, objetivos, medidas y hábitos.
-  \item Clasificación de clientes por categorías personalizadas de objetivos (pérdida de peso, ganancia muscular, mantenimiento) y por tipo de dieta (cetogénica, alta en proteínas, baja en carbohidratos, etc.).
-  \item Filtros de búsqueda para segmentación rápida de clientes según las categorías establecidas.
-  \item Constructor de dietas personalizadas con plantillas reutilizables y cálculo automático de macronutrientes.
-  \item Biblioteca de alimentos organizada mediante etiquetas (vegano, sin gluten, etc.).
-  \item Zona privada de preparación de dietas.
-  \item Historial completo de dietas previas asignadas.
-  \item Exportación de dietas e informes en formato PDF.
-  \item Inteligencia Artificial personalizada para asistir en la generación de dietas según parámetros definidos por el profesional.
-  \item Análisis predictivo del progreso estimando el peso o la evolución futura de cada cliente en base al plan asignado.
-  \item Creación de cuestionarios personalizados para recopilar información de hábitos, actividad física y otros datos relevantes.
-  \item Gestión de la agenda de citas, disponibilidad y confirmación online o presencial.
-  \item Recordatorios automáticos por correo, SMS o notificaciones.
-  \item Programación de mensajes de seguimiento posteriores a las citas.
-  \item Chat privado con cada cliente y posibilidad de adjuntar archivos.
-  \item Zona de recursos profesionales (vídeos, guías, plantillas, eBooks) para compartir y vender entre nutricionistas.
-  \item Gestión de grupos de clientes para retos o programas colectivos.
-  \item Control de roles de usuarios: nutricionistas, administrativos y otros colaboradores.
-  \item Panel de métricas detalladas del progreso de cada cliente y estadísticas globales de la actividad profesional.
+    \item \textbf{Gestión de clientes.} Perfiles completos con historial clínico, objetivos, medidas y categorías personalizadas. Incluye filtros de búsqueda para segmentar clientes según sus características y un sistema de notas privadas por cliente, visibles únicamente para el nutricionista, que sustituye al cuaderno físico donde tradicionalmente se registran observaciones personales sobre cada caso.
+
+    \item \textbf{Calendario y citas.} Gestión de citas con soporte multi-clínica, diferenciando cada centro mediante un código de colores. Permite configurar la disponibilidad del profesional, enviar recordatorios automáticos y gestionar citas presenciales y online desde un mismo calendario.
+
+    \item \textbf{Mensajería profesional.} Chat integrado con cada cliente que sustituye la comunicación por WhatsApp. Incluye historial completo de conversaciones y posibilidad de adjuntar archivos, manteniendo toda la comunicación dentro de la plataforma y asociada al perfil del cliente correspondiente.
+
+    \item \textbf{Formularios personalizables.} Constructor de formularios con múltiples tipos de campo (texto, numérico, escala, opción múltiple) y plantillas reutilizables. El nutricionista puede crear formularios de primera visita, seguimiento periódico, evaluación de adherencia o cualquier otro cuestionario que necesite, adaptándolos libremente a su metodología de trabajo.
+
+    \item \textbf{Planes nutricionales.} Constructor de dietas con plantillas reutilizables, cálculo de macronutrientes por comida y por día, y biblioteca de recetas. El nutricionista puede diseñar planes semanales completos y asignarlos a sus clientes, que los consultan desde su propio panel.
+
+    \item \textbf{Informes y análisis.} Panel de métricas con indicadores clave de rendimiento: tasas de adherencia, evolución de los clientes, actividad de la consulta y estadísticas globales. Los informes se pueden exportar en formato PDF.
 \end{itemize}
 
-\subsection{Funcionalidades para Clientes}
+Además de estas funcionalidades base, el panel del nutricionista incorpora dos innovaciones clave que no están presentes en ningún competidor analizado:
+
+\paragraph{Sistema de alertas inteligentes.}
+Una de las principales carencias detectadas durante el análisis de mercado es que el nutricionista solo se entera de los problemas de sus clientes cuando estos se lo comunican directamente, ya sea en consulta o por mensaje. Para entonces, el cliente puede llevar días o semanas en dificultades sin que el profesional lo sepa. NutriApp aborda este problema mediante un sistema de alertas configurables: el nutricionista define reglas sobre sus formularios ---por ejemplo, que se genere una alerta crítica si un cliente reporta haber incumplido más de dos comidas, o una alerta de aviso si la autoevaluación de adherencia es inferior a cinco sobre diez---. Estas reglas se evalúan automáticamente cada vez que un cliente envía un formulario o cuando los datos de check-in cumplen determinadas condiciones. Las alertas aparecen en el dashboard del nutricionista, clasificadas por prioridad mediante un código de colores (rojo para críticas, amarillo para avisos, azul para informativas), permitiéndole actuar de forma proactiva en lugar de reactiva.
+
+\paragraph{Lista de la compra con sustituciones inteligentes.}
+Uno de los motivos más frecuentes de abandono del plan nutricional es la dificultad para seguirlo en la práctica: el cliente va al supermercado, no encuentra un ingrediente y termina comprando lo que le parece. NutriApp genera automáticamente la lista de la compra a partir del plan nutricional asignado, agregando los ingredientes de todas las comidas de la semana. Cuando el cliente marca un ingrediente como no disponible, el sistema sugiere alternativas del mismo grupo nutricional con un perfil de macronutrientes similar. El nutricionista también puede preconfigurar sustituciones preferidas para determinados alimentos, lo que le da control sobre las alternativas que se proponen.
+
+\subsection{Panel del cliente}
+
+El panel del cliente ofrece una experiencia orientada al seguimiento personal del tratamiento nutricional. Sus funcionalidades principales son:
 
 \begin{itemize}
-  \item Acceso completo a sus dietas, datos personales y evolución registrada.
-  \item Registro de peso, medidas, fotos de progreso y analíticas.
-  \item Envío de feedback sobre bienestar, adherencia, energía y dificultades.
-  \item Cuestionarios de satisfacción periódicos con notificación automática al nutricionista en caso de incidencias.
-  \item Pantalla resumen diaria (modo "Hoy") mostrando la dieta del día, próximas citas y mensajes pendientes.
-  \item Solicitud de citas directamente desde el calendario de disponibilidad del profesional.
-  \item Selección de modalidad de cita (presencial u online).
-  \item Recepción de recordatorios, avisos y mensajes automatizados o personalizados.
-  \item Comunicación directa con el nutricionista mediante chat.
+    \item \textbf{Dashboard personalizado.} Pantalla de inicio con un resumen del día: próxima cita programada, mensajes sin leer, formularios pendientes de completar y estado del check-in diario.
+
+    \item \textbf{Mi plan nutricional.} Vista semanal del plan asignado por el nutricionista, con el detalle de cada comida, recetas asociadas e información nutricional (calorías y macronutrientes).
+
+    \item \textbf{Lista de la compra.} Generada automáticamente desde el plan nutricional. El cliente puede marcar ingredientes como comprados o no disponibles, y en este último caso el sistema le muestra las sustituciones configuradas.
+
+    \item \textbf{Seguimiento y progreso.} Registro de peso, medidas corporales y fotos comparativas. Los datos se visualizan mediante gráficos de evolución temporal y un mapa de calor de cumplimiento con un formato inspirado en el de contribuciones de GitHub, que permite ver de un vistazo la regularidad del cliente a lo largo del tiempo.
+
+    \item \textbf{Mensajería con el nutricionista.} Acceso al chat integrado para comunicarse con el profesional sin salir de la plataforma.
+
+    \item \textbf{Formularios.} Listado de formularios pendientes y completados, con acceso al historial de respuestas enviadas.
+
+    \item \textbf{Citas.} Solicitud de citas nuevas a partir de la disponibilidad publicada por el nutricionista, con opción de elegir modalidad (presencial u online) y posibilidad de consultar, cancelar o reprogramar citas existentes.
 \end{itemize}
 
-\subsection{Funcionalidades Generales}
+La funcionalidad más diferenciadora del panel del cliente es el sistema de check-in diario gamificado:
+
+\paragraph{Check-in diario con rachas de adherencia.}
+La adherencia al plan es el mayor reto en nutrición: muchos clientes comienzan un tratamiento con motivación pero lo abandonan a las pocas semanas. Para abordar este problema, NutriApp incorpora un sistema de check-in diario en el que el cliente registra su cumplimiento en varias categorías: agua consumida respecto al objetivo diario, suplementos tomados, comidas completadas del plan, ejercicio realizado y hábitos personalizados que el nutricionista puede configurar para cada cliente (horas de sueño, nivel de estrés u otros indicadores relevantes para el caso). El sistema lleva un registro de días consecutivos de cumplimiento ---rachas de adherencia--- que se muestran visualmente al cliente, siguiendo una mecánica de gamificación similar a la que utilizan aplicaciones como Duolingo para crear hábitos. Además de su valor motivacional, los datos del check-in alimentan el sistema de alertas: si un cliente deja de registrar sus check-ins durante un número configurable de días, se genera una alerta automática en el panel del nutricionista.
+
+\subsection{Características generales}
 
 \begin{itemize}
-  \item Plataforma web completamente responsive, compatible tanto en escritorio como en dispositivos móviles.
-  \item Sistema seguro de gestión de roles y permisos de acceso.
-  \item Automatización de procesos rutinarios (mensajería, notificaciones, recordatorios, etc.).
-  \item Exportación automática de documentación en formato PDF.
-  \item Arquitectura escalable apta tanto para nutricionistas independientes como para clínicas de mayor tamaño.
+    \item \textbf{Plataforma web desktop-first.} Diseñada en primer lugar para uso en escritorio, dado que el nutricionista trabaja principalmente desde un ordenador durante las consultas. La interfaz es responsive y accesible desde dispositivos móviles, especialmente relevante para el panel del cliente.
+
+    \item \textbf{Dos paneles, una base de datos.} El nutricionista y el cliente acceden a paneles separados con interfaces adaptadas a sus necesidades, pero toda la información reside en la misma base de datos relacional. Esto garantiza la coherencia de los datos y permite que las acciones de un usuario se reflejen automáticamente en el panel del otro.
+
+    \item \textbf{Sistema de roles y permisos.} Cada usuario accede únicamente a las funcionalidades y datos que le corresponden según su rol (nutricionista o cliente), garantizando la privacidad y la seguridad de la información.
+
+    \item \textbf{Arquitectura escalable.} El diseño de la plataforma contempla tanto el uso por parte de nutricionistas independientes como su posible adopción en clínicas de mayor tamaño.
 \end{itemize}
