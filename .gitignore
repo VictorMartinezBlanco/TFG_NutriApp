@@ -196,3 +196,30 @@ cython_debug/
 # Claude Code
 .claude/
 CLAUDE.md
+.mcp.json
+
+# LaTeX build artifacts
+MEMORIA/*.aux
+MEMORIA/*.log
+MEMORIA/*.out
+MEMORIA/*.toc
+MEMORIA/*.lof
+MEMORIA/*.lot
+MEMORIA/*.bbl
+MEMORIA/*.blg
+MEMORIA/*.synctex.gz
+MEMORIA/*.fdb_latexmk
+MEMORIA/*.fls
+MEMORIA/*.idx
+MEMORIA/*.ilg
+MEMORIA/*.ind
+MEMORIA/*.acn
+MEMORIA/*.acr
+MEMORIA/*.alg
+MEMORIA/*.glg
+MEMORIA/*.glo
+MEMORIA/*.gls
+
+# Working documents (not part of the formal thesis)
+usability-test-*.html
+MEMORIA/notas-plantilla.md

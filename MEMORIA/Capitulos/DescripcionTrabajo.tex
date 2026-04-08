@@ -3,7 +3,7 @@
 
 NutriApp es una plataforma web diseñada para centralizar el flujo de trabajo de los nutricionistas profesionales. Como se ha descrito en la introducción, el proyecto nace de la observación directa de un problema real: un nutricionista que gestiona su práctica diaria repartiendo la información de sus clientes entre formularios de Google, Google Calendar, WhatsApp, un cuaderno físico y la plataforma de su clínica. NutriApp propone reunir todas esas herramientas en un único punto de acceso, de forma que el profesional pueda dedicar su tiempo a lo que realmente aporta valor ---diseñar planes nutricionales, acompañar a sus clientes y lograr que los tratamientos funcionen--- en lugar de invertirlo en tareas administrativas y en cruzar datos entre plataformas desconectadas.
 
-En este capítulo se describe el alcance funcional de la plataforma: qué puede hacer, para quién y cómo se organizan sus herramientas.
+En este capítulo se describe el alcance funcional de la plataforma: qué puede hacer, para quién y cómo se organizan sus herramientas. Las funcionalidades que se detallan a continuación se derivan de los requisitos recogidos en el capítulo~\ref{cap:analisisRequisitos}.
 
 \section{Objetivo del proyecto}
 
@@ -24,15 +24,17 @@ El panel del nutricionista es una herramienta de gestión integral desde la que 
 \begin{itemize}
     \item \textbf{Gestión de clientes.} Perfiles completos con historial clínico, objetivos, medidas y categorías personalizadas. Incluye filtros de búsqueda para segmentar clientes según sus características y un sistema de notas privadas por cliente, visibles únicamente para el nutricionista, que sustituye al cuaderno físico donde tradicionalmente se registran observaciones personales sobre cada caso.
 
-    \item \textbf{Calendario y citas.} Gestión de citas con soporte multi-clínica, diferenciando cada centro mediante un código de colores. Permite configurar la disponibilidad del profesional, enviar recordatorios automáticos y gestionar citas presenciales y online desde un mismo calendario.
+    \item \textbf{Calendario y citas.} Gestión de citas con soporte multi-clínica, diferenciando cada centro mediante un código de colores (verde para clínica A, azul para clínica B, naranja para citas online y morado para consulta privada). El calendario ofrece vistas por día, semana y mes, permite añadir citas directamente desde la interfaz, configurar la disponibilidad del profesional y enviar recordatorios automáticos.
 
     \item \textbf{Mensajería profesional.} Chat integrado con cada cliente que sustituye la comunicación por WhatsApp. Incluye historial completo de conversaciones y posibilidad de adjuntar archivos, manteniendo toda la comunicación dentro de la plataforma y asociada al perfil del cliente correspondiente.
 
-    \item \textbf{Formularios personalizables.} Constructor de formularios con múltiples tipos de campo (texto, numérico, escala, opción múltiple) y plantillas reutilizables. El nutricionista puede crear formularios de primera visita, seguimiento periódico, evaluación de adherencia o cualquier otro cuestionario que necesite, adaptándolos libremente a su metodología de trabajo.
+    \item \textbf{Formularios personalizables.} Constructor de formularios con múltiples tipos de campo (texto, numérico, escala, opción múltiple) y plantillas reutilizables. El nutricionista puede crear formularios de primera visita, seguimiento periódico, evaluación de adherencia o cualquier otro cuestionario que necesite, adaptándolos libremente a su metodología de trabajo. Los formularios se pueden enviar a los clientes tanto desde la biblioteca de formularios como desde la propia ficha del cliente.
 
-    \item \textbf{Planes nutricionales.} Constructor de dietas con plantillas reutilizables, cálculo de macronutrientes por comida y por día, y biblioteca de recetas. El nutricionista puede diseñar planes semanales completos y asignarlos a sus clientes, que los consultan desde su propio panel.
+    \item \textbf{Planes nutricionales.} Constructor de dietas organizadas por día y comida, con cálculo de macronutrientes y biblioteca de recetas. La sección se divide en dos pestañas: \textit{Meal Plans}, donde el nutricionista gestiona planes de dieta completos (por ejemplo, un plan de pérdida de peso de 1800\,kcal), y \textit{Meal Templates}, donde puede crear y reutilizar comidas individuales predefinidas (tipos de desayuno, almuerzo o cena) para incorporarlas a distintos planes de distintos clientes.
 
-    \item \textbf{Informes y análisis.} Panel de métricas con indicadores clave de rendimiento: tasas de adherencia, evolución de los clientes, actividad de la consulta y estadísticas globales. Los informes se pueden exportar en formato PDF.
+    \item \textbf{Informes y análisis.} Panel de métricas con indicadores clave de rendimiento: clientes activos, adherencia media, citas de la semana y formularios completados. Incluye gráficos de tendencia de adherencia y distribución de clientes por objetivo, junto con una tabla de los clientes con mejor rendimiento. Los informes se pueden exportar en formato PDF.
+
+    \item \textbf{Ajustes.} Configuración del perfil profesional, gestión de clínicas (con código de colores correspondiente al calendario), disponibilidad horaria y preferencias de notificaciones.
 \end{itemize}
 
 Además de estas funcionalidades base, el panel del nutricionista incorpora dos innovaciones clave que no están presentes en ningún competidor analizado:
@@ -50,7 +52,7 @@ El panel del cliente ofrece una experiencia orientada al seguimiento personal de
 \begin{itemize}
     \item \textbf{Dashboard personalizado.} Pantalla de inicio con un resumen del día: próxima cita programada, mensajes sin leer, formularios pendientes de completar y estado del check-in diario.
 
-    \item \textbf{Mi plan nutricional.} Vista semanal del plan asignado por el nutricionista, con el detalle de cada comida, recetas asociadas e información nutricional (calorías y macronutrientes).
+    \item \textbf{Mi plan nutricional.} Vista del plan asignado por el nutricionista, organizada por defecto como plan diario ---mostrando las comidas del día con su hora, ingredientes y calorías--- con opción de cambiar a vista semanal o mensual. Incluye objetivos nutricionales diarios (calorías, proteínas, carbohidratos) y acceso directo a la lista de la compra y las recetas.
 
     \item \textbf{Lista de la compra.} Generada automáticamente desde el plan nutricional. El cliente puede marcar ingredientes como comprados o no disponibles, y en este último caso el sistema le muestra las sustituciones configuradas.
 
@@ -60,7 +62,11 @@ El panel del cliente ofrece una experiencia orientada al seguimiento personal de
 
     \item \textbf{Formularios.} Listado de formularios pendientes y completados, con acceso al historial de respuestas enviadas.
 
-    \item \textbf{Citas.} Solicitud de citas nuevas a partir de la disponibilidad publicada por el nutricionista, con opción de elegir modalidad (presencial u online) y posibilidad de consultar, cancelar o reprogramar citas existentes.
+    \item \textbf{Perfil personal.} Pantalla donde el cliente puede consultar y editar sus datos personales (nombre, teléfono, fecha de nacimiento), ver sus mediciones corporales actuales (peso, grasa corporal, masa muscular, IMC) y gestionar sus fotos de progreso.
+
+    \item \textbf{Citas.} Solicitud de citas nuevas a partir de la disponibilidad publicada por el nutricionista, con opción de elegir modalidad (presencial u online), visualización de la próxima cita programada con posibilidad de cancelar o reprogramar, e historial completo de citas anteriores.
+
+    \item \textbf{Ajustes.} Pantalla de configuración de la cuenta del cliente: edición de datos personales, cambio de contraseña, preferencias de notificaciones e idioma.
 \end{itemize}
 
 La funcionalidad más diferenciadora del panel del cliente es el sistema de check-in diario gamificado:
