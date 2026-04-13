@@ -220,6 +220,11 @@ MEMORIA/*.glg
 MEMORIA/*.glo
 MEMORIA/*.gls
 
-# Working documents (not part of the formal thesis)
-usability-test-*.html
+# Office lock files (Word, Excel, PowerPoint)
+~$*
+
+# Temporary generator scripts
+generate_docx.py
+
+# Internal template notes (not part of the formal thesis)
 MEMORIA/notas-plantilla.md

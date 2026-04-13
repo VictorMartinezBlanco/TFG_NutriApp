@@ -1,16 +1,150 @@
 \chapter{Estado de la Cuestión}
 \label{cap:estadoDeLaCuestion}
 
-En el estado de la cuestión es donde aparecen gran parte de las referencias bibliográficas del trabajo. Una de las formas más cómodas de gestionar la bibliografía en {\LaTeX} es utilizando \textbf{bibtex}. Las entradas bibliográficas deben estar en un fichero con extensión \textit{.bib} (con esta plantilla se proporciona el fichero biblio.bib, donde están las entradas referenciadas más abajo). Cada entrada bibliográfica tiene una clave que permite referenciarla desde cualquier parte del texto con los siguiente comandos:
+NutriApp no nace en un mercado vacío. Existen varias plataformas comerciales que ya intentan resolver, total o parcialmente, el problema de centralizar el flujo de trabajo de un nutricionista profesional. Antes de diseñar una propuesta propia, era razonable estudiar qué se ofrece ya, qué funciona bien, qué se ha quedado a medio camino y, sobre todo, dónde están los huecos que justifican construir algo nuevo en lugar de adoptar un producto existente.
+
+Este capítulo recoge ese análisis. Se han estudiado las cuatro plataformas más representativas del sector ---las tres principales soluciones integrales del mercado profesional y la referencia en seguimiento de alimentos--- evaluándolas con un conjunto homogéneo de criterios funcionales. No se pretende elaborar un \textit{benchmark} exhaustivo, sino tener una referencia clara que permita explicar las decisiones de diseño que se toman más adelante en los capítulos~\ref{cap:analisisRequisitos} y~\ref{cap:descripcionTrabajo}, y dejar fundamentado por qué NutriApp incorpora ciertas funcionalidades y descarta otras de forma deliberada.
+
+%% ====================================================================
+\section{Criterios de comparación}
+\label{sec:criterios-competencia}
+%% ====================================================================
+
+Para que la comparación tenga sentido, todos los competidores se han revisado bajo el mismo conjunto de criterios funcionales:
 
 \begin{itemize}
-\item Referencia bibliografica con cite: \cite{ldesc2e}
-\item Referencia bibliográfica con citep: \citep{notsoshort}
-\item Referencia bibliográfica con citet: \citet{latexAPrimer}
+    \item Gestión de clientes (perfiles, historial, notas privadas).
+    \item Calendario y citas con soporte multi-clínica.
+    \item Mensajería integrada con el cliente.
+    \item Constructor de formularios personalizables.
+    \item Sistema de alertas configurables por el profesional.
+    \item Constructor de planes nutricionales y biblioteca de recetas.
+    \item Lista de la compra generada desde el plan.
+    \item Base de datos de alimentos con buscador.
+    \item Reconocimiento automático de alimentos (código de barras, fotografía).
+    \item Marketplace de recursos educativos.
+    \item Motor de automatizaciones (reglas con disparadores).
+    \item Idioma del producto y mercado objetivo.
+    \item Modelo de precios e integraciones externas.
 \end{itemize}
 
-Es posible citar más de una fuente, como por ejemplo \citep{latexCompanion,LaTeXLamport,texKnuth}
+A estos criterios se añade una valoración cualitativa de la interfaz, la curva de aprendizaje y el público al que va dirigida cada plataforma, ya que son aspectos relevantes para entender las decisiones de diseño de cada producto aunque no se reflejen en una tabla de funcionalidades.
 
-Después, \LaTeX se ocupa de rellenar la sección de bibliografía con las entradas \textbf{que hayan sido citadas} (es decir, no con todas las entradas que hay en el .bib, sino sólo con aquellas que se hayan citado en alguna parte del texto).
 
-Bibtex es un programa separado de latex, pdflatex o cualquier otra cosa que se use para compilar los .tex, de manera que para que se rellene correctamente la sección de bibliografía es necesario compilar primero el trabajo (a veces es necesario compilarlo dos veces), compilar después con bibtex, y volver a compilar otra vez el trabajo (de nuevo, puede ser necesario compilarlo dos veces). 
+%% ====================================================================
+\section{Análisis de competidores}
+\label{sec:competidores}
+%% ====================================================================
+
+%% -------------------------------------------
+\subsection{Plataformas integrales}
+%% -------------------------------------------
+
+\paragraph{Nutrium.}
+Nutrium~\citep{nutrium} es la plataforma de referencia del sector. Nace en Portugal y opera en más de cien países, con una base estimada de 120.000 profesionales. Su gran fortaleza es la solidez como herramienta integral: cuenta con una aplicación de paciente bien construida, mensajería interna, evaluaciones nutricionales completas, biblioteca de recetas, plantillas de planes y cumplimiento normativo de privacidad sanitaria. Su interfaz es limpia y profesional, lo que la convierte en la referencia visual del sector. Sus debilidades son notables para el perfil de usuario al que se dirige NutriApp: el plan completo es caro para un nutricionista autónomo, la curva de aprendizaje es alta porque incorpora muchas funcionalidades poco utilizadas en consultas pequeñas, y su sistema de notificaciones al profesional es genérico ---no permite definir reglas personalizadas sobre los formularios---. NutriApp toma de Nutrium su \textbf{lenguaje visual y la organización general del panel del nutricionista}, pero descarta su modelo de funcionalidades exhaustivas a favor de un conjunto más reducido y mejor conectado entre sí.
+
+\paragraph{Practice Better.}
+Practice Better~\citep{practicebetter} es una plataforma canadiense con fuerte presencia en Estados Unidos. Está pensada como sistema integral para profesionales de la salud y la nutrición, con cumplimiento HIPAA, integraciones con Zoom, Google Calendar y Stripe, formularios personalizables y un módulo de gestión de pagos. Su mayor punto fuerte es el grado de personalización: el profesional puede construir plantillas reutilizables para casi cualquier flujo de trabajo, y dispone de un sistema básico de automatizaciones que permite encadenar acciones tras determinados eventos. Su mayor debilidad es que está pensado para el mercado norteamericano ---no existe versión en castellano y su modelo de facturación está orientado a clínicas privadas estadounidenses---, y que sus formularios, aunque flexibles, no están conectados a ningún tipo de motor de alertas: las respuestas se almacenan, pero el profesional debe revisarlas manualmente. NutriApp toma de Practice Better la idea de un \textbf{motor de automatizaciones configurable por el profesional}, lo amplía vinculándolo al sistema de alertas y lo trae a un mercado donde no existe equivalente en castellano.
+
+\paragraph{Healthie.}
+Healthie~\citep{healthie} es otra plataforma estadounidense, también orientada a clínicas y consultas privadas, que destaca por su \textit{marketplace de recursos}: los profesionales pueden publicar guías, plantillas, programas y materiales formativos dentro de la propia plataforma, ofreciendo a sus clientes contenido educativo curado y, al mismo tiempo, una vía de monetización adicional para el nutricionista. Su interfaz es moderna y la integración del marketplace con el resto del flujo de trabajo es uno de sus puntos diferenciadores. Sin embargo, también tiene los problemas de Practice Better: producto exclusivamente en inglés, modelo de precios elevado y enfoque en el mercado norteamericano, además de una experiencia de cliente que se queda corta en la parte de seguimiento diario y gamificación de la adherencia. NutriApp toma de Healthie la idea del \textbf{marketplace integrado dentro del flujo}, con la particularidad de que el cliente ve una sección destacada con los recursos publicados específicamente por su propio nutricionista, no solo el catálogo general.
+
+%% -------------------------------------------
+\subsection{Plataforma centrada en el seguimiento de alimentos}
+%% -------------------------------------------
+
+\paragraph{Cronometer Pro.}
+Cronometer~\citep{cronometer} es originalmente una aplicación de \textit{food tracking} orientada al consumidor, con una versión profesional (Cronometer Pro) que permite al nutricionista vincular cuentas de clientes y revisar su registro alimentario. Su mayor fortaleza es la \textbf{base de datos de alimentos}, una de las más completas del sector, con información de micronutrientes que muchas plataformas no incluyen. También dispone de buscador por código de barras, sincronizado con bases públicas. Su debilidad principal es que es esencialmente una herramienta de tracking: no construye planes nutricionales completos, no tiene formularios personalizables, no gestiona citas y no incluye mensajería real con el profesional. Es una pieza valiosa, pero no una plataforma integral. NutriApp toma de Cronometer la idea de \textbf{integrar una base de datos de alimentos accesible y un buscador por código de barras}, y la combina con un servicio externo de reconocimiento de alimentos por fotografía mediante inteligencia artificial ---una funcionalidad presente ya en algunos productos emergentes del sector, pero todavía poco extendida en plataformas integrales como las anteriores---.
+
+
+%% ====================================================================
+\section{Resumen comparativo}
+\label{sec:tabla-competidores}
+%% ====================================================================
+
+La tabla~\ref{tab:competidores} sintetiza qué cubre cada una de las cuatro plataformas frente a NutriApp en los criterios funcionales más relevantes. Se utiliza ``Sí'' cuando la funcionalidad está presente y bien integrada, ``Parc.'' (parcial) cuando existe en una versión limitada o aislada, y ``No'' cuando la funcionalidad no está disponible.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{5pt}
+\begin{tabular}{|p{5cm}|c|c|c|c|c|}
+\hline
+\textbf{Funcionalidad} & \textbf{NutriApp} & \textbf{Nutrium} & \textbf{P. Better} & \textbf{Healthie} & \textbf{Cron. Pro} \\
+\hline
+Gestión de clientes              & Sí    & Sí    & Sí    & Sí    & Parc. \\
+\hline
+Calendario y citas               & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Mensajería integrada             & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Videollamada y voz en chat       & Sí    & No    & Parc. & Parc. & No    \\
+\hline
+Formularios personalizables      & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Alertas configurables por regla  & Sí    & No    & No    & No    & No    \\
+\hline
+Planes nutricionales             & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Lista de compra inteligente      & Sí    & Parc. & No    & No    & No    \\
+\hline
+Base de alimentos con buscador   & Sí    & Sí    & No    & No    & Sí    \\
+\hline
+Escaneo de código de barras      & Sí    & No    & No    & No    & Sí    \\
+\hline
+Reconocimiento por fotografía    & Sí    & No    & No    & No    & No    \\
+\hline
+Check-in diario gamificado       & Sí    & No    & No    & No    & No    \\
+\hline
+Marketplace de recursos          & Sí    & No    & No    & Sí    & No    \\
+\hline
+Motor de automatizaciones        & Sí    & No    & Parc. & Parc. & No    \\
+\hline
+Comunidad entre clientes         & Sí    & No    & No    & No    & No    \\
+\hline
+Disponible en castellano         & Sí    & Sí    & No    & No    & No    \\
+\hline
+\end{tabular}
+\caption{Cobertura funcional de los principales competidores frente a NutriApp.}
+\label{tab:competidores}
+\end{table}
+
+La tabla deja a la vista varios patrones útiles para justificar el diseño. Las tres plataformas integrales cubren con solvencia las funcionalidades de gestión profesional, pero ninguna ofrece alertas configurables por regla, lista de la compra inteligente, check-in gamificado, reconocimiento de alimentos por fotografía ni canal de comunidad entre clientes. Cronometer Pro es fuerte precisamente en el bloque que las otras ignoran ---base de datos de alimentos y escáner de código de barras--- pero no es una herramienta integral para gestionar una consulta. Ninguna de las cuatro cubre simultáneamente todas las dimensiones que NutriApp aborda, y la única que está disponible en castellano es Nutrium.
+
+
+%% ====================================================================
+\section{Posicionamiento de NutriApp}
+\label{sec:posicionamiento}
+%% ====================================================================
+
+A partir de este análisis, NutriApp se posiciona como una plataforma integral pensada para el mercado hispanohablante, que toma prestados elementos de las mejores referencias del sector y los combina con un conjunto de innovaciones que ningún competidor cubre por sí solo. La conexión entre cada una de las ocho funcionalidades clave del proyecto y el hueco del mercado al que responde es directa:
+
+\begin{itemize}
+    \item El \textbf{lenguaje visual y la organización general del panel} se inspiran en Nutrium, la referencia estética del sector. NutriApp adopta su limpieza visual sin replicar su densidad funcional.
+    \item El \textbf{sistema de alertas inteligentes con reglas configurables por formulario} no existe en ninguna plataforma analizada. Este es el principal diferenciador del proyecto y emerge directamente de la observación del flujo de trabajo real del nutricionista.
+    \item El \textbf{check-in diario gamificado con rachas de adherencia} tampoco tiene equivalente en la competencia. Ninguna de las cuatro plataformas estudiadas incorpora una mecánica de gamificación real.
+    \item La \textbf{lista de la compra inteligente con sustituciones por equivalencia nutricional} es otra propuesta única. Nutrium genera listas básicas, pero ninguna plataforma sugiere alternativas inteligentes cuando un ingrediente no está disponible.
+    \item El \textbf{motor de automatizaciones configurable} se inspira en Practice Better, pero NutriApp lo amplía conectándolo al sistema de alertas: la misma estructura de reglas que dispara una alerta puede disparar también una acción automática.
+    \item El \textbf{marketplace de recursos educativos} se inspira en Healthie. NutriApp lo integra dentro del flujo del cliente con una sección destacada que muestra los recursos publicados específicamente por su propio nutricionista, no solo el catálogo general.
+    \item La \textbf{base de datos de alimentos con escáner de código de barras} se inspira en Cronometer Pro, y se complementa con un servicio de \textbf{reconocimiento de alimentos por fotografía} mediante inteligencia artificial. La combinación de ambas vías de captura no aparece en ninguna de las plataformas integrales analizadas.
+    \item El \textbf{canal de comunidad entre clientes del mismo nutricionista} es una propuesta original de NutriApp que ningún competidor analizado contempla. Funciona como apoyo entre pares, con aislamiento garantizado entre consultas de profesionales distintos.
+\end{itemize}
+
+El conjunto resultante no es una suma de funcionalidades, sino una plataforma donde cada pieza se conecta con las demás a través de una base de datos común. Esa conexión es precisamente lo que permite que el sistema de alertas se alimente de los formularios y los check-ins, que la lista de la compra se genere automáticamente del plan, y que las automatizaciones puedan reaccionar a cualquier evento del sistema sin intervención manual del profesional.
+
+
+%% ====================================================================
+\section{Alcance de las integraciones externas}
+\label{sec:integraciones}
+%% ====================================================================
+
+Para cerrar este capítulo conviene aclarar el alcance de las integraciones externas que el diseño contempla. Muchas plataformas profesionales del sector presumen de integraciones con ecosistemas como Apple Health, Google Fit, Fitbit o Garmin, además de servicios de videollamada de terceros y pasarelas de pago. NutriApp no descarta esas integraciones a futuro, pero las deja fuera del alcance de esta iteración del TFG: tienen sentido cuando el producto está implementado y empieza a tener tracción real, no en la fase de diseño, donde añadirían complejidad sin contribuir al eje académico del trabajo (el diseño de la base de datos en el marco de la asignatura de Ampliación de Bases de Datos).
+
+Sí entran en el diseño dos servicios externos concretos, ambos consumidos a través de APIs REST, porque su salida enriquece directamente el modelo de datos del proyecto:
+
+\begin{itemize}
+    \item \textbf{Open Food Facts}~\citep{openfoodfacts}. Base de datos abierta y colaborativa de productos alimentarios. Su API pública y gratuita permite consultar productos por código de barras o por nombre y devuelve la información nutricional en formato JSON. Es la fuente que alimenta el buscador de la base de datos de alimentos y el escáner de código de barras.
+    \item \textbf{Servicio de reconocimiento de alimentos por imagen.} El reconocimiento automático de alimentos a partir de una fotografía se resuelve con una API REST especializada (existen varios proveedores comerciales con interfaces equivalentes, como LogMeal, Passio o Foodvisor), que recibe la imagen y devuelve los alimentos identificados con sus macronutrientes estimados.
+\end{itemize}
+
+El resto de integraciones ---wearables y apps de salud, pasarelas de pago para el marketplace, servicios de videollamada de terceros para los botones del chat--- quedan documentadas como trabajo futuro y se acometerían en la fase de implementación, cuando la plataforma esté construida y empiece a probarse con usuarios reales.
