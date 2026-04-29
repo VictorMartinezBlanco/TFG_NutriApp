@@ -1,4 +1,491 @@
-\chapter{Título del Apéndice A}
-\label{Appendix:Key1}
+\chapter{Catálogo original de requisitos (versión V1)}
+\label{apendice:catalogoV1}
 
-Los apéndices son secciones al final del documento en las que se agrega texto con el objetivo de ampliar los contenidos del documento principal.
+Este apéndice recoge el catálogo completo de requisitos \emph{tal y como se formuló inicialmente}, antes del pivote de alcance consensuado con los directores del TFG en abril de 2026. Su función no es normativa ---el alcance que realmente se implementa es el descrito en el capítulo~\ref{cap:analisisRequisitos}---, sino \emph{histórica}: conservar la visión inicial como registro del proceso de reformulación del proyecto y facilitar la trazabilidad de cada decisión de recorte.
+
+La versión V1 contenía \textbf{61 requisitos funcionales}, \textbf{7 requisitos no funcionales} y \textbf{8 innovaciones clave}. Tras dos iteraciones de triaje, la versión implementada (V2) reduce estas cifras a 29 requisitos funcionales, 11 requisitos no funcionales (con cinco nuevos específicos del copiloto IA) y una única innovación clave centrada en la generación semi-automática de planes nutricionales por nutricionista. Las razones y el criterio de triaje que llevaron a esta reformulación se desarrollan en la sección~\ref{sec:reformulacionAlcance} del cuerpo principal.
+
+Todo el contenido que sigue ---tablas de requisitos, dependencias funcionales y funcionalidades resultantes--- se presenta sin modificaciones respecto a su formulación original, incluyendo terminología, etiquetas de \emph{innovación clave} y referencias a bloques que posteriormente han sido descartados o redimensionados.
+
+%% ====================================================================
+\section{Requisitos no funcionales (V1)}
+\label{sec:rnf-v1}
+%% ====================================================================
+
+Los requisitos no funcionales definen las restricciones y condiciones de calidad que debe cumplir el sistema, independientemente de las funcionalidades concretas que ofrezca. Cada uno de ellos se deriva de las necesidades observadas durante la fase de investigación con nutricionistas y del contexto de uso de la aplicación.
+
+\paragraph{RNF-01 --- Interfaz diseñada para escritorio.}
+Durante las entrevistas con nutricionistas se constató que tanto los profesionales como sus clientes trabajan desde un portátil durante las consultas. Ninguno de los nutricionistas consultados realizaba gestiones desde el móvil en su entorno laboral. Por este motivo, toda la interfaz se ha diseñado para una resolución de escritorio (1280\,px de ancho mínimo), siguiendo un enfoque \textit{desktop-first}. Esto no excluye el acceso desde otros dispositivos, pero la experiencia principal está optimizada para portátil.
+
+\paragraph{RNF-02 --- Aplicación web accesible desde navegador.}
+Al tratarse de una aplicación web, no requiere instalación ni configuración local. Esto es especialmente relevante porque muchos nutricionistas trabajan en varias clínicas distintas y no siempre utilizan el mismo equipo. Acceder desde cualquier navegador garantiza disponibilidad sin dependencia del hardware.
+
+\paragraph{RNF-03 --- Interfaz moderna, limpia y profesional.}
+La aplicación va a ser utilizada por profesionales de la salud en su entorno de trabajo, por lo que debe transmitir confianza y profesionalidad. Se tomó como referencia visual Nutrium, el líder del mercado identificado durante el análisis de competencia, por su interfaz limpia y orientada a productividad. El objetivo es que el nutricionista perciba la herramienta como un instrumento profesional, no como un producto genérico.
+
+\paragraph{RNF-04 --- Navegación intuitiva con sidebar permanente.}
+Al tratarse de una herramienta de uso diario, el nutricionista necesita acceder rápidamente a cualquier sección sin perder el contexto de lo que está haciendo. Un sidebar fijo y visible en todo momento ---similar al de aplicaciones como Gmail o Notion--- permite esta navegación inmediata. Se descartó el menú tipo hamburguesa porque en una interfaz de escritorio hay espacio suficiente para mantener la navegación siempre visible.
+
+\paragraph{RNF-05 --- Separación clara entre panel de nutricionista y panel de cliente.}
+Ambos perfiles de usuario tienen necesidades completamente distintas: el nutricionista gestiona múltiples clientes, citas, formularios y planes; el cliente interactúa con sus propios datos, su plan y su progreso. Mezclar ambas experiencias en una sola interfaz generaría confusión. Por ello, cada perfil dispone de su propio panel con navegación, funcionalidades y diseño adaptados, aunque ambos paneles comparten la misma base de datos subyacente.
+
+\paragraph{RNF-06 --- Escalabilidad.}
+La arquitectura del sistema debe funcionar tanto para un nutricionista autónomo como para una clínica con varios profesionales. Esto afecta directamente al diseño de la base de datos ---la relación entre nutricionistas y clínicas se modela como N:M--- y a la estructura de permisos, que debe contemplar distintos niveles de acceso según el contexto.
+
+\paragraph{RNF-07 --- Seguridad y privacidad de datos.}
+La plataforma maneja datos de salud de los clientes, que son especialmente sensibles. El sistema debe contemplar autenticación segura, roles diferenciados y acceso restringido a la información según el perfil del usuario. Por ejemplo, las notas privadas que el nutricionista escribe sobre un cliente no deben ser visibles para dicho cliente en ningún caso.
+
+
+%% ====================================================================
+\section{Requisitos funcionales (V1)}
+\label{sec:rf-v1}
+%% ====================================================================
+
+Los requisitos funcionales describen las acciones concretas que el sistema debe permitir realizar. Se organizan por bloques temáticos, indicando para cada requisito el actor principal que lo ejecuta: el nutricionista (N), el cliente (C) o el propio sistema de forma automática (S). Aquellos bloques que constituyen innovaciones clave del proyecto ---funcionalidades no presentes en ningún competidor analizado--- se señalan expresamente.
+
+%% -------------------------------------------
+\subsection{Gestión de clientes}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-01 & Crear, editar y consultar perfiles de clientes con historial clínico, datos personales, objetivos y mediciones. & N \\
+\hline
+RF-02 & Clasificar y filtrar clientes por estado (activo, inactivo, nuevo) y buscar por nombre u otros criterios. & N \\
+\hline
+RF-03 & Escribir notas privadas asociadas a cada cliente, visibles únicamente para el nutricionista, sustituyendo la agenda física. & N \\
+\hline
+RF-04 & Editar datos personales, registrar mediciones corporales y subir fotos de progreso. & C \\
+\hline
+RF-05 & Consultar las mediciones, fotos de progreso y evolución de cada uno de sus clientes. & N \\
+\hline
+RF-60 & Acceder a una ficha detallada por cliente que consolide foto, datos básicos, notas privadas, plan actual, próxima sesión, alertas recientes e histórico de check-ins en una sola pantalla. & N \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Gestión de clientes.}
+\label{tab:rf-clientes-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Calendario y citas}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-06 & Gestionar una agenda de citas con vista diaria, semanal y mensual. & N \\
+\hline
+RF-07 & Diferenciar citas por tipo (clínica A, clínica B, privada, online) mediante un código de colores. & N \\
+\hline
+RF-08 & Gestionar múltiples clínicas y asignar citas a cada una de ellas. & N \\
+\hline
+RF-09 & Configurar la disponibilidad horaria para que los clientes puedan solicitar citas. & N \\
+\hline
+RF-10 & Ver citas programadas, solicitar nuevas según disponibilidad, y cancelar o reprogramar citas existentes. & C \\
+\hline
+RF-11 & Enviar recordatorios automáticos de citas próximas. & S \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Calendario y citas.}
+\label{tab:rf-calendario-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Mensajería}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-12 & Ofrecer un chat de mensajería directa entre nutricionista y cliente, con historial completo de conversaciones. & N/C \\
+\hline
+RF-13 & Permitir adjuntar archivos (documentos, imágenes, PDFs) en los mensajes. & N/C \\
+\hline
+RF-43 & Iniciar una videollamada con el interlocutor directamente desde el chat, sin salir de la plataforma. & N/C \\
+\hline
+RF-44 & Iniciar una llamada de voz con el interlocutor desde el chat. & N/C \\
+\hline
+RF-61 & Ofrecer al cliente un canal de chat con otros clientes del mismo nutricionista, manteniendo el aislamiento entre consultas de distintos profesionales. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Mensajería.}
+\label{tab:rf-mensajeria-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Formularios personalizables}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-14 & Crear formularios personalizados mediante un editor visual, con múltiples tipos de campo (texto, número, escala, selección múltiple). & N \\
+\hline
+RF-15 & Gestionar una biblioteca de plantillas de formularios predefinidos (primera consulta, seguimiento, valoración). & N \\
+\hline
+RF-16 & Asignar formularios a clientes de forma manual o programada (semanal, mensual, tras cada cita). & N \\
+\hline
+RF-17 & Ver formularios pendientes, completarlos y consultar el historial de respuestas anteriores. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Formularios personalizables.}
+\label{tab:rf-formularios-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Sistema de alertas inteligentes \textnormal{\textit{(innovación clave V1)}}}
+%% -------------------------------------------
+
+Este bloque constituye una de las principales innovaciones de NutriApp en su versión original. Ninguno de los competidores analizados ofrece un sistema de alertas configurables vinculado a las respuestas de formularios. Su objetivo es que el nutricionista pueda actuar de forma proactiva ante problemas de sus clientes, en lugar de enterarse solo cuando el cliente se lo comunica.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-18 & Definir reglas de alerta condicionales por formulario (ejemplo: ``si comidas falladas $>$ 2, generar alerta crítica''). & N \\
+\hline
+RF-19 & Evaluar automáticamente las respuestas de formularios contra las reglas configuradas y generar alertas con nivel de prioridad (crítica, media, informativa). & S \\
+\hline
+RF-20 & Generar alertas automáticas cuando un cliente no realiza check-in durante un número configurable de días. & S \\
+\hline
+RF-21 & Ver, gestionar y resolver alertas desde el dashboard, con indicadores de color por prioridad. & N \\
+\hline
+RF-22 & Resolver alertas y registrar las acciones tomadas al respecto. & N \\
+\hline
+RF-23 & Enviar un mensaje rápido al cliente directamente desde una alerta, con el contexto del caso precargado. & N \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Sistema de alertas inteligentes.}
+\label{tab:rf-alertas-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Planes nutricionales}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-24 & Crear planes nutricionales completos organizados por día y por comida (desayuno, comida, cena, snacks). & N \\
+\hline
+RF-25 & Gestionar una base de datos de alimentos con información nutricional (calorías, macronutrientes, categoría). & N \\
+\hline
+RF-26 & Crear y gestionar recetas compuestas por alimentos de la base de datos, con instrucciones de preparación e información nutricional agregada. & N \\
+\hline
+RF-27 & Definir sustituciones entre alimentos del mismo grupo nutricional con equivalencia de macronutrientes. & N \\
+\hline
+RF-28 & Guardar planes nutricionales como plantillas reutilizables para aplicar a otros clientes. & N \\
+\hline
+RF-29 & Consultar el plan nutricional actual con vista semanal, desglose por comidas, recetas e información nutricional. & C \\
+\hline
+RF-59 & Sustituir una comida del plan por una opción equivalente preconfigurada por el nutricionista, manteniendo el equilibrio de macronutrientes del día. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Planes nutricionales.}
+\label{tab:rf-planes-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Lista de la compra inteligente \textnormal{\textit{(innovación clave V1)}}}
+%% -------------------------------------------
+
+Otra innovación diferenciadora de NutriApp en su planteamiento original. Los competidores que ofrecen listas de la compra las generan de forma estática; ninguno incorpora un sistema de sustituciones inteligentes basado en equivalencia nutricional.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-30 & Generar automáticamente una lista de la compra a partir del plan nutricional asignado, organizada por categorías de alimentos. & S \\
+\hline
+RF-31 & Marcar ingredientes como ``no disponible'' y recibir sugerencias de sustitución del mismo grupo nutricional. & C \\
+\hline
+RF-32 & Marcar ítems como comprados y exportar o compartir la lista. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Lista de la compra inteligente.}
+\label{tab:rf-lista-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Check-in diario y gamificación \textnormal{\textit{(innovación clave V1)}}}
+%% -------------------------------------------
+
+La tercera innovación clave del proyecto en su versión original. Los competidores analizados ofrecen, en el mejor de los casos, check-ins básicos sin mecánicas de gamificación ni conexión con un sistema de alertas.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-33 & Registrar diariamente: agua consumida, suplementos tomados, comidas completadas del plan, ejercicio realizado y hábitos personalizados. & C \\
+\hline
+RF-34 & Calcular y mostrar la racha de días consecutivos con check-in completado, incluyendo comparación con la mejor racha histórica. & S \\
+\hline
+RF-35 & Configurar hábitos personalizados para cada cliente (horas de sueño, nivel de estrés, meditación, etc.). & N \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Check-in diario y gamificación.}
+\label{tab:rf-checkin-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Seguimiento y progreso}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-36 & Visualizar la evolución mediante gráficos de peso, medidas corporales y porcentaje de adherencia. & C \\
+\hline
+RF-37 & Mostrar un calendario de cumplimiento tipo \textit{heat map} (estilo contribuciones de GitHub) basado en los check-ins diarios. & S \\
+\hline
+RF-38 & Subir y comparar fotos de progreso organizadas cronológicamente. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Seguimiento y progreso.}
+\label{tab:rf-progreso-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Informes y análisis}
+%% -------------------------------------------
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-39 & Visualizar un dashboard con métricas globales: clientes activos, citas del día y formularios pendientes. & N \\
+\hline
+RF-40 & Exportar informes de clientes y métricas en formato PDF. & N \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Informes y análisis.}
+\label{tab:rf-informes-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Base de datos de alimentos con reconocimiento inteligente \textnormal{\textit{(innovación clave V1)}}}
+%% -------------------------------------------
+
+Una de las fricciones principales detectadas durante la investigación es el tiempo que tanto el nutricionista como el cliente dedican a consultar información nutricional sobre alimentos concretos. El cliente, sobre todo, suele abandonar el registro de su dieta porque implica buscar manualmente las calorías de cada producto que consume. La propuesta original de NutriApp resolvía este punto mediante una base de datos de alimentos accesible desde ambos paneles, integrada con una API abierta como Open Food Facts, y complementada con dos mecanismos de captura rápida: el escaneo de códigos de barras y el reconocimiento de alimentos por fotografía usando un modelo de inteligencia artificial.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-45 & Consultar una base de datos de alimentos con buscador por nombre, alimentada por una fuente externa como Open Food Facts. & N/C \\
+\hline
+RF-46 & Escanear el código de barras de un producto para obtener su información nutricional de forma automática. & C \\
+\hline
+RF-47 & Identificar alimentos mediante el análisis de fotografías usando un modelo de reconocimiento de imagen basado en IA. & C \\
+\hline
+RF-48 & Añadir alimentos personalizados a la base de datos (recetas propias o productos locales) con sus macronutrientes. & N \\
+\hline
+RF-49 & Registrar un alimento consumido como parte del plan diario del cliente desde el propio buscador. & C \\
+\hline
+RF-50 & Comparar los macronutrientes de un alimento con los objetivos nutricionales restantes del día antes de decidir si añadirlo al plan. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Base de datos de alimentos.}
+\label{tab:rf-alimentos-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Marketplace de recursos educativos \textnormal{\textit{(innovación clave V1)}}}
+%% -------------------------------------------
+
+El análisis de competencia reveló que algunas plataformas profesionales como Healthie incorporan un marketplace donde los nutricionistas pueden vender contenido educativo y los clientes pueden adquirirlo. La propuesta original de NutriApp recogía esta idea y la adaptaba a sus dos paneles: el nutricionista publica sus propios recursos (guías, libros, plantillas, cursos) y gestiona sus ventas, mientras que el cliente navega el catálogo general y dispone además de una sección destacada con los recursos publicados específicamente por su propio profesional. De esta forma, la plataforma ofrecía al nutricionista una vía adicional de monetización y al cliente acceso a contenido educativo curado por alguien en quien ya confía.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-51 & Explorar un catálogo de recursos educativos (cursos, libros, plantillas, guías) filtrado por categoría y con valoraciones de otros usuarios. & N/C \\
+\hline
+RF-52 & Publicar recursos propios en el marketplace asignándoles categoría, descripción, precio y materiales asociados. & N \\
+\hline
+RF-53 & Gestionar los recursos publicados y el historial de ventas propias desde la sección \textit{My Published}. & N \\
+\hline
+RF-54 & Adquirir recursos del marketplace y acceder a ellos desde una biblioteca personal (\textit{My Library}). & C \\
+\hline
+RF-55 & Visualizar una sección destacada con los recursos publicados específicamente por el propio nutricionista del cliente. & C \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Marketplace de recursos educativos.}
+\label{tab:rf-marketplace-v1}
+\end{table}
+
+%% -------------------------------------------
+\subsection{Automatización de procesos \textnormal{\textit{(innovación clave V1)}}}
+%% -------------------------------------------
+
+La automatización de tareas repetitivas es la forma más directa de reducir la carga administrativa del nutricionista. La propuesta original ampliaba el concepto más allá del envío programado de formularios: ofrecía un motor de reglas configurables con disparadores y acciones asociadas, de forma que el profesional podía modelar procedimientos típicos de su práctica (bienvenida a nuevos clientes, seguimiento tras sesión, detección de baja adherencia, celebración de hitos) y dejar que el sistema los ejecutase sin intervención manual.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|p{10.5cm}|c|}
+\hline
+\textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
+\hline
+RF-41 & Automatizar el envío de formularios programados (semanal, mensual, tras cada cita). & S \\
+\hline
+RF-42 & Automatizar las notificaciones de nuevos mensajes, formularios asignados y eventos relevantes del sistema. & S \\
+\hline
+RF-56 & Definir reglas de automatización con disparadores (nuevo cliente, baja adherencia sostenida, cita próxima, hito alcanzado) y acciones asociadas (enviar mensaje, asignar formulario, crear tarea interna). & N \\
+\hline
+RF-57 & Activar, desactivar, editar o eliminar reglas de automatización de forma individual. & N \\
+\hline
+RF-58 & Ejecutar automáticamente las acciones de las reglas activas cuando se cumplen sus disparadores. & S \\
+\hline
+\end{tabular}
+\caption{Requisitos funcionales V1 --- Automatización de procesos.}
+\label{tab:rf-automatizacion-v1}
+\end{table}
+
+
+%% ====================================================================
+\section{Dependencias funcionales (V1)}
+\label{sec:dependencias-v1}
+%% ====================================================================
+
+Los requisitos funcionales no actúan de forma aislada: muchos de ellos dependen de otros para conformar las funcionalidades completas de la plataforma. La tabla~\ref{tab:dependencias-v1} muestra estas relaciones de dependencia tal y como se formularon originalmente, permitiendo trazar cada funcionalidad hasta los requisitos que la hacen posible.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|p{5cm}|p{8.5cm}|}
+\hline
+\textbf{Funcionalidad} & \textbf{Requisitos involucrados} \\
+\hline
+Gestión integral de clientes & RF-01, RF-02, RF-03, RF-04, RF-05 \\
+\hline
+Ficha detallada del cliente & RF-01, RF-03, RF-05, RF-19, RF-34, RF-60 \\
+\hline
+Calendario multi-clínica & RF-06, RF-07, RF-08, RF-09, RF-10, RF-11 \\
+\hline
+Mensajería profesional & RF-12, RF-13 \\
+\hline
+Videollamadas y llamadas de voz & RF-12, RF-43, RF-44 \\
+\hline
+Comunidad entre clientes & RF-12, RF-61 \\
+\hline
+Formularios personalizables & RF-14, RF-15, RF-16, RF-17 \\
+\hline
+\textbf{Sistema de alertas inteligentes}$^*$ & RF-14, RF-18, RF-19, RF-20, RF-21, RF-22, RF-23 \\
+\hline
+\textbf{Formularios con reglas de alerta}$^*$ & RF-14, RF-15, RF-16, RF-18, RF-19 \\
+\hline
+Planes nutricionales & RF-24, RF-25, RF-26, RF-27, RF-28, RF-29 \\
+\hline
+Sustitución de comidas por equivalencias & RF-27, RF-59 \\
+\hline
+\textbf{Lista de compra inteligente}$^*$ & RF-24, RF-25, RF-27, RF-30, RF-31, RF-32 \\
+\hline
+\textbf{Base de datos de alimentos con IA}$^*$ & RF-25, RF-45, RF-46, RF-47, RF-48, RF-49, RF-50 \\
+\hline
+\textbf{Check-in diario gamificado}$^*$ & RF-33, RF-34, RF-35, RF-37 \\
+\hline
+Seguimiento y progreso & RF-04, RF-05, RF-33, RF-36, RF-37, RF-38 \\
+\hline
+Informes y análisis & RF-05, RF-34, RF-36, RF-39, RF-40 \\
+\hline
+\textbf{Marketplace de recursos}$^*$ & RF-51, RF-52, RF-53, RF-54, RF-55 \\
+\hline
+\textbf{Motor de automatizaciones}$^*$ & RF-18, RF-41, RF-42, RF-56, RF-57, RF-58 \\
+\hline
+\end{tabular}
+\caption{Dependencias funcionales V1: funcionalidades y sus requisitos. Las funcionalidades marcadas con $^*$ son innovaciones clave del planteamiento original.}
+\label{tab:dependencias-v1}
+\end{table}
+
+En el planteamiento original se destacaba que la combinación de \textbf{formularios personalizables con reglas de alerta asociadas} constituye una innovación en sí misma: la posibilidad de que el nutricionista defina, sobre cada formulario que crea, reglas condicionales que generen alertas automáticas al ser evaluadas. Ningún competidor analizado conecta estas dos funcionalidades de forma integrada. Esta combinación emergía de la intersección de los bloques de Formularios (RF-14 a RF-16) y Alertas (RF-18, RF-19), y era la que daba al sistema su capacidad de detección proactiva de problemas.
+
+También se observaba que el bloque de \textbf{seguimiento y progreso} actuaba como punto de convergencia de varios sistemas: los datos del check-in diario (RF-33) alimentan el heat map (RF-37) y las métricas de adherencia (RF-36), mientras que las mediciones y fotos del cliente (RF-04) eran consultadas por el nutricionista (RF-05) para evaluar la evolución.
+
+
+%% ====================================================================
+\section{Funcionalidades resultantes (V1)}
+\label{sec:funcionalidades-v1}
+%% ====================================================================
+
+A partir de los requisitos V1 definidos y sus dependencias, las funcionalidades inicialmente propuestas para NutriApp se agrupaban en las siguientes áreas:
+
+\paragraph{Gestión de clientes} (RF-01 a RF-05). Perfiles completos, clasificación por categorías, filtros de búsqueda, notas privadas del nutricionista y acceso a la evolución del cliente. Sustituye la combinación de cuaderno físico + notas del móvil + plataforma de la clínica.
+
+\paragraph{Calendario y citas} (RF-06 a RF-11). Agenda con vistas múltiples, soporte multi-clínica con código de colores, configuración de disponibilidad, solicitud de citas por parte del cliente y recordatorios automáticos. Sustituye Google Calendar.
+
+\paragraph{Mensajería profesional} (RF-12, RF-13, RF-43, RF-44). Chat integrado con historial y adjuntos, vinculado al perfil de cada cliente, con botones de videollamada y llamada de voz directamente en la cabecera del chat. Sustituye tanto a WhatsApp como a las herramientas externas de videoconsulta.
+
+\paragraph{Comunidad entre clientes} (RF-12, RF-61). El cliente dispone de un canal de chat con otros clientes del mismo nutricionista, pensado como apoyo entre pares. El sistema garantiza el aislamiento entre consultas de profesionales distintos, por lo que un cliente nunca puede comunicarse con clientes de un nutricionista que no sea el suyo.
+
+\paragraph{Ficha detallada del cliente} (RF-60). El nutricionista cuenta con una vista dedicada por cada cliente que consolida en una sola pantalla la foto, los datos básicos, las notas privadas, el plan actual, la próxima sesión, las alertas recientes y el histórico de check-ins. Evita tener que saltar entre varias secciones para obtener una visión global del caso.
+
+\paragraph{Formularios personalizables} (RF-14 a RF-17). Editor visual con múltiples tipos de campo, biblioteca de plantillas, asignación manual o programada, y acceso del cliente a sus formularios. Sustituye Google Forms.
+
+\paragraph{Sistema de alertas inteligentes} (RF-18 a RF-23). \textit{Innovación clave V1.} Reglas condicionales por formulario, evaluación automática de respuestas, alertas por inactividad, dashboard de gestión con prioridades por color y acción directa desde la alerta. Sin equivalente en la competencia.
+
+\paragraph{Planes nutricionales} (RF-24 a RF-29, RF-59). Constructor de dietas por día y comida, base de datos de alimentos, gestión de recetas, sistema de sustituciones por equivalencia nutricional, plantillas reutilizables y vista del plan para el cliente. Incluye la posibilidad de que el cliente cambie una comida concreta por otra opción equivalente preconfigurada por el nutricionista sin romper el equilibrio de macronutrientes del día.
+
+\paragraph{Base de datos de alimentos con reconocimiento inteligente} (RF-45 a RF-50). \textit{Innovación clave V1.} Base de datos accesible desde ambos paneles, alimentada por una fuente externa como Open Food Facts, con tres vías de captura: búsqueda por nombre, escaneo de código de barras y reconocimiento de alimentos por fotografía mediante un modelo de IA. El cliente puede comparar cualquier alimento con sus objetivos nutricionales restantes del día antes de añadirlo al plan, y el nutricionista puede ampliar la base con alimentos personalizados.
+
+\paragraph{Lista de la compra inteligente} (RF-30 a RF-32). \textit{Innovación clave V1.} Generación automática desde el plan, sustituciones inteligentes al marcar ingredientes como no disponibles, y gestión de la lista por el cliente. Sin equivalente en la competencia.
+
+\paragraph{Check-in diario gamificado} (RF-33 a RF-35). \textit{Innovación clave V1.} Registro diario de adherencia en múltiples categorías, hábitos personalizados configurados por el nutricionista, y rachas de cumplimiento con mecánica de gamificación. Sin equivalente en la competencia.
+
+\paragraph{Seguimiento y progreso} (RF-36 a RF-38). Gráficos de evolución, heat map de cumplimiento estilo GitHub y comparativa de fotos de progreso. Integra datos del check-in diario y las mediciones del cliente.
+
+\paragraph{Informes y análisis} (RF-39, RF-40). Dashboard de métricas globales para el nutricionista y exportación de informes en PDF.
+
+\paragraph{Marketplace de recursos educativos} (RF-51 a RF-55). \textit{Innovación clave V1.} Catálogo de recursos formativos (cursos, libros, plantillas, guías) con filtros por categoría y valoraciones. El nutricionista puede publicar sus propios recursos y gestionar sus ventas, y el cliente dispone de una biblioteca personal con los recursos adquiridos además de una sección destacada con los contenidos publicados específicamente por su profesional.
+
+\paragraph{Motor de automatizaciones} (RF-41, RF-42, RF-56 a RF-58). \textit{Innovación clave V1.} Motor de reglas configurables con disparadores (nuevo cliente, baja adherencia sostenida, cita próxima, hito alcanzado) y acciones asociadas (enviar mensaje, asignar formulario, crear tarea interna). Permite al nutricionista modelar procedimientos recurrentes de su práctica y delegar su ejecución en el sistema, ampliando la automatización básica de envío de formularios y notificaciones.
+
+
+%% ====================================================================
+\section{Nota final sobre el alcance definitivo}
+%% ====================================================================
+
+El alcance efectivamente implementado en el TFG corresponde al subconjunto descrito en el capítulo~\ref{cap:analisisRequisitos} tras la reformulación recogida en la sección~\ref{sec:reformulacionAlcance}. Los requisitos aquí documentados que no forman parte del alcance final ---\textit{marketplace}, motor de automatizaciones avanzado, formularios personalizables, sistema de alertas inteligentes en su versión original, lista de la compra inteligente, reconocimiento de alimentos por imagen, videollamadas, chat entre clientes, entre otros--- se recogen como trabajo futuro con su correspondiente justificación de posposición.
