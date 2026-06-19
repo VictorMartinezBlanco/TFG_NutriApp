@@ -96,6 +96,15 @@ El script de carga es re-ejecutable: reutiliza el alimento por nombre y fuente,
 hace upsert de los nutrientes y no duplica tags. Toda la carga va en una sola
 transacción.
 
+## Frontend
+
+La conexión desde Next.js con la SDK de Supabase está en `../frontend` (login
+real de un nutri y lectura de catálogos + alimentos bajo RLS, todo con la
+publishable key). Ver su README.
+
 ## Siguiente
 
-- Conexión desde Next.js con la SDK de Supabase y comprobar la RLS con un login real.
+- Añadir fastapi, ortools y anthropic a `requirements.txt` cuando arranque el
+  pipeline (traductor LLM + solver CP-SAT).
+- Carga masiva BEDCA + USDA en una migration aparte (`source_id` +
+  `external_food_mapping`).
