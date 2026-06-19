@@ -1,0 +1,9 @@
+# Dependencias del backend. FastAPI, OR-Tools y anthropic se añaden más adelante.
+
+# Migraciones
+alembic>=1.13
+sqlalchemy[asyncio]>=2.0
+
+# Conexion y acceso a datos
+asyncpg>=0.30
+python-dotenv>=1.0
