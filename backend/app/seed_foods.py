@@ -1,0 +1,227 @@
+"""Conjunto inicial de alimentos para el catálogo global.
+
+Alimentos españoles comunes con su composición en los 12 nutrientes del seed
+(por 100 g) y los tags que les tocan. Sirven para tener datos reales con los que
+probar la lectura/escritura y luego el solver.
+
+Los valores son aproximados de BEDCA y USDA, redondeados, por eso source='custom'
+(la importación masiva con source_id va aparte). sugar_added_g es 0 en los
+alimentos sin procesar porque el azúcar de la fruta no es añadido. Un nutriente
+que no aparece en un alimento se trata como "sin dato", no como cero.
+"""
+
+from __future__ import annotations
+
+from typing import TypedDict
+
+
+class FoodSeed(TypedDict):
+    name_es: str
+    name_en: str
+    typical_serving_g: float
+    nutrients: dict[str, float]
+    tags: list[str]
+
+
+# Orden de macros en los dicts: energy, protein, carb, fat, sat_fat, fiber,
+# sodium, sugar_added, iron, calcium, vit_d, vit_b12.
+FOODS: list[FoodSeed] = [
+    {
+        "name_es": "Pechuga de pollo, cruda",
+        "name_en": "Chicken breast, raw",
+        "typical_serving_g": 150,
+        "nutrients": {"energy_kcal": 110, "protein_g": 23.0, "carb_g": 0.0, "fat_g": 1.9,
+                      "sat_fat_g": 0.5, "fiber_g": 0.0, "sodium_mg": 65, "sugar_added_g": 0.0,
+                      "iron_mg": 0.7, "calcium_mg": 11, "vit_b12_ug": 0.3},
+        "tags": ["halal", "no_pork"],
+    },
+    {
+        "name_es": "Salmón, crudo",
+        "name_en": "Salmon, raw",
+        "typical_serving_g": 125,
+        "nutrients": {"energy_kcal": 208, "protein_g": 20.0, "carb_g": 0.0, "fat_g": 13.0,
+                      "sat_fat_g": 3.0, "fiber_g": 0.0, "sodium_mg": 59, "sugar_added_g": 0.0,
+                      "iron_mg": 0.8, "calcium_mg": 12, "vit_d_ug": 11.0, "vit_b12_ug": 3.2},
+        "tags": ["fish_allergen", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Huevo de gallina, entero",
+        "name_en": "Egg, whole",
+        "typical_serving_g": 60,
+        "nutrients": {"energy_kcal": 143, "protein_g": 12.6, "carb_g": 0.7, "fat_g": 9.5,
+                      "sat_fat_g": 3.1, "fiber_g": 0.0, "sodium_mg": 142, "sugar_added_g": 0.0,
+                      "iron_mg": 1.8, "calcium_mg": 56, "vit_d_ug": 2.0, "vit_b12_ug": 1.1},
+        "tags": ["eggs_allergen", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Leche de vaca, semidesnatada",
+        "name_en": "Cow's milk, semi-skimmed",
+        "typical_serving_g": 200,
+        "nutrients": {"energy_kcal": 46, "protein_g": 3.3, "carb_g": 4.8, "fat_g": 1.6,
+                      "sat_fat_g": 1.0, "fiber_g": 0.0, "sodium_mg": 44, "sugar_added_g": 0.0,
+                      "iron_mg": 0.0, "calcium_mg": 120, "vit_d_ug": 0.0, "vit_b12_ug": 0.4},
+        "tags": ["milk_allergen", "lactose", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Yogur natural",
+        "name_en": "Plain yogurt",
+        "typical_serving_g": 125,
+        "nutrients": {"energy_kcal": 61, "protein_g": 3.5, "carb_g": 4.7, "fat_g": 3.3,
+                      "sat_fat_g": 2.1, "fiber_g": 0.0, "sodium_mg": 46, "sugar_added_g": 0.0,
+                      "iron_mg": 0.1, "calcium_mg": 121, "vit_b12_ug": 0.4},
+        "tags": ["milk_allergen", "lactose", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Queso curado",
+        "name_en": "Cured cheese",
+        "typical_serving_g": 40,
+        "nutrients": {"energy_kcal": 387, "protein_g": 25.0, "carb_g": 1.4, "fat_g": 32.0,
+                      "sat_fat_g": 20.0, "fiber_g": 0.0, "sodium_mg": 700, "sugar_added_g": 0.0,
+                      "iron_mg": 0.4, "calcium_mg": 850, "vit_d_ug": 0.6, "vit_b12_ug": 1.5},
+        "tags": ["milk_allergen", "lactose", "vegetarian", "no_pork", "halal", "high_sodium"],
+    },
+    {
+        "name_es": "Arroz blanco, crudo",
+        "name_en": "White rice, raw",
+        "typical_serving_g": 70,
+        "nutrients": {"energy_kcal": 354, "protein_g": 7.0, "carb_g": 78.0, "fat_g": 0.6,
+                      "sat_fat_g": 0.2, "fiber_g": 1.3, "sodium_mg": 5, "sugar_added_g": 0.0,
+                      "iron_mg": 0.8, "calcium_mg": 10},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal", "high_gi"],
+    },
+    {
+        "name_es": "Pan blanco de trigo",
+        "name_en": "White wheat bread",
+        "typical_serving_g": 50,
+        "nutrients": {"energy_kcal": 265, "protein_g": 9.0, "carb_g": 49.0, "fat_g": 3.2,
+                      "sat_fat_g": 0.7, "fiber_g": 2.7, "sodium_mg": 490, "sugar_added_g": 3.0,
+                      "iron_mg": 1.5, "calcium_mg": 90},
+        "tags": ["gluten", "vegan", "vegetarian", "no_pork", "halal", "high_gi", "high_sodium"],
+    },
+    {
+        "name_es": "Copos de avena",
+        "name_en": "Oat flakes",
+        "typical_serving_g": 40,
+        "nutrients": {"energy_kcal": 379, "protein_g": 13.0, "carb_g": 58.0, "fat_g": 7.0,
+                      "sat_fat_g": 1.2, "fiber_g": 10.0, "sodium_mg": 4, "sugar_added_g": 0.0,
+                      "iron_mg": 4.3, "calcium_mg": 52},
+        "tags": ["gluten", "vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Pasta de trigo, cruda",
+        "name_en": "Wheat pasta, raw",
+        "typical_serving_g": 75,
+        "nutrients": {"energy_kcal": 359, "protein_g": 12.5, "carb_g": 71.0, "fat_g": 1.5,
+                      "sat_fat_g": 0.3, "fiber_g": 3.0, "sodium_mg": 6, "sugar_added_g": 0.0,
+                      "iron_mg": 1.4, "calcium_mg": 22},
+        "tags": ["gluten", "vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Lentejas, secas",
+        "name_en": "Lentils, dry",
+        "typical_serving_g": 80,
+        "nutrients": {"energy_kcal": 336, "protein_g": 24.0, "carb_g": 52.0, "fat_g": 1.8,
+                      "sat_fat_g": 0.3, "fiber_g": 11.5, "sodium_mg": 24, "sugar_added_g": 0.0,
+                      "iron_mg": 7.5, "calcium_mg": 56},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal", "fodmap_high"],
+    },
+    {
+        "name_es": "Garbanzos, secos",
+        "name_en": "Chickpeas, dry",
+        "typical_serving_g": 80,
+        "nutrients": {"energy_kcal": 364, "protein_g": 19.0, "carb_g": 61.0, "fat_g": 6.0,
+                      "sat_fat_g": 0.6, "fiber_g": 17.0, "sodium_mg": 24, "sugar_added_g": 0.0,
+                      "iron_mg": 6.2, "calcium_mg": 105},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal", "fodmap_high"],
+    },
+    {
+        "name_es": "Aceite de oliva virgen extra",
+        "name_en": "Extra virgin olive oil",
+        "typical_serving_g": 10,
+        "nutrients": {"energy_kcal": 884, "protein_g": 0.0, "carb_g": 0.0, "fat_g": 100.0,
+                      "sat_fat_g": 14.0, "fiber_g": 0.0, "sodium_mg": 0, "sugar_added_g": 0.0,
+                      "iron_mg": 0.0, "calcium_mg": 1},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Almendras, crudas",
+        "name_en": "Almonds, raw",
+        "typical_serving_g": 30,
+        "nutrients": {"energy_kcal": 579, "protein_g": 21.0, "carb_g": 22.0, "fat_g": 50.0,
+                      "sat_fat_g": 3.8, "fiber_g": 12.5, "sodium_mg": 1, "sugar_added_g": 0.0,
+                      "iron_mg": 3.7, "calcium_mg": 269},
+        "tags": ["tree_nuts", "vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Tomate, crudo",
+        "name_en": "Tomato, raw",
+        "typical_serving_g": 120,
+        "nutrients": {"energy_kcal": 18, "protein_g": 0.9, "carb_g": 3.9, "fat_g": 0.2,
+                      "sat_fat_g": 0.0, "fiber_g": 1.2, "sodium_mg": 5, "sugar_added_g": 0.0,
+                      "iron_mg": 0.3, "calcium_mg": 10},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Brócoli, crudo",
+        "name_en": "Broccoli, raw",
+        "typical_serving_g": 150,
+        "nutrients": {"energy_kcal": 34, "protein_g": 2.8, "carb_g": 7.0, "fat_g": 0.4,
+                      "sat_fat_g": 0.1, "fiber_g": 2.6, "sodium_mg": 33, "sugar_added_g": 0.0,
+                      "iron_mg": 0.7, "calcium_mg": 47},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Espinacas, crudas",
+        "name_en": "Spinach, raw",
+        "typical_serving_g": 100,
+        "nutrients": {"energy_kcal": 23, "protein_g": 2.9, "carb_g": 3.6, "fat_g": 0.4,
+                      "sat_fat_g": 0.1, "fiber_g": 2.2, "sodium_mg": 79, "sugar_added_g": 0.0,
+                      "iron_mg": 2.7, "calcium_mg": 99},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal", "high_potassium"],
+    },
+    {
+        "name_es": "Patata, cruda",
+        "name_en": "Potato, raw",
+        "typical_serving_g": 180,
+        "nutrients": {"energy_kcal": 77, "protein_g": 2.0, "carb_g": 17.0, "fat_g": 0.1,
+                      "sat_fat_g": 0.0, "fiber_g": 2.2, "sodium_mg": 6, "sugar_added_g": 0.0,
+                      "iron_mg": 0.8, "calcium_mg": 12},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal", "high_gi", "high_potassium"],
+    },
+    {
+        "name_es": "Manzana, cruda",
+        "name_en": "Apple, raw",
+        "typical_serving_g": 150,
+        "nutrients": {"energy_kcal": 52, "protein_g": 0.3, "carb_g": 14.0, "fat_g": 0.2,
+                      "sat_fat_g": 0.0, "fiber_g": 2.4, "sodium_mg": 1, "sugar_added_g": 0.0,
+                      "iron_mg": 0.1, "calcium_mg": 6},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal"],
+    },
+    {
+        "name_es": "Plátano, crudo",
+        "name_en": "Banana, raw",
+        "typical_serving_g": 120,
+        "nutrients": {"energy_kcal": 89, "protein_g": 1.1, "carb_g": 23.0, "fat_g": 0.3,
+                      "sat_fat_g": 0.1, "fiber_g": 2.6, "sodium_mg": 1, "sugar_added_g": 0.0,
+                      "iron_mg": 0.3, "calcium_mg": 5},
+        "tags": ["vegan", "vegetarian", "no_pork", "halal", "high_potassium"],
+    },
+    {
+        "name_es": "Atún en conserva al natural",
+        "name_en": "Canned tuna in water",
+        "typical_serving_g": 80,
+        "nutrients": {"energy_kcal": 116, "protein_g": 26.0, "carb_g": 0.0, "fat_g": 1.0,
+                      "sat_fat_g": 0.3, "fiber_g": 0.0, "sodium_mg": 320, "sugar_added_g": 0.0,
+                      "iron_mg": 1.3, "calcium_mg": 11, "vit_d_ug": 1.7, "vit_b12_ug": 2.2},
+        "tags": ["fish_allergen", "no_pork", "halal", "high_sodium"],
+    },
+    {
+        "name_es": "Tofu firme",
+        "name_en": "Firm tofu",
+        "typical_serving_g": 100,
+        "nutrients": {"energy_kcal": 144, "protein_g": 15.0, "carb_g": 2.8, "fat_g": 8.7,
+                      "sat_fat_g": 1.3, "fiber_g": 2.0, "sodium_mg": 14, "sugar_added_g": 0.0,
+                      "iron_mg": 2.7, "calcium_mg": 350},
+        "tags": ["soy", "vegan", "vegetarian", "no_pork", "halal"],
+    },
+]

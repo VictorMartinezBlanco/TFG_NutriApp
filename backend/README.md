@@ -46,9 +46,13 @@ Copiar `.env.example` a `.env.local` y rellenar. `.env.local` no se sube al repo
 | `SUPABASE_SERVICE_ROLE_KEY` | clave de servidor, se salta la RLS |
 | `DATABASE_URL` | cadena de conexión para asyncpg |
 
-Para la conexión hay dos puertos: el directo (5432) sirve para desarrollo y
-migraciones; para el backend en marcha conviene el pooler (6543), que se copia
-desde Supabase → Connect → Transaction pooler.
+Para la conexión hay dos puertos: el directo (5432) y el pooler (6543). El
+backend de Python usa el **pooler**, en `DATABASE_URL_POOLER`. El host directo
+`db.<ref>.supabase.co` solo resuelve por IPv6 en proyectos free nuevos, así que
+desde una red sin IPv6 falla con `getaddrinfo failed`; el pooler va por IPv4 y
+lo evita. Se copia desde Supabase → Connect → Transaction pooler. El usuario
+tiene la forma `postgres.<project_ref>` y el host es
+`aws-1-eu-central-1.pooler.supabase.com`.
 
 ## Notas del modelo
 
@@ -62,7 +66,36 @@ desde Supabase → Connect → Transaction pooler.
 - La tabla de restricciones se llama `diet_constraint` (no `constraint`, que es
   palabra reservada).
 
+## Conexión desde Python
+
+La capa de aplicación vive en `app/` y los scripts en `scripts/`:
+
+```
+app/
+  config.py         # carga .env.local y elige la mejor cadena (pooler primero)
+  db.py             # pool asyncpg (singleton perezoso + context manager)
+  repositories.py   # lectura/escritura: catálogos, alta de food, lectura cruzada
+  seed_foods.py     # subset de 22 alimentos con nutrientes T1 y tags
+scripts/
+  check_connection.py
+  load_foods.py
+```
+
+Con el venv activo y `DATABASE_URL_POOLER` relleno:
+
+```bash
+python -m scripts.check_connection   # conecta y cuenta catálogos (espera 12/20/6/7)
+python -m scripts.load_foods         # carga el subset de alimentos (idempotente)
+```
+
+En modo transaction el pool va con `statement_cache_size=0`: los prepared
+statements no sobreviven al reparto de conexiones del pooler. La conexión usa el
+rol `postgres` (superusuario), que se salta la RLS, igual que la service key.
+
+El script de carga es re-ejecutable: reutiliza el alimento por nombre y fuente,
+hace upsert de los nutrientes y no duplica tags. Toda la carga va en una sola
+transacción.
+
 ## Siguiente
 
-- Conexión desde Python (asyncpg) y carga de un primer conjunto de alimentos.
 - Conexión desde Next.js con la SDK de Supabase y comprobar la RLS con un login real.
