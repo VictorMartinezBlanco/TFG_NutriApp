@@ -134,6 +134,10 @@ celerybeat.pid
 .venv
 __pycache__/
 *.pyc
+
+# Documentos de diseño internos (no van al repo público)
+auditoria-bd-ia.md
+feedback-docs/bd-modelo-v0.md
 env/
 venv/
 ENV/
