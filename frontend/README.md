@@ -52,6 +52,10 @@ Sin sesión, la raíz redirige a `/login`. Tras entrar con un nutri real, la
 pantalla principal muestra 12 nutrientes, 20 tags, 6 tipos de comida, 7
 unidades y los alimentos globales cargados.
 
+Las credenciales del nutri de prueba están en `.test-user.local.md` (no se
+sube al repo, como las claves). Si no existe, crear un usuario desde Supabase
+Auth: el trigger se encarga de darle de alta en `nutritionist`.
+
 ## Notas
 
 - La publishable key tiene el formato nuevo `sb_publishable_...`. Funciona con

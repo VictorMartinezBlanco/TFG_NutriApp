@@ -28,6 +28,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# credenciales de prueba locales, no se suben
+.test-user.local.md
+
 # vercel
 .vercel
 
