@@ -1,0 +1,10 @@
+import { PagePlaceholder } from "@/components/layout/page-placeholder";
+
+export default function SettingsPage() {
+  return (
+    <PagePlaceholder
+      title="Settings"
+      note="Profile, availability and notification settings come later."
+    />
+  );
+}

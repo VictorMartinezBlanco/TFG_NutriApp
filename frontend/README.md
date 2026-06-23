@@ -5,28 +5,58 @@ con la clave pública y la RLS. El backend de Python sigue en `../backend`.
 
 ## Qué hace por ahora
 
-Una pantalla de login y una pantalla principal que, ya con sesión, lista los
-catálogos (nutrientes, tags, tipos de comida, unidades) y los alimentos del
-catálogo global. Todo se lee con la publishable key, así que la RLS decide qué
-filas devuelve según el nutricionista logueado.
+Login real de un nutricionista y, ya con sesión, el panel del nutri: un layout
+con sidebar colapsable y header, y un dashboard con datos reales de la BD
+(clientes, planes, borradores sin firmar, alimentos del catálogo). El resto de
+secciones del menú (clientes, planes, calendario, mensajes, ajustes) están como
+placeholders navegables a la espera de bloques posteriores.
+
+Todo se lee con la publishable key, así que la RLS decide qué filas devuelve
+según el nutricionista logueado.
 
 ## Estructura
 
 ```
 src/
-  lib/supabase/
-    client.ts        # cliente para componentes del navegador ("use client")
-    server.ts        # cliente para Server Components / Actions (lee cookies)
-  middleware.ts      # refresca la sesion en cada request
+  lib/
+    supabase/
+      client.ts        # cliente para componentes del navegador ("use client")
+      server.ts        # cliente para Server Components / Actions (lee cookies)
+    utils.ts           # helper cn (clsx + tailwind-merge)
+  components/
+    ui/                # componentes base (button, card, input, label, badge,
+                       #   avatar, select, dialog, toaster)
+    layout/            # logo, sidebar colapsable, header, nav-items, placeholder
+  middleware.ts        # refresca la sesion en cada request
   app/
-    actions.ts       # signIn / signOut (server actions)
-    login/page.tsx   # formulario de login
-    page.tsx         # raiz: si hay sesion, lista catalogos + alimentos
+    actions.ts         # signIn / signOut (server actions)
+    layout.tsx         # root: fuente Inter + Toaster
+    page.tsx           # raiz: redirige a /dashboard
+    (auth)/login/      # formulario de login
+    (app)/             # shell con sidebar + header, guard de sesion
+      layout.tsx
+      dashboard/       # pantalla viva con datos reales
+      clients/         # placeholder
+      plans/           # placeholder
+      calendar/        # placeholder
+      messages/        # placeholder
+      settings/        # placeholder
+      ui-kit/          # muestra de componentes + lectura de catalogos (RLS)
 ```
 
-El patrón de los dos clientes y el middleware es el que recomienda
-`@supabase/ssr` para App Router: la sesión vive en cookies, el middleware la
-refresca, y tanto el navegador como el servidor leen como el nutri logueado.
+El route group `(app)` aplica el shell (sidebar + header) y un guard que manda
+a `/login` si no hay sesión. `(auth)` agrupa el login sin shell. Los grupos no
+añaden segmento a la URL, así que las rutas quedan limpias (`/login`,
+`/dashboard`, ...).
+
+## Componentes y diseño
+
+Componentes base en `components/ui/` construidos sobre Radix + Tailwind +
+class-variance-authority, con la paleta del prototipo. Los tokens (colores,
+radios, sombra de card, medidas de sidebar/header, fuente Inter) viven en
+`tailwind.config.ts` y `src/app/globals.css` como variables. El sidebar es
+colapsable estilo Notion: expandido muestra iconos y etiquetas, compacto solo
+iconos; el estado se guarda en localStorage.
 
 ## Variables de entorno
 
@@ -48,19 +78,20 @@ cp .env.example .env.local   # rellenar con los datos del proyecto
 npm run dev                  # http://localhost:3000
 ```
 
-Sin sesión, la raíz redirige a `/login`. Tras entrar con un nutri real, la
-pantalla principal muestra 12 nutrientes, 20 tags, 6 tipos de comida, 7
-unidades y los alimentos globales cargados.
+Sin sesión, cualquier ruta del panel redirige a `/login`. Tras entrar con un
+nutri real, se aterriza en `/dashboard`.
 
 Las credenciales del nutri de prueba están en `.test-user.local.md` (no se
-sube al repo, como las claves). Si no existe, crear un usuario desde Supabase
-Auth: el trigger se encarga de darle de alta en `nutritionist`.
+sube al repo). El dashboard muestra datos solo si el nutri tiene clientes y
+planes; para tener algo que ver hay un seed de demostración en
+`../backend/migrations/sql/0004_seed_demo.sql` (4 clientes y 3 planes para el
+nutri de prueba, reaplicable).
 
 ## Notas
 
 - La publishable key tiene el formato nuevo `sb_publishable_...`. Funciona con
   `@supabase/supabase-js` y `@supabase/ssr` igual que la antigua anon key.
 - La RLS solo deja leer a usuarios autenticados (`TO authenticated`). Sin
-  sesión, las queries devuelven cero filas, por eso la raíz exige login.
-- Los catálogos son lectura para cualquier nutri logueado; los alimentos del
-  catálogo global son los que tienen `nutritionist_id` a null.
+  sesión, las queries devuelven cero filas.
+- El calendario y la mensajería no tienen tabla en el modelo v0, así que sus
+  pantallas no muestran datos todavía: quedan como placeholders.
