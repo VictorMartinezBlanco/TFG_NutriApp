@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search, Sparkles, Upload } from "lucide-react";
+import { Search, Sparkles, Upload, Apple, ChevronRight } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import { monthYear } from "@/lib/format";
 import { planStatus, planStatusLabel } from "@/lib/plans";
@@ -78,6 +78,24 @@ export default async function PlansPage() {
           </div>
         </Card>
       </div>
+
+      <Link
+        href="/foods"
+        className="flex items-center justify-between gap-3 rounded-card border border-border bg-card p-4 shadow-card transition-colors hover:bg-muted/40"
+      >
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-control bg-brand-soft text-brand">
+            <Apple className="size-5" />
+          </span>
+          <div>
+            <p className="text-sm font-semibold">Browse food catalog</p>
+            <p className="text-xs text-muted-foreground">
+              Explore the shared food database and add your own custom foods.
+            </p>
+          </div>
+        </div>
+        <ChevronRight className="size-5 text-muted-foreground" />
+      </Link>
 
       <div className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Your plans</h2>

@@ -11,12 +11,18 @@ con sidebar colapsable y header, un dashboard con datos reales de la BD
 de clientes (lista + ficha) leyendo los datos reales del cliente y sus
 restricciones bajo RLS, en solo lectura, y la sección de planes (lista + ficha):
 la lista muestra los planes del nutri con su cliente, estado y fechas, y la ficha
-despliega las comidas agrupadas por día con sus items, también solo lectura. El
-resto de secciones del menú (calendario, mensajes, ajustes) siguen como
+despliega las comidas agrupadas por día con sus items, también solo lectura, y
+la sección de alimentos (catálogo + ficha + alta de alimento custom): la lista
+busca por nombre y filtra por alimentos propios, la ficha muestra el perfil
+nutricional (macros y micros desde `food_nutrient`) y las tags, y el alta crea
+un alimento custom con sus nutrientes y tags mediante un Server Action bajo RLS.
+El resto de secciones del menú (calendario, mensajes, ajustes) siguen como
 placeholders navegables a la espera de bloques posteriores.
 
 Todo se lee con la publishable key, así que la RLS decide qué filas devuelve
-según el nutricionista logueado.
+según el nutricionista logueado. El alta de alimento escribe igualmente con la
+publishable key: la policy de INSERT obliga a que `nutritionist_id` sea el del
+usuario logueado.
 
 ## Estructura
 
@@ -42,6 +48,7 @@ src/
       dashboard/       # pantalla viva con datos reales
       clients/         # lista + ficha [id] (solo lectura, datos reales)
       plans/           # lista + ficha [id] (solo lectura, datos reales)
+      foods/           # catalogo + ficha [id] + alta custom (new, server action)
       calendar/        # placeholder
       messages/        # placeholder
       settings/        # placeholder
