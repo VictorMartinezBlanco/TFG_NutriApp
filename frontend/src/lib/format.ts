@@ -10,3 +10,40 @@ export function initials(name: string) {
     .map((w) => w[0]?.toUpperCase())
     .join("");
 }
+
+export function ageFromBirthDate(birthDate: string | null): number | null {
+  if (!birthDate) return null;
+  const dob = new Date(birthDate);
+  if (Number.isNaN(dob.getTime())) return null;
+  const now = new Date();
+  let age = now.getFullYear() - dob.getFullYear();
+  const beforeBirthday =
+    now.getMonth() < dob.getMonth() ||
+    (now.getMonth() === dob.getMonth() && now.getDate() < dob.getDate());
+  if (beforeBirthday) age -= 1;
+  return age;
+}
+
+const SEX_LABEL: Record<string, string> = { M: "Male", F: "Female", X: "Other" };
+
+export function sexLabel(sex: string | null): string | null {
+  return sex ? SEX_LABEL[sex] ?? sex : null;
+}
+
+const ACTIVITY_LABEL: Record<string, string> = {
+  sedentary: "Sedentary",
+  light: "Light",
+  moderate: "Moderate",
+  active: "Active",
+  very_active: "Very active",
+};
+
+export function activityLabel(level: string | null): string | null {
+  return level ? ACTIVITY_LABEL[level] ?? level : null;
+}
+
+export function monthYear(iso: string): string {
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  return d.toLocaleDateString("en-US", { month: "short", year: "numeric" });
+}
