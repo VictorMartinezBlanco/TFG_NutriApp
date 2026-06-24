@@ -9,9 +9,11 @@ Login real de un nutricionista y, ya con sesión, el panel del nutri: un layout
 con sidebar colapsable y header, un dashboard con datos reales de la BD
 (clientes, planes, borradores sin firmar, alimentos del catálogo) y la sección
 de clientes (lista + ficha) leyendo los datos reales del cliente y sus
-restricciones bajo RLS, en solo lectura. El resto de secciones del menú (planes,
-calendario, mensajes, ajustes) siguen como placeholders navegables a la espera
-de bloques posteriores.
+restricciones bajo RLS, en solo lectura, y la sección de planes (lista + ficha):
+la lista muestra los planes del nutri con su cliente, estado y fechas, y la ficha
+despliega las comidas agrupadas por día con sus items, también solo lectura. El
+resto de secciones del menú (calendario, mensajes, ajustes) siguen como
+placeholders navegables a la espera de bloques posteriores.
 
 Todo se lee con la publishable key, así que la RLS decide qué filas devuelve
 según el nutricionista logueado.
@@ -39,7 +41,7 @@ src/
       layout.tsx
       dashboard/       # pantalla viva con datos reales
       clients/         # lista + ficha [id] (solo lectura, datos reales)
-      plans/           # placeholder
+      plans/           # lista + ficha [id] (solo lectura, datos reales)
       calendar/        # placeholder
       messages/        # placeholder
       settings/        # placeholder

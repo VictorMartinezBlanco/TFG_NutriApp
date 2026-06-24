@@ -1,0 +1,114 @@
+// Helpers para la lista y la ficha de planes. Solo lectura.
+// El estado del plan se deriva de approved_at: no hay columna status en v0.
+
+export type PlanStatus = "signed" | "draft";
+
+export function planStatus(approvedAt: string | null): PlanStatus {
+  return approvedAt ? "signed" : "draft";
+}
+
+export function planStatusLabel(status: PlanStatus): string {
+  return status === "signed" ? "Signed" : "Draft";
+}
+
+const MEAL_TYPE_LABEL: Record<string, string> = {
+  breakfast: "Breakfast",
+  mid_morning: "Mid-morning",
+  lunch: "Lunch",
+  snack: "Afternoon snack",
+  dinner: "Dinner",
+  late_snack: "Late snack",
+};
+
+export function mealTypeLabel(code: string, fallback: string): string {
+  return MEAL_TYPE_LABEL[code] ?? fallback;
+}
+
+// Fila plana tal como llega de plan_meal_item con sus joins embebidos.
+export type MealItemRow = {
+  id: number;
+  day_num: number;
+  item_order: number;
+  quantity_g: number | null;
+  description_free: string | null;
+  meal_type: { code: string; name_en: string; default_order: number } | null;
+  food: { name_en: string } | null;
+};
+
+export type PlanMeal = {
+  code: string;
+  label: string;
+  order: number;
+  items: MealItemRow[];
+};
+
+export type PlanDay = {
+  dayNum: number;
+  meals: PlanMeal[];
+};
+
+// Agrupa los items por dia y, dentro de cada dia, por comida. Ordena las comidas
+// por el default_order del meal_type y los items por item_order.
+export function groupItemsByDay(items: MealItemRow[]): PlanDay[] {
+  const byDay = new Map<number, Map<string, PlanMeal>>();
+
+  for (const item of items) {
+    const code = item.meal_type?.code ?? "unknown";
+    const meals = byDay.get(item.day_num) ?? new Map<string, PlanMeal>();
+    const meal =
+      meals.get(code) ??
+      ({
+        code,
+        label: mealTypeLabel(code, item.meal_type?.name_en ?? code),
+        order: item.meal_type?.default_order ?? 99,
+        items: [],
+      } satisfies PlanMeal);
+    meal.items.push(item);
+    meals.set(code, meal);
+    byDay.set(item.day_num, meals);
+  }
+
+  return Array.from(byDay.keys())
+    .sort((a, b) => a - b)
+    .map((dayNum) => {
+      const meals = Array.from(byDay.get(dayNum)!.values()).sort(
+        (a, b) => a.order - b.order
+      );
+      for (const meal of meals) {
+        meal.items.sort((a, b) => a.item_order - b.item_order);
+      }
+      return { dayNum, meals };
+    });
+}
+
+// Texto de un item: el alimento con sus gramos, o el texto libre del plan flexible.
+export function mealItemText(item: MealItemRow): string {
+  if (item.food) {
+    return item.quantity_g != null
+      ? `${item.food.name_en}, ${item.quantity_g} g`
+      : item.food.name_en;
+  }
+  return item.description_free ?? "Item";
+}
+
+// Fecha del dia n contando desde start_date (dia 1 = start_date).
+export function dayLabel(startDate: string, dayNum: number): string {
+  const d = new Date(startDate);
+  if (Number.isNaN(d.getTime())) return `Day ${dayNum}`;
+  d.setDate(d.getDate() + dayNum - 1);
+  return d.toLocaleDateString("en-US", {
+    weekday: "short",
+    month: "short",
+    day: "numeric",
+  });
+}
+
+export function planDateRange(startDate: string, durationDays: number): string {
+  const start = new Date(startDate);
+  if (Number.isNaN(start.getTime())) return "";
+  const end = new Date(start);
+  end.setDate(end.getDate() + durationDays - 1);
+  const fmt = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
+  return `${fmt(start)} - ${fmt(end)}`;
+}
