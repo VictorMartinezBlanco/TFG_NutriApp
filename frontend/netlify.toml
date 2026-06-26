@@ -1,0 +1,15 @@
+# Configuracion de Netlify para el frontend Next.js.
+# El base directory (Repo/frontend) se fija en los ajustes del sitio en Netlify;
+# por eso aqui las rutas son relativas a esa carpeta y no se repite el base.
+
+[build]
+command = "npm run build"
+publish = ".next"
+
+[build.environment]
+NODE_VERSION = "20"
+
+# El adaptador de Next lo mantiene Netlify; sin pinear version se actualiza solo
+# en cada build. Gestiona el publish real, middleware (edge) y server actions.
+[[plugins]]
+package = "@netlify/plugin-nextjs"

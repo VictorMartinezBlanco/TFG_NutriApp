@@ -5,24 +5,32 @@ con la clave pública y la RLS. El backend de Python sigue en `../backend`.
 
 ## Qué hace por ahora
 
-Login real de un nutricionista y, ya con sesión, el panel del nutri: un layout
-con sidebar colapsable y header, un dashboard con datos reales de la BD
-(clientes, planes, borradores sin firmar, alimentos del catálogo) y la sección
-de clientes (lista + ficha) leyendo los datos reales del cliente y sus
-restricciones bajo RLS, en solo lectura, y la sección de planes (lista + ficha):
-la lista muestra los planes del nutri con su cliente, estado y fechas, y la ficha
-despliega las comidas agrupadas por día con sus items, también solo lectura, y
-la sección de alimentos (catálogo + ficha + alta de alimento custom): la lista
-busca por nombre y filtra por alimentos propios, la ficha muestra el perfil
-nutricional (macros y micros desde `food_nutrient`) y las tags, y el alta crea
-un alimento custom con sus nutrientes y tags mediante un Server Action bajo RLS.
-El resto de secciones del menú (calendario, mensajes, ajustes) siguen como
-placeholders navegables a la espera de bloques posteriores.
+Login real de un nutricionista y, ya con sesión, el panel del nutri completo:
+
+- Layout con sidebar colapsable y header.
+- Dashboard con datos reales de la BD (clientes, planes, borradores sin firmar,
+  alimentos del catálogo).
+- Clientes (lista + ficha): datos del cliente y sus restricciones bajo RLS, en
+  solo lectura.
+- Planes (lista + ficha): la lista muestra los planes del nutri con su cliente,
+  estado y fechas; la ficha despliega las comidas agrupadas por día con sus
+  items, también solo lectura.
+- Alimentos (catálogo + ficha + alta custom): la lista busca por nombre y filtra
+  por alimentos propios, la ficha muestra el perfil nutricional (macros y micros
+  desde `food_nutrient`) y las tags, y el alta crea un alimento custom con sus
+  nutrientes y tags mediante un Server Action bajo RLS.
+- Calendario: citas en lista (próximas y pasadas) y alta de cita desde un
+  diálogo, con aviso si la hora cae fuera de la disponibilidad declarada.
+- Mensajería: dos columnas (conversaciones + hilo), envío de mensajes y refresco
+  por sondeo cada 15 s contra un route handler.
+- Ajustes: cuatro pestañas (perfil, disponibilidad, notificaciones, estilo
+  clínico); perfil y disponibilidad son editables.
 
 Todo se lee con la publishable key, así que la RLS decide qué filas devuelve
-según el nutricionista logueado. El alta de alimento escribe igualmente con la
-publishable key: la policy de INSERT obliga a que `nutritionist_id` sea el del
-usuario logueado.
+según el nutricionista logueado. Las escrituras (alta de alimento, citas,
+mensajes, perfil, disponibilidad) van también con la publishable key: las
+policies de INSERT/UPDATE obligan a que `nutritionist_id` sea el del usuario
+logueado.
 
 ## Estructura
 
@@ -49,10 +57,12 @@ src/
       clients/         # lista + ficha [id] (solo lectura, datos reales)
       plans/           # lista + ficha [id] (solo lectura, datos reales)
       foods/           # catalogo + ficha [id] + alta custom (new, server action)
-      calendar/        # placeholder
-      messages/        # placeholder
-      settings/        # placeholder
+      calendar/        # lista de citas + alta por dialogo (server action)
+      messages/        # conversaciones + hilo con sondeo cada 15s
+      settings/        # 4 tabs (perfil y disponibilidad editables)
       ui-kit/          # muestra de componentes + lectura de catalogos (RLS)
+    api/
+      messages/        # route handler GET para el sondeo de mensajes
 ```
 
 El route group `(app)` aplica el shell (sidebar + header) y un guard que manda
@@ -104,5 +114,43 @@ nutri de prueba, reaplicable).
   `@supabase/supabase-js` y `@supabase/ssr` igual que la antigua anon key.
 - La RLS solo deja leer a usuarios autenticados (`TO authenticated`). Sin
   sesión, las queries devuelven cero filas.
-- El calendario y la mensajería no tienen tabla en el modelo v0, así que sus
-  pantallas no muestran datos todavía: quedan como placeholders.
+
+## Production deployment
+
+La app pública vive en https://nutriapp-tfg.netlify.app (panel del nutri, sin la
+parte de IA, que correrá aparte en el backend de Python). Es un prototipo
+académico: las credenciales del nutri demo se entregan por canal seguro a
+tutores y revisores, no van en el repo.
+
+### Netlify
+
+El sitio se despliega desde este repo (rama `main` a producción, los pull
+requests generan deploy previews). La configuración vive en `netlify.toml`:
+
+- Base directory `Repo/frontend` (el frontend está en un subdirectorio).
+- Build command `npm run build`, Node 20.
+- El adaptador `@netlify/plugin-nextjs` resuelve el publish, el middleware (como
+  edge function) y los Server Actions.
+
+Variables de entorno en Netlify (las mismas dos del `.env.example`, ambas
+públicas):
+
+| Variable | Valor |
+|---|---|
+| `NEXT_PUBLIC_SUPABASE_URL` | URL del proyecto Supabase |
+| `NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY` | clave pública del proyecto |
+
+La secret key NO se configura en Netlify: solo la usa el backend de Python. Se
+sacan de Supabase en Project Settings, API.
+
+### Supabase Auth
+
+Para que el login funcione en el dominio público hay que registrarlo en el
+dashboard de Supabase, en Authentication, URL Configuration:
+
+- Site URL: `https://nutriapp-tfg.netlify.app`.
+- Redirect URLs: `https://nutriapp-tfg.netlify.app/**` (con `http://localhost:3000`
+  añadido para desarrollo local).
+
+El login es email y contraseña, así que con eso basta; no hay magic link ni
+OAuth que configurar.

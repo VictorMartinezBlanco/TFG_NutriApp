@@ -2,31 +2,37 @@
 
 Trabajo de Fin de Grado — Doble Grado en Ingeniería Informática y ADE, Universidad Complutense de Madrid.
 
-NutriApp es una plataforma web para centralizar el flujo de trabajo de nutricionistas profesionales. El proyecto nace de un problema real: la información de los clientes repartida entre Google Forms, Google Calendar, WhatsApp, cuadernos físicos y la plataforma de la clínica. NutriApp reúne todas esas herramientas en un único punto de acceso.
+NutriApp es una plataforma web para nutricionistas profesionales. El núcleo del proyecto es un copiloto de IA que aprende el estilo clínico de cada nutricionista a partir de sus planes históricos y genera borradores de planes nutricionales semanales personalizados para cada cliente; el profesional siempre revisa antes de entregar. Alrededor del copiloto se mantiene un conjunto reducido de funciones de gestión (clientes, planes, alimentos, calendario, mensajería y ajustes).
+
+La generación de planes combina recuperación del estilo del nutricionista, un solver de programación con restricciones (OR-Tools CP-SAT) y un modelo de lenguaje que traduce los requisitos en lenguaje natural a restricciones. Esa parte corre en el backend de Python y aún está en desarrollo.
+
+## Estado
+
+El panel del nutricionista está implementado y desplegado: gestión de clientes, planes, alimentos, calendario, mensajería y ajustes, todo sobre Supabase con aislamiento por nutricionista mediante RLS. El backend de IA y el panel del cliente son trabajo en curso.
+
+La aplicación pública (panel del nutricionista, sin la parte de IA) está en:
+
+**https://nutriapp-tfg.netlify.app**
+
+Es un prototipo académico. Las credenciales del nutricionista de demostración se entregan por canal seguro a tutores y revisores; no están en el repositorio.
 
 ## Estructura del repositorio
 
 ```
+frontend/         Aplicación Next.js 14 (panel del nutricionista). Ver frontend/README.md
+backend/          Capa de datos y backend de IA en Python. Ver backend/README.md
 MEMORIA/          Memoria del TFG (LaTeX, plantilla TFGTeXiS - UCM)
-MOCK-UP/          Mockups de la aplicación (pantallas del nutricionista y del cliente)
-feedback-docs/    Guías de prueba de usabilidad enviadas a profesionales reales
+MOCK-UP/          Mockups de la aplicación
 ```
 
-## Funcionalidades principales
+## Cómo correr en local
 
-- **Panel del nutricionista**: gestión de clientes con ficha detallada y notas privadas, calendario multi-clínica, mensajería con videollamada y voz integradas, formularios personalizables, planes nutricionales con base de datos de alimentos, marketplace de recursos, automatizaciones e informes
-- **Panel del cliente**: dashboard con check-in y plan del día, plan nutricional con sustitución de comidas, lista de la compra inteligente, búsqueda de alimentos con escáner y reconocimiento por imagen, seguimiento de progreso, citas, mensajería con su nutricionista y comunidad entre pares, formularios y biblioteca de recursos
+Cada parte tiene su propio README con los pasos:
 
-### Innovaciones diferenciadoras
+- Frontend: ver [frontend/README.md](frontend/README.md).
+- Backend: ver [backend/README.md](backend/README.md).
 
-- **Sistema de alertas inteligentes**: reglas configurables por formulario que generan alertas automáticas según las respuestas del cliente
-- **Check-in diario gamificado**: registro de hábitos con rachas de adherencia para fomentar el cumplimiento del plan
-- **Lista de la compra con sustituciones**: generada desde el plan nutricional, con alternativas por equivalencia nutricional
-- **Base de datos de alimentos con reconocimiento por IA**: buscador, escáner de código de barras (Open Food Facts) y reconocimiento de alimentos por fotografía
-- **Marketplace de recursos educativos**: el nutricionista publica sus materiales formativos y el cliente accede a una sección destacada con los recursos de su propio profesional
-- **Motor de automatizaciones**: reglas con disparadores y acciones que ejecutan procedimientos recurrentes de la consulta sin intervención manual
-- **Videollamadas y voz integradas en el chat**: comunicación profesional sin depender de herramientas externas
-- **Comunidad entre clientes del mismo nutricionista**: chat de apoyo entre pares con aislamiento garantizado entre consultas distintas
+La base de datos es un proyecto de Supabase compartido por ambas partes. El frontend la lee con la clave pública bajo RLS; el backend usa la clave de servidor para el pipeline de IA.
 
 ## Autor
 

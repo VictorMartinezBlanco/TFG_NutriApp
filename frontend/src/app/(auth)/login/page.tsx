@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
+import { AcademicDisclaimer } from "@/components/layout/academic-disclaimer";
 
 export default async function LoginPage({
   searchParams,
@@ -51,6 +52,8 @@ export default async function LoginPage({
         {searchParams.error ? (
           <p className="text-sm text-danger">{searchParams.error}</p>
         ) : null}
+
+        <AcademicDisclaimer className="border-t border-border pt-4 text-center text-xs text-muted-foreground" />
       </Card>
     </main>
   );
