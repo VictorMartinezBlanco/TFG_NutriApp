@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Sparkles, Upload } from "lucide-react";
+import { ChevronLeft, Sparkles, Upload, MessageSquare, CalendarDays } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import {
   initials,
@@ -14,6 +14,14 @@ import {
   constraintGroup,
   type ConstraintRow,
 } from "@/lib/constraints";
+import { aggregatePlanMacros, type MealItemRow } from "@/lib/plans";
+import {
+  formatAppointmentWhen,
+  splitUpcomingPast,
+  type AppointmentRow,
+} from "@/lib/appointments";
+import { MacroPanel } from "@/components/plan-macros";
+import { NewAppointmentDialog } from "../../calendar/new-appointment-dialog";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -35,6 +43,7 @@ type Plan = {
   start_date: string;
   duration_days: number;
   approved_at: string | null;
+  plan_meal_item: MealItemRow[];
 };
 
 export default async function ClientDetailPage({
@@ -59,31 +68,53 @@ export default async function ClientDetailPage({
 
   if (!client) notFound();
 
-  const [{ data: rawConstraints }, { data: plan }] = await Promise.all([
-    supabase
-      .from("diet_constraint")
-      .select(
-        `id, type, operator, value, value2, priority, weight,
-         tag:target_tag_id (name_en, kind),
-         food:target_food_id (name_en),
-         nutrient:target_nutrient_id (name_en, unit_default)`
-      )
-      .eq("scope_type", "client")
-      .eq("scope_client_id", clientId)
-      .is("deleted_at", null)
-      .order("priority", { ascending: true })
-      .order("weight", { ascending: false }),
-    supabase
-      .from("plan")
-      .select("id, start_date, duration_days, approved_at")
-      .eq("client_id", clientId)
-      .is("deleted_at", null)
-      .order("start_date", { ascending: false })
-      .limit(1)
-      .maybeSingle<Plan>(),
-  ]);
+  const [{ data: rawConstraints }, { data: plan }, { data: appointmentRows }] =
+    await Promise.all([
+      supabase
+        .from("diet_constraint")
+        .select(
+          `id, type, operator, value, value2, priority, weight,
+           tag:target_tag_id (name_en, kind),
+           food:target_food_id (name_en),
+           nutrient:target_nutrient_id (name_en, unit_default)`
+        )
+        .eq("scope_type", "client")
+        .eq("scope_client_id", clientId)
+        .is("deleted_at", null)
+        .order("priority", { ascending: true })
+        .order("weight", { ascending: false }),
+      supabase
+        .from("plan")
+        .select(
+          `id, start_date, duration_days, approved_at,
+           plan_meal_item (day_num, quantity_g, description_free,
+             food:food_id (name_en, food_nutrient (value_per_100g, nutrient:nutrient_id (code))))`
+        )
+        .eq("client_id", clientId)
+        .is("deleted_at", null)
+        .order("start_date", { ascending: false })
+        .limit(1)
+        .maybeSingle<Plan>(),
+      supabase
+        .from("appointment")
+        .select("id, scheduled_at, duration_min, status, notes, client:client_id (id, full_name_pseudonym)")
+        .eq("client_id", clientId)
+        .neq("status", "cancelled")
+        .is("deleted_at", null)
+        .order("scheduled_at", { ascending: true }),
+    ]);
 
   const constraints = (rawConstraints as ConstraintRow[] | null) ?? [];
+  const planMacros = plan
+    ? aggregatePlanMacros(plan.plan_meal_item ?? [], plan.duration_days)
+    : null;
+
+  // proxima cita por hora de fin (una cita en curso sigue siendo la proxima),
+  // mismo criterio que el calendario y el dashboard.
+  const nextAppointment = splitUpcomingPast(
+    (appointmentRows as AppointmentRow[] | null) ?? [],
+    new Date()
+  ).upcoming[0];
 
   const age = ageFromBirthDate(client.birth_date);
   const demographics = [
@@ -126,16 +157,60 @@ export default async function ClientDetailPage({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
-          <Button variant="outline" size="sm" disabled>
-            <Upload className="size-4" />
-            Upload historical plan
+          <Button asChild variant="outline" size="sm">
+            <Link href={`/messages?with=${client.id}`}>
+              <MessageSquare className="size-4" />
+              Send message
+            </Link>
           </Button>
-          <Button size="sm" disabled>
-            <Sparkles className="size-4" />
-            Generate plan with AI
-          </Button>
-          <Badge variant="info">Available soon</Badge>
+          <NewAppointmentDialog
+            lockedClient={{ id: client.id, name: client.full_name_pseudonym }}
+            triggerLabel="Schedule"
+            triggerVariant="outline"
+          />
         </div>
+      </Card>
+
+      <div className="flex flex-wrap items-center gap-2">
+        <Button size="sm" disabled>
+          <Sparkles className="size-4" />
+          Generate plan with AI
+        </Button>
+        <Button variant="outline" size="sm" disabled>
+          <Upload className="size-4" />
+          Upload historical plan
+        </Button>
+        <Badge variant="info">Available soon</Badge>
+      </div>
+
+      <Card className="flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-3">
+          <span className="flex size-9 items-center justify-center rounded-control bg-brand-soft text-brand">
+            <CalendarDays className="size-5" />
+          </span>
+          <div>
+            <p className="text-xs uppercase tracking-wide text-muted-foreground">
+              Next session
+            </p>
+            {nextAppointment ? (
+              <p className="text-sm font-medium">
+                {formatAppointmentWhen(
+                  nextAppointment.scheduled_at,
+                  nextAppointment.duration_min
+                )}
+              </p>
+            ) : (
+              <p className="text-sm text-muted-foreground">
+                No upcoming appointments.
+              </p>
+            )}
+          </div>
+        </div>
+        {nextAppointment && (
+          <Button asChild variant="ghost" size="sm">
+            <Link href="/calendar">View calendar</Link>
+          </Button>
+        )}
       </Card>
 
       <div className="grid gap-6 lg:grid-cols-2">
@@ -156,20 +231,28 @@ export default async function ClientDetailPage({
             <CardTitle>Current meal plan</CardTitle>
           </CardHeader>
           {plan ? (
-            <div className="text-sm">
-              <p className="font-medium">
-                {plan.duration_days}-day plan
-              </p>
-              <p className="text-muted-foreground">
-                Starts {monthYear(plan.start_date)}
-              </p>
-              <div className="mt-2">
+            <div className="flex flex-col gap-3 text-sm">
+              <div>
+                <Link
+                  href={`/plans/${plan.id}`}
+                  className="font-medium hover:text-brand"
+                >
+                  {plan.duration_days}-day plan
+                </Link>
+                <p className="text-muted-foreground">
+                  Starts {monthYear(plan.start_date)}
+                </p>
+              </div>
+              <div>
                 {plan.approved_at ? (
                   <Badge variant="success">Signed</Badge>
                 ) : (
                   <Badge variant="warning">Draft</Badge>
                 )}
               </div>
+              {planMacros && planMacros.countedItems > 0 && (
+                <MacroPanel macros={planMacros} />
+              )}
             </div>
           ) : (
             <p className="py-6 text-center text-sm text-muted-foreground">

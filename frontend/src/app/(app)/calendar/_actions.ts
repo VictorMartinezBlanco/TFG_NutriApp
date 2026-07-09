@@ -93,6 +93,9 @@ export async function createAppointment(
     };
   }
 
+  // el dialog se usa desde el calendario y desde la ficha del cliente, asi que
+  // se revalidan las dos: la ficha pinta la proxima cita del cliente.
   revalidatePath("/calendar");
+  revalidatePath("/clients/[id]", "page");
   return { error: null, warning, ok: true };
 }

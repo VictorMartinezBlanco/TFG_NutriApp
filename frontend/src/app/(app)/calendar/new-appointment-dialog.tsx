@@ -19,7 +19,19 @@ type ClientOption = { id: number; name: string };
 
 const initialState: AppointmentFormState = { error: null, warning: null, ok: false };
 
-export function NewAppointmentDialog({ clients }: { clients: ClientOption[] }) {
+// Se usa desde el calendario con la lista de clientes, y desde la ficha de un
+// cliente con lockedClient para dejar el cliente fijado.
+export function NewAppointmentDialog({
+  clients,
+  lockedClient,
+  triggerLabel = "New appointment",
+  triggerVariant = "primary",
+}: {
+  clients?: ClientOption[];
+  lockedClient?: ClientOption;
+  triggerLabel?: string;
+  triggerVariant?: "primary" | "outline";
+}) {
   const [open, setOpen] = React.useState(false);
   const [state, formAction] = useFormState(createAppointment, initialState);
 
@@ -29,12 +41,14 @@ export function NewAppointmentDialog({ clients }: { clients: ClientOption[] }) {
     if (state.ok && !state.warning) setOpen(false);
   }, [state.ok, state.warning]);
 
+  const options = clients ?? [];
+
   return (
     <Dialog open={open} onOpenChange={setOpen}>
       <DialogTrigger asChild>
-        <Button size="sm">
+        <Button size="sm" variant={triggerVariant}>
           <Plus className="size-4" />
-          New appointment
+          {triggerLabel}
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -43,27 +57,37 @@ export function NewAppointmentDialog({ clients }: { clients: ClientOption[] }) {
         </DialogHeader>
 
         <form action={formAction} className="flex flex-col gap-4">
-          <div className="flex flex-col gap-1.5">
-            <Label htmlFor="client_id">
-              Client<span className="text-danger"> *</span>
-            </Label>
-            <select
-              id="client_id"
-              name="client_id"
-              required
-              defaultValue=""
-              className="h-10 rounded-control border border-input bg-card px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-            >
-              <option value="" disabled>
-                Select a client
-              </option>
-              {clients.map((c) => (
-                <option key={c.id} value={c.id}>
-                  {c.name}
+          {lockedClient ? (
+            <>
+              <input type="hidden" name="client_id" value={lockedClient.id} />
+              <div className="flex flex-col gap-1.5">
+                <Label>Client</Label>
+                <p className="text-sm font-medium">{lockedClient.name}</p>
+              </div>
+            </>
+          ) : (
+            <div className="flex flex-col gap-1.5">
+              <Label htmlFor="client_id">
+                Client<span className="text-danger"> *</span>
+              </Label>
+              <select
+                id="client_id"
+                name="client_id"
+                required
+                defaultValue=""
+                className="h-10 rounded-control border border-input bg-card px-3 text-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+              >
+                <option value="" disabled>
+                  Select a client
                 </option>
-              ))}
-            </select>
-          </div>
+                {options.map((c) => (
+                  <option key={c.id} value={c.id}>
+                    {c.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
 
           <div className="grid gap-4 sm:grid-cols-2">
             <div className="flex flex-col gap-1.5">

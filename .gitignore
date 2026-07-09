@@ -144,6 +144,7 @@ __pycache__/
 # Documentos de diseño internos (no van al repo público)
 auditoria-bd-ia.md
 feedback-docs/bd-modelo-v0.md
+feedback-docs/auditoria-figma-vs-impl.md
 env/
 venv/
 ENV/

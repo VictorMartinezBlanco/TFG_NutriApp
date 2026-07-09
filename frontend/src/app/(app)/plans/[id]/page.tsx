@@ -6,11 +6,13 @@ import {
   planStatus,
   planStatusLabel,
   groupItemsByDay,
+  aggregatePlanMacros,
   mealItemText,
   dayLabel,
   planDateRange,
   type MealItemRow,
 } from "@/lib/plans";
+import { MacroPanel } from "@/components/plan-macros";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -52,7 +54,7 @@ export default async function PlanDetailPage({
     .select(
       `id, day_num, item_order, quantity_g, description_free,
        meal_type:meal_type_id (code, name_en, default_order),
-       food:food_id (name_en)`
+       food:food_id (name_en, food_nutrient (value_per_100g, nutrient:nutrient_id (code)))`
     )
     .eq("plan_id", planId)
     .order("day_num", { ascending: true })
@@ -62,6 +64,7 @@ export default async function PlanDetailPage({
 
   const status = planStatus(plan.approved_at);
   const days = groupItemsByDay(items);
+  const macros = aggregatePlanMacros(items, plan.duration_days);
   const mealsPerDay = days.length ? days[0].meals.length : 0;
   const clientName = plan.client?.full_name_pseudonym ?? "Unknown client";
 
@@ -114,6 +117,15 @@ export default async function PlanDetailPage({
           <Badge variant="info">Available soon</Badge>
         </div>
       </Card>
+
+      {macros.countedItems > 0 && (
+        <Card>
+          <CardHeader>
+            <CardTitle>Daily macros</CardTitle>
+          </CardHeader>
+          <MacroPanel macros={macros} />
+        </Card>
+      )}
 
       {days.length === 0 ? (
         <Card>

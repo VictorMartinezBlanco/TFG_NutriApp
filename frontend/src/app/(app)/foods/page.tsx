@@ -114,7 +114,6 @@ export default async function FoodsPage({
                 <th className="px-5 py-3 font-medium">Protein</th>
                 <th className="px-5 py-3 font-medium">Carbs</th>
                 <th className="px-5 py-3 font-medium">Fat</th>
-                <th className="px-5 py-3 font-medium">Serving</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-border">
@@ -140,11 +139,6 @@ export default async function FoodsPage({
                     <Macro value={protein} suffix=" g" />
                     <Macro value={carb} suffix=" g" />
                     <Macro value={fat} suffix=" g" />
-                    <td className="px-5 py-3 text-muted-foreground">
-                      {food.typical_serving_g
-                        ? `${formatAmount(food.typical_serving_g)} g`
-                        : "-"}
-                    </td>
                   </tr>
                 );
               })}

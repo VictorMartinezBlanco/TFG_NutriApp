@@ -2,7 +2,13 @@ import Link from "next/link";
 import { Search, Sparkles, Upload, Apple, ChevronRight } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import { monthYear } from "@/lib/format";
-import { planStatus, planStatusLabel } from "@/lib/plans";
+import {
+  planStatus,
+  planStatusLabel,
+  aggregatePlanMacros,
+  type MealItemRow,
+  type PlanMacros,
+} from "@/lib/plans";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -18,6 +24,10 @@ type PlanRow = {
   client: { id: number; full_name_pseudonym: string } | null;
 };
 
+const ITEM_SELECT =
+  `day_num, quantity_g, description_free, ` +
+  `food:food_id (name_en, food_nutrient (value_per_100g, nutrient:nutrient_id (code)))`;
+
 export default async function PlansPage() {
   const { supabase } = await requireNutritionist();
 
@@ -32,6 +42,22 @@ export default async function PlansPage() {
     .order("start_date", { ascending: false });
 
   const plans = (data as PlanRow[] | null) ?? [];
+
+  // los macros se agregan plan a plan en consultas separadas en paralelo, no en
+  // un embed unico: asi el limite de filas de postgrest nunca trunca un plan.
+  const macrosByPlan = new Map<number, PlanMacros>();
+  await Promise.all(
+    plans.map(async (p) => {
+      const { data: items } = await supabase
+        .from("plan_meal_item")
+        .select(ITEM_SELECT)
+        .eq("plan_id", p.id);
+      macrosByPlan.set(
+        p.id,
+        aggregatePlanMacros((items as MealItemRow[] | null) ?? [], p.duration_days)
+      );
+    })
+  );
 
   return (
     <div className="flex flex-col gap-6">
@@ -124,14 +150,17 @@ export default async function PlansPage() {
                 <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted-foreground">
                   <th className="px-5 py-3 font-medium">Client</th>
                   <th className="px-5 py-3 font-medium">Status</th>
+                  <th className="px-5 py-3 font-medium">Energy</th>
+                  <th className="px-5 py-3 font-medium">Macros / day</th>
                   <th className="px-5 py-3 font-medium">Start</th>
                   <th className="px-5 py-3 font-medium">Duration</th>
-                  <th className="px-5 py-3 font-medium">Created</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
                 {plans.map((p) => {
                   const status = planStatus(p.approved_at);
+                  const macros = macrosByPlan.get(p.id);
+                  const shown = macros && macros.countedItems > 0 ? macros : null;
                   return (
                     <tr key={p.id} className="hover:bg-muted/40">
                       <td className="px-5 py-3">
@@ -147,14 +176,19 @@ export default async function PlansPage() {
                           {planStatusLabel(status)}
                         </Badge>
                       </td>
+                      <td className="px-5 py-3 font-medium">
+                        {shown ? `${shown.kcal} kcal` : "-"}
+                      </td>
+                      <td className="px-5 py-3 text-muted-foreground">
+                        {shown
+                          ? `P ${shown.protein} · C ${shown.carb} · F ${shown.fat} g`
+                          : "-"}
+                      </td>
                       <td className="px-5 py-3 text-muted-foreground">
                         {monthYear(p.start_date)}
                       </td>
                       <td className="px-5 py-3 text-muted-foreground">
                         {p.duration_days} days
-                      </td>
-                      <td className="px-5 py-3 text-muted-foreground">
-                        {monthYear(p.created_at)}
                       </td>
                     </tr>
                   );

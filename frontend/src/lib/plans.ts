@@ -24,7 +24,14 @@ export function mealTypeLabel(code: string, fallback: string): string {
   return MEAL_TYPE_LABEL[code] ?? fallback;
 }
 
-// Fila plana tal como llega de plan_meal_item con sus joins embebidos.
+// Fila plana tal como llega de plan_meal_item con sus joins embebidos. El food
+// puede traer sus nutrientes por 100 g cuando la consulta pide el join, para
+// agregar los macros del plan.
+export type MealItemFoodNutrient = {
+  value_per_100g: number;
+  nutrient: { code: string } | null;
+};
+
 export type MealItemRow = {
   id: number;
   day_num: number;
@@ -32,7 +39,7 @@ export type MealItemRow = {
   quantity_g: number | null;
   description_free: string | null;
   meal_type: { code: string; name_en: string; default_order: number } | null;
-  food: { name_en: string } | null;
+  food: { name_en: string; food_nutrient?: MealItemFoodNutrient[] } | null;
 };
 
 export type PlanMeal = {
@@ -111,4 +118,86 @@ export function planDateRange(startDate: string, durationDays: number): string {
   const fmt = (d: Date) =>
     d.toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
   return `${fmt(start)} - ${fmt(end)}`;
+}
+
+// Macros agregados de un plan como media diaria, sin comparar contra nada. El
+// chequeo contra las restricciones del cliente es cosa del validador clinico.
+export type PlanMacros = {
+  kcal: number;
+  protein: number;
+  carb: number;
+  fat: number;
+  // dias entre los que se reparte la suma (la duracion declarada del plan).
+  days: number;
+  // items con comida y gramos que si contaron.
+  countedItems: number;
+  // items sin datos nutricionales (texto libre, sin gramos, o food sin macros).
+  skippedItems: number;
+};
+
+// Los cuatro macros core de food_nutrient (mismos codes que CORE_MACRO_CODES).
+const MACRO_FIELD: Record<string, keyof Pick<PlanMacros, "kcal" | "protein" | "carb" | "fat">> = {
+  energy_kcal: "kcal",
+  protein_g: "protein",
+  carb_g: "carb",
+  fat_g: "fat",
+};
+
+// Lo minimo que necesita el agregado de macros: gramos, dia y el food con sus
+// nutrientes. Encaja tanto con MealItemRow como con el select recortado de la
+// lista de planes.
+export type MacroItem = {
+  day_num: number;
+  quantity_g: number | null;
+  food: { food_nutrient?: MealItemFoodNutrient[] } | null;
+};
+
+// Suma cada item = value_per_100g * quantity_g / 100 sobre los cuatro macros
+// core y reparte el total entre los dias del plan. Un item cuenta como saltado
+// si es texto libre, no tiene gramos, o su alimento no trae ningun macro core.
+export function aggregatePlanMacros(
+  items: MacroItem[],
+  durationDays: number
+): PlanMacros {
+  const total = { kcal: 0, protein: 0, carb: 0, fat: 0 };
+  let countedItems = 0;
+  let skippedItems = 0;
+
+  for (const item of items) {
+    const nutrients = item.food?.food_nutrient;
+    if (!item.food || item.quantity_g == null || !nutrients?.length) {
+      skippedItems += 1;
+      continue;
+    }
+
+    const factor = item.quantity_g / 100;
+    let contributed = false;
+    for (const row of nutrients) {
+      const code = row.nutrient?.code;
+      const field = code ? MACRO_FIELD[code] : undefined;
+      if (!field) continue;
+      total[field] += row.value_per_100g * factor;
+      contributed = true;
+    }
+
+    if (contributed) countedItems += 1;
+    else skippedItems += 1;
+  }
+
+  const days = durationDays > 0 ? durationDays : dayCount(items) || 1;
+  const perDay = (v: number) => Math.round(v / days);
+
+  return {
+    kcal: perDay(total.kcal),
+    protein: perDay(total.protein),
+    carb: perDay(total.carb),
+    fat: perDay(total.fat),
+    days,
+    countedItems,
+    skippedItems,
+  };
+}
+
+function dayCount(items: MacroItem[]): number {
+  return new Set(items.map((i) => i.day_num)).size;
 }

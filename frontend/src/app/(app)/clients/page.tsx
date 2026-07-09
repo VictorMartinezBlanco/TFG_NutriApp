@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, Plus } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import {
   initials,
@@ -9,6 +9,7 @@ import {
   monthYear,
 } from "@/lib/format";
 import { Card } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 
@@ -19,8 +20,6 @@ type Client = {
   full_name_pseudonym: string;
   sex: string | null;
   birth_date: string | null;
-  height_cm: number | null;
-  weight_kg: number | null;
   activity_level: string | null;
   created_at: string;
 };
@@ -32,7 +31,7 @@ export default async function ClientsPage() {
   const { data } = await supabase
     .from("client")
     .select(
-      "id, full_name_pseudonym, sex, birth_date, height_cm, weight_kg, activity_level, created_at"
+      "id, full_name_pseudonym, sex, birth_date, activity_level, created_at"
     )
     .is("deleted_at", null)
     .order("full_name_pseudonym", { ascending: true });
@@ -41,11 +40,19 @@ export default async function ClientsPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl font-bold">Clients</h1>
-        <p className="text-sm text-muted-foreground">
-          Your client roster and their key data.
-        </p>
+      <div className="flex flex-wrap items-start justify-between gap-3">
+        <div>
+          <h1 className="text-2xl font-bold">Clients</h1>
+          <p className="text-sm text-muted-foreground">
+            Your client roster and their key data.
+          </p>
+        </div>
+        <Button asChild size="sm">
+          <Link href="/clients/new">
+            <Plus className="size-4" />
+            Add client
+          </Link>
+        </Button>
       </div>
 
       <div className="relative max-w-md">
@@ -72,8 +79,6 @@ export default async function ClientsPage() {
                 <th className="px-5 py-3 font-medium">Client</th>
                 <th className="px-5 py-3 font-medium">Age</th>
                 <th className="px-5 py-3 font-medium">Sex</th>
-                <th className="px-5 py-3 font-medium">Height</th>
-                <th className="px-5 py-3 font-medium">Weight</th>
                 <th className="px-5 py-3 font-medium">Activity</th>
                 <th className="px-5 py-3 font-medium">Since</th>
               </tr>
@@ -102,12 +107,6 @@ export default async function ClientsPage() {
                     </td>
                     <td className="px-5 py-3 text-muted-foreground">
                       {sexLabel(c.sex) ?? "-"}
-                    </td>
-                    <td className="px-5 py-3 text-muted-foreground">
-                      {c.height_cm ? `${c.height_cm} cm` : "-"}
-                    </td>
-                    <td className="px-5 py-3 text-muted-foreground">
-                      {c.weight_kg ? `${c.weight_kg} kg` : "-"}
                     </td>
                     <td className="px-5 py-3">
                       {activity ? (
