@@ -7,3 +7,6 @@ sqlalchemy[asyncio]>=2.0
 # Conexion y acceso a datos
 asyncpg>=0.30
 python-dotenv>=1.0
+
+# Solver de planes (CP-SAT)
+ortools>=9.15
