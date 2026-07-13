@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Sparkles, Upload, MessageSquare, CalendarDays } from "lucide-react";
+import { ChevronLeft, Sparkles, Upload, MessageSquare, CalendarDays, Plus } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import {
   initials,
@@ -22,6 +22,7 @@ import {
 } from "@/lib/appointments";
 import { MacroPanel } from "@/components/plan-macros";
 import { NewAppointmentDialog } from "../../calendar/new-appointment-dialog";
+import { DeleteConstraintButton } from "./constraints/delete-constraint-button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -73,7 +74,7 @@ export default async function ClientDetailPage({
       supabase
         .from("diet_constraint")
         .select(
-          `id, type, operator, value, value2, priority, weight,
+          `id, type, operator, value, value2, priority, weight, context,
            tag:target_tag_id (name_en, kind),
            food:target_food_id (name_en),
            nutrient:target_nutrient_id (name_en, unit_default)`
@@ -263,8 +264,14 @@ export default async function ClientDetailPage({
       </div>
 
       <Card>
-        <CardHeader>
+        <CardHeader className="gap-3">
           <CardTitle>Dietary constraints</CardTitle>
+          <Button asChild size="sm" variant="outline">
+            <Link href={`/clients/${client.id}/constraints/new`}>
+              <Plus className="size-4" />
+              Add constraint
+            </Link>
+          </Button>
         </CardHeader>
         {constraints.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
@@ -284,9 +291,16 @@ export default async function ClientDetailPage({
                       className="flex items-center justify-between gap-3 py-2.5 text-sm"
                     >
                       <span>{constraintLabel(c)}</span>
-                      <Badge variant={c.priority === "hard" ? "critical" : "neutral"}>
-                        {c.priority}
-                      </Badge>
+                      <div className="flex items-center gap-3">
+                        <Badge variant={c.priority === "hard" ? "critical" : "neutral"}>
+                          {c.priority}
+                        </Badge>
+                        <DeleteConstraintButton
+                          clientId={client.id}
+                          constraintId={c.id}
+                          label={constraintLabel(c)}
+                        />
+                      </div>
                     </li>
                   ))}
                 </ul>
@@ -294,6 +308,10 @@ export default async function ClientDetailPage({
             ))}
           </div>
         )}
+        <p className="mt-4 text-xs text-muted-foreground">
+          Meals per day and plan length are set when you generate a plan, not
+          here.
+        </p>
       </Card>
     </div>
   );
