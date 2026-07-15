@@ -1,6 +1,7 @@
 # Backend NutriApp
 
-Base de datos y (más adelante) el backend de Python con el solver y el traductor LLM.
+Base de datos y backend de Python: el solver CP-SAT, el validador y la API HTTP
+que los expone. El traductor LLM llega más adelante.
 
 ## Base de datos
 
@@ -96,15 +97,63 @@ El script de carga es re-ejecutable: reutiliza el alimento por nombre y fuente,
 hace upsert de los nutrientes y no duplica tags. Toda la carga va en una sola
 transacción.
 
+## API HTTP
+
+`app/api/` expone el pipeline determinista por HTTP con FastAPI. Envuelve las
+funciones puras `generate_plan` (solver) y `validate_plan` (validador) sin
+reimplementar nada.
+
+```
+app/api/
+  main.py         # app FastAPI, lifespan del pool, auth por token, endpoints
+  schemas.py      # modelos Pydantic del contrato de peticion y respuesta
+  service.py      # orquesta cargar datos + solver + validador, mapea errores a HTTP
+  serialize.py    # dataclasses -> JSON, unifica hallazgos con campo source
+  persistence.py  # inserta el plan + items en una transaccion, firma
+```
+
+Endpoints:
+
+- `GET /health`: vivo y con la BD accesible (hace un `SELECT 1`).
+- `POST /plans/generate`: genera y valida un plan para un cliente. Devuelve 200
+  tanto si es factible (plan + metrics + validation + findings) como si es
+  infactible (unsat_core + suggestion). Si `persist` es true, escribe el borrador
+  y devuelve su `plan_id`. Códigos: 400 entidad inexistente, 403 cliente ajeno,
+  422 restricción incoherente.
+- `POST /plans/{id}/sign`: marca el plan como firmado (`approved_at` + `signed_by`).
+
+Las llamadas van autenticadas con un token compartido en la cabecera
+`Authorization: Bearer <NUTRIAPP_API_TOKEN>`. El backend usa el rol de confianza,
+así que además comprueba a mano que el cliente pertenece al nutricionista que
+dice la petición. Los borradores se persisten con una transacción real de
+asyncpg: el plan y sus items entran juntos o no entra ninguno.
+
+Levantar en local:
+
+```bash
+uvicorn app.api.main:app --reload --port 8000
+```
+
+## Despliegue
+
+La API se despliega en Render (región de Frankfurt, junto a la BD) con el
+`Dockerfile` y el `render.yaml` de esta carpeta. Root directory `backend`. Los
+secretos (`DATABASE_URL_POOLER`, `NUTRIAPP_API_TOKEN`) se ponen en la UI de
+Render, nunca en el repo. Se verifica que el pooler IPv4 responde desde el
+datacenter de Render (el host directo solo resuelve por IPv6).
+
+El plan gratis duerme el servicio tras unos minutos de inactividad, así que el
+primer request tras un rato tarda unos segundos en despertar.
+
 ## Frontend
 
 La conexión desde Next.js con la SDK de Supabase está en `../frontend` (login
-real de un nutri y lectura de catálogos + alimentos bajo RLS, todo con la
-publishable key). Ver su README.
+real de un nutri, lectura bajo RLS y la llamada server-side a esta API para
+generar planes). Ver su README.
 
 ## Siguiente
 
-- Añadir fastapi, ortools y anthropic a `requirements.txt` cuando arranque el
-  pipeline (traductor LLM + solver CP-SAT).
+- Traductor LLM (texto libre -> filas de `diet_constraint`), que produce las
+  mismas restricciones que este pipeline ya consume.
 - Carga masiva BEDCA + USDA en una migration aparte (`source_id` +
   `external_food_mapping`).

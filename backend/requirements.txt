@@ -1,4 +1,4 @@
-# Dependencias del backend. FastAPI, OR-Tools y anthropic se añaden más adelante.
+# Dependencias del backend. anthropic se añade en la fase del traductor LLM.
 
 # Migraciones
 alembic>=1.13
@@ -10,3 +10,8 @@ python-dotenv>=1.0
 
 # Solver de planes (CP-SAT)
 ortools>=9.15
+
+# API HTTP
+fastapi>=0.115
+uvicorn[standard]>=0.30
+pydantic>=2.7

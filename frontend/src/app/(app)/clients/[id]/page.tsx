@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ChevronLeft, Sparkles, Upload, MessageSquare, CalendarDays, Plus } from "lucide-react";
+import { ChevronLeft, MessageSquare, CalendarDays, Plus } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import {
   initials,
@@ -23,6 +23,7 @@ import {
 import { MacroPanel } from "@/components/plan-macros";
 import { NewAppointmentDialog } from "../../calendar/new-appointment-dialog";
 import { DeleteConstraintButton } from "./constraints/delete-constraint-button";
+import { GeneratePlanButton } from "./generate-plan-button";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -172,17 +173,7 @@ export default async function ClientDetailPage({
         </div>
       </Card>
 
-      <div className="flex flex-wrap items-center gap-2">
-        <Button size="sm" disabled>
-          <Sparkles className="size-4" />
-          Generate plan with AI
-        </Button>
-        <Button variant="outline" size="sm" disabled>
-          <Upload className="size-4" />
-          Upload historical plan
-        </Button>
-        <Badge variant="info">Available soon</Badge>
-      </div>
+      <GeneratePlanButton clientId={client.id} />
 
       <Card className="flex flex-wrap items-center justify-between gap-3">
         <div className="flex items-center gap-3">

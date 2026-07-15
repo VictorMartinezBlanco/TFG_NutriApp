@@ -31,6 +31,9 @@ class Settings:
 
     database_url: str
     using_pooler: bool
+    # secreto compartido con el frontend para autenticar sus llamadas a la API.
+    # vacio en los scripts que solo tocan la BD (solver, validador).
+    api_token: str
 
     @staticmethod
     def _normalize(dsn: str) -> str:
@@ -41,11 +44,12 @@ class Settings:
     def load(cls) -> "Settings":
         pooler = os.environ.get("DATABASE_URL_POOLER")
         direct = os.environ.get("DATABASE_URL_ASYNCPG") or os.environ.get("DATABASE_URL")
+        token = os.environ.get("NUTRIAPP_API_TOKEN", "")
 
         if pooler and "<" not in pooler:  # rellenado de verdad, no la plantilla
-            return cls(database_url=cls._normalize(pooler), using_pooler=True)
+            return cls(database_url=cls._normalize(pooler), using_pooler=True, api_token=token)
         if direct and "<" not in direct:
-            return cls(database_url=cls._normalize(direct), using_pooler=False)
+            return cls(database_url=cls._normalize(direct), using_pooler=False, api_token=token)
 
         raise RuntimeError(
             "No hay cadena de conexión utilizable en .env.local. "
