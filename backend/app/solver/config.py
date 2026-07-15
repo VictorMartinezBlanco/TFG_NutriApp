@@ -48,8 +48,10 @@ DEFAULT_AGE = 40
 DEFAULT_SEX = "F"
 
 # tiempo maximo de resolucion. holgado sobre el target de 5s del diseno; si
-# expira con una solucion factible se devuelve esa.
-SOLVE_TIME_LIMIT_S = 10.0
+# expira con una solucion factible se devuelve esa. el margen alto cubre el
+# hardware limitado del hosting gratuito, donde los casos mas pesados (kcal
+# exacto + reparto por comida sobre la semana) tardan mas que en local.
+SOLVE_TIME_LIMIT_S = 30.0
 
 # el solver para al llegar a este gap relativo respecto a la cota inferior. un
 # borrador editable no necesita el optimo demostrado; un 2% es de sobra para el
