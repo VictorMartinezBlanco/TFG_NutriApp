@@ -62,10 +62,12 @@ DEFAULT_SEX = "F"
 # expira con una solucion factible se devuelve esa. el margen alto cubre el
 # hardware limitado del hosting gratuito, donde los casos mas pesados (kcal
 # exacto + reparto por comida sobre la semana) tardan mas que en local. subido a
-# 60s tras ampliar el catalogo a ~58 alimentos: mas variables por comida hacen
+# 90s tras ampliar el catalogo a ~58 alimentos: mas variables por comida hacen
 # que refinar el objetivo calorico exacto tarde mas en la CPU limitada del free
-# tier, donde 30s no bastaban para bajar del 5% de desviacion.
-SOLVE_TIME_LIMIT_S = 60.0
+# tier. los casos mas duros (objetivo calorico exacto combinado con preferencia
+# o reparto por comida sobre la semana) rozan los 33s en local y superan los 60s
+# en Render; 90s les da margen para bajar del 5% de desviacion.
+SOLVE_TIME_LIMIT_S = 90.0
 
 # el solver para al llegar a este gap relativo respecto a la cota inferior. un
 # borrador editable no necesita el optimo demostrado; un 2% es de sobra para el
