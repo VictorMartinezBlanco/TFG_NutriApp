@@ -23,6 +23,17 @@ NUTRIENT_SCALE = 10
 MAX_ITEMS_PER_MEAL = 4
 MIN_DISTINCT_PER_WEEK = 10
 
+# reglas de sentido comun para que los planes tengan logica nutricional y no
+# concentren un alimento ni rellenen al azar. son estructurales, se aplican
+# siempre, no vienen de diet_constraint.
+# veces que un mismo alimento puede aparecer en las comidas de un mismo dia.
+MAX_SAME_FOOD_PER_DAY = 2
+# alimentos distintos minimos por dia (acotado al tamano del pool).
+MIN_DISTINCT_PER_DAY = 4
+# tope blando de apariciones de un alimento en todo el plan, por dia de plan.
+# 0.6 deja unas 4 apariciones en una semana antes de penalizar el reparto.
+MAX_APPEARANCES_PER_DAY_RATIO = 0.6
+
 # suelo calorico absoluto por sexo por debajo del cual una dieta deja de ser
 # segura sin supervision.
 FLOOR_KCAL = {"F": 1200, "M": 1500, "X": 1200}
@@ -68,6 +79,7 @@ class ObjectiveWeights:
     w_prefer: int = 4
     w_no_repeat: int = 5
     w_variety: int = 5
+    w_spread: int = 4
 
 
 DEFAULT_WEIGHTS = ObjectiveWeights()

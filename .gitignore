@@ -64,6 +64,7 @@ local_settings.py
 # runners temporales de verificacion (no van al repo)
 *_verify.*
 *_apply.*
+playground.py
 db.sqlite3
 db.sqlite3-journal
 
@@ -145,6 +146,7 @@ __pycache__/
 auditoria-bd-ia.md
 feedback-docs/bd-modelo-v0.md
 feedback-docs/auditoria-figma-vs-impl.md
+feedback-docs/reunion-tutor-julio-2026-plan.md
 env/
 venv/
 ENV/

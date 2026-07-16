@@ -15,6 +15,7 @@ import asyncio
 
 from app.db import connection_pool
 from app.solver import Constraint, FeasiblePlan, InfeasiblePlan, generate_plan
+from app.solver import config as C
 from app.solver.loader import (
     load_client,
     load_constraints,
@@ -71,6 +72,35 @@ def _plan_uses_food(plan, food_id):
     return False
 
 
+def _max_same_food_in_a_day(plan):
+    """Maximo de comidas de un mismo dia en que aparece un mismo alimento."""
+    peak = 0
+    for day in plan.days:
+        counts = {}
+        for meal in day.meals:
+            for it in meal.items:
+                counts[it.food_id] = counts.get(it.food_id, 0) + 1
+        if counts:
+            peak = max(peak, max(counts.values()))
+    return peak
+
+
+def _min_distinct_per_day(plan):
+    return min(
+        len({it.food_id for meal in day.meals for it in meal.items})
+        for day in plan.days
+    )
+
+
+def _max_appearances_in_plan(plan):
+    counts = {}
+    for day in plan.days:
+        for meal in day.meals:
+            for it in meal.items:
+                counts[it.food_id] = counts.get(it.food_id, 0) + 1
+    return max(counts.values()) if counts else 0
+
+
 class Report:
     def __init__(self):
         self.passed = 0
@@ -123,6 +153,15 @@ async def main() -> int:
                           all(m.items for d in r.days for m in d.meals))
                 k = _daily_nutrient(r, foods_by_id, "energy_kcal")
                 rep.check("energia dia1 sobre el suelo fisiologico", k > 0, f"{k:.0f} kcal")
+                # reglas base de sentido comun (estructurales, siempre activas).
+                peak = _max_same_food_in_a_day(r)
+                rep.check("ningun alimento repetido de mas en un dia (base)",
+                          peak <= C.MAX_SAME_FOOD_PER_DAY,
+                          f"max {peak}/dia, tope {C.MAX_SAME_FOOD_PER_DAY}")
+                mind = _min_distinct_per_day(r)
+                rep.check("variedad minima por dia (base)",
+                          mind >= min(C.MIN_DISTINCT_PER_DAY, len(foods)),
+                          f"{mind} distintos/dia, min {C.MIN_DISTINCT_PER_DAY}")
                 print(f"    status={r.metrics.solve_status} time={r.metrics.solve_time_ms}ms")
 
             # Caso 2. Objetivo calorico blando.
@@ -255,6 +294,34 @@ async def main() -> int:
                 rep.check("carne roja <= 2 apariciones/semana (hard)", red_count <= 2,
                           f"apariciones={red_count}")
                 print(f"    status={r.metrics.solve_status} time={r.metrics.solve_time_ms}ms")
+
+            # Evidencia antes/despues: mismo caso con y sin las reglas base, para
+            # ver el efecto en la distribucion. "Sin reglas" relaja las
+            # constantes estructurales a valores permisivos; no toca el solver.
+            print("\nAntes/despues de las reglas base (Maria, 7 dias, 5 comidas)")
+            orig = (C.MAX_SAME_FOOD_PER_DAY, C.MIN_DISTINCT_PER_DAY,
+                    C.MAX_APPEARANCES_PER_DAY_RATIO)
+            only_kcal = [c for c in maria_cons if c.type == "kcal_target"]
+
+            C.MAX_SAME_FOOD_PER_DAY = 5
+            C.MIN_DISTINCT_PER_DAY = 1
+            C.MAX_APPEARANCES_PER_DAY_RATIO = 100.0
+            before = run(maria_c, 7, 5, only_kcal, m5)
+
+            (C.MAX_SAME_FOOD_PER_DAY, C.MIN_DISTINCT_PER_DAY,
+             C.MAX_APPEARANCES_PER_DAY_RATIO) = orig
+            after = run(maria_c, 7, 5, only_kcal, m5)
+
+            for label, plan in (("sin reglas base", before), ("con reglas base", after)):
+                if isinstance(plan, FeasiblePlan):
+                    print(f"    {label}: max mismo alimento/dia="
+                          f"{_max_same_food_in_a_day(plan)}, "
+                          f"min distintos/dia={_min_distinct_per_day(plan)}, "
+                          f"max apariciones/plan={_max_appearances_in_plan(plan)}")
+            if isinstance(before, FeasiblePlan) and isinstance(after, FeasiblePlan):
+                rep.check("las reglas base mejoran la distribucion",
+                          _max_appearances_in_plan(after) <= _max_appearances_in_plan(before)
+                          and _min_distinct_per_day(after) >= _min_distinct_per_day(before))
 
     print(f"\n== {rep.passed} PASS, {rep.failed} FAIL ==")
     return 0 if rep.failed == 0 else 1

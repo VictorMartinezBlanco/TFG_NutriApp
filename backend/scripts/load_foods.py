@@ -1,6 +1,6 @@
 """Carga el subset inicial de alimentos en el catálogo global.
 
-Inserta los ~22 alimentos de app/seed_foods.py con su composición (12 nutrientes
+Inserta los alimentos de app/seed_foods.py con su composición (12 nutrientes
 T1) y sus tags, todos como alimentos globales (nutritionist_id IS NULL). Es
 **idempotente**: re-ejecutarlo no duplica (reutiliza el food por name_es+source,
 hace UPSERT de nutrientes y DO NOTHING en tags).

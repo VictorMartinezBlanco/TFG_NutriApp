@@ -171,6 +171,25 @@ def _structural_constraints(
                 >= C.FAT_MIN_PCT_ENERGY * pm.daily_nut[(d, C.KCAL_CODE)]
             )
 
+    # un mismo alimento no se repite en todas las comidas de un dia: se limita
+    # cuantas veces puede aparecer dentro del mismo dia.
+    for f in foods:
+        for d in days:
+            model.Add(
+                sum(pm.x[(f.id, d, m)] for m in meals) <= C.MAX_SAME_FOOD_PER_DAY
+            )
+
+    # variedad minima por dia: al menos K alimentos distintos cada dia, no solo
+    # a lo largo de la semana. presencia diaria = max sobre las comidas del dia.
+    per_day_target = min(C.MIN_DISTINCT_PER_DAY, len(foods))
+    for d in days:
+        used = []
+        for f in foods:
+            u = model.NewBoolVar(f"used_day_{f.id}_{d}")
+            model.AddMaxEquality(u, [pm.x[(f.id, d, m)] for m in meals])
+            used.append(u)
+        model.Add(sum(used) >= per_day_target)
+
     # variedad minima semanal para planes de al menos una semana.
     if len(days) >= 7:
         for start in range(1, len(days) - 5):
