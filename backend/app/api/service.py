@@ -20,6 +20,7 @@ from app.solver.loader import (
     load_food_pool,
     load_meal_type_codes,
 )
+from app.translator.validation import validate_draft
 from app.validator import validate_plan
 
 from . import persistence, serialize
@@ -38,19 +39,10 @@ class Unprocessable(Exception):
     """Constraints are syntactically valid but incoherent (maps to 422)."""
 
 
-# constraint types that require a target the caller must supply.
-_NEEDS_NUTRIENT = {"nutrient_min", "nutrient_max", "nutrient_ratio"}
-_NEEDS_TAG = {"forbid_tag", "prefer_tag", "no_repeat_tag"}
-_NEEDS_FOOD = {"forbid_food", "prefer_food", "no_repeat_food"}
-
-
 def _to_constraint(c: ConstraintIn, synthetic_id: int) -> Constraint:
-    if c.type in _NEEDS_NUTRIENT and c.target_nutrient_id is None:
-        raise Unprocessable(f"{c.type} requires target_nutrient_id.")
-    if c.type in _NEEDS_TAG and c.target_tag_id is None:
-        raise Unprocessable(f"{c.type} requires target_tag_id.")
-    if c.type in _NEEDS_FOOD and c.target_food_id is None:
-        raise Unprocessable(f"{c.type} requires target_food_id.")
+    reason = validate_draft(c)
+    if reason is not None:
+        raise Unprocessable(reason)
     return Constraint(
         id=synthetic_id,
         type=c.type,

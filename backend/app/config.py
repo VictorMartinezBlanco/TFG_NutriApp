@@ -34,6 +34,9 @@ class Settings:
     # secreto compartido con el frontend para autenticar sus llamadas a la API.
     # vacio en los scripts que solo tocan la BD (solver, validador).
     api_token: str
+    # motor del traductor de restricciones. Ollama corre local y no lleva clave.
+    ollama_host: str
+    ollama_model: str
 
     @staticmethod
     def _normalize(dsn: str) -> str:
@@ -45,11 +48,19 @@ class Settings:
         pooler = os.environ.get("DATABASE_URL_POOLER")
         direct = os.environ.get("DATABASE_URL_ASYNCPG") or os.environ.get("DATABASE_URL")
         token = os.environ.get("NUTRIAPP_API_TOKEN", "")
+        ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
+        ollama_model = os.environ.get("OLLAMA_MODEL", "qwen2.5:7b-instruct")
 
         if pooler and "<" not in pooler:  # rellenado de verdad, no la plantilla
-            return cls(database_url=cls._normalize(pooler), using_pooler=True, api_token=token)
+            return cls(
+                database_url=cls._normalize(pooler), using_pooler=True, api_token=token,
+                ollama_host=ollama_host, ollama_model=ollama_model,
+            )
         if direct and "<" not in direct:
-            return cls(database_url=cls._normalize(direct), using_pooler=False, api_token=token)
+            return cls(
+                database_url=cls._normalize(direct), using_pooler=False, api_token=token,
+                ollama_host=ollama_host, ollama_model=ollama_model,
+            )
 
         raise RuntimeError(
             "No hay cadena de conexión utilizable en .env.local. "
