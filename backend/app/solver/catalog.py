@@ -2,8 +2,10 @@
 
 Cada tipo se traduce a una restriccion dura (fija el espacio factible) o a un
 termino de la funcion objetivo (penaliza o premia). Las duras se envuelven en un
-literal de asuncion para poder reconstruir el nucleo de infactibilidad. Los
-patrones siguen la especificacion formal del catalogo.
+literal de asuncion para poder reconstruir el nucleo de infactibilidad. Hay un
+handler por tipo del catalogo cerrado; los dos tipos estructurales
+(meals_per_day, plan_duration_days) no generan restriccion porque fijan la
+dimension del problema.
 """
 
 from __future__ import annotations
@@ -93,10 +95,11 @@ def apply_constraints(
 
 
 def _abs_dev(model: cp_model.CpModel, expr, target: int, upper: int, tag: str):
-    """Devuelve |expr - target| linealizado con over/under.
+    """Linealiza |expr - target| con dos variables no negativas over y under.
 
-    over solo puede llegar a upper - target (exceso maximo posible) y under a
-    target (defecto maximo). acotarlos asi, en vez de con una cota comun holgada,
+    expr - target == over - under, luego over + under = |expr - target|. over
+    solo puede llegar a upper - target (exceso maximo posible) y under a target
+    (defecto maximo); acotarlos ajustado, en vez de con una cota comun holgada,
     ayuda a la propagacion del solver.
     """
     over = model.NewIntVar(0, max(upper - target, 0), f"over_{tag}")

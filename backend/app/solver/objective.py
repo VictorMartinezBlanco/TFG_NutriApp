@@ -2,8 +2,9 @@
 
 Suma ponderada de penalizaciones menos bonificaciones. El peso efectivo de cada
 termino ya viene aplicado desde los handlers (peso de familia x peso de fila), asi
-que aqui solo se agregan. Se anade una penalizacion de variedad global suave para
-empujar a usar mas alimentos distintos cuando nada mas lo decide.
+que aqui solo se agregan. A esos terminos se suman dos penalizaciones
+estructurales globales del plan: variedad (usar mas alimentos distintos) y
+reparto (no concentrar un alimento en pocos dias).
 """
 
 from __future__ import annotations
@@ -22,13 +23,15 @@ def set_objective(pm: PlanModel, obj: ObjectiveTerms, weights: C.ObjectiveWeight
     for b in obj.bonuses:
         terms.append(-b)
 
-    # variedad: penaliza cada alimento no usado en todo el plan, suavemente.
+    # variety term: penalizes each food unused across the whole plan, softly, to
+    # push toward more distinct foods when nothing else decides it.
     variety_penalty = _variety_penalty(pm)
     if variety_penalty is not None:
         terms.append(weights.w_variety * variety_penalty)
 
-    # reparto: penaliza que un mismo alimento aparezca demasiadas veces en todo
-    # el plan, para que la ingesta se distribuya en vez de concentrarse.
+    # spread term: penalizes a food appearing too many times across the plan, so
+    # intake is distributed instead of concentrated. soft on purpose, so a tight
+    # catalog yields an imperfect feasible plan rather than infeasibility.
     spread_penalty = _spread_penalty(pm)
     if spread_penalty is not None:
         terms.append(weights.w_spread * spread_penalty)

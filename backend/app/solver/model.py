@@ -142,20 +142,25 @@ def _structural_constraints(
 ) -> None:
     model, foods, days, meals = pm.model, pm.foods, pm.days, pm.meals
 
-    # presencia minima y cota de items por comida.
+    # structural rule 1: at least one food per meal, no empty meals.
+    # structural rule 2: cap on distinct foods per meal.
     for d in days:
         for m in meals:
             present = [pm.x[(f.id, d, m)] for f in foods]
             model.Add(sum(present) >= 1)
             model.Add(sum(present) <= C.MAX_ITEMS_PER_MEAL)
 
-    # suelo calorico diario.
+    # structural rule 3: daily calorie floor. the floor is the basal metabolic
+    # rate (Mifflin), not total expenditure, so weight-loss plans stay feasible.
     pm.kcal_floor = daily_kcal_floor(client, warnings)
     for d in days:
         if (d, C.KCAL_CODE) in pm.daily_nut:
             model.Add(pm.daily_nut[(d, C.KCAL_CODE)] >= scale_target(pm.kcal_floor))
 
-    # rangos humanos de macros.
+    # structural rule 4: human protein range (g per kg of body weight).
+    # structural rule 5: minimum fat as a share of daily energy. from
+    # fat_g * 9 >= pct/100 * kcal, cleared of the division on the scaled sums:
+    # fat_scaled * 9 * 100 >= pct * kcal_scaled.
     weight = client.weight_kg if client.weight_kg is not None else C.DEFAULT_WEIGHT_KG
     prot_min = C.PROTEIN_G_PER_KG[0] * weight
     prot_max = C.PROTEIN_G_PER_KG[1] * weight
@@ -163,24 +168,22 @@ def _structural_constraints(
         if (d, C.PROTEIN_CODE) in pm.daily_nut:
             model.Add(pm.daily_nut[(d, C.PROTEIN_CODE)] >= scale_target(prot_min))
             model.Add(pm.daily_nut[(d, C.PROTEIN_CODE)] <= scale_target(prot_max))
-        # grasa minima como % de la energia: fat_g * 9 >= pct/100 * kcal.
-        # escalado: fat_scaled * 9 * 100 >= pct * kcal_scaled.
         if (d, C.FAT_CODE) in pm.daily_nut and (d, C.KCAL_CODE) in pm.daily_nut:
             model.Add(
                 pm.daily_nut[(d, C.FAT_CODE)] * C.KCAL_PER_G[C.FAT_CODE] * 100
                 >= C.FAT_MIN_PCT_ENERGY * pm.daily_nut[(d, C.KCAL_CODE)]
             )
 
-    # un mismo alimento no se repite en todas las comidas de un dia: se limita
-    # cuantas veces puede aparecer dentro del mismo dia.
+    # structural rule 6: a food appears at most MAX_SAME_FOOD_PER_DAY times
+    # across the meals of a single day.
     for f in foods:
         for d in days:
             model.Add(
                 sum(pm.x[(f.id, d, m)] for m in meals) <= C.MAX_SAME_FOOD_PER_DAY
             )
 
-    # variedad minima por dia: al menos K alimentos distintos cada dia, no solo
-    # a lo largo de la semana. presencia diaria = max sobre las comidas del dia.
+    # structural rule 7: minimum distinct foods per day, not just per week.
+    # daily presence used_day[f,d] = max of x over the day's meals.
     per_day_target = min(C.MIN_DISTINCT_PER_DAY, len(foods))
     for d in days:
         used = []
@@ -190,7 +193,8 @@ def _structural_constraints(
             used.append(u)
         model.Add(sum(used) >= per_day_target)
 
-    # variedad minima semanal para planes de al menos una semana.
+    # structural rule 8: minimum distinct foods in each 7-day window, for plans
+    # of at least a week.
     if len(days) >= 7:
         for start in range(1, len(days) - 5):
             window = list(range(start, start + 7))
