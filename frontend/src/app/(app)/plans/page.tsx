@@ -12,6 +12,7 @@ import {
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { InProgress } from "./in-progress";
 
 export const dynamic = "force-dynamic";
 
@@ -42,6 +43,18 @@ export default async function PlansPage() {
     .order("start_date", { ascending: false });
 
   const plans = (data as PlanRow[] | null) ?? [];
+
+  // nombres de cliente para el subapartado "In progress" (las tareas guardan
+  // solo el client_id).
+  const { data: clientRows } = await supabase
+    .from("client")
+    .select("id, full_name_pseudonym")
+    .is("deleted_at", null);
+  const clientNames: Record<number, string> = Object.fromEntries(
+    ((clientRows as { id: number; full_name_pseudonym: string }[] | null) ?? []).map(
+      (c) => [c.id, c.full_name_pseudonym]
+    )
+  );
 
   // los macros se agregan plan a plan en consultas separadas en paralelo, no en
   // un embed unico: asi el limite de filas de postgrest nunca trunca un plan.
@@ -79,11 +92,12 @@ export default async function PlansPage() {
             their constraints.
           </p>
           <div className="mt-auto flex items-center gap-2">
-            <Button disabled>
-              <Sparkles className="size-4" />
-              Generate
+            <Button asChild>
+              <Link href="/plans/generate">
+                <Sparkles className="size-4" />
+                Generate
+              </Link>
             </Button>
-            <Badge variant="info">Available soon</Badge>
           </div>
         </Card>
 
@@ -122,6 +136,8 @@ export default async function PlansPage() {
         </div>
         <ChevronRight className="size-5 text-muted-foreground" />
       </Link>
+
+      <InProgress clientNames={clientNames} />
 
       <div className="flex flex-col gap-3">
         <h2 className="text-lg font-semibold">Your plans</h2>

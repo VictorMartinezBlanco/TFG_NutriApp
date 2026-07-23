@@ -54,3 +54,55 @@ export async function generatePlan(p: GeneratePayload): Promise<GenerateResult> 
   }
   return { ok: true, status: "feasible", planId: body?.plan_id ?? null };
 }
+
+export type EnqueueResult =
+  | { ok: true; taskId: number }
+  | { ok: false; error: string };
+
+type EnqueuePayload = {
+  nutritionistId: string;
+  clientId: number;
+  kind: "translate" | "generate";
+  inputText?: string | null;
+  constraints?: unknown[];
+  durationDays?: number;
+  mealsPerDay?: number;
+};
+
+// Deja una tarea en la cola y vuelve al instante con su id. El worker local la
+// procesa; el frontend consulta el estado por RLS.
+export async function enqueueTask(p: EnqueuePayload): Promise<EnqueueResult> {
+  if (!API_URL || !API_TOKEN) {
+    return { ok: false, error: "The plan service is not configured." };
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/generation-tasks`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
+      body: JSON.stringify({
+        nutritionist_id: p.nutritionistId,
+        client_id: p.clientId,
+        kind: p.kind,
+        input_text: p.inputText ?? null,
+        constraints: p.constraints ?? [],
+        duration_days: p.durationDays ?? 7,
+        meals_per_day: p.mealsPerDay ?? 5,
+      }),
+      cache: "no-store",
+    });
+  } catch {
+    return { ok: false, error: "Could not reach the plan service." };
+  }
+
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    const detail = body?.detail ? String(body.detail) : `Request failed (${res.status}).`;
+    return { ok: false, error: detail };
+  }
+  return { ok: true, taskId: Number(body?.task_id) };
+}

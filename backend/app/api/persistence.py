@@ -8,8 +8,9 @@ no partial plan to compensate for. Signing is a separate, explicit step.
 
 from __future__ import annotations
 
+import json
 from datetime import date
-from typing import Optional
+from typing import Any, Optional
 
 import asyncpg
 
@@ -30,6 +31,35 @@ async def client_belongs_to(
         client_id,
     )
     return owner is not None and str(owner) == str(nutritionist_id)
+
+
+async def enqueue_task(
+    conn: asyncpg.Connection,
+    nutritionist_id: str,
+    client_id: int,
+    kind: str,
+    input_text: Optional[str],
+    constraints: list[dict[str, Any]],
+    duration_days: int,
+    meals_per_day: int,
+) -> int:
+    """Insert a queued task and return its id. The worker picks it up later."""
+    return await conn.fetchval(
+        """
+        INSERT INTO generation_task
+            (nutritionist_id, client_id, kind, input_text, constraints,
+             duration_days, meals_per_day)
+        VALUES ($1, $2, $3, $4, $5::jsonb, $6, $7)
+        RETURNING id
+        """,
+        nutritionist_id,
+        client_id,
+        kind,
+        input_text,
+        json.dumps(constraints, ensure_ascii=False),
+        duration_days,
+        meals_per_day,
+    )
 
 
 async def persist_plan(

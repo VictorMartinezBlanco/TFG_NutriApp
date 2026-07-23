@@ -76,30 +76,58 @@ def _weights(raw: dict[str, int] | None) -> ObjectiveWeights:
 async def generate(
     conn: asyncpg.Connection, req: GenerateRequest
 ) -> FeasibleResponse | InfeasibleResponse:
-    if not await persistence.client_belongs_to(conn, req.client_id, req.nutritionist_id):
+    return await run_generation(
+        conn,
+        nutritionist_id=req.nutritionist_id,
+        client_id=req.client_id,
+        duration_days=req.duration_days,
+        meals_per_day=req.meals_per_day,
+        extra=req.constraints,
+        weights=req.weights,
+        persist=req.persist,
+    )
+
+
+async def run_generation(
+    conn: asyncpg.Connection,
+    *,
+    nutritionist_id: str,
+    client_id: int,
+    duration_days: int,
+    meals_per_day: int,
+    extra: list[ConstraintIn],
+    weights: dict[str, int] | None = None,
+    persist: bool = True,
+) -> FeasibleResponse | InfeasibleResponse:
+    """Core pipeline: load, solve, validate and (optionally) persist a draft.
+
+    Shared by the synchronous endpoint and the async worker so both take exactly
+    the same path. Raises the tipped exceptions above; the caller maps them.
+    """
+    if not await persistence.client_belongs_to(conn, client_id, nutritionist_id):
         raise Forbidden("The client does not belong to this nutritionist.")
 
-    client = await load_client(conn, req.client_id)
+    client = await load_client(conn, client_id)
     if client is None:
-        raise BadRequest(f"Client {req.client_id} does not exist.")
+        raise BadRequest(f"Client {client_id} does not exist.")
 
-    stored = await load_constraints(conn, req.client_id, req.nutritionist_id)
-    extra = [_to_constraint(c, -(i + 1)) for i, c in enumerate(req.constraints)]
-    constraints = stored + extra
+    stored = await load_constraints(conn, client_id, nutritionist_id)
+    resolved_extra = [_to_constraint(c, -(i + 1)) for i, c in enumerate(extra)]
+    constraints = stored + resolved_extra
 
-    foods = await load_food_pool(conn, req.nutritionist_id)
-    meal_codes = await load_meal_type_codes(conn, req.meals_per_day)
+    foods = await load_food_pool(conn, nutritionist_id)
+    meal_codes = await load_meal_type_codes(conn, meals_per_day)
     ncodes = await _nutrient_codes(conn)
 
     result = generate_plan(
         client,
-        req.duration_days,
-        req.meals_per_day,
+        duration_days,
+        meals_per_day,
         constraints,
         foods,
         nutrient_codes=ncodes,
         meal_codes=meal_codes,
-        weights=_weights(req.weights),
+        weights=_weights(weights),
     )
 
     if isinstance(result, InfeasiblePlan):
@@ -121,14 +149,14 @@ async def generate(
     )
 
     plan_id = None
-    if req.persist:
+    if persist:
         plan_id = await persistence.persist_plan(
-            conn, req.nutritionist_id, req.client_id, result,
-            req.duration_days, date.today(),
+            conn, nutritionist_id, client_id, result,
+            duration_days, date.today(),
         )
 
     return serialize.feasible_response(
-        result, validation, req.duration_days, req.meals_per_day, plan_id
+        result, validation, duration_days, meals_per_day, plan_id
     )
 
 

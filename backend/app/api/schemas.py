@@ -133,3 +133,25 @@ class SignResponse(BaseModel):
     plan_id: int
     status: Literal["signed", "already_signed"]
     approved_at: Optional[str] = None
+
+
+class EnqueueRequest(BaseModel):
+    """A task dropped on the generation queue.
+
+    kind 'translate' only turns free text into proposed constraints (feeds the
+    modal); kind 'generate' runs the whole pipeline and persists a draft. The
+    worker reads this row and does the work; the endpoint just inserts it.
+    """
+
+    nutritionist_id: str
+    client_id: int
+    kind: Literal["translate", "generate"] = "generate"
+    input_text: Optional[str] = None
+    constraints: list[ConstraintIn] = Field(default_factory=list)
+    duration_days: int = Field(default=7, ge=1, le=90)
+    meals_per_day: int = Field(default=5, ge=1, le=6)
+
+
+class EnqueueResponse(BaseModel):
+    task_id: int
+    status: Literal["queued"] = "queued"

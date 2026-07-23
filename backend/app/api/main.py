@@ -18,12 +18,14 @@ from app.db import close_pool, get_pool
 
 from . import service
 from .schemas import (
+    EnqueueRequest,
+    EnqueueResponse,
     FeasibleResponse,
     GenerateRequest,
     InfeasibleResponse,
     SignResponse,
 )
-from .persistence import sign_plan
+from .persistence import client_belongs_to, enqueue_task, sign_plan
 
 
 @contextlib.asynccontextmanager
@@ -70,6 +72,35 @@ async def generate_plan_endpoint(
             raise HTTPException(status_code=400, detail=str(e))
         except service.Unprocessable as e:
             raise HTTPException(status_code=422, detail=str(e))
+
+
+@app.post("/generation-tasks")
+async def enqueue_task_endpoint(
+    req: EnqueueRequest, _: None = Depends(require_token)
+) -> EnqueueResponse:
+    """Drop a task on the queue and return at once. The local worker does the
+    work; polling reads the row's state directly under RLS."""
+    if req.kind == "generate" and not req.input_text and not req.constraints:
+        raise HTTPException(
+            status_code=400, detail="A generation needs free text or constraints."
+        )
+    pool = await get_pool()
+    async with pool.acquire() as conn:
+        if not await client_belongs_to(conn, req.client_id, req.nutritionist_id):
+            raise HTTPException(
+                status_code=403, detail="The client does not belong to this nutritionist."
+            )
+        task_id = await enqueue_task(
+            conn,
+            req.nutritionist_id,
+            req.client_id,
+            req.kind,
+            req.input_text,
+            [c.model_dump() for c in req.constraints],
+            req.duration_days,
+            req.meals_per_day,
+        )
+    return EnqueueResponse(task_id=task_id)
 
 
 @app.post("/plans/{plan_id}/sign")
