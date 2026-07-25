@@ -26,12 +26,15 @@ function fail(error: string): BuildResult {
   return { row: null, error };
 }
 
-export function buildConstraintRow(formData: FormData): BuildResult {
-  const clientId = parseInt1(formData.get("client_id"));
-  if (clientId == null || Number.isNaN(clientId) || clientId <= 0) {
-    return fail("Invalid client.");
-  }
+export type BuildScope =
+  | { scope: "client" }
+  | { scope: "nutritionist" };
 
+// Por defecto ambito cliente, para no romper a los llamantes previos.
+export function buildConstraintRow(
+  formData: FormData,
+  opts: BuildScope = { scope: "client" }
+): BuildResult {
   const type = String(formData.get("type") ?? "").trim();
   const meta = constraintMeta(type);
   if (!meta) return fail("Unknown constraint type.");
@@ -47,9 +50,23 @@ export function buildConstraintRow(formData: FormData): BuildResult {
     return fail("Weight must be a whole number between 1 and 10.");
   }
 
+  const scopeCols: Record<string, unknown> = {};
+  if (opts.scope === "client") {
+    const clientId = parseInt1(formData.get("client_id"));
+    if (clientId == null || Number.isNaN(clientId) || clientId <= 0) {
+      return fail("Invalid client.");
+    }
+    scopeCols.scope_type = "client";
+    scopeCols.scope_client_id = clientId;
+  } else {
+    const nutritionistId = String(formData.get("nutritionist_id") ?? "").trim();
+    if (!nutritionistId) return fail("Invalid nutritionist.");
+    scopeCols.scope_type = "nutritionist";
+    scopeCols.scope_nutritionist_id = nutritionistId;
+  }
+
   const row: Record<string, unknown> = {
-    scope_type: "client",
-    scope_client_id: clientId,
+    ...scopeCols,
     type,
     operator: meta.operator,
     priority,

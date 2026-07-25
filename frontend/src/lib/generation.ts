@@ -2,6 +2,8 @@
 // tabla generation_task; el worker local la procesa y deja el resultado. El
 // frontend encola por la API y lee el estado por RLS.
 
+import { constraintSentence, priorityLabel as priorityLabelBase } from "./constraints";
+
 export type TaskStatus = "queued" | "in_progress" | "done" | "failed";
 export type TaskKind = "translate" | "generate";
 
@@ -11,6 +13,7 @@ export type ProposedConstraint = {
   type: string;
   priority: "hard" | "soft";
   weight?: number;
+  operator?: string | null;
   value?: number | null;
   value2?: number | null;
   target_food_id?: number | null;
@@ -78,44 +81,18 @@ export type NameMaps = {
 };
 
 export function proposedLabel(c: ProposedConstraint, names: NameMaps): string {
-  const nutrient = c.target_nutrient_id ? names.nutrients[c.target_nutrient_id] : undefined;
-  const tag = c.target_tag_id ? names.tags[c.target_tag_id] : undefined;
-  const food = c.target_food_id ? names.foods[c.target_food_id] : undefined;
-
-  switch (c.type) {
-    case "forbid_tag":
-      return `Avoid ${tag ?? "tag"}`;
-    case "prefer_tag":
-      return `Prefer ${tag ?? "tag"}`;
-    case "forbid_food":
-      return `Avoid ${food ?? "food"}`;
-    case "prefer_food":
-      return `Prefer ${food ?? "food"}`;
-    case "no_repeat_food":
-      return `Do not repeat ${food ?? "food"} within ${c.value ?? "?"} days`;
-    case "kcal_target":
-      return `Calorie target ${c.value ?? "?"} kcal/day`;
-    case "macro_target":
-      return `Macro target ${c.value ?? "?"} g of ${nutrient ?? "macro"}`;
-    case "nutrient_min":
-      return `At least ${c.value ?? "?"} of ${nutrient ?? "nutrient"}`;
-    case "nutrient_max":
-      return `At most ${c.value ?? "?"} of ${nutrient ?? "nutrient"}`;
-    case "nutrient_ratio":
-      return `${nutrient ?? "nutrient"} ratio limit ${c.value ?? "?"}`;
-    case "meal_kcal_ratio":
-      return "Calorie split across meals";
-    case "max_servings_per_period":
-      return `At most ${c.value ?? "?"} servings of ${food ?? tag ?? "item"}`;
-    case "forbid_combination":
-      return `Do not combine ${food ?? tag ?? "item"} with another item`;
-    case "no_repeat_tag":
-      return `Do not repeat ${tag ?? "tag"} within ${c.value ?? "?"} days`;
-    default:
-      return c.type.replace(/_/g, " ");
-  }
+  const windowDays = c.context && typeof c.context.window_days === "number"
+    ? (c.context.window_days as number)
+    : null;
+  return constraintSentence({
+    type: c.type,
+    operator: c.operator,
+    value: c.value,
+    nutrient: c.target_nutrient_id ? names.nutrients[c.target_nutrient_id] : undefined,
+    tag: c.target_tag_id ? names.tags[c.target_tag_id] : undefined,
+    food: c.target_food_id ? names.foods[c.target_food_id] : undefined,
+    windowDays,
+  });
 }
 
-export function priorityLabel(p: "hard" | "soft"): string {
-  return p === "hard" ? "Must" : "Prefer";
-}
+export const priorityLabel = priorityLabelBase;

@@ -12,6 +12,7 @@ import {
 import {
   constraintLabel,
   constraintGroup,
+  priorityLabel,
   type ConstraintRow,
 } from "@/lib/constraints";
 import { aggregatePlanMacros, type MealItemRow } from "@/lib/plans";
@@ -256,17 +257,17 @@ export default async function ClientDetailPage({
 
       <Card>
         <CardHeader className="gap-3">
-          <CardTitle>Dietary constraints</CardTitle>
+          <CardTitle>Dietary rules</CardTitle>
           <Button asChild size="sm" variant="outline">
             <Link href={`/clients/${client.id}/constraints/new`}>
               <Plus className="size-4" />
-              Add constraint
+              Add rule
             </Link>
           </Button>
         </CardHeader>
         {constraints.length === 0 ? (
           <p className="py-6 text-center text-sm text-muted-foreground">
-            No active constraints for this client.
+            No rules for this client yet.
           </p>
         ) : (
           <div className="flex flex-col gap-5">
@@ -284,7 +285,7 @@ export default async function ClientDetailPage({
                       <span>{constraintLabel(c)}</span>
                       <div className="flex items-center gap-3">
                         <Badge variant={c.priority === "hard" ? "critical" : "neutral"}>
-                          {c.priority}
+                          {priorityLabel(c.priority)}
                         </Badge>
                         <DeleteConstraintButton
                           clientId={client.id}

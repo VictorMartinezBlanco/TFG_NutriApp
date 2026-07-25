@@ -1,14 +1,11 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { useFormState, useFormStatus } from "react-dom";
-import {
-  createClientConstraint,
-  type ConstraintFormState,
-} from "./_actions";
+import { type ConstraintFormState } from "./_actions";
 import {
   CONSTRAINT_TYPES,
-  CONSTRAINT_FAMILIES,
+  CONSTRAINT_INTENTS,
   constraintMeta,
 } from "@/lib/constraints";
 import { FoodPicker } from "./food-picker";
@@ -22,24 +19,37 @@ type NutrientOption = { id: number; name_en: string; unit_default: string };
 type UnitOption = { id: number; name_en: string };
 type MealSplit = { code: string; label: string };
 
+type ConstraintAction = (
+  prev: ConstraintFormState,
+  formData: FormData
+) => Promise<ConstraintFormState>;
+
 const initialState: ConstraintFormState = { error: null };
 
+// Formulario de alta de restriccion reutilizable por el ambito cliente y el de
+// estilo del nutri. El scope entra como campo oculto (scopeField) y la accion de
+// servidor como prop. El selector agrupa por intencion en lenguaje del nutri; el
+// tipo interno se mantiene detras de cada opcion.
 export function ConstraintForm({
-  clientId,
+  action,
+  scopeField,
+  cancelHref,
   tagGroups,
   nutrients,
   macros,
   units,
   mealSplit,
 }: {
-  clientId: number;
+  action: ConstraintAction;
+  scopeField: ReactNode;
+  cancelHref: string;
   tagGroups: TagGroup[];
   nutrients: NutrientOption[];
   macros: NutrientOption[];
   units: UnitOption[];
   mealSplit: MealSplit[];
 }) {
-  const [state, formAction] = useFormState(createClientConstraint, initialState);
+  const [state, formAction] = useFormState(action, initialState);
   const [type, setType] = useState(CONSTRAINT_TYPES[0].type);
   const [termKind, setTermKind] = useState<"food" | "tag">("food");
   const [partnerKind, setPartnerKind] = useState<"food" | "tag">("food");
@@ -50,10 +60,10 @@ export function ConstraintForm({
 
   return (
     <form action={formAction} className="flex flex-col gap-6">
-      <input type="hidden" name="client_id" value={clientId} />
+      {scopeField}
 
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="type">Constraint type</Label>
+        <Label htmlFor="type">What do you want to set?</Label>
         <select
           id="type"
           name="type"
@@ -61,11 +71,11 @@ export function ConstraintForm({
           onChange={(e) => setType(e.target.value)}
           className="h-10 rounded-control border border-input bg-card px-3 text-sm focus:outline-none focus:ring-2 focus:ring-ring"
         >
-          {CONSTRAINT_FAMILIES.map((family) => (
-            <optgroup key={family} label={family}>
-              {CONSTRAINT_TYPES.filter((t) => t.family === family).map((t) => (
-                <option key={t.type} value={t.type}>
-                  {t.label}
+          {CONSTRAINT_INTENTS.map((group) => (
+            <optgroup key={group.intent} label={group.intent}>
+              {group.options.map((o) => (
+                <option key={o.type} value={o.type}>
+                  {o.label}
                 </option>
               ))}
             </optgroup>
@@ -281,14 +291,14 @@ export function ConstraintForm({
 
       {/* priority */}
       <div className="flex flex-col gap-1.5">
-        <span className="text-sm font-medium">Priority</span>
+        <span className="text-sm font-medium">How strict is this?</span>
         {meta.priorityLocked ? (
           <>
             <input type="hidden" name="priority" value={meta.defaultPriority} />
             <p className="text-sm text-muted-foreground">
               {meta.defaultPriority === "hard"
-                ? "This type is always a hard rule."
-                : "This type is always a soft goal weighted in the plan."}
+                ? "This one always holds without exception."
+                : "This one is a goal the plan tries to meet."}
             </p>
           </>
         ) : (
@@ -296,14 +306,14 @@ export function ConstraintForm({
             <PriorityRadio
               value="hard"
               defaultChecked={meta.defaultPriority === "hard"}
-              label="Hard (must hold)"
+              label="Must always hold"
               // key fuerza el re-render del default al cambiar de tipo
               key={`hard-${type}`}
             />
             <PriorityRadio
               value="soft"
               defaultChecked={meta.defaultPriority === "soft"}
-              label="Soft (weighted goal)"
+              label="Prefer, but flexible"
               key={`soft-${type}`}
             />
           </div>
@@ -312,7 +322,7 @@ export function ConstraintForm({
 
       {/* weight */}
       <div className="flex flex-col gap-1.5">
-        <Label htmlFor="weight">Weight (1-10)</Label>
+        <Label htmlFor="weight">How much does it matter? (1-10)</Label>
         <Input
           id="weight"
           name="weight"
@@ -324,7 +334,8 @@ export function ConstraintForm({
           className="max-w-[10rem]"
         />
         <p className="text-xs text-muted-foreground">
-          How much a soft goal counts against the others.
+          When a preference is flexible, this sets how much it weighs against the
+          others.
         </p>
       </div>
 
@@ -337,7 +348,7 @@ export function ConstraintForm({
       <div className="flex items-center gap-3">
         <SubmitButton />
         <a
-          href={`/clients/${clientId}`}
+          href={cancelHref}
           className="text-sm text-muted-foreground hover:text-foreground"
         >
           Cancel

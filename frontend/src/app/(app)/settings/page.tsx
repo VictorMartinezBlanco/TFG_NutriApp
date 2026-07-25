@@ -1,14 +1,18 @@
 import Link from "next/link";
+import { Plus } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
 import {
   constraintLabel,
   constraintGroup,
+  priorityLabel,
   type ConstraintRow,
 } from "@/lib/constraints";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { ProfileForm } from "./profile-form";
 import { AvailabilityEditor, type AvailabilityBlock } from "./availability-editor";
+import { DeleteRuleButton } from "./clinical/delete-rule-button";
 
 export const dynamic = "force-dynamic";
 
@@ -168,7 +172,7 @@ async function ClinicalTab({
   const { data } = await supabase
     .from("diet_constraint")
     .select(
-      `id, type, operator, value, value2, priority, weight,
+      `id, type, operator, value, value2, priority, weight, context,
        tag:target_tag_id (name_en, kind),
        food:target_food_id (name_en),
        nutrient:target_nutrient_id (name_en, unit_default)`
@@ -192,19 +196,24 @@ async function ClinicalTab({
 
   return (
     <Card>
-      <CardHeader>
+      <CardHeader className="gap-3">
         <CardTitle>My clinical style</CardTitle>
-        <button type="button" disabled className="text-sm text-muted-foreground" title="Available soon">
-          Add constraint
-        </button>
+        <Button asChild size="sm" variant="outline">
+          <Link href="/settings/clinical/new">
+            <Plus className="size-4" />
+            Add rule
+          </Link>
+        </Button>
       </CardHeader>
       <p className="mb-4 text-sm text-muted-foreground">
-        Default rules applied to every plan you generate. Editing comes with the AI copilot.
+        Rules you follow with every client. They apply to every plan you generate,
+        on top of each client&apos;s own rules.
       </p>
 
       {constraints.length === 0 ? (
         <p className="text-sm text-muted-foreground">
-          No default rules yet. You will set these up when generating your first plan.
+          No rules yet. Add the ones you apply to everyone, like a family you never
+          include or a protein floor you always keep.
         </p>
       ) : (
         <div className="flex flex-col gap-5">
@@ -213,13 +222,19 @@ async function ClinicalTab({
               <h4 className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
                 {group}
               </h4>
-              <ul className="flex flex-col gap-2">
+              <ul className="flex flex-col divide-y divide-border">
                 {list.map((c) => (
-                  <li key={c.id} className="flex items-center justify-between gap-3 text-sm">
+                  <li
+                    key={c.id}
+                    className="flex items-center justify-between gap-3 py-2.5 text-sm"
+                  >
                     <span>{constraintLabel(c)}</span>
-                    <Badge variant={c.priority === "hard" ? "critical" : "neutral"}>
-                      {c.priority}
-                    </Badge>
+                    <div className="flex items-center gap-3">
+                      <Badge variant={c.priority === "hard" ? "critical" : "neutral"}>
+                        {priorityLabel(c.priority)}
+                      </Badge>
+                      <DeleteRuleButton constraintId={c.id} label={constraintLabel(c)} />
+                    </div>
                   </li>
                 ))}
               </ul>

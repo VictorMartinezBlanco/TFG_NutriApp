@@ -17,48 +17,85 @@ export type ConstraintRow = {
   nutrient: { name_en: string; unit_default: string } | null;
 };
 
-export function constraintLabel(c: ConstraintRow): string {
-  const tag = c.tag?.name_en;
-  const food = c.food?.name_en;
-  const nutrient = c.nutrient?.name_en;
-  const unit = c.nutrient?.unit_default ?? "";
-  const ctx = c.context ?? {};
+// Forma normalizada de una restriccion para escribir su frase legible. Tanto una
+// fila de diet_constraint (con sus embeds de nombre) como una constraint cruda del
+// worker (targets por id, nombres resueltos aparte) se reducen a esto, para que
+// haya una unica fuente de lenguaje llano en toda la interfaz.
+export type ConstraintParts = {
+  type: string;
+  operator?: string | null;
+  value?: number | null;
+  tag?: string;
+  food?: string;
+  nutrient?: string;
+  unit?: string;
+  windowDays?: number | null;
+};
 
-  switch (c.type) {
+// Frase en lenguaje natural, sin vocabulario tecnico. El nutri lee "Never eat
+// red meat", no "forbid_tag red_meat hard".
+export function constraintSentence(p: ConstraintParts): string {
+  const tag = p.tag ?? "this family";
+  const food = p.food ?? "this food";
+  const nutrient = p.nutrient ?? "this nutrient";
+  const unit = p.unit ? ` ${p.unit}` : "";
+  const amount = p.value ?? "?";
+
+  switch (p.type) {
     case "forbid_tag":
-      return `Avoid ${tag ?? "tag"}`;
+      return `Never include ${tag}`;
     case "prefer_tag":
-      return `Prefer ${tag ?? "tag"}`;
+      return `Favor ${tag} when possible`;
     case "forbid_food":
-      return `Avoid ${food ?? "food"}`;
+      return `Never include ${food}`;
     case "prefer_food":
-      return `Prefer ${food ?? "food"}`;
+      return `Favor ${food} when possible`;
     case "no_repeat_food":
-      return `Do not repeat ${food ?? "food"} within ${c.value ?? "?"} days`;
+      return `Do not repeat ${food} within ${amount} days`;
     case "kcal_target":
-      return `Calorie target ${c.value ?? "?"} kcal/day`;
+      return `Aim for about ${amount} kcal a day`;
     case "macro_target":
-      return `Macro target ${c.value ?? "?"} ${unit || "g"} of ${nutrient ?? "macro"}`;
+      return `Aim for about ${amount} g of ${nutrient} a day`;
     case "nutrient_min":
-      return `At least ${c.value ?? "?"} ${unit} of ${nutrient ?? "nutrient"}`;
+      return `At least ${amount}${unit} of ${nutrient} a day`;
     case "nutrient_max":
-      return `At most ${c.value ?? "?"} ${unit} of ${nutrient ?? "nutrient"}`;
+      return `No more than ${amount}${unit} of ${nutrient} a day`;
     case "nutrient_ratio":
-      return `${nutrient ?? "nutrient"} ratio ${c.operator === "min" ? "at least" : "at most"} ${c.value ?? "?"}`;
+      return `Keep ${nutrient} ${p.operator === "min" ? "above" : "below"} a ${amount} ratio`;
     case "meal_kcal_ratio":
-      return `Calorie split across meals`;
+      return "Split the daily calories across meals";
     case "max_servings_per_period": {
-      const target = food ?? tag ?? "item";
-      const days = numContext(ctx, "window_days");
-      return `At most ${c.value ?? "?"} servings of ${target}${days ? ` per ${days} days` : ""}`;
+      const target = p.food ?? p.tag ?? "this item";
+      return `At most ${amount} servings of ${target}${p.windowDays ? ` every ${p.windowDays} days` : ""}`;
     }
     case "forbid_combination": {
-      const first = food ?? tag ?? "item";
-      return `Do not combine ${first} with another item`;
+      const first = p.food ?? p.tag ?? "this item";
+      return `Never serve ${first} together with another item`;
     }
+    case "no_repeat_tag":
+      return `Do not repeat ${tag} within ${amount} days`;
     default:
-      return c.type.replace(/_/g, " ");
+      return p.type.replace(/_/g, " ");
   }
+}
+
+export function constraintLabel(c: ConstraintRow): string {
+  return constraintSentence({
+    type: c.type,
+    operator: c.operator,
+    value: c.value,
+    tag: c.tag?.name_en,
+    food: c.food?.name_en,
+    nutrient: c.nutrient?.name_en,
+    unit: c.nutrient?.unit_default ?? "",
+    windowDays: numContext(c.context ?? {}, "window_days"),
+  });
+}
+
+// "Must" para una regla dura, "Prefer" para una preferencia. Sin exponer el
+// enum hard/soft al nutri.
+export function priorityLabel(p: "hard" | "soft"): string {
+  return p === "hard" ? "Must" : "Prefer";
 }
 
 // El tag clinico de la restriccion da una pista del origen para agrupar.
@@ -282,6 +319,57 @@ export const CONSTRAINT_FAMILIES = [
   "Food & tag rules",
   "Meal distribution",
   "Frequency & variety",
+];
+
+// Agrupacion del selector del formulario por intencion, en lenguaje del nutri:
+// que quiere conseguir, no como se llama el tipo por dentro. Cada intencion
+// reune uno o varios tipos del catalogo; el label de cada tipo se reescribe a
+// una frase de accion. El vocabulario interno (type) no cambia.
+export type IntentOption = { type: string; label: string };
+export type IntentGroup = { intent: string; options: IntentOption[] };
+
+export const CONSTRAINT_INTENTS: IntentGroup[] = [
+  {
+    intent: "Set an energy or macro goal",
+    options: [
+      { type: "kcal_target", label: "Daily calorie goal" },
+      { type: "macro_target", label: "Daily goal for a macronutrient" },
+    ],
+  },
+  {
+    intent: "Set a nutrient floor or cap",
+    options: [
+      { type: "nutrient_min", label: "At least a certain amount of a nutrient" },
+      { type: "nutrient_max", label: "No more than a certain amount of a nutrient" },
+      { type: "nutrient_ratio", label: "Keep two nutrients in balance" },
+    ],
+  },
+  {
+    intent: "Avoid a food or family",
+    options: [
+      { type: "forbid_tag", label: "Never a whole family (allergy, intolerance)" },
+      { type: "forbid_food", label: "Never a specific food" },
+      { type: "forbid_combination", label: "Never two items in the same meal" },
+    ],
+  },
+  {
+    intent: "Favor a food or family",
+    options: [
+      { type: "prefer_tag", label: "Favor a whole family" },
+      { type: "prefer_food", label: "Favor a specific food" },
+    ],
+  },
+  {
+    intent: "Shape the daily meals",
+    options: [{ type: "meal_kcal_ratio", label: "Share of calories per meal" }],
+  },
+  {
+    intent: "Limit how often something appears",
+    options: [
+      { type: "max_servings_per_period", label: "Cap servings over a window of days" },
+      { type: "no_repeat_food", label: "Space out a food so it does not repeat" },
+    ],
+  },
 ];
 
 export function constraintMeta(type: string): ConstraintTypeMeta | undefined {
