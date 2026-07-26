@@ -37,6 +37,11 @@ class Settings:
     # motor del traductor de restricciones. Ollama corre local y no lleva clave.
     ollama_host: str
     ollama_model: str
+    # un modelo por pasada de validacion previa: el mas barato que hace bien
+    # cada check, medido empiricamente.
+    ollama_scope_model: str
+    ollama_completeness_model: str
+    ollama_contradiction_model: str
 
     @staticmethod
     def _normalize(dsn: str) -> str:
@@ -50,16 +55,25 @@ class Settings:
         token = os.environ.get("NUTRIAPP_API_TOKEN", "")
         ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
         ollama_model = os.environ.get("OLLAMA_MODEL", "qwen2.5:7b-instruct")
+        scope_model = os.environ.get("OLLAMA_SCOPE_MODEL", "qwen2.5:1.5b-instruct")
+        completeness_model = os.environ.get("OLLAMA_COMPLETENESS_MODEL", "qwen2.5:7b-instruct")
+        contradiction_model = os.environ.get("OLLAMA_CONTRADICTION_MODEL", "qwen2.5:3b-instruct")
 
         if pooler and "<" not in pooler:  # rellenado de verdad, no la plantilla
             return cls(
                 database_url=cls._normalize(pooler), using_pooler=True, api_token=token,
                 ollama_host=ollama_host, ollama_model=ollama_model,
+                ollama_scope_model=scope_model,
+                ollama_completeness_model=completeness_model,
+                ollama_contradiction_model=contradiction_model,
             )
         if direct and "<" not in direct:
             return cls(
                 database_url=cls._normalize(direct), using_pooler=False, api_token=token,
                 ollama_host=ollama_host, ollama_model=ollama_model,
+                ollama_scope_model=scope_model,
+                ollama_completeness_model=completeness_model,
+                ollama_contradiction_model=contradiction_model,
             )
 
         raise RuntimeError(

@@ -18,17 +18,40 @@ import argparse
 import asyncio
 import json
 import signal
+from dataclasses import dataclass
 from typing import Any, Optional
 
 import asyncpg
 
 from app.api import service
+from app.api.explain import load_name_index, ref_ids
 from app.api.schemas import ConstraintIn, InfeasibleResponse
 from app.db import connection_pool
+from app.precheck import (
+    CheckEngines,
+    PrecheckResult,
+    find_draft_conflicts,
+    find_stored_conflicts,
+    run_prechecks,
+)
+from app.solver.loader import load_constraints
 from app.translator.client import FakeLLMClient, LLMClient, OllamaClient
 from app.translator.translate import translate_constraints
 
 POLL_INTERVAL_S = 2.0
+
+
+@dataclass
+class Engines:
+    """The models in play: the translator and the cheaper ones that run the
+    checks in front of it."""
+
+    translator: LLMClient
+    checks: CheckEngines
+
+    @classmethod
+    def single(cls, llm: LLMClient) -> "Engines":
+        return cls(translator=llm, checks=CheckEngines.single(llm))
 
 
 async def claim_task(conn: asyncpg.Connection) -> Optional[asyncpg.Record]:
@@ -58,31 +81,81 @@ def _rejected_out(rejected: list[tuple[dict[str, Any], str]]) -> list[dict[str, 
 
 
 async def _run_translate(
-    conn: asyncpg.Connection, task: asyncpg.Record, llm: LLMClient
+    conn: asyncpg.Connection, task: asyncpg.Record, engines: Engines
 ) -> dict[str, Any]:
-    """Turn free text into proposed constraints for the modal. No plan."""
+    """Turn free text into proposed constraints for the modal. No plan.
+
+    The checks run first and short-circuit: a message that fails one comes back
+    as a verdict in the result, and the translator is never called.
+    """
     text = task["input_text"] or ""
+    nutri = str(task["nutritionist_id"])
+
+    pre = await run_prechecks(conn, text, llms=engines.checks, created_by=nutri)
+    if not pre.ok:
+        return {"precheck": pre.to_payload()}
+
     tr = await translate_constraints(
         conn,
         text,
-        llm=llm,
-        nutritionist_id=str(task["nutritionist_id"]),
-        created_by=str(task["nutritionist_id"]),
+        llm=engines.translator,
+        nutritionist_id=nutri,
+        created_by=nutri,
     )
+
+    conflicts = await _stored_conflicts(conn, task, tr.constraints)
+    if conflicts:
+        return {
+            "precheck": PrecheckResult(
+                status="contradiction",
+                message="The request conflicts with the client's stored "
+                "constraints, so no constraints were applied.",
+                details=conflicts,
+            ).to_payload()
+        }
+
     return {
         "constraints": [c.model_dump(exclude_none=True) for c in tr.constraints],
         "rejected": _rejected_out(tr.rejected),
         "model": tr.model,
         "latency_ms": tr.latency_ms,
+        "precheck": PrecheckResult(status="ok").to_payload(),
     }
 
 
+async def _stored_conflicts(
+    conn: asyncpg.Connection, task: asyncpg.Record, drafts: list[ConstraintIn]
+) -> list[str]:
+    """Deterministic half of the contradiction check: proposed drafts against
+    each other and against the client's stored constraints, worded with real
+    names."""
+    if not drafts:
+        return []
+    stored = await load_constraints(
+        conn, task["client_id"], str(task["nutritionist_id"])
+    )
+    rows = list(stored) + list(drafts)
+    names = await load_name_index(
+        conn,
+        food_ids={r.target_food_id for r in rows if r.target_food_id is not None},
+        tag_ids={r.target_tag_id for r in rows if r.target_tag_id is not None},
+        nutrient_ids={
+            r.target_nutrient_id for r in rows if r.target_nutrient_id is not None
+        },
+    )
+    return find_draft_conflicts(drafts, names) + find_stored_conflicts(
+        drafts, stored, names
+    )
+
+
 async def _run_generate(
-    conn: asyncpg.Connection, task: asyncpg.Record, llm: LLMClient
+    conn: asyncpg.Connection, task: asyncpg.Record, engines: Engines
 ) -> tuple[Optional[int], Optional[str], dict[str, Any]]:
     """Full pipeline: translate free text if any, then solve/validate/persist.
 
     Returns (plan_id, error, trace). error is set when the plan is infeasible.
+    Free text goes through the same checks as a translate task; a message that
+    fails them ends the task with the verdict and no plan.
     """
     trace: dict[str, Any] = {}
 
@@ -95,12 +168,18 @@ async def _run_generate(
 
     # plus anything the free text translates to, if there was text.
     if task["input_text"]:
+        nutri = str(task["nutritionist_id"])
+        pre = await run_prechecks(
+            conn, task["input_text"], llms=engines.checks, created_by=nutri
+        )
+        if not pre.ok:
+            return None, None, {"precheck": pre.to_payload()}
         tr = await translate_constraints(
             conn,
             task["input_text"],
-            llm=llm,
-            nutritionist_id=str(task["nutritionist_id"]),
-            created_by=str(task["nutritionist_id"]),
+            llm=engines.translator,
+            nutritionist_id=nutri,
+            created_by=nutri,
         )
         extra.extend(tr.constraints)
         trace["rejected"] = _rejected_out(tr.rejected)
@@ -116,19 +195,46 @@ async def _run_generate(
     )
 
     if isinstance(result, InfeasibleResponse):
-        return None, result.suggestion, trace
+        trace["infeasible"] = await _infeasible_out(conn, result)
+        return None, result.explanation or result.suggestion, trace
 
     trace["findings"] = [f.model_dump() for f in result.findings]
     return result.plan_id, None, trace
 
 
+async def _infeasible_out(
+    conn: asyncpg.Connection, result: InfeasibleResponse
+) -> dict[str, Any]:
+    """The diagnosis as the frontend shows it: the plain explanation plus the
+    conflict core with real names instead of catalog ids."""
+    food_ids, tag_ids, nut_ids = ref_ids(result.unsat_core)
+    names = await load_name_index(
+        conn, food_ids=food_ids, tag_ids=tag_ids, nutrient_ids=nut_ids
+    )
+    core = []
+    for r in result.unsat_core:
+        target = None
+        if r.target_food_id is not None:
+            target = names.food(r.target_food_id)
+        elif r.target_tag_id is not None:
+            target = names.tag(r.target_tag_id)
+        elif r.target_nutrient_id is not None:
+            target = names.nutrient(r.target_nutrient_id)[0]
+        core.append({"type": r.type, "value": r.value, "target": target})
+    return {"explanation": result.explanation, "core": core}
+
+
 async def process_task(
-    conn: asyncpg.Connection, task: asyncpg.Record, llm: LLMClient
+    conn: asyncpg.Connection, task: asyncpg.Record, engines: Engines
 ) -> None:
-    """Run one task and write its outcome. Any failure lands as 'failed'."""
+    """Run one task and write its outcome. Any failure lands as 'failed'.
+
+    A message the checks stop is not a failure: the task ends 'done' with the
+    verdict in result. 'failed' is for infeasibility and real errors.
+    """
     try:
         if task["kind"] == "translate":
-            result = await _run_translate(conn, task, llm)
+            result = await _run_translate(conn, task, engines)
             await conn.execute(
                 """
                 UPDATE generation_task
@@ -140,7 +246,7 @@ async def process_task(
             )
             return
 
-        plan_id, error, trace = await _run_generate(conn, task, llm)
+        plan_id, error, trace = await _run_generate(conn, task, engines)
         if error is not None:
             await conn.execute(
                 """
@@ -176,7 +282,7 @@ async def process_task(
         )
 
 
-async def worker_loop(llm: LLMClient, *, stop: asyncio.Event) -> None:
+async def worker_loop(engines: Engines, *, stop: asyncio.Event) -> None:
     async with connection_pool() as pool:
         print("worker up, polling generation_task")
         while not stop.is_set():
@@ -186,7 +292,7 @@ async def worker_loop(llm: LLMClient, *, stop: asyncio.Event) -> None:
                     await _wait(stop, POLL_INTERVAL_S)
                     continue
                 print(f"task {task['id']} ({task['kind']}) claimed")
-                await process_task(conn, task, llm)
+                await process_task(conn, task, engines)
                 print(f"task {task['id']} finished")
         print("worker stopped")
 
@@ -198,10 +304,12 @@ async def _wait(stop: asyncio.Event, seconds: float) -> None:
         pass
 
 
-def _build_llm(fake: bool) -> LLMClient:
+def _build_engines(fake: bool) -> Engines:
     if fake:
         # Verifies the loop without Ollama; canned by a substring of the text.
-        return FakeLLMClient(
+        # The fallback answer of the fake parses as a clean verdict for every
+        # check, so the same client serves every role.
+        return Engines.single(FakeLLMClient(
             canned={
                 "protein": {
                     "constraints": [
@@ -210,8 +318,8 @@ def _build_llm(fake: bool) -> LLMClient:
                     ]
                 }
             }
-        )
-    return OllamaClient()
+        ))
+    return Engines(translator=OllamaClient(), checks=CheckEngines.from_settings())
 
 
 async def _main() -> None:
@@ -226,7 +334,7 @@ async def _main() -> None:
         loop.add_signal_handler(signal.SIGINT, stop.set)
         loop.add_signal_handler(signal.SIGTERM, stop.set)
 
-    await worker_loop(_build_llm(args.fake), stop=stop)
+    await worker_loop(_build_engines(args.fake), stop=stop)
 
 
 if __name__ == "__main__":

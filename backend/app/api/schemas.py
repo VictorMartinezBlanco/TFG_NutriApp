@@ -127,6 +127,8 @@ class InfeasibleResponse(BaseModel):
     unsat_core: list[ConstraintRefOut]
     suggestion: str
     relaxable: list[ConstraintRefOut]
+    # the same diagnosis worded with real food/nutrient/tag names, ready to show.
+    explanation: Optional[str] = None
 
 
 class SignResponse(BaseModel):

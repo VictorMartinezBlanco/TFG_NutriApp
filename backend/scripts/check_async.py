@@ -22,7 +22,7 @@ import asyncpg
 
 from app.db import connection_pool
 from app.translator.client import FakeLLMClient
-from app.worker.run import claim_task, process_task
+from app.worker.run import Engines, claim_task, process_task
 
 NUTRI = "03f06edf-603e-489d-8aed-71bc93f97ef0"
 NUTRI2 = "075f505b-bf3a-4937-8e13-ec364a0875d8"
@@ -83,7 +83,7 @@ async def _drive(conn: asyncpg.Connection, llm: FakeLLMClient) -> asyncpg.Record
     """Claim and process exactly one task, return its final row."""
     task = await claim_task(conn)
     assert task is not None, "no queued task to claim"
-    await process_task(conn, task, llm)
+    await process_task(conn, task, Engines.single(llm))
     return await conn.fetchrow("SELECT * FROM generation_task WHERE id = $1", task["id"])
 
 

@@ -24,6 +24,7 @@ from app.translator.validation import validate_draft
 from app.validator import validate_plan
 
 from . import persistence, serialize
+from .explain import explain_infeasible, load_name_index, ref_ids
 from .schemas import ConstraintIn, FeasibleResponse, GenerateRequest, InfeasibleResponse
 
 
@@ -131,7 +132,12 @@ async def run_generation(
     )
 
     if isinstance(result, InfeasiblePlan):
-        return serialize.infeasible_response(result)
+        food_ids, tag_ids, nut_ids = ref_ids(result.unsat_core)
+        names = await load_name_index(
+            conn, food_ids=food_ids, tag_ids=tag_ids, nutrient_ids=nut_ids
+        )
+        explanation = explain_infeasible(result.unsat_core, names)
+        return serialize.infeasible_response(result, explanation)
 
     food_index = {f.id: f for f in foods}
     tag_members: dict[int, list[int]] = {}

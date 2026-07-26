@@ -122,9 +122,12 @@ def _ref_out(r: ConstraintRef) -> ConstraintRefOut:
     )
 
 
-def infeasible_response(result: InfeasiblePlan) -> InfeasibleResponse:
+def infeasible_response(
+    result: InfeasiblePlan, explanation: str | None = None
+) -> InfeasibleResponse:
     return InfeasibleResponse(
         unsat_core=[_ref_out(r) for r in result.unsat_core],
         suggestion=result.suggestion,
         relaxable=[_ref_out(r) for r in result.relaxable],
+        explanation=explanation,
     )
