@@ -1,27 +1,51 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { useFormState, useFormStatus } from "react-dom";
-import { Loader2, AlertTriangle } from "lucide-react";
+import {
+  AlertTriangle,
+  Ban,
+  HelpCircle,
+  Languages,
+  Loader2,
+  Plus,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
+  precheckPresentation,
   proposedLabel,
   priorityLabel,
   type GenerationTask,
   type NameMaps,
+  type Precheck,
   type ProposedConstraint,
   type RejectedItem,
-  type TranslateResult,
 } from "@/lib/generation";
+import { buildConstraintRow } from "@/lib/constraint-row";
+import type { loadConstraintCatalog } from "@/lib/constraint-catalog";
+import { ConstraintForm } from "@/app/(app)/clients/[id]/constraints/constraint-form";
 import { confirmGeneration, type ConfirmState } from "./_actions";
 
 const POLL_MS = 4000;
 // Tras este tiempo en cola, avisamos de que el worker puede no estar arrancado.
 const WORKER_HINT_MS = 20000;
 
+type Catalog = Awaited<ReturnType<typeof loadConstraintCatalog>>;
+
 type Decision = "permanent" | "temporary" | "discard";
+type Origin = "ai" | "manual";
+
+// Fila de la lista unificada de revision: la propuesta, quien la produjo y que
+// decide el nutri con ella. El unit_id solo aplica a las manuales al guardarse.
+type ReviewItem = {
+  c: ProposedConstraint;
+  origin: Origin;
+  decision: Decision;
+  unit_id: number | null;
+};
 
 const initial: ConfirmState = { error: null };
 
@@ -31,17 +55,20 @@ export function ReviewFlow({
   durationDays,
   mealsPerDay,
   names,
+  catalog,
 }: {
-  taskId: number;
+  taskId: number | null;
   clientId: number;
   durationDays: number;
   mealsPerDay: number;
   names: NameMaps;
+  catalog: Catalog;
 }) {
   const [task, setTask] = useState<GenerationTask | null>(null);
   const [elapsed, setElapsed] = useState(0);
 
   useEffect(() => {
+    if (taskId === null) return;
     let alive = true;
     const started = Date.now();
 
@@ -67,6 +94,12 @@ export function ReviewFlow({
     };
   }, [taskId]);
 
+  const shared = { clientId, durationDays, mealsPerDay, names, catalog };
+
+  if (taskId === null) {
+    return <ReviewList {...shared} constraints={[]} rejected={[]} manual />;
+  }
+
   if (!task || task.status === "queued" || task.status === "in_progress") {
     return <Waiting elapsed={elapsed} />;
   }
@@ -81,19 +114,35 @@ export function ReviewFlow({
     );
   }
 
-  const result = (task.result as TranslateResult | null) ?? {
-    constraints: [],
-    rejected: [],
-  };
+  const result = task.result ?? {};
+  const precheck = result.precheck;
+  if (precheck && precheck.status !== "ok") {
+    return (
+      <PrecheckNotice
+        precheck={precheck}
+        editHref={editHref(clientId, durationDays, mealsPerDay, task.input_text)}
+      />
+    );
+  }
+
   return (
-    <ReviewModal
-      clientId={clientId}
-      durationDays={durationDays}
-      mealsPerDay={mealsPerDay}
+    <ReviewList
+      {...shared}
       constraints={result.constraints ?? []}
       rejected={result.rejected ?? []}
-      names={names}
     />
+  );
+}
+
+function editHref(
+  clientId: number,
+  durationDays: number,
+  mealsPerDay: number,
+  inputText: string | null
+): string {
+  return (
+    `/plans/generate?client=${clientId}&days=${durationDays}` +
+    `&meals=${mealsPerDay}&text=${encodeURIComponent(inputText ?? "")}`
   );
 }
 
@@ -112,13 +161,66 @@ function Waiting({ elapsed }: { elapsed: number }) {
   );
 }
 
-function ReviewModal({
+const PRECHECK_ICONS = {
+  out_of_scope: Ban,
+  unsupported_language: Languages,
+  missing_info: HelpCircle,
+  contradiction: AlertTriangle,
+} as const;
+
+const PRECHECK_ICON_TONE = {
+  info: "text-info",
+  warning: "text-warning",
+  critical: "text-danger",
+} as const;
+
+// El mensaje que el nutri lee cuando las pasadas previas paran su texto. El
+// backend ya lo redacta; aqui solo se enmarca por tipo y se ofrece corregir.
+function PrecheckNotice({
+  precheck,
+  editHref,
+}: {
+  precheck: Precheck;
+  editHref: string;
+}) {
+  const status = precheck.status as Exclude<Precheck["status"], "ok">;
+  const look = precheckPresentation(status);
+  const Icon = PRECHECK_ICONS[status];
+
+  return (
+    <Card className="flex max-w-2xl flex-col gap-4">
+      <div className="flex items-center gap-2">
+        <Icon className={`size-5 ${PRECHECK_ICON_TONE[look.variant]}`} />
+        <Badge variant={look.variant}>{look.label}</Badge>
+      </div>
+      <p className="text-sm">{precheck.message}</p>
+      {precheck.details.length > 0 && (
+        <ul className="flex flex-col gap-1.5 rounded-control border border-border bg-muted/30 px-3 py-3">
+          {precheck.details.map((d, i) => (
+            <li key={i} className="text-xs text-muted-foreground">
+              {d}
+            </li>
+          ))}
+        </ul>
+      )}
+      <div>
+        <Link href={editHref} className={buttonVariants({ variant: "outline" })}>
+          Edit message
+        </Link>
+      </div>
+    </Card>
+  );
+}
+
+function ReviewList({
   clientId,
   durationDays,
   mealsPerDay,
   constraints,
   rejected,
   names,
+  catalog,
+  manual = false,
 }: {
   clientId: number;
   durationDays: number;
@@ -126,73 +228,137 @@ function ReviewModal({
   constraints: ProposedConstraint[];
   rejected: RejectedItem[];
   names: NameMaps;
+  catalog: Catalog;
+  manual?: boolean;
 }) {
   const [state, formAction] = useFormState(confirmGeneration, initial);
-  const [decisions, setDecisions] = useState<Record<number, Decision>>(
-    Object.fromEntries(constraints.map((_, i) => [i, "temporary" as Decision]))
+  const [items, setItems] = useState<ReviewItem[]>(
+    constraints.map((c) => ({ c, origin: "ai", decision: "temporary", unit_id: null }))
   );
+  const [adding, setAdding] = useState(false);
 
-  const kept = constraints.filter((_, i) => decisions[i] !== "discard").length;
+  const kept = items.filter((it) => it.decision !== "discard").length;
+
+  // Alta manual: valida con la misma logica pura del alta de la ficha y anade
+  // la fila a la lista como una propuesta mas. Nada se persiste aqui.
+  async function addManual(
+    _prev: { error: string | null },
+    formData: FormData
+  ): Promise<{ error: string | null }> {
+    const built = buildConstraintRow(formData);
+    if (built.error) return { error: built.error };
+    const row: Record<string, unknown> = { ...built.row };
+    delete row.scope_type;
+    delete row.scope_client_id;
+    delete row.source;
+    const unitId = typeof row.unit_id === "number" ? row.unit_id : null;
+    delete row.unit_id;
+    setItems((list) => [
+      ...list,
+      {
+        c: row as unknown as ProposedConstraint,
+        origin: "manual",
+        decision: "temporary",
+        unit_id: unitId,
+      },
+    ]);
+    setAdding(false);
+    return { error: null };
+  }
 
   return (
-    <Card className="max-w-2xl">
-      <form action={formAction} className="flex flex-col gap-5">
-        <div>
-          <h2 className="text-lg font-semibold">Review the constraints</h2>
-          <p className="text-sm text-muted-foreground">
-            Decide what to keep on the client&apos;s profile, what to use only
-            for this plan, and what to drop.
-          </p>
-        </div>
+    <Card className="flex max-w-2xl flex-col gap-5">
+      <div>
+        <h2 className="text-lg font-semibold">Review the constraints</h2>
+        <p className="text-sm text-muted-foreground">
+          {manual
+            ? "Set the constraints for this plan by hand. Decide what to keep " +
+              "on the client's profile, what to use only for this plan, and " +
+              "what to drop."
+            : "Decide what to keep on the client's profile, what to use only " +
+              "for this plan, and what to drop. You can also add your own."}
+        </p>
+      </div>
 
-        {constraints.length === 0 ? (
-          <p className="rounded-control border border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground">
-            The copilot did not find any constraint it could apply. Go back and
-            rephrase, or add them by hand from the client&apos;s profile.
+      {items.length === 0 ? (
+        <p className="rounded-control border border-border bg-muted/30 px-3 py-4 text-sm text-muted-foreground">
+          {manual
+            ? "No constraints yet. Add them below, or generate straight away " +
+              "with the client's saved rules only."
+            : "The copilot did not find any constraint it could apply. Go " +
+              "back and rephrase, or add them by hand below."}
+        </p>
+      ) : (
+        <ul className="flex flex-col gap-2">
+          {items.map((it, i) => (
+            <li
+              key={i}
+              className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-border px-3 py-2.5"
+            >
+              <div className="flex items-center gap-2">
+                <Badge variant={it.origin === "ai" ? "info" : "neutral"}>
+                  {it.origin === "ai" ? "AI" : "Manual"}
+                </Badge>
+                <Badge variant={it.c.priority === "hard" ? "warning" : "info"}>
+                  {priorityLabel(it.c.priority)}
+                </Badge>
+                <span className="text-sm">{proposedLabel(it.c, names)}</span>
+              </div>
+              <ChoiceGroup
+                value={it.decision}
+                onChange={(v) =>
+                  setItems((list) =>
+                    list.map((x, j) => (j === i ? { ...x, decision: v } : x))
+                  )
+                }
+              />
+            </li>
+          ))}
+        </ul>
+      )}
+
+      {rejected.length > 0 && (
+        <div className="rounded-control border border-warning/40 bg-warning/10 px-3 py-3">
+          <p className="flex items-center gap-1.5 text-sm font-medium">
+            <AlertTriangle className="size-4 text-warning" />
+            Not understood ({rejected.length})
           </p>
-        ) : (
-          <ul className="flex flex-col gap-2">
-            {constraints.map((c, i) => (
-              <li
-                key={i}
-                className="flex flex-wrap items-center justify-between gap-3 rounded-control border border-border px-3 py-2.5"
-              >
-                <div className="flex items-center gap-2">
-                  <Badge variant={c.priority === "hard" ? "warning" : "info"}>
-                    {priorityLabel(c.priority)}
-                  </Badge>
-                  <span className="text-sm">{proposedLabel(c, names)}</span>
-                </div>
-                <ChoiceGroup
-                  value={decisions[i]}
-                  onChange={(v) => setDecisions((d) => ({ ...d, [i]: v }))}
-                />
+          <ul className="mt-2 flex flex-col gap-1.5">
+            {rejected.map((r, i) => (
+              <li key={i} className="text-xs text-muted-foreground">
+                {r.reason}
               </li>
             ))}
           </ul>
-        )}
+        </div>
+      )}
 
-        {rejected.length > 0 && (
-          <div className="rounded-control border border-warning/40 bg-warning/10 px-3 py-3">
-            <p className="flex items-center gap-1.5 text-sm font-medium">
-              <AlertTriangle className="size-4 text-warning" />
-              Not understood ({rejected.length})
-            </p>
-            <ul className="mt-2 flex flex-col gap-1.5">
-              {rejected.map((r, i) => (
-                <li key={i} className="text-xs text-muted-foreground">
-                  {r.reason}
-                </li>
-              ))}
-            </ul>
-          </div>
-        )}
+      {adding ? (
+        <div className="rounded-control border border-border bg-muted/20 p-4">
+          <ConstraintForm
+            action={addManual}
+            scopeField={
+              <input type="hidden" name="client_id" value={clientId} />
+            }
+            onCancel={() => setAdding(false)}
+            submitLabel="Add to the list"
+            {...catalog}
+          />
+        </div>
+      ) : (
+        <div>
+          <Button type="button" variant="outline" onClick={() => setAdding(true)}>
+            <Plus className="size-4" />
+            Add constraint
+          </Button>
+        </div>
+      )}
 
+      <form action={formAction} className="flex flex-col gap-4">
         <input type="hidden" name="client_id" value={clientId} />
         <input type="hidden" name="duration_days" value={durationDays} />
         <input type="hidden" name="meals_per_day" value={mealsPerDay} />
-        <input type="hidden" name="constraints" value={JSON.stringify(constraints)} />
-        <input type="hidden" name="decisions" value={JSON.stringify(decisions)} />
+        <input type="hidden" name="items" value={JSON.stringify(items)} />
 
         {state.error && <p className="text-sm text-danger">{state.error}</p>}
 

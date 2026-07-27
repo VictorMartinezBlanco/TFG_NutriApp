@@ -34,6 +34,8 @@ export function ConstraintForm({
   action,
   scopeField,
   cancelHref,
+  onCancel,
+  submitLabel = "Save constraint",
   tagGroups,
   nutrients,
   macros,
@@ -42,7 +44,9 @@ export function ConstraintForm({
 }: {
   action: ConstraintAction;
   scopeField: ReactNode;
-  cancelHref: string;
+  cancelHref?: string;
+  onCancel?: () => void;
+  submitLabel?: string;
   tagGroups: TagGroup[];
   nutrients: NutrientOption[];
   macros: NutrientOption[];
@@ -346,13 +350,24 @@ export function ConstraintForm({
       )}
 
       <div className="flex items-center gap-3">
-        <SubmitButton />
-        <a
-          href={cancelHref}
-          className="text-sm text-muted-foreground hover:text-foreground"
-        >
-          Cancel
-        </a>
+        <SubmitButton label={submitLabel} />
+        {cancelHref && (
+          <a
+            href={cancelHref}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </a>
+        )}
+        {onCancel && (
+          <button
+            type="button"
+            onClick={onCancel}
+            className="text-sm text-muted-foreground hover:text-foreground"
+          >
+            Cancel
+          </button>
+        )}
       </div>
     </form>
   );
@@ -379,11 +394,11 @@ function valueLabel(type: string): string {
   }
 }
 
-function SubmitButton() {
+function SubmitButton({ label }: { label: string }) {
   const { pending } = useFormStatus();
   return (
     <Button type="submit" disabled={pending}>
-      {pending ? "Saving..." : "Save constraint"}
+      {pending ? "Saving..." : label}
     </Button>
   );
 }

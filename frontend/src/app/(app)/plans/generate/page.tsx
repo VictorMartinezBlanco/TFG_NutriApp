@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import { requireNutritionist } from "@/lib/supabase/session";
+import { loadConstraintCatalog } from "@/lib/constraint-catalog";
 import type { NameMaps } from "@/lib/generation";
 import { RequestForm } from "./request-form";
 import { ReviewFlow } from "./review-flow";
@@ -12,13 +13,21 @@ type ClientRow = { id: number; full_name_pseudonym: string };
 export default async function GeneratePage({
   searchParams,
 }: {
-  searchParams: { task?: string; client?: string; days?: string; meals?: string };
+  searchParams: {
+    task?: string;
+    client?: string;
+    days?: string;
+    meals?: string;
+    review?: string;
+    text?: string;
+  };
 }) {
   const preselectedClient = Number(searchParams.client) || null;
   const { supabase } = await requireNutritionist();
 
   const taskId = Number(searchParams.task);
   const inReview = Number.isInteger(taskId) && taskId > 0;
+  const manualReview = searchParams.review === "manual" && !!preselectedClient;
 
   return (
     <div className="flex flex-col gap-6">
@@ -38,18 +47,20 @@ export default async function GeneratePage({
         </div>
       </div>
 
-      {inReview ? (
+      {inReview || manualReview ? (
         <ReviewFlow
-          taskId={taskId}
+          taskId={inReview ? taskId : null}
           clientId={Number(searchParams.client) || 0}
           durationDays={Number(searchParams.days) || 7}
           mealsPerDay={Number(searchParams.meals) || 5}
           names={await loadNames(supabase)}
+          catalog={await loadConstraintCatalog(supabase)}
         />
       ) : (
         <RequestForm
           clients={await loadClients(supabase)}
           defaultClientId={preselectedClient}
+          defaultText={searchParams.text}
         />
       )}
     </div>
@@ -73,7 +84,7 @@ async function loadNames(
   supabase: Awaited<ReturnType<typeof requireNutritionist>>["supabase"]
 ): Promise<NameMaps> {
   const [nutrients, tags, foods] = await Promise.all([
-    supabase.from("nutrient").select("id, name_en"),
+    supabase.from("nutrient").select("id, name_en, unit_default"),
     supabase.from("tag").select("id, name_en"),
     supabase.from("food").select("id, name_en").is("deleted_at", null),
   ]);
@@ -83,8 +94,14 @@ async function loadNames(
   ): Record<number, string> =>
     Object.fromEntries((rows ?? []).map((r) => [r.id, r.name_en]));
 
+  const nutrientRows =
+    (nutrients.data as { id: number; name_en: string; unit_default: string }[] | null) ?? [];
+
   return {
-    nutrients: toMap(nutrients.data as { id: number; name_en: string }[] | null),
+    nutrients: toMap(nutrientRows),
+    nutrientUnits: Object.fromEntries(
+      nutrientRows.map((r) => [r.id, r.unit_default])
+    ),
     tags: toMap(tags.data as { id: number; name_en: string }[] | null),
     foods: toMap(foods.data as { id: number; name_en: string }[] | null),
   };

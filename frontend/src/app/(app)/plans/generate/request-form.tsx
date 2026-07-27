@@ -19,9 +19,11 @@ const EXAMPLE =
 export function RequestForm({
   clients,
   defaultClientId,
+  defaultText,
 }: {
   clients: ClientRow[];
   defaultClientId: number | null;
+  defaultText?: string;
 }) {
   const [state, formAction] = useFormState(startTranslation, initial);
 
@@ -56,6 +58,7 @@ export function RequestForm({
             required
             rows={5}
             placeholder={EXAMPLE}
+            defaultValue={defaultText}
             className="rounded-control border border-border bg-card px-3 py-2 text-sm"
           />
           <p className="text-xs text-muted-foreground">
@@ -91,8 +94,9 @@ export function RequestForm({
 
         {state.error && <p className="text-sm text-danger">{state.error}</p>}
 
-        <div>
+        <div className="flex flex-wrap items-center gap-4">
           <SubmitButton />
+          <ManualButton />
         </div>
       </form>
     </Card>
@@ -110,5 +114,24 @@ function SubmitButton() {
       )}
       {pending ? "Reading your notes..." : "Read notes"}
     </Button>
+  );
+}
+
+// Via manual completa: salta el traductor y va directo a la revision. Mismo
+// form (conserva cliente y parametros); formNoValidate evita que el required
+// del textarea bloquee el envio sin texto.
+function ManualButton() {
+  const { pending } = useFormStatus();
+  return (
+    <button
+      type="submit"
+      name="mode"
+      value="manual"
+      formNoValidate
+      disabled={pending}
+      className="text-sm text-muted-foreground underline-offset-4 hover:text-foreground hover:underline"
+    >
+      Skip the copilot and set the constraints by hand
+    </button>
   );
 }
