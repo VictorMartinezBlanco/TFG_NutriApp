@@ -1,0 +1,248 @@
+{
+  "formats": ["natural", "telegrafico", "plantilla", "clave_valor", "verboso"],
+  "messages": [
+    {
+      "id": 1,
+      "name": "kcal + vegetariana",
+      "expected": [
+        {"type": "kcal_target", "value": 1500},
+        {"type": "prefer_tag", "tag_code": "vegetarian"}
+      ],
+      "canned": {"constraints": [
+        {"type": "kcal_target", "priority": "soft", "weight": 7, "value": 1500},
+        {"type": "prefer_tag", "priority": "soft", "weight": 5, "target_tag_code": "vegetarian"}
+      ]},
+      "texts": {
+        "natural": "Quiere perder peso, ponle unas 1500 kcal al día y ten en cuenta que es vegetariana.",
+        "telegrafico": "- objetivo: perder peso\n- 1500 kcal/día\n- vegetariana",
+        "plantilla": "Objetivo: perder peso, 1500 kcal al día. Evitar: nada concreto. Preferencias: dieta vegetariana.",
+        "clave_valor": "objetivo=perder_peso; kcal_dia=1500; dieta=vegetariana",
+        "verboso": "Hoy ha pasado por consulta después de las vacaciones y me ha contado que se ha apuntado al gimnasio con su hermana. Quiere perder peso, así que vamos a dejarle la dieta en unas 1500 kcal al día, y acuérdate de que es vegetariana desde hace años."
+      }
+    },
+    {
+      "id": 2,
+      "name": "cacahuete + proteina min",
+      "expected": [
+        {"type": "forbid_tag", "tag_code": "peanuts"},
+        {"type": "nutrient_min", "nutrient_code": "protein_g", "value": 140}
+      ],
+      "canned": {"constraints": [
+        {"type": "forbid_tag", "priority": "hard", "weight": 10, "target_tag_code": "peanuts"},
+        {"type": "nutrient_min", "priority": "soft", "weight": 6, "target_nutrient_code": "protein_g", "value": 140}
+      ]},
+      "texts": {
+        "natural": "Busca ganar músculo, es alérgico al cacahuete y quiero al menos 140 g de proteína al día.",
+        "telegrafico": "- alergia: cacahuete\n- proteína: mínimo 140 g/día\n- objetivo: ganar músculo",
+        "plantilla": "Objetivo: ganar músculo. Evitar: cacahuete (alergia). Mínimos: 140 g de proteína al día.",
+        "clave_valor": "alergia=cacahuete; proteina_min=140g/dia; objetivo=ganar_musculo",
+        "verboso": "Este chico entrena fuerza cuatro días a la semana y me pregunta mucho por los batidos que ve en internet. Como busca ganar músculo quiero que llegue al menos a 140 g de proteína al día, y mucho cuidado porque es alérgico al cacahuete."
+      }
+    },
+    {
+      "id": 3,
+      "name": "lactosa + sodio max",
+      "expected": [
+        {"type": "forbid_tag", "tag_code": "lactose"},
+        {"type": "nutrient_max", "nutrient_code": "sodium_mg", "value": 2000}
+      ],
+      "canned": {"constraints": [
+        {"type": "forbid_tag", "priority": "hard", "weight": 9, "target_tag_code": "lactose"},
+        {"type": "nutrient_max", "priority": "soft", "weight": 7, "target_nutrient_code": "sodium_mg", "value": 2000}
+      ]},
+      "texts": {
+        "natural": "Es intolerante a la lactosa y que no pase de 2000 mg de sodio al día.",
+        "telegrafico": "- intolerancia: lactosa\n- sodio: máximo 2000 mg/día",
+        "plantilla": "Evitar: lactosa (intolerancia). Máximos: 2000 mg de sodio al día.",
+        "clave_valor": "intolerancia=lactosa; sodio_max=2000mg/dia",
+        "verboso": "Lleva una temporada con la tensión un poco alta y el médico le ha dicho que vigile la sal, así que no me pases de 2000 mg de sodio al día. Y recuerda que es intolerante a la lactosa de toda la vida."
+      }
+    },
+    {
+      "id": 4,
+      "name": "celiaco + kcal",
+      "expected": [
+        {"type": "forbid_tag", "tag_code": "gluten"},
+        {"type": "kcal_target", "value": 2200}
+      ],
+      "canned": {"constraints": [
+        {"type": "forbid_tag", "priority": "hard", "weight": 10, "target_tag_code": "gluten"},
+        {"type": "kcal_target", "priority": "soft", "weight": 6, "value": 2200}
+      ]},
+      "texts": {
+        "natural": "Es celiaco, así que nada con gluten, y mantenlo en unas 2200 kcal al día.",
+        "telegrafico": "- celiaco: sin gluten\n- 2200 kcal/día",
+        "plantilla": "Evitar: gluten (celiaquía). Objetivo calórico: 2200 kcal al día.",
+        "clave_valor": "evitar=gluten; kcal_dia=2200",
+        "verboso": "Le diagnosticaron celiaquía hace un par de años y desde entonces lo lleva bastante bien, aunque de vez en cuando cae algún despiste fuera de casa. Nada con gluten, obviamente, y de calorías déjalo en unas 2200 al día que está en mantenimiento."
+      }
+    },
+    {
+      "id": 5,
+      "name": "sin ternera + salmon preferido",
+      "expected": [
+        {"type": "forbid_food", "food_prefix": "ternera"},
+        {"type": "prefer_food", "food_prefix": "salm"}
+      ],
+      "canned": {"constraints": [
+        {"type": "forbid_food", "priority": "hard", "weight": 8, "target_food_name": "ternera", "value": 0},
+        {"type": "prefer_food", "priority": "soft", "weight": 5, "target_food_name": "salmón"}
+      ]},
+      "texts": {
+        "natural": "No quiero que coma ternera en el plan, y métele salmón a menudo que le encanta.",
+        "telegrafico": "- sin ternera\n- salmón: a menudo",
+        "plantilla": "Evitar: ternera. Preferencias: salmón con frecuencia.",
+        "clave_valor": "prohibido=ternera; preferido=salmon",
+        "verboso": "Estuvimos repasando el plan anterior y me dijo que la ternera no le gusta nada, que no se la ponga más. Eso sí, el salmón le encanta desde que vivió en el norte, así que mételo a menudo."
+      }
+    },
+    {
+      "id": 6,
+      "name": "reparto desayuno/comida",
+      "expected": [
+        {"type": "meal_kcal_ratio", "split": {"breakfast": 30, "lunch": 40}}
+      ],
+      "canned": {"constraints": [
+        {"type": "meal_kcal_ratio", "priority": "soft", "weight": 5, "split": {"breakfast": 30, "lunch": 40}}
+      ]},
+      "texts": {
+        "natural": "El desayuno debe ser un 30% de las calorías del día y la comida un 40%.",
+        "telegrafico": "- desayuno: 30% kcal\n- comida: 40% kcal",
+        "plantilla": "Reparto de calorías: desayuno 30%, comida 40%.",
+        "clave_valor": "desayuno_pct=30; comida_pct=40",
+        "verboso": "Por su horario de trabajo hace la comida fuerte a mediodía en casa de su madre y por la noche apenas cena, así que organízale el día con el desayuno al 30% de las calorías y la comida al 40%."
+      }
+    },
+    {
+      "id": 7,
+      "name": "ratio saturadas/grasa",
+      "expected": [
+        {"type": "nutrient_ratio", "nutrient_code": "sat_fat_g", "denominator_code": "fat_g", "value": 0.33}
+      ],
+      "canned": {"constraints": [
+        {"type": "nutrient_ratio", "priority": "soft", "weight": 5, "target_nutrient_code": "sat_fat_g", "denominator_nutrient_code": "fat_g", "value": 0.33, "ratio_bound": "max"}
+      ]},
+      "texts": {
+        "natural": "Que las grasas saturadas no superen un tercio de la grasa total.",
+        "telegrafico": "- saturadas: máximo 1/3 de la grasa total",
+        "plantilla": "Límite: grasas saturadas como máximo un tercio de la grasa total.",
+        "clave_valor": "grasa_saturada_max=1/3_grasa_total",
+        "verboso": "Viene de una analítica con el colesterol justito y quiero cuidar la calidad de la grasa más que la cantidad: que las saturadas no superen un tercio de la grasa total del plan."
+      }
+    },
+    {
+      "id": 8,
+      "name": "vegano + B12 min",
+      "expected": [
+        {"type": "prefer_tag", "tag_code": "vegan"},
+        {"type": "nutrient_min", "nutrient_code": "vit_b12_ug", "value": 4}
+      ],
+      "canned": {"constraints": [
+        {"type": "prefer_tag", "priority": "hard", "weight": 9, "target_tag_code": "vegan"},
+        {"type": "nutrient_min", "priority": "soft", "weight": 6, "target_nutrient_code": "vit_b12_ug", "value": 4}
+      ]},
+      "texts": {
+        "natural": "Es vegano y me preocupa la B12: quiero al menos 4 microgramos al día.",
+        "telegrafico": "- vegano\n- B12: mínimo 4 microgramos/día",
+        "plantilla": "Preferencias: dieta vegana. Mínimos: 4 microgramos de vitamina B12 al día.",
+        "clave_valor": "dieta=vegana; b12_min=4ug/dia",
+        "verboso": "Se hizo vegano el año pasado por convicción y lo respeto totalmente, pero en la última analítica la B12 salió en el límite bajo, así que asegúrame al menos 4 microgramos al día en el plan."
+      }
+    },
+    {
+      "id": 9,
+      "name": "fibra min + azucar max",
+      "expected": [
+        {"type": "nutrient_min", "nutrient_code": "fiber_g", "value": 30},
+        {"type": "nutrient_max", "nutrient_code": "sugar_added_g", "value": 25}
+      ],
+      "canned": {"constraints": [
+        {"type": "nutrient_min", "priority": "soft", "weight": 6, "target_nutrient_code": "fiber_g", "value": 30},
+        {"type": "nutrient_max", "priority": "soft", "weight": 6, "target_nutrient_code": "sugar_added_g", "value": 25}
+      ]},
+      "texts": {
+        "natural": "Quiero que llegue a 30 g de fibra al día y que el azúcar añadido no pase de 25 g.",
+        "telegrafico": "- fibra: mínimo 30 g/día\n- azúcar añadido: máximo 25 g/día",
+        "plantilla": "Mínimos: 30 g de fibra al día. Máximos: 25 g de azúcar añadido al día.",
+        "clave_valor": "fibra_min=30g/dia; azucar_anadido_max=25g/dia",
+        "verboso": "Anda fatal de tránsito intestinal y encima pica mucho dulce entre horas, sobre todo en el trabajo. Súbeme la fibra hasta al menos 30 g al día y que el azúcar añadido no pase de 25 g."
+      }
+    },
+    {
+      "id": 10,
+      "name": "alergias frutos secos + huevo",
+      "expected": [
+        {"type": "forbid_tag", "tag_code": "tree_nuts"},
+        {"type": "forbid_tag", "tag_code": "eggs_allergen"}
+      ],
+      "canned": {"constraints": [
+        {"type": "forbid_tag", "priority": "hard", "weight": 10, "target_tag_code": "tree_nuts"},
+        {"type": "forbid_tag", "priority": "hard", "weight": 10, "target_tag_code": "eggs_allergen"}
+      ]},
+      "texts": {
+        "natural": "Es alérgico a los frutos secos y también al huevo.",
+        "telegrafico": "- alergia: frutos secos\n- alergia: huevo",
+        "plantilla": "Evitar: frutos secos (alergia), huevo (alergia).",
+        "clave_valor": "alergia=frutos_secos,huevo",
+        "verboso": "Me ha traído por fin el informe de alergología que le pedí en la primera visita: alergia confirmada a los frutos secos y al huevo, así que los dos fuera del plan completamente."
+      }
+    },
+    {
+      "id": 11,
+      "name": "sin pescado + legumbres",
+      "expected": [
+        {"type": "forbid_tag", "tag_code": "fish_allergen"},
+        {"type": "prefer_tag", "tag_code": "legume"}
+      ],
+      "canned": {"constraints": [
+        {"type": "forbid_tag", "priority": "hard", "weight": 9, "target_tag_code": "fish_allergen"},
+        {"type": "prefer_tag", "priority": "soft", "weight": 5, "target_tag_code": "legume"}
+      ]},
+      "texts": {
+        "natural": "El pescado le sienta fatal, evítalo del todo, y métele legumbres a menudo.",
+        "telegrafico": "- sin pescado\n- legumbres: a menudo",
+        "plantilla": "Evitar: pescado. Preferencias: legumbres con frecuencia.",
+        "clave_valor": "evitar=pescado; preferido=legumbres",
+        "verboso": "Cada vez que come pescado acaba con el estómago revuelto, ya le pasaba de pequeño, así que evítalo del todo. A cambio las legumbres le sientan de maravilla y además le gustan, mételas a menudo."
+      }
+    },
+    {
+      "id": 12,
+      "name": "diabetico: azucar + IG + kcal",
+      "expected": [
+        {"type": "nutrient_max", "nutrient_code": "sugar_added_g", "value": 20},
+        {"type": "forbid_tag", "tag_code": "high_gi"},
+        {"type": "kcal_target", "value": 1800}
+      ],
+      "canned": {"constraints": [
+        {"type": "nutrient_max", "priority": "hard", "weight": 8, "target_nutrient_code": "sugar_added_g", "value": 20},
+        {"type": "forbid_tag", "priority": "hard", "weight": 8, "target_tag_code": "high_gi"},
+        {"type": "kcal_target", "priority": "soft", "weight": 6, "value": 1800}
+      ]},
+      "texts": {
+        "natural": "Es diabético: el azúcar añadido como mucho 20 g al día, evita los alimentos de índice glucémico alto y déjalo en unas 1800 kcal.",
+        "telegrafico": "- diabético\n- azúcar añadido: máximo 20 g/día\n- evitar: índice glucémico alto\n- 1800 kcal/día",
+        "plantilla": "Condición: diabetes. Máximos: 20 g de azúcar añadido al día. Evitar: alimentos de índice glucémico alto. Objetivo calórico: 1800 kcal al día.",
+        "clave_valor": "azucar_anadido_max=20g/dia; evitar=indice_glucemico_alto; kcal_dia=1800",
+        "verboso": "Diabetes tipo 2 diagnosticada este invierno, está bastante concienciado y viene con su libreta de glucemias apuntadas. Quiero el azúcar añadido como mucho en 20 g al día, evita los alimentos de índice glucémico alto y de energía déjalo en unas 1800 kcal."
+      }
+    },
+    {
+      "id": 13,
+      "name": "no repetir carne roja",
+      "expected": [
+        {"type": "no_repeat_tag", "tag_code": "red_meat"}
+      ],
+      "canned": {"constraints": [
+        {"type": "no_repeat_tag", "priority": "hard", "weight": 7, "target_tag_code": "red_meat", "value": 1}
+      ]},
+      "texts": {
+        "natural": "Que no le pongas carne roja dos días seguidos.",
+        "telegrafico": "- carne roja: no repetir días seguidos",
+        "plantilla": "Regla: no repetir carne roja en días consecutivos.",
+        "clave_valor": "no_repetir=carne_roja",
+        "verboso": "En su casa son muy de guisos de carne y ya me ha dicho que si le dejo se la pondría a diario, así que ponle variedad: nada de carne roja dos días seguidos."
+      }
+    }
+  ]
+}

@@ -1,0 +1,392 @@
+[
+ {
+  "format": "natural",
+  "message": 1,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 2,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 3,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 4,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 5,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 6,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 7,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 8,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 9,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 10,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 11,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "natural",
+  "message": 12,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "natural",
+  "message": 13,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "telegrafico",
+  "message": 1,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 2,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 3,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 4,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 5,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "telegrafico",
+  "message": 6,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 7,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "telegrafico",
+  "message": 8,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 9,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 10,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "telegrafico",
+  "message": 11,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "telegrafico",
+  "message": 12,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "telegrafico",
+  "message": 13,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "plantilla",
+  "message": 1,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 2,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 3,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 4,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 5,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 6,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 7,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 8,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 9,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 10,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 11,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "plantilla",
+  "message": 12,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "plantilla",
+  "message": 13,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 1,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 2,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 3,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 4,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 5,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 6,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 7,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "clave_valor",
+  "message": 8,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 9,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 10,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 11,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "clave_valor",
+  "message": 12,
+  "status": "unsupported_language",
+  "message_text": "Please write the request in Spanish or English."
+ },
+ {
+  "format": "clave_valor",
+  "message": 13,
+  "status": "out_of_scope",
+  "message_text": "This request does not seem to be about the client's diet, so no constraints were applied."
+ },
+ {
+  "format": "verboso",
+  "message": 1,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 2,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 3,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 4,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 5,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 6,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 7,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 8,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 9,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 10,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 11,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 12,
+  "status": "ok",
+  "message_text": ""
+ },
+ {
+  "format": "verboso",
+  "message": 13,
+  "status": "ok",
+  "message_text": ""
+ }
+]

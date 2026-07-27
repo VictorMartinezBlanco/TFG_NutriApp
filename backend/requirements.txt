@@ -21,3 +21,6 @@ httpx>=0.27
 
 # Pasadas de validacion previa (deteccion de idioma determinista)
 langdetect>=1.0.9
+
+# Graficas del estudio de formatos de prompt
+matplotlib>=3.9

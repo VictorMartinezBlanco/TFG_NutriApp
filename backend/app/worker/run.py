@@ -39,6 +39,7 @@ from app.translator.client import FakeLLMClient, LLMClient, OllamaClient
 from app.translator.translate import translate_constraints
 
 POLL_INTERVAL_S = 2.0
+RECONNECT_MAX_S = 30.0
 
 
 @dataclass
@@ -283,17 +284,29 @@ async def process_task(
 
 
 async def worker_loop(engines: Engines, *, stop: asyncio.Event) -> None:
+    """Poll, claim, process, forever. The whole database round trip sits inside
+    the retry guard: the pooler drops idle connections, and the first statement
+    on a dead one raises. The loop backs off, reacquires and goes on. A task
+    already claimed stays in_progress and is never claimed twice."""
     async with connection_pool() as pool:
         print("worker up, polling generation_task")
+        backoff = POLL_INTERVAL_S
         while not stop.is_set():
-            async with pool.acquire() as conn:
-                task = await claim_task(conn)
-                if task is None:
-                    await _wait(stop, POLL_INTERVAL_S)
-                    continue
-                print(f"task {task['id']} ({task['kind']}) claimed")
-                await process_task(conn, task, engines)
-                print(f"task {task['id']} finished")
+            try:
+                async with pool.acquire() as conn:
+                    task = await claim_task(conn)
+                    if task is None:
+                        await _wait(stop, POLL_INTERVAL_S)
+                        continue
+                    print(f"task {task['id']} ({task['kind']}) claimed")
+                    await process_task(conn, task, engines)
+                    print(f"task {task['id']} finished")
+                backoff = POLL_INTERVAL_S
+            except (asyncpg.PostgresConnectionError, asyncpg.InterfaceError, OSError) as exc:
+                print(f"database connection lost ({type(exc).__name__}: {exc}); "
+                      f"retrying in {backoff:.0f}s")
+                await _wait(stop, backoff)
+                backoff = min(backoff * 2, RECONNECT_MAX_S)
         print("worker stopped")
 
 
