@@ -13,18 +13,43 @@ export type AppointmentRow = {
 };
 
 const STATUS_LABEL: Record<string, string> = {
-  scheduled: "Scheduled",
+  pending: "Pending",
+  scheduled: "Confirmed",
   completed: "Completed",
   cancelled: "Cancelled",
   no_show: "No show",
 };
 
-export function appointmentStatusLabel(status: string): string {
+// Una peticion cuya fecha ya paso sigue siendo pending en la tabla: no hay nada
+// que la cierre, porque no hay proceso periodico. Se etiqueta al pintarla, que
+// es honesto en las dos caras. El profesional ve que dejo algo sin contestar y
+// el cliente que su peticion se quedo sin respuesta, en vez de desaparecer.
+export function appointmentExpired(
+  status: string,
+  scheduledAt: string,
+  now: Date
+): boolean {
+  return status === "pending" && Date.parse(scheduledAt) < now.getTime();
+}
+
+export function appointmentStatusLabel(
+  status: string,
+  scheduledAt?: string,
+  now: Date = new Date()
+): string {
+  if (scheduledAt && appointmentExpired(status, scheduledAt, now)) return "Expired";
   return STATUS_LABEL[status] ?? status;
 }
 
-export function appointmentStatusVariant(status: string): BadgeProps["variant"] {
+export function appointmentStatusVariant(
+  status: string,
+  scheduledAt?: string,
+  now: Date = new Date()
+): BadgeProps["variant"] {
+  if (scheduledAt && appointmentExpired(status, scheduledAt, now)) return "neutral";
   switch (status) {
+    case "pending":
+      return "warning";
     case "scheduled":
       return "info";
     case "completed":

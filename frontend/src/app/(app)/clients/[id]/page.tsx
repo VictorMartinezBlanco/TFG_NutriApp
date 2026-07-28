@@ -15,7 +15,19 @@ import {
   priorityLabel,
   type ConstraintRow,
 } from "@/lib/constraints";
-import { aggregatePlanMacros, type MealItemRow } from "@/lib/plans";
+import {
+  aggregatePlanMacros,
+  pickActivePlan,
+  planDaysElapsed,
+  type MealItemRow,
+} from "@/lib/plans";
+import { computeAdherence, type MealCheckRow } from "@/lib/adherence";
+import { AdherenceBar } from "@/components/adherence-bar";
+import {
+  WeightSparkline,
+  WeightLog,
+  type WeightPoint,
+} from "@/components/weight-series";
 import {
   formatAppointmentWhen,
   splitUpcomingPast,
@@ -112,11 +124,62 @@ export default async function ClientDetailPage({
     ? aggregatePlanMacros(plan.plan_meal_item ?? [], plan.duration_days)
     : null;
 
+  const now = new Date();
+
+  // La adherencia se mide sobre el plan FIRMADO que el cliente esta siguiendo,
+  // que no tiene por que ser el ultimo que aparece arriba: un borrador nuevo no
+  // cambia lo que se le pidio cumplir. Es el mismo plan que elige su panel, y
+  // con el mismo helper, para que los dos vean el mismo numero.
+  const { data: signedPlans } = await supabase
+    .from("plan")
+    .select("id, start_date, duration_days")
+    .eq("client_id", clientId)
+    .not("approved_at", "is", null)
+    .is("deleted_at", null)
+    .order("start_date", { ascending: false });
+
+  const followed = pickActivePlan(
+    (signedPlans as { id: number; start_date: string; duration_days: number }[] | null) ?? [],
+    now
+  );
+
+  const [{ data: plannedMeals }, { data: rawChecks }, { data: rawWeights }] =
+    await Promise.all([
+      followed
+        ? supabase
+            .from("plan_meal_item")
+            .select("day_num, meal_type_id")
+            .eq("plan_id", followed.id)
+        : Promise.resolve({ data: null }),
+      followed
+        ? supabase
+            .from("meal_check")
+            .select("day_num, meal_type_id")
+            .eq("plan_id", followed.id)
+        : Promise.resolve({ data: null }),
+      supabase
+        .from("weight_entry")
+        .select("measured_on, weight_kg")
+        .eq("client_id", clientId)
+        .order("measured_on", { ascending: false })
+        .limit(12),
+    ]);
+
+  const adherence = followed
+    ? computeAdherence(
+        (plannedMeals as { day_num: number; meal_type_id: number }[] | null) ?? [],
+        (rawChecks as MealCheckRow[] | null) ?? [],
+        planDaysElapsed(followed.start_date, followed.duration_days, now)
+      )
+    : null;
+
+  const weights = (rawWeights as WeightPoint[] | null) ?? [];
+
   // proxima cita por hora de fin (una cita en curso sigue siendo la proxima),
   // mismo criterio que el calendario y el dashboard.
   const nextAppointment = splitUpcomingPast(
     (appointmentRows as AppointmentRow[] | null) ?? [],
-    new Date()
+    now
   ).upcoming[0];
 
   const age = ageFromBirthDate(client.birth_date);
@@ -186,10 +249,14 @@ export default async function ClientDetailPage({
               Next session
             </p>
             {nextAppointment ? (
-              <p className="text-sm font-medium">
+              <p className="flex flex-wrap items-center gap-2 text-sm font-medium">
                 {formatAppointmentWhen(
                   nextAppointment.scheduled_at,
                   nextAppointment.duration_min
+                )}
+                {/* una peticion sin contestar no es todavia una sesion */}
+                {nextAppointment.status === "pending" && (
+                  <Badge variant="warning">Pending</Badge>
                 )}
               </p>
             ) : (
@@ -252,6 +319,35 @@ export default async function ClientDetailPage({
               No plan assigned yet.
             </p>
           )}
+        </Card>
+      </div>
+
+      <div className="grid gap-6 lg:grid-cols-2">
+        <Card>
+          <CardHeader>
+            <CardTitle>Plan adherence</CardTitle>
+          </CardHeader>
+          {adherence ? (
+            <AdherenceBar adherence={adherence} />
+          ) : (
+            <p className="py-6 text-center text-sm text-muted-foreground">
+              No signed plan yet, so there is nothing to follow.
+            </p>
+          )}
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Weight reported by the client</CardTitle>
+          </CardHeader>
+          <div className="flex flex-col gap-3">
+            <WeightSparkline points={weights} />
+            <WeightLog points={weights} />
+          </div>
+          <p className="mt-3 text-xs text-muted-foreground">
+            Self-reported. It does not change the weight on file, which is what
+            the plan generator uses.
+          </p>
         </Card>
       </div>
 

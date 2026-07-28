@@ -21,7 +21,15 @@ const SECTIONS: Record<"nutritionist" | "client", Sections> = {
   client: { items: clientNavItems },
 };
 
-export function Sidebar({ variant }: { variant: keyof typeof SECTIONS }) {
+// Los contadores llegan por href y como numero: cruzan el limite servidor a
+// cliente sin problema, al contrario que los iconos, que son componentes.
+export function Sidebar({
+  variant,
+  badges,
+}: {
+  variant: keyof typeof SECTIONS;
+  badges?: Record<string, number>;
+}) {
   const { items, footerItem } = SECTIONS[variant];
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
@@ -79,6 +87,7 @@ export function Sidebar({ variant }: { variant: keyof typeof SECTIONS }) {
             item={item}
             active={pathname.startsWith(item.href)}
             collapsed={collapsed}
+            badge={badges?.[item.href]}
           />
         ))}
       </nav>
@@ -100,10 +109,12 @@ function SidebarLink({
   item,
   active,
   collapsed,
+  badge,
 }: {
   item: NavItem;
   active: boolean;
   collapsed: boolean;
+  badge?: number;
 }) {
   const Icon = item.icon;
 
@@ -132,7 +143,7 @@ function SidebarLink({
       href={item.href}
       title={collapsed ? item.label : undefined}
       className={cn(
-        "flex h-10 items-center gap-3 rounded-control px-3 text-sm transition-colors",
+        "relative flex h-10 items-center gap-3 rounded-control px-3 text-sm transition-colors",
         collapsed && "justify-center px-0",
         active
           ? "bg-brand-soft font-semibold text-brand"
@@ -141,6 +152,16 @@ function SidebarLink({
     >
       <Icon className="size-5 shrink-0" />
       {!collapsed && <span>{item.label}</span>}
+      {badge != null && badge > 0 && (
+        <span
+          className={cn(
+            "flex min-w-5 items-center justify-center rounded-full bg-brand px-1.5 text-xs font-medium text-brand-foreground",
+            collapsed ? "absolute right-2" : "ml-auto"
+          )}
+        >
+          {badge}
+        </span>
+      )}
     </Link>
   );
 }

@@ -5,6 +5,14 @@
 // un segundo nutricionista ajeno. Lo que se comprueba no es que la interfaz
 // oculte cosas, sino que la base de datos no las entregue.
 //
+// Cubre las dos mitades del acceso del cliente: lo que puede leer, y lo que
+// puede escribir. De la escritura interesan sobre todo los limites, porque son
+// lo que separa aportar informacion de alterar el trabajo del profesional:
+// marcar solo comidas planificadas de un plan firmado suyo y no futuras,
+// registrar solo su peso, no poder firmar un mensaje como su nutricionista, no
+// poder darse una cita por confirmada, y no poder tocar por la via directa las
+// columnas que solo las funciones saben cambiar.
+//
 // El escenario se monta y se deshace desde las propias sesiones de los
 // nutricionistas, con sus permisos: crean un alimento a medida, lo meten en el
 // plan del cliente y crean un borrador para el. Asi el borrador invisible y el
@@ -108,7 +116,49 @@ async function main() {
     .eq("code", "energy_kcal")
     .single();
 
-  const created = { food1: null, food2: null, item: null, draft: null, draftItem: null };
+  // Comida del catalogo que el plan de demostracion no usa, para probar que no
+  // se puede marcar algo que no esta planificado.
+  const { data: lateSnack } = await nutri1.sb
+    .from("meal_type")
+    .select("id")
+    .eq("code", "late_snack")
+    .single();
+
+  // Otro cliente del mismo nutricionista: sirve de objetivo ajeno sin salir de
+  // la consulta, que es el caso realmente peligroso.
+  const { data: otherPlan } = await nutri1.sb
+    .from("plan")
+    .select("id, client_id")
+    .neq("client_id", clientId)
+    .not("approved_at", "is", null)
+    .is("deleted_at", null)
+    .limit(1)
+    .single();
+  check("hay un segundo cliente con plan firmado en la consulta", otherPlan?.id > 0);
+
+  const { data: otherAppointment } = await nutri1.sb
+    .from("appointment")
+    .select("id, client_id, status")
+    .neq("client_id", clientId)
+    .eq("status", "scheduled")
+    .is("deleted_at", null)
+    .limit(1)
+    .single();
+  check("y una cita suya que el cliente no debe poder tocar", otherAppointment?.id > 0);
+
+  const created = {
+    food1: null,
+    food2: null,
+    item: null,
+    draft: null,
+    draftItem: null,
+    msgClient: null,
+    msgNutri: null,
+    appointment: null,
+    weightDay: null,
+    weightRestore: null,
+    checkMealType: null,
+  };
 
   try {
     const { data: food1, error: food1Err } = await nutri1.sb
@@ -267,31 +317,9 @@ async function main() {
       check(`no ve ${table}, que no tiene policy de cliente`, n === 0, `${n}`);
     }
 
-    section("EL CLIENTE NO ESCRIBE NADA");
+    section("EL MATERIAL DEL PROFESIONAL SIGUE FUERA DE SU ALCANCE");
 
     const writes = [
-      [
-        "no puede escribir un mensaje",
-        () =>
-          client.sb
-            .from("message")
-            .insert({
-              nutritionist_id: nutri1.uid,
-              client_id: clientId,
-              sender: "client",
-              body: "intento de escritura",
-            }),
-      ],
-      [
-        "no puede pedir cita",
-        () =>
-          client.sb.from("appointment").insert({
-            nutritionist_id: nutri1.uid,
-            client_id: clientId,
-            scheduled_at: new Date().toISOString(),
-            duration_min: 30,
-          }),
-      ],
       [
         "no puede crear un plan",
         () =>
@@ -349,7 +377,407 @@ async function main() {
       .update({ read_at: new Date().toISOString() })
       .eq("client_id", clientId)
       .select("id");
-    check("no puede marcar mensajes como leidos", readMsg?.length === 0);
+    check("no puede marcar mensajes como leidos por la via directa", readMsg?.length === 0);
+
+    // ---------- comidas cumplidas ----------
+    section("MARCA COMIDAS, Y SOLO LAS QUE PUEDE MARCAR");
+
+    // Comida del dia 1 que el juego de datos no deja ya marcada. Se elige en
+    // caliente para que la pasada no dependa de cuanto lleve marcado la
+    // demostracion, y al limpiar solo se borra esta.
+    const { data: dayOnePlanned } = await nutri1.sb
+      .from("plan_meal_item")
+      .select("meal_type_id")
+      .eq("plan_id", signedPlan.id)
+      .eq("day_num", 1);
+    const { data: dayOneChecked } = await client.sb
+      .from("meal_check")
+      .select("meal_type_id")
+      .eq("plan_id", signedPlan.id)
+      .eq("day_num", 1);
+    const takenTypes = new Set((dayOneChecked ?? []).map((c) => c.meal_type_id));
+    created.checkMealType =
+      Array.from(new Set((dayOnePlanned ?? []).map((m) => m.meal_type_id))).find(
+        (id) => !takenTypes.has(id)
+      ) ?? null;
+    check("hay una comida del dia 1 sin marcar", created.checkMealType != null);
+
+    const { error: checkErr } = await client.sb
+      .from("meal_check")
+      .insert({
+        plan_id: signedPlan.id,
+        day_num: 1,
+        meal_type_id: created.checkMealType,
+      });
+    check("marca una comida de su plan firmado", !checkErr, checkErr?.message);
+
+    const { data: ownChecks } = await client.sb
+      .from("meal_check")
+      .select("plan_id, day_num, meal_type_id")
+      .eq("plan_id", signedPlan.id)
+      .eq("day_num", 1)
+      .eq("meal_type_id", created.checkMealType);
+    check("y la relee", ownChecks?.length === 1, `${ownChecks?.length}`);
+
+    const { error: dupErr } = await client.sb
+      .from("meal_check")
+      .insert({
+        plan_id: signedPlan.id,
+        day_num: 1,
+        meal_type_id: created.checkMealType,
+      });
+    check("la misma comida no se marca dos veces", Boolean(dupErr));
+
+    // Dia del plan que todavia no ha llegado, calculado de su fecha de inicio
+    // para no depender de cuando se sembro la demostracion.
+    const dayMs = 86_400_000;
+    const startDay = Math.floor(Date.parse(`${signedPlan.start_date}T00:00:00Z`) / dayMs);
+    const todayDay = Math.floor(Date.parse(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`) / dayMs);
+    const futureDay = todayDay - startDay + 2;
+    check(
+      `el plan llega hasta el dia ${futureDay}, que es futuro`,
+      futureDay > 1 && futureDay <= signedPlan.duration_days,
+      `duracion ${signedPlan.duration_days}`
+    );
+
+    const { data: futurePlanned } = await nutri1.sb
+      .from("plan_meal_item")
+      .select("id")
+      .eq("plan_id", signedPlan.id)
+      .eq("day_num", futureDay)
+      .eq("meal_type_id", mealType.id)
+      .limit(1);
+    check("y esa comida si esta planificada ese dia", futurePlanned?.length === 1);
+
+    const { error: futureErr } = await client.sb
+      .from("meal_check")
+      .insert({ plan_id: signedPlan.id, day_num: futureDay, meal_type_id: mealType.id });
+    check("aun asi no puede marcar un dia que no ha llegado", Boolean(futureErr));
+
+    const { data: lateInPlan } = await nutri1.sb
+      .from("plan_meal_item")
+      .select("id")
+      .eq("plan_id", signedPlan.id)
+      .eq("meal_type_id", lateSnack.id)
+      .limit(1);
+    check("el plan no tiene late_snack ningun dia", (lateInPlan?.length ?? 0) === 0);
+
+    const { error: unplannedErr } = await client.sb
+      .from("meal_check")
+      .insert({ plan_id: signedPlan.id, day_num: 1, meal_type_id: lateSnack.id });
+    check("no puede marcar una comida que no esta en el plan", Boolean(unplannedErr));
+
+    const { error: draftCheckErr } = await client.sb
+      .from("meal_check")
+      .insert({ plan_id: created.draft, day_num: 1, meal_type_id: mealType.id });
+    check("no puede marcar en un borrador", Boolean(draftCheckErr));
+
+    const { error: otherCheckErr } = await client.sb
+      .from("meal_check")
+      .insert({ plan_id: otherPlan.id, day_num: 1, meal_type_id: mealType.id });
+    check("no puede marcar en el plan de otro cliente", Boolean(otherCheckErr));
+
+    const { error: nutriCheckErr } = await nutri1.sb
+      .from("meal_check")
+      .insert({ plan_id: signedPlan.id, day_num: 1, meal_type_id: lateSnack.id });
+    check("el profesional no marca en su lugar", Boolean(nutriCheckErr));
+
+    const { data: n1Checks } = await nutri1.sb
+      .from("meal_check")
+      .select("plan_id, day_num, meal_type_id")
+      .eq("plan_id", signedPlan.id)
+      .eq("day_num", 1)
+      .eq("meal_type_id", created.checkMealType);
+    check("pero si ve lo que su cliente marco", n1Checks?.length === 1, `${n1Checks?.length}`);
+
+    const { data: n2Checks } = await nutri2.sb.from("meal_check").select("plan_id");
+    check("y el otro profesional no ve ninguna marca", (n2Checks?.length ?? 0) === 0);
+
+    const { data: undone } = await client.sb
+      .from("meal_check")
+      .delete()
+      .eq("plan_id", signedPlan.id)
+      .eq("day_num", 1)
+      .eq("meal_type_id", created.checkMealType)
+      .select("plan_id");
+    check("desmarca lo que habia marcado", undone?.length === 1);
+    created.checkMealType = null;
+
+    // ---------- peso ----------
+    section("REGISTRA SU PESO SIN TOCAR EL DE LA FICHA");
+
+    const today = new Date().toISOString().slice(0, 10);
+    const tomorrow = new Date(Date.now() + dayMs).toISOString().slice(0, 10);
+    // El juego de datos de demostracion siembra el peso de hoy. Se guarda para
+    // devolverlo al final, que si no la pasada lo dejaria borrado.
+    const { data: seededToday } = await client.sb
+      .from("weight_entry")
+      .select("weight_kg")
+      .eq("measured_on", today)
+      .maybeSingle();
+    created.weightRestore = seededToday ? Number(seededToday.weight_kg) : null;
+    await client.sb.from("weight_entry").delete().eq("measured_on", today);
+
+    const { data: weightBefore } = await nutri1.sb
+      .from("client")
+      .select("weight_kg")
+      .eq("id", clientId)
+      .single();
+
+    const { error: wErr } = await client.sb
+      .from("weight_entry")
+      .insert({ client_id: clientId, measured_on: today, weight_kg: 68.4 });
+    check("registra su peso de hoy", !wErr, wErr?.message);
+    created.weightDay = wErr ? null : today;
+
+    const { error: upErr } = await client.sb
+      .from("weight_entry")
+      .upsert(
+        { client_id: clientId, measured_on: today, weight_kg: 67.9 },
+        { onConflict: "client_id,measured_on" }
+      );
+    check("volver a enviarlo el mismo dia pisa el valor", !upErr, upErr?.message);
+
+    const { data: wRows } = await client.sb
+      .from("weight_entry")
+      .select("measured_on, weight_kg")
+      .eq("measured_on", today);
+    check(
+      "y queda un solo registro, con el valor nuevo",
+      wRows?.length === 1 && Number(wRows[0].weight_kg) === 67.9,
+      JSON.stringify(wRows)
+    );
+
+    const { error: wFutureErr } = await client.sb
+      .from("weight_entry")
+      .insert({ client_id: clientId, measured_on: tomorrow, weight_kg: 67 });
+    check("no puede registrar un peso con fecha futura", Boolean(wFutureErr));
+
+    const { error: wOtherErr } = await client.sb
+      .from("weight_entry")
+      .insert({ client_id: otherPlan.client_id, measured_on: today, weight_kg: 80 });
+    check("no puede registrar el peso de otro cliente", Boolean(wOtherErr));
+
+    const { data: wMoved } = await client.sb
+      .from("weight_entry")
+      .update({ client_id: otherPlan.client_id })
+      .eq("measured_on", today)
+      .select("measured_on");
+    check("ni mover su registro a otra ficha", (wMoved?.length ?? 0) === 0);
+
+    const { data: weightAfter } = await nutri1.sb
+      .from("client")
+      .select("weight_kg")
+      .eq("id", clientId)
+      .single();
+    check(
+      "el peso declarado NO cambia client.weight_kg, que alimenta al solver",
+      String(weightBefore?.weight_kg) === String(weightAfter?.weight_kg),
+      `${weightBefore?.weight_kg} -> ${weightAfter?.weight_kg}`
+    );
+
+    const { data: n1Weights } = await nutri1.sb
+      .from("weight_entry")
+      .select("client_id")
+      .eq("client_id", clientId);
+    check("el profesional ve la serie de su cliente", (n1Weights?.length ?? 0) >= 1);
+
+    const { data: n2Weights } = await nutri2.sb.from("weight_entry").select("client_id");
+    check("y el otro profesional no ve ningun peso", (n2Weights?.length ?? 0) === 0);
+
+    // ---------- mensajes ----------
+    section("ESCRIBE MENSAJES, PERO NO EN NOMBRE AJENO");
+
+    const { data: sentMsg, error: sendErr } = await client.sb
+      .from("message")
+      .insert({
+        nutritionist_id: nutri1.uid,
+        client_id: clientId,
+        sender: "client",
+        body: "Mensaje de prueba del cliente",
+      })
+      .select("id")
+      .single();
+    check("envia un mensaje suyo", !sendErr, sendErr?.message);
+    created.msgClient = sentMsg?.id;
+
+    const { error: impersonateErr } = await client.sb.from("message").insert({
+      nutritionist_id: nutri1.uid,
+      client_id: clientId,
+      sender: "nutritionist",
+      body: "Esto lo tendria que haber escrito el profesional",
+    });
+    check("no puede firmar un mensaje como su nutricionista", Boolean(impersonateErr));
+
+    const { error: msgOtherErr } = await client.sb.from("message").insert({
+      nutritionist_id: nutri1.uid,
+      client_id: otherPlan.client_id,
+      sender: "client",
+      body: "En el hilo de otro",
+    });
+    check("no puede escribir en el hilo de otro cliente", Boolean(msgOtherErr));
+
+    const NUTRI_BODY = "Respuesta del profesional, sin leer";
+    const { data: fromNutri } = await nutri1.sb
+      .from("message")
+      .insert({
+        nutritionist_id: nutri1.uid,
+        client_id: clientId,
+        sender: "nutritionist",
+        body: NUTRI_BODY,
+      })
+      .select("id")
+      .single();
+    created.msgNutri = fromNutri?.id;
+
+    const { data: directRead } = await client.sb
+      .from("message")
+      .update({ read_at: new Date().toISOString() })
+      .eq("id", created.msgNutri)
+      .select("id");
+    check("no lo marca leido con un update directo", (directRead?.length ?? 0) === 0);
+
+    const { data: markedCount, error: rpcReadErr } = await client.sb.rpc(
+      "client_mark_thread_read"
+    );
+    check(
+      "la funcion si se lo marca leido",
+      !rpcReadErr && markedCount >= 1,
+      rpcReadErr?.message ?? `${markedCount}`
+    );
+
+    const { data: afterRpc } = await client.sb
+      .from("message")
+      .select("id, body, read_at")
+      .eq("id", created.msgNutri)
+      .single();
+    check("el mensaje queda leido", afterRpc?.read_at !== null);
+    check("y la funcion no ha tocado el cuerpo", afterRpc?.body === NUTRI_BODY);
+
+    const { data: bodyEdit } = await client.sb
+      .from("message")
+      .update({ body: "reescrito por el cliente" })
+      .eq("id", created.msgNutri)
+      .select("id");
+    check("que tampoco puede reescribir por su cuenta", (bodyEdit?.length ?? 0) === 0);
+
+    // ---------- citas ----------
+    section("PIDE CITA, Y ES EL PROFESIONAL QUIEN LA CONFIRMA");
+
+    const whenIso = new Date(Date.now() + 3 * dayMs).toISOString();
+    const pastIso = new Date(Date.now() - dayMs).toISOString();
+
+    const { data: reqAppt, error: reqErr } = await client.sb
+      .from("appointment")
+      .insert({
+        nutritionist_id: nutri1.uid,
+        client_id: clientId,
+        scheduled_at: whenIso,
+        duration_min: 30,
+        status: "pending",
+      })
+      .select("id, status, scheduled_at")
+      .single();
+    check("pide una cita y queda pendiente", !reqErr && reqAppt?.status === "pending", reqErr?.message);
+    created.appointment = reqAppt?.id;
+
+    const { error: selfConfirmErr } = await client.sb.from("appointment").insert({
+      nutritionist_id: nutri1.uid,
+      client_id: clientId,
+      scheduled_at: whenIso,
+      duration_min: 30,
+      status: "scheduled",
+    });
+    check("no puede darse una cita ya confirmada", Boolean(selfConfirmErr));
+
+    const { error: pastApptErr } = await client.sb.from("appointment").insert({
+      nutritionist_id: nutri1.uid,
+      client_id: clientId,
+      scheduled_at: pastIso,
+      duration_min: 30,
+      status: "pending",
+    });
+    check("no puede pedir cita en el pasado", Boolean(pastApptErr));
+
+    const { error: apptOtherErr } = await client.sb.from("appointment").insert({
+      nutritionist_id: nutri1.uid,
+      client_id: otherPlan.client_id,
+      scheduled_at: whenIso,
+      duration_min: 30,
+      status: "pending",
+    });
+    check("no puede pedir cita para otro cliente", Boolean(apptOtherErr));
+
+    const { data: movedAppt } = await client.sb
+      .from("appointment")
+      .update({ scheduled_at: pastIso })
+      .eq("id", created.appointment)
+      .select("id");
+    check("no puede mover la fecha de su cita", (movedAppt?.length ?? 0) === 0);
+
+    const { data: directCancel } = await client.sb
+      .from("appointment")
+      .update({ status: "cancelled" })
+      .eq("id", created.appointment)
+      .select("id");
+    check("ni cancelarla con un update directo", (directCancel?.length ?? 0) === 0);
+
+    const { data: confirmed, error: confirmErr } = await nutri1.sb
+      .from("appointment")
+      .update({ status: "scheduled" })
+      .eq("id", created.appointment)
+      .select("id, status");
+    check(
+      "el profesional la confirma con la policy que ya tenia",
+      !confirmErr && confirmed?.[0]?.status === "scheduled",
+      confirmErr?.message
+    );
+
+    const { data: seenByClient } = await client.sb
+      .from("appointment")
+      .select("id, status")
+      .eq("id", created.appointment)
+      .single();
+    check("y el cliente la ve confirmada", seenByClient?.status === "scheduled");
+
+    const { data: cancelOther, error: cancelOtherErr } = await client.sb.rpc(
+      "client_cancel_appointment",
+      { p_appointment_id: otherAppointment.id }
+    );
+    check(
+      "la funcion no cancela la cita de otro cliente",
+      !cancelOtherErr && cancelOther === false,
+      cancelOtherErr?.message ?? `${cancelOther}`
+    );
+
+    const { data: otherStill } = await nutri1.sb
+      .from("appointment")
+      .select("status")
+      .eq("id", otherAppointment.id)
+      .single();
+    check("que sigue en su estado", otherStill?.status === otherAppointment.status);
+
+    const { data: cancelledOk, error: cancelErr } = await client.sb.rpc(
+      "client_cancel_appointment",
+      { p_appointment_id: created.appointment }
+    );
+    check("cancela la suya por la funcion", !cancelErr && cancelledOk === true, cancelErr?.message);
+
+    const { data: afterCancel } = await client.sb
+      .from("appointment")
+      .select("status, scheduled_at")
+      .eq("id", created.appointment)
+      .single();
+    check("queda cancelada", afterCancel?.status === "cancelled");
+    check(
+      "y la funcion no ha movido la fecha",
+      Date.parse(afterCancel?.scheduled_at) === Date.parse(reqAppt.scheduled_at)
+    );
+
+    const { data: cancelTwice } = await client.sb.rpc("client_cancel_appointment", {
+      p_appointment_id: created.appointment,
+    });
+    check("cancelar dos veces ya no cambia nada", cancelTwice === false);
 
     // ---------- la firma es lo que decide ----------
     section("LA FIRMA ES LO QUE ABRE EL PLAN");
@@ -439,6 +867,29 @@ async function main() {
     check("solo se ve a si mismo en nutritionist", n2Nutris?.length === 1 && n2Nutris[0].id === nutri2.uid);
   } finally {
     section("LIMPIEZA");
+    // lo que escribio el cliente lo deshace el cliente, salvo los mensajes y la
+    // cita, que solo el profesional puede borrar. Se borra SOLO la marca de
+    // esta pasada: las del juego de datos de demostracion se quedan.
+    if (created.checkMealType != null)
+      await client.sb
+        .from("meal_check")
+        .delete()
+        .eq("plan_id", signedPlan.id)
+        .eq("day_num", 1)
+        .eq("meal_type_id", created.checkMealType);
+    if (created.weightDay) {
+      await client.sb.from("weight_entry").delete().eq("measured_on", created.weightDay);
+      if (created.weightRestore != null)
+        await client.sb.from("weight_entry").insert({
+          client_id: clientId,
+          measured_on: created.weightDay,
+          weight_kg: created.weightRestore,
+        });
+    }
+    if (created.msgClient) await nutri1.sb.from("message").delete().eq("id", created.msgClient);
+    if (created.msgNutri) await nutri1.sb.from("message").delete().eq("id", created.msgNutri);
+    if (created.appointment)
+      await nutri1.sb.from("appointment").delete().eq("id", created.appointment);
     if (created.draftItem)
       await nutri1.sb.from("plan_meal_item").delete().eq("id", created.draftItem);
     if (created.draft) await nutri1.sb.from("plan").delete().eq("id", created.draft);

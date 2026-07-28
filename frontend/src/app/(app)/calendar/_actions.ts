@@ -99,3 +99,35 @@ export async function createAppointment(
   revalidatePath("/clients/[id]", "page");
   return { error: null, warning, ok: true };
 }
+
+// Respuesta a una peticion del cliente. El paso de estado es lo unico que
+// cambia; la policy del nutricionista sobre appointment ya cubre el update, asi
+// que no hace falta nada nuevo en la base de datos.
+async function answerRequest(id: number, status: "scheduled" | "cancelled") {
+  if (!Number.isInteger(id) || id <= 0) return;
+
+  const supabase = createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) redirect("/login");
+
+  // Solo se responde a lo que sigue pendiente: si el cliente ya la cancelo, no
+  // se resucita.
+  await supabase
+    .from("appointment")
+    .update({ status })
+    .eq("id", id)
+    .eq("status", "pending");
+
+  revalidatePath("/calendar");
+  revalidatePath("/clients/[id]", "page");
+}
+
+export async function confirmAppointment(formData: FormData): Promise<void> {
+  await answerRequest(Number(formData.get("appointment_id")), "scheduled");
+}
+
+export async function declineAppointment(formData: FormData): Promise<void> {
+  await answerRequest(Number(formData.get("appointment_id")), "cancelled");
+}

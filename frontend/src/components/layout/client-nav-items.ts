@@ -7,11 +7,10 @@ import {
 import type { NavItem } from "./nav-items";
 
 // Sidebar del cliente. Mismas cuatro secciones que el prototipo, con el plan en
-// segundo lugar porque es la pantalla que el cliente abre a diario. Citas y
-// mensajes se marcan como proximos: su lado cliente llega con las interacciones.
+// segundo lugar porque es la pantalla que el cliente abre a diario.
 export const clientNavItems: NavItem[] = [
   { label: "Dashboard", href: "/my/dashboard", icon: LayoutDashboard },
   { label: "My Plan", href: "/my/plan", icon: ClipboardList },
-  { label: "Appointments", href: "/my/appointments", icon: Calendar, soon: true },
-  { label: "Messages", href: "/my/messages", icon: MessageSquare, soon: true },
+  { label: "Appointments", href: "/my/appointments", icon: Calendar },
+  { label: "Messages", href: "/my/messages", icon: MessageSquare },
 ];

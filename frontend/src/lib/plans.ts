@@ -38,7 +38,8 @@ export type MealItemRow = {
   item_order: number;
   quantity_g: number | null;
   description_free: string | null;
-  meal_type: { code: string; name_en: string; default_order: number } | null;
+  // el id del meal_type solo lo piden las pantallas que marcan comidas
+  meal_type: { id?: number; code: string; name_en: string; default_order: number } | null;
   food: { name_en: string; food_nutrient?: MealItemFoodNutrient[] } | null;
 };
 
@@ -46,6 +47,7 @@ export type PlanMeal = {
   code: string;
   label: string;
   order: number;
+  mealTypeId?: number;
   items: MealItemRow[];
 };
 
@@ -68,6 +70,7 @@ export function groupItemsByDay(items: MealItemRow[]): PlanDay[] {
         code,
         label: mealTypeLabel(code, item.meal_type?.name_en ?? code),
         order: item.meal_type?.default_order ?? 99,
+        mealTypeId: item.meal_type?.id,
         items: [],
       } satisfies PlanMeal);
     meal.items.push(item);
@@ -137,6 +140,21 @@ export function planDayNumFor(
   if (start === null) return null;
   const offset = calendarDayOf(on) - start;
   return offset >= 0 && offset < durationDays ? offset + 1 : null;
+}
+
+// Dias del plan que ya se pueden dar por vividos, contando el de hoy. Cero si
+// todavia no ha empezado, y la duracion entera si ya termino. Es el corte que
+// separa lo exigible de lo que aun no toca.
+export function planDaysElapsed(
+  startDate: string,
+  durationDays: number,
+  on: Date
+): number {
+  const start = calendarDay(startDate);
+  if (start === null) return 0;
+  const offset = calendarDayOf(on) - start;
+  if (offset < 0) return 0;
+  return Math.min(offset + 1, durationDays);
 }
 
 // Plan en curso del cliente: el que cubre la fecha dada, y si ninguno la cubre,

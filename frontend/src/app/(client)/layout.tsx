@@ -10,11 +10,20 @@ export default async function ClientLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const { client } = await requireClient();
+  const { supabase, client } = await requireClient();
+
+  // Sin leer del hilo: solo cuenta lo que le ha escrito su nutricionista y
+  // sigue sin leer. Se apoya en el indice parcial de mensajes no leidos.
+  const { count } = await supabase
+    .from("message")
+    .select("id", { count: "exact", head: true })
+    .eq("sender", "nutritionist")
+    .is("read_at", null)
+    .is("deleted_at", null);
 
   return (
     <div className="flex h-screen overflow-hidden">
-      <Sidebar variant="client" />
+      <Sidebar variant="client" badges={{ "/my/messages": count ?? 0 }} />
       <div className="flex flex-1 flex-col overflow-hidden">
         <Header fullName={client.fullName} subtitle="Client" />
         <main className="flex-1 overflow-y-auto p-6">{children}</main>
