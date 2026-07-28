@@ -12,6 +12,9 @@ export type NavItem = {
   label: string;
   href: string;
   icon: LucideIcon;
+  // seccion ya disenada cuyo contenido aun no existe: se ve en su sitio pero no
+  // navega, en vez de llevar a una pantalla vacia.
+  soon?: boolean;
 };
 
 // sidebar del nutri, segun el prototipo v2 (sin forms/resources/reports)

@@ -7,10 +7,22 @@ import { PanelLeftClose, PanelLeft } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Logo } from "./logo";
 import { navItems, settingsItem, type NavItem } from "./nav-items";
+import { clientNavItems } from "./client-nav-items";
 
 const STORAGE_KEY = "nutriapp:sidebar-collapsed";
 
-export function Sidebar() {
+// Un solo sidebar con dos juegos de secciones. La variante viaja como texto y
+// las tablas de navegacion se quedan de este lado del limite, porque los iconos
+// son componentes y no se pueden pasar como props desde el servidor.
+type Sections = { items: NavItem[]; footerItem?: NavItem };
+
+const SECTIONS: Record<"nutritionist" | "client", Sections> = {
+  nutritionist: { items: navItems, footerItem: settingsItem },
+  client: { items: clientNavItems },
+};
+
+export function Sidebar({ variant }: { variant: keyof typeof SECTIONS }) {
+  const { items, footerItem } = SECTIONS[variant];
   const pathname = usePathname();
   const [collapsed, setCollapsed] = useState(false);
 
@@ -61,7 +73,7 @@ export function Sidebar() {
             <PanelLeft className="size-5" />
           </button>
         )}
-        {navItems.map((item) => (
+        {items.map((item) => (
           <SidebarLink
             key={item.href}
             item={item}
@@ -71,13 +83,15 @@ export function Sidebar() {
         ))}
       </nav>
 
-      <div className="border-t border-border p-3">
-        <SidebarLink
-          item={settingsItem}
-          active={pathname.startsWith(settingsItem.href)}
-          collapsed={collapsed}
-        />
-      </div>
+      {footerItem && (
+        <div className="border-t border-border p-3">
+          <SidebarLink
+            item={footerItem}
+            active={pathname.startsWith(footerItem.href)}
+            collapsed={collapsed}
+          />
+        </div>
+      )}
     </aside>
   );
 }
@@ -92,6 +106,27 @@ function SidebarLink({
   collapsed: boolean;
 }) {
   const Icon = item.icon;
+
+  if (item.soon) {
+    return (
+      <div
+        title={collapsed ? `${item.label} (soon)` : undefined}
+        className={cn(
+          "flex h-10 items-center gap-3 rounded-control px-3 text-sm text-muted-foreground/60",
+          collapsed && "justify-center px-0"
+        )}
+      >
+        <Icon className="size-5 shrink-0" />
+        {!collapsed && (
+          <>
+            <span>{item.label}</span>
+            <span className="ml-auto text-xs uppercase tracking-wide">Soon</span>
+          </>
+        )}
+      </div>
+    );
+  }
+
   return (
     <Link
       href={item.href}

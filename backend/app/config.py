@@ -55,7 +55,7 @@ class Settings:
         token = os.environ.get("NUTRIAPP_API_TOKEN", "")
         ollama_host = os.environ.get("OLLAMA_HOST", "http://localhost:11434")
         ollama_model = os.environ.get("OLLAMA_MODEL", "qwen2.5:7b-instruct")
-        scope_model = os.environ.get("OLLAMA_SCOPE_MODEL", "qwen2.5:1.5b-instruct")
+        scope_model = os.environ.get("OLLAMA_SCOPE_MODEL", "qwen2.5:3b-instruct")
         completeness_model = os.environ.get("OLLAMA_COMPLETENESS_MODEL", "qwen2.5:7b-instruct")
         contradiction_model = os.environ.get("OLLAMA_CONTRADICTION_MODEL", "qwen2.5:3b-instruct")
 

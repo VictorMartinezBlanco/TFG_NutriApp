@@ -17,7 +17,7 @@ export default async function LoginPage({
   const {
     data: { user },
   } = await supabase.auth.getUser();
-  if (user) redirect("/dashboard");
+  if (user) redirect("/");
 
   return (
     <main className="flex min-h-screen items-center justify-center p-6">
@@ -25,7 +25,7 @@ export default async function LoginPage({
         <div className="flex flex-col items-center gap-2">
           <Logo />
           <p className="text-sm text-muted-foreground">
-            Acceso para nutricionistas
+            Acceso para nutricionistas y clientes
           </p>
         </div>
 

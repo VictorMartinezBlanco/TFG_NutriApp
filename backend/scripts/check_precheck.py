@@ -34,7 +34,8 @@ from app.precheck import (
 )
 from app.solver.loader import load_constraints
 from app.solver.types import ConstraintRef
-from app.translator.client import FakeLLMClient
+from app.precheck.scope import check_scope
+from app.translator.client import FakeLLMClient, OllamaClient
 from app.worker.run import Engines, claim_task, process_task
 
 NUTRI = "03f06edf-603e-489d-8aed-71bc93f97ef0"
@@ -316,6 +317,37 @@ def _ollama_up() -> bool:
         return False
 
 
+# Ordenes cortas en imperativo sin cifras: la clase de mensaje que el modelo mas
+# pequeno rechazaba como fuera de tema. Se comprueba el veredicto del scope a
+# solas, sin las otras pasadas, porque es ahi donde estaba el fallo.
+SCOPE_CASES = [
+    ("El pescado le sienta fatal, evitalo del todo, y metele legumbres a menudo", "in_scope"),
+    ("Que no le pongas carne roja dos dias seguidos", "in_scope"),
+    ("Quitale el pan blanco y ponle integral.", "in_scope"),
+    ("Nada de lactosa.", "in_scope"),
+    ("Recomiendame una pelicula para ver esta noche con mi pareja.", "out_of_scope"),
+    ("Puedes cambiarme la contrasena de la aplicacion?", "out_of_scope"),
+    ("Mandale un recordatorio de la cita del jueves por WhatsApp.", "out_of_scope"),
+]
+
+
+def run_scope(attempts: int = 2) -> None:
+    print(f"\n=== OLLAMA scope solo ({settings.ollama_scope_model}) ===")
+    llm = OllamaClient(model=settings.ollama_scope_model)
+    for text, expected in SCOPE_CASES:
+        got = ""
+        for _ in range(attempts):
+            try:
+                verdict, _res = check_scope(text, llm=llm)
+            except Exception as exc:
+                print(f"    (attempt error: {exc})")
+                continue
+            got = verdict.verdict
+            if got == expected:
+                break
+        check(f"scope '{text[:44]}' -> {expected}", got == expected)
+
+
 OLLAMA_CASES = [
     ("out of scope", "Recomiendame una pelicula para ver esta noche con mi pareja.", "out_of_scope"),
     ("clean message", "Quiere perder peso, unas 1500 kcal al dia y es vegetariana.", "ok"),
@@ -359,6 +391,7 @@ async def main() -> None:
             if fake_only:
                 print("\n(ollama skipped: --fake)")
             elif _ollama_up():
+                run_scope()
                 await run_ollama(conn)
             else:
                 print("\n(ollama skipped: not reachable at "

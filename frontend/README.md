@@ -5,7 +5,10 @@ con la clave pública y la RLS. El backend de Python sigue en `../backend`.
 
 ## Qué hace por ahora
 
-Login real de un nutricionista y, ya con sesión, el panel del nutri completo:
+Un único login para los dos roles de la aplicación. Tras entrar, la raíz reparte:
+el nutricionista va a su panel y el cliente al suyo.
+
+### Panel del nutricionista
 
 - Layout con sidebar colapsable y header.
 - Dashboard con datos reales de la BD (clientes, planes, borradores sin firmar,
@@ -26,11 +29,24 @@ Login real de un nutricionista y, ya con sesión, el panel del nutri completo:
 - Ajustes: cuatro pestañas (perfil, disponibilidad, notificaciones, estilo
   clínico); perfil y disponibilidad son editables.
 
+### Panel del cliente
+
+Bajo `/my`, en solo lectura:
+
+- Dashboard: saludo, las comidas del día que le toca hoy en su plan, la próxima
+  cita y el último mensaje de su hilo.
+- My Plan: el plan completo (días, comidas, alimentos con gramos y macros
+  diarios medios).
+
+El cliente solo ve planes **firmados**: un borrador del profesional no le llega,
+y no porque la pantalla lo filtre, sino porque la policy no lo entrega. Las
+secciones de citas y mensajes aparecen en su sidebar marcadas como próximas.
+
 Todo se lee con la publishable key, así que la RLS decide qué filas devuelve
-según el nutricionista logueado. Las escrituras (alta de alimento, citas,
-mensajes, perfil, disponibilidad) van también con la publishable key: las
+según quién esté logueado. Las escrituras del nutricionista (alta de alimento,
+citas, mensajes, perfil, disponibilidad) van también con la publishable key: las
 policies de INSERT/UPDATE obligan a que `nutritionist_id` sea el del usuario
-logueado.
+logueado. El cliente no escribe en nada todavía.
 
 ## Estructura
 
@@ -49,8 +65,8 @@ src/
   app/
     actions.ts         # signIn / signOut (server actions)
     layout.tsx         # root: fuente Inter + Toaster
-    page.tsx           # raiz: redirige a /dashboard
-    (auth)/login/      # formulario de login
+    page.tsx           # raiz: reparte por rol (nutri -> /dashboard, cliente -> /my)
+    (auth)/login/      # formulario de login, comun a los dos roles
     (app)/             # shell con sidebar + header, guard de sesion
       layout.tsx
       dashboard/       # pantalla viva con datos reales
@@ -61,14 +77,25 @@ src/
       messages/        # conversaciones + hilo con sondeo cada 15s
       settings/        # 4 tabs (perfil y disponibilidad editables)
       ui-kit/          # muestra de componentes + lectura de catalogos (RLS)
+    (client)/          # mismo shell con el sidebar del cliente
+      layout.tsx
+      my/dashboard/    # plan de hoy, proxima cita, ultimo mensaje
+      my/plan/         # plan firmado completo
     api/
       messages/        # route handler GET para el sondeo de mensajes
+scripts/
+  check-client-rls.mjs # aislamiento con tres actores reales (ver Notas)
 ```
 
-El route group `(app)` aplica el shell (sidebar + header) y un guard que manda
-a `/login` si no hay sesión. `(auth)` agrupa el login sin shell. Los grupos no
-añaden segmento a la URL, así que las rutas quedan limpias (`/login`,
-`/dashboard`, ...).
+El route group `(app)` aplica el shell (sidebar + header) y el guard del
+nutricionista; `(client)` hace lo mismo para el cliente bajo el prefijo `/my`.
+`(auth)` agrupa el login sin shell. Los grupos no añaden segmento a la URL, así
+que las rutas quedan limpias (`/login`, `/dashboard`, `/my/plan`, ...).
+
+El rol se decide por el vínculo `client.auth_user_id`, no por los metadatos de la
+cuenta: esos los puede reescribir el propio usuario desde el navegador. Quien
+fuerce una URL del otro panel es devuelto al suyo, pero la barrera real de los
+datos es la RLS.
 
 ## Componentes y diseño
 
@@ -99,14 +126,16 @@ cp .env.example .env.local   # rellenar con los datos del proyecto
 npm run dev                  # http://localhost:3000
 ```
 
-Sin sesión, cualquier ruta del panel redirige a `/login`. Tras entrar con un
-nutri real, se aterriza en `/dashboard`.
+Sin sesión, cualquier ruta de los dos paneles redirige a `/login`. Tras entrar se
+aterriza en la raíz, que reparte según el rol.
 
-Las credenciales del nutri de prueba están en `.test-user.local.md` (no se
-sube al repo). El dashboard muestra datos solo si el nutri tiene clientes y
-planes; para tener algo que ver hay un seed de demostración en
-`../backend/migrations/sql/0004_seed_demo.sql` (4 clientes y 3 planes para el
-nutri de prueba, reaplicable).
+Las credenciales de los usuarios de prueba (dos nutricionistas y el cliente de
+demostración) están en `.test-user.local.md`, que no se sube al repo. El panel
+muestra datos solo si hay clientes y planes; el juego de demostración se siembra
+desde `../backend/migrations/sql/0004_seed_demo.sql` y siguientes, y
+`0013_seed_demo_refresh.sql` vuelve a acercar sus fechas al día de hoy cuando la
+demo se queda atrás. La cuenta del cliente se crea y vincula con
+`../backend/scripts/create_demo_client.py`.
 
 ## Notas
 
@@ -114,6 +143,14 @@ nutri de prueba, reaplicable).
   `@supabase/supabase-js` y `@supabase/ssr` igual que la antigua anon key.
 - La RLS solo deja leer a usuarios autenticados (`TO authenticated`). Sin
   sesión, las queries devuelven cero filas.
+- `scripts/check-client-rls.mjs` comprueba el aislamiento entre los dos roles con
+  tres sesiones reales (cliente, su nutricionista y otro ajeno) y la clave
+  pública. Monta y deshace su propio escenario, así que se puede repetir:
+
+  ```bash
+  CLIENT_DEMO_PASSWORD=... NUTRI1_PASSWORD=... NUTRI2_PASSWORD=... \
+    node --env-file=.env.local scripts/check-client-rls.mjs
+  ```
 
 ## Production deployment
 

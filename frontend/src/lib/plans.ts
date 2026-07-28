@@ -110,6 +110,50 @@ export function dayLabel(startDate: string, dayNum: number): string {
   });
 }
 
+// Dias transcurridos desde una fecha en formato YYYY-MM-DD hasta hoy, contando
+// por dia natural. Se compara sobre el mismo eje (dia del calendario) para que
+// el desplazamiento horario no mueva de dia el plan.
+const MS_PER_DAY = 86_400_000;
+
+function calendarDay(iso: string): number | null {
+  const [y, m, d] = iso.split("-").map(Number);
+  if (!y || !m || !d) return null;
+  return Math.floor(Date.UTC(y, m - 1, d) / MS_PER_DAY);
+}
+
+function calendarDayOf(date: Date): number {
+  return Math.floor(
+    Date.UTC(date.getFullYear(), date.getMonth(), date.getDate()) / MS_PER_DAY
+  );
+}
+
+// Dia del plan que le toca a una fecha, o null si cae fuera del rango.
+export function planDayNumFor(
+  startDate: string,
+  durationDays: number,
+  on: Date
+): number | null {
+  const start = calendarDay(startDate);
+  if (start === null) return null;
+  const offset = calendarDayOf(on) - start;
+  return offset >= 0 && offset < durationDays ? offset + 1 : null;
+}
+
+// Plan en curso del cliente: el que cubre la fecha dada, y si ninguno la cubre,
+// el mas reciente por fecha de inicio.
+export function pickActivePlan<
+  T extends { start_date: string; duration_days: number }
+>(plans: T[], on: Date): T | null {
+  if (plans.length === 0) return null;
+  const covering = plans.find(
+    (p) => planDayNumFor(p.start_date, p.duration_days, on) !== null
+  );
+  if (covering) return covering;
+  return [...plans].sort((a, b) =>
+    a.start_date < b.start_date ? 1 : a.start_date > b.start_date ? -1 : 0
+  )[0];
+}
+
 export function planDateRange(startDate: string, durationDays: number): string {
   const start = new Date(startDate);
   if (Number.isNaN(start.getTime())) return "";
