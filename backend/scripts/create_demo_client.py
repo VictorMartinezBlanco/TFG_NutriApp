@@ -12,8 +12,15 @@ Idempotente: si el usuario ya existe reusa su id y solo reescribe el vinculo.
 La contrasena se pasa en DEMO_CLIENT_PASSWORD; si no viene, se genera una y se
 imprime (solo cuando el usuario se crea, para no dejarla en el repo).
 
+El cliente al que se vincula se elige con DEMO_CLIENT_NAME y DEMO_CLIENT_EMAIL.
+Por defecto es el primero que se dio de alta, para no cambiar lo que ya habia.
+Hay una segunda cuenta de cliente en la demostracion, con datos propios, para
+que una prueba con un usuario real no ensucie la que usan los runners.
+
 Uso:
     DEMO_CLIENT_PASSWORD=... python scripts/create_demo_client.py
+    DEMO_CLIENT_NAME="Lucia Fernandez" DEMO_CLIENT_EMAIL=lucia.client@nutriapp.dev \
+      DEMO_CLIENT_PASSWORD=... python scripts/create_demo_client.py
 """
 
 from __future__ import annotations
@@ -29,9 +36,9 @@ from app.config import BACKEND_DIR, settings  # noqa: F401  (carga .env.local)
 from app.db import connection_pool
 
 NUTRI = "03f06edf-603e-489d-8aed-71bc93f97ef0"
-CLIENT_NAME = "Maria Gonzalez"
-EMAIL = "maria.client@nutriapp.dev"
-FULL_NAME = "Maria Gonzalez"
+CLIENT_NAME = os.environ.get("DEMO_CLIENT_NAME", "Maria Gonzalez")
+EMAIL = os.environ.get("DEMO_CLIENT_EMAIL", "maria.client@nutriapp.dev")
+FULL_NAME = CLIENT_NAME
 
 
 def _admin_headers(key: str) -> dict[str, str]:

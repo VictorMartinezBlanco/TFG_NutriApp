@@ -86,10 +86,13 @@ async function main() {
     process.env.NUTRI1_PASSWORD
   );
 
+  // El vigente, no el primero: la clienta tiene tambien un plan historico
+  // firmado, y la adherencia del dashboard se mide sobre el que cubre hoy.
   const { data: plan } = await client.sb
     .from("plan")
     .select("id, start_date, duration_days")
     .not("approved_at", "is", null)
+    .order("start_date", { ascending: false })
     .limit(1)
     .single();
   // Comida del dia 1 que el juego de datos NO deja ya marcada, para que el

@@ -76,7 +76,7 @@ app/
   config.py         # carga .env.local y elige la mejor cadena (pooler primero)
   db.py             # pool asyncpg (singleton perezoso + context manager)
   repositories.py   # lectura/escritura: catálogos, alta de food, lectura cruzada
-  seed_foods.py     # subset de 22 alimentos con nutrientes T1 y tags
+  seed_foods.py     # catálogo global de 100 alimentos con nutrientes T1 y tags
 scripts/
   check_connection.py
   load_foods.py
@@ -144,6 +144,41 @@ datacenter de Render (el host directo solo resuelve por IPv6).
 
 El plan gratis duerme el servicio tras unos minutos de inactividad, así que el
 primer request tras un rato tarda unos segundos en despertar.
+
+## Juego de datos de demostración
+
+La aplicación se demuestra con datos ficticios: doce clientes con seudónimo
+repartidos entre dos nutricionistas, sus restricciones, sus planes, sus citas y
+sus series de seguimiento. Los nombres son seudónimos a propósito (la columna se
+llama `full_name_pseudonym`).
+
+Los planes **no están escritos a mano**: los genera el pipeline real, así que
+cada uno respeta de verdad las restricciones de su cliente.
+
+Orden de carga, una sola vez:
+
+```bash
+python -m scripts.load_foods                     # catálogo de 100 alimentos
+# aplicar migrations/sql/0015_seed_demo_clients.sql y 0016_seed_clinical_style.sql
+python -m scripts.seed_demo_plans                # genera y firma los planes
+```
+
+Antes de cada demostración o prueba con un usuario, **un solo comando** reancla
+todo lo que lleva fecha (los planes caducan: se sembraron relativos al día de la
+carga):
+
+```
+migrations/sql/0017_seed_demo_refresh.sql
+```
+
+Es idempotente y re-ejecutable. Sucede a `0013_seed_demo_refresh.sql`, que solo
+cubría cuatro clientes; el 0013 se queda por historia y ya no hace falta
+aplicarlo.
+
+Las dos cuentas de acceso de cliente se dan de alta con
+`scripts/create_demo_client.py`, que elige a quién vincular con
+`DEMO_CLIENT_NAME` y `DEMO_CLIENT_EMAIL`. Las contraseñas viven en
+`../frontend/.test-user.local.md`, que no se sube al repo.
 
 ## Frontend
 

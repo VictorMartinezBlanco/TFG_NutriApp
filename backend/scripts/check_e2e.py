@@ -28,6 +28,13 @@ TOKEN = os.environ.get("NUTRIAPP_API_TOKEN", "")
 KCAL_TOL_PCT = 5.0
 
 
+# Un caso que agota el limite del solver tarda los 90 s de resolucion mas la
+# carga del pool, la validacion y la serializacion del plan, que en la CPU del
+# free tier suman otros veinte y pico segundos. Con 120 s el cliente cortaba
+# antes que el servidor.
+HTTP_TIMEOUT_S = 240
+
+
 def _call(method, path, body=None):
     data = json.dumps(body).encode() if body is not None else None
     req = urllib.request.Request(BASE + path, data=data, method=method)
@@ -35,10 +42,22 @@ def _call(method, path, body=None):
     if TOKEN:
         req.add_header("Authorization", f"Bearer {TOKEN}")
     try:
-        with urllib.request.urlopen(req, timeout=120) as r:
-            return r.status, json.loads(r.read().decode())
+        with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT_S) as r:
+            return r.status, _parse(r.read())
     except urllib.error.HTTPError as e:
-        return e.code, json.loads(e.read().decode())
+        return e.code, _parse(e.read())
+    except Exception as e:  # noqa: BLE001
+        # un corte de red o un timeout tiene que salir como FAIL del caso, no
+        # tumbar la pasada entera y perder los casos que quedaban.
+        return -1, {"detail": f"{type(e).__name__}: {e}"}
+
+
+def _parse(raw):
+    """El proxy del hosting contesta los errores con HTML, no con JSON."""
+    try:
+        return json.loads(raw.decode())
+    except (ValueError, UnicodeDecodeError):
+        return {"detail": raw.decode("utf-8", "replace")[:200]}
 
 
 class Report:
@@ -185,9 +204,16 @@ async def main() -> int:
     # espina, soja y frutos secos; al prohibirlas solo quedan aportes bajos
     # (legumbres, verduras, pan) que no alcanzan un minimo alto. el minimo se pone
     # por encima de lo que el pool restante puede dar para forzar la infactibilidad.
+    #
+    # el umbral se recalibro al ampliar el catalogo (28 -> 58 -> 100 alimentos):
+    # con 100, un minimo de 3000 volvio a ser alcanzable (mas legumbres y panes
+    # suman), y ademas demostrar la infactibilidad se encarece con el pool (a
+    # 3500 la prueba tarda ~13 s en local y en la CPU del hosting no cierra
+    # dentro del limite, devolviendo un nucleo vacio). A 6000 la prueba baja a
+    # ~2 s en local, con margen para el hardware lento.
     print("\nCaso 12. Sintetico 7d/5c, min calcio alto + prohibir familias con calcio. Infactible.")
     s, b = _gen(NUTRI, michael, 7, 5, [
-        {"type": "nutrient_min", "operator": "min", "value": 3000, "target_nutrient_id": calc,
+        {"type": "nutrient_min", "operator": "min", "value": 6000, "target_nutrient_id": calc,
          "priority": "hard", "weight": 10},
         {"type": "forbid_tag", "operator": "forbid", "target_tag_id": tids["milk_allergen"],
          "priority": "hard", "weight": 10},

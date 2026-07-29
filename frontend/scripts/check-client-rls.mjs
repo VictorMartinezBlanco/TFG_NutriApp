@@ -89,12 +89,16 @@ async function main() {
   check("el nutricionista ve el vinculo de su cliente", demoClient?.id > 0);
   const clientId = demoClient.id;
 
+  // El vigente, no el primero: la clienta de demostracion tiene tambien un plan
+  // historico firmado, y los calculos de dias de mas abajo solo tienen sentido
+  // sobre el plan que cubre hoy, que es el que la aplicacion mide.
   const { data: signedPlan } = await nutri1.sb
     .from("plan")
     .select("id, start_date, duration_days")
     .eq("client_id", clientId)
     .not("approved_at", "is", null)
     .is("deleted_at", null)
+    .order("start_date", { ascending: false })
     .limit(1)
     .single();
   check("el cliente de demostracion tiene un plan firmado", signedPlan?.id > 0);
@@ -490,8 +494,14 @@ async function main() {
       .eq("meal_type_id", created.checkMealType);
     check("pero si ve lo que su cliente marco", n1Checks?.length === 1, `${n1Checks?.length}`);
 
-    const { data: n2Checks } = await nutri2.sb.from("meal_check").select("plan_id");
-    check("y el otro profesional no ve ninguna marca", (n2Checks?.length ?? 0) === 0);
+    // El segundo profesional tiene cartera propia con sus marcas desde el juego
+    // de datos ampliado, asi que el cero se comprueba sobre el plan de ESTA
+    // clienta, no sobre la tabla entera.
+    const { data: n2Checks } = await nutri2.sb
+      .from("meal_check")
+      .select("plan_id")
+      .eq("plan_id", signedPlan.id);
+    check("y el otro profesional no ve ninguna marca de ella", (n2Checks?.length ?? 0) === 0);
 
     const { data: undone } = await client.sb
       .from("meal_check")
@@ -582,8 +592,12 @@ async function main() {
       .eq("client_id", clientId);
     check("el profesional ve la serie de su cliente", (n1Weights?.length ?? 0) >= 1);
 
-    const { data: n2Weights } = await nutri2.sb.from("weight_entry").select("client_id");
-    check("y el otro profesional no ve ningun peso", (n2Weights?.length ?? 0) === 0);
+    // Mismo motivo que con las marcas: el cero es sobre esta clienta.
+    const { data: n2Weights } = await nutri2.sb
+      .from("weight_entry")
+      .select("client_id")
+      .eq("client_id", clientId);
+    check("y el otro profesional no ve ningun peso de ella", (n2Weights?.length ?? 0) === 0);
 
     // ---------- mensajes ----------
     section("ESCRIBE MENSAJES, PERO NO EN NOMBRE AJENO");
