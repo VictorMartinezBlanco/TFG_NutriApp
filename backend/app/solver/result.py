@@ -35,7 +35,7 @@ def solve(
     solver = cp_model.CpSolver()
     solver.parameters.max_time_in_seconds = time_limit_s
     solver.parameters.relative_gap_limit = C.SOLVE_RELATIVE_GAP
-    solver.parameters.num_search_workers = 8
+    solver.parameters.num_search_workers = C.SOLVE_WORKERS
     status = solver.Solve(pm.model)
 
     if status in (cp_model.OPTIMAL, cp_model.FEASIBLE):

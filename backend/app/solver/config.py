@@ -7,6 +7,7 @@ solo sitio.
 
 from __future__ import annotations
 
+import os
 from dataclasses import dataclass
 
 # gramos por alimento y comida. cota generosa para cualquier ingesta normal.
@@ -68,6 +69,12 @@ DEFAULT_SEX = "F"
 # o reparto por comida sobre la semana) rozan los 33s en local y superan los 60s
 # en Render; 90s les da margen para bajar del 5% de desviacion.
 SOLVE_TIME_LIMIT_S = 90.0
+
+# workers de busqueda de CP-SAT. 8 aprovecha una maquina de desarrollo; en el
+# hosting gratuito (0.5 vCPU y 512 MB) cada worker suma memoria sin aportar
+# velocidad y el proceso llega a morir por OOM, asi que alli se baja por entorno
+# (SOLVER_WORKERS=2 en Render).
+SOLVE_WORKERS = int(os.environ.get("SOLVER_WORKERS", "8"))
 
 # el solver para al llegar a este gap relativo respecto a la cota inferior. un
 # borrador editable no necesita el optimo demostrado; un 2% es de sobra para el
