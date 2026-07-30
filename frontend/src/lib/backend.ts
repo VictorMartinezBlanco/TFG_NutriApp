@@ -106,3 +106,38 @@ export async function enqueueTask(p: EnqueuePayload): Promise<EnqueueResult> {
   }
   return { ok: true, taskId: Number(body?.task_id) };
 }
+
+export type SignResult = { ok: true } | { ok: false; error: string };
+
+// Firma un plan en borrador. El endpoint re-valida el plan y la propiedad
+// antes de poner approved_at; aqui solo se transporta la decision del nutri.
+export async function signPlan(p: {
+  planId: number;
+  nutritionistId: string;
+}): Promise<SignResult> {
+  if (!API_URL || !API_TOKEN) {
+    return { ok: false, error: "The plan service is not configured." };
+  }
+
+  let res: Response;
+  try {
+    res = await fetch(`${API_URL}/plans/${p.planId}/sign`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${API_TOKEN}`,
+      },
+      body: JSON.stringify({ nutritionist_id: p.nutritionistId }),
+      cache: "no-store",
+    });
+  } catch {
+    return { ok: false, error: "Could not reach the plan service." };
+  }
+
+  const body = await res.json().catch(() => null);
+  if (!res.ok) {
+    const detail = body?.detail ? String(body.detail) : `Request failed (${res.status}).`;
+    return { ok: false, error: detail };
+  }
+  return { ok: true };
+}

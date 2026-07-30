@@ -30,6 +30,7 @@ yarn-error.log*
 
 # credenciales de prueba locales, no se suben
 .test-user.local.md
+.invitacion-prueba.local.md
 
 # vercel
 .vercel

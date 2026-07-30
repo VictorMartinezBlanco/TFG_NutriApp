@@ -16,6 +16,7 @@ import { MacroPanel } from "@/components/plan-macros";
 import { Card, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import { SignPlanButton } from "./sign-plan-button";
 
 type Plan = {
   id: number;
@@ -115,6 +116,7 @@ export default async function PlanDetailPage({
             Edit plan
           </Button>
           <Badge variant="info">Available soon</Badge>
+          {status === "draft" && <SignPlanButton planId={plan.id} />}
         </div>
       </Card>
 
