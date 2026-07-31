@@ -114,6 +114,12 @@ BEGIN
       ('Maria Gonzalez',   4, TIME '15:00', 30, 'pending',   'I would like to go over the plan, dinners are the hard part for me.'),
       ('Sofia Marin',      4, TIME '09:30', 45, 'scheduled', 'Check fiber intake without gluten.'),
       ('Lucia Fernandez',  5, TIME '11:00', 30, 'pending',   'Can we look at my iron numbers?'),
+      -- Seis peticiones futuras sin decidir: en la prueba con nutricionistas
+      -- cada tester acepta o rechaza una o dos.
+      ('Carlos Ruiz',      3, TIME '17:30', 30, 'pending',   'I want to talk about what to eat after the gym.'),
+      ('Michael Chen',     6, TIME '12:00', 30, 'pending',   'Could we move my next visit to the morning?'),
+      ('Sofia Marin',      7, TIME '17:00', 30, 'pending',   'I have a family dinner coming and I do not know what to pick.'),
+      ('Nadia Haddad',     8, TIME '09:00', 45, 'pending',   'I would like to review my breakfast options.'),
       ('Emma Wilson',      6, TIME '16:00', 30, 'scheduled', NULL),
       ('Tomas Alvarez',    7, TIME '18:00', 45, 'scheduled', 'Review the training week.'),
       ('Michael Chen',     9, TIME '10:00', 60, 'scheduled', NULL)

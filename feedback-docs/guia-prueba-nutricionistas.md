@@ -81,6 +81,8 @@ Comentarios:
 
 Pídele a la aplicación una dieta semanal para tu cliente nuevo contándoselo con tus palabras, como se lo contarías a un compañero (por ejemplo: unas 2000 calorías al día, sin gluten, con bastante proteína). Revisa lo que la aplicación dice haber entendido, genera la dieta, mírala con ojo profesional y, si te convence, apruébala.
 
+Un aviso honesto: probablemente la propuesta todavía no sea muy buena y tenga cosas sin sentido; estoy trabajando en ello. Precisamente por eso me interesa tu ojo: apunta en los comentarios lo que le cambiarías o lo que no cuadra.
+
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
 Comentarios:
@@ -99,7 +101,7 @@ Comentarios:
 
 ### Tarea 6. Mensajes y citas
 
-Llevas unos días sin entrar. Comprueba si algún cliente lleva tiempo esperando una respuesta tuya y contéstale. Echa también un vistazo a tu agenda: qué citas tienes próximamente y si hay alguna petición pendiente de tu decisión.
+Llevas unos días sin entrar. Comprueba si algún cliente lleva tiempo esperando una respuesta tuya. Echa también un vistazo a tu agenda: hay varias peticiones de cita esperando tu decisión; acepta o rechaza una o dos, las que veas.
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
