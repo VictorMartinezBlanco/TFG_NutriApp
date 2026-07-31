@@ -6,20 +6,28 @@ Víctor Martínez, Trabajo de Fin de Grado (UCM)
 
 NutriApp es el prototipo de mi TFG: una plataforma web para nutricionistas con un asistente que ayuda a preparar borradores de dietas. Tú le cuentas con tus palabras lo que necesita un cliente, la aplicación te propone una dieta semanal que cumple esas condiciones, y tú la revisas y decides. El asistente nunca entrega nada al cliente por su cuenta: la última palabra es siempre del profesional.
 
-Te pido entre 30 y 45 minutos, cuando te venga bien, para hacer las tareas de este documento y contarme cómo te ha ido. Es un prototipo académico con datos inventados, no una herramienta clínica, así que no esperes que esté todo pulido: lo que me interesa es saber qué se entiende, qué no, y qué echarías en falta en tu día a día. No hay respuestas buenas ni malas; si algo no lo encuentras o no lo entiendes, la culpa es del diseño, no tuya, y ese comentario es justo el que más me sirve.
-
 ## Cómo entrar
 
-- La aplicación está en esta dirección: **https://nutriapp-tfg.netlify.app** (funciona desde el navegador del ordenador; mejor que desde el móvil).
-- Las credenciales te las envío aparte, por privado. Hay dos cuentas: una de **nutricionista** (para las tareas 1 a 6) y una de una **clienta, Lucía** (para las tareas 7 y 8).
-- Para cambiar de una cuenta a otra, cierra la sesión y vuelve a entrar con la otra.
+La aplicación está en esta dirección: **https://nutriapp-tfg.netlify.app** (funciona desde el navegador del ordenador; mejor que desde el móvil).
+
+Cuenta de **nutricionista** (tareas 1 a 6):
+
+- usuario: `nutri.test@nutriapp.dev`
+- contraseña: `«PASS_NUTRI»`
+
+Cuenta de la **clienta Lucía** (tareas 7 y 8):
+
+- usuario: `lucia.client@nutriapp.dev`
+- contraseña: `«PASS_LUCIA»`
+
+Para cambiar de una cuenta a otra, cierra la sesión y vuelve a entrar con la otra.
 
 ## Antes de empezar, cuatro avisos
 
 1. **La cuenta de nutricionista es compartida** entre las personas que estáis probando la aplicación. Puede que veas clientes o dietas creados por otro compañero: es normal. Por favor, no borres ni cambies lo que ya existe; crea tus propias cosas encima.
 2. **La aplicación está en inglés.** Las tareas te las explico en español, pero los menús y botones están en inglés. Si algún texto no se entiende o te frena, apúntalo en los comentarios: también es información valiosa.
-3. **El asistente de texto libre (tarea 4) solo trabaja en ciertas franjas horarias**, porque se ejecuta en un equipo que tengo que tener encendido. Las franjas para esta prueba son: `___________________________________`. Si lo usas fuera de esas horas, tu petición se quedará "en espera" y se procesará cuando el asistente vuelva a estar disponible; puedes cerrar y mirar el resultado más tarde.
-4. **Generar una dieta tarda entre uno y dos minutos.** No es que se haya colgado: está calculando. La pantalla te va informando.
+3. **Probablemente no puedas usar el asistente al instante.** La parte que crea las dietas funciona por ahora con mi portátil, así que hasta que yo no esté conectado no verás el resultado de las dietas que pidas (las escribas con tus palabras o las configures a mano). Tu petición no se pierde: se queda "en espera" y se procesa en cuanto me conecte, así que puedes cerrar tranquilamente y mirar el resultado más tarde. El resto de la aplicación funciona siempre.
+4. **Cuando el asistente está activo, generar una dieta tarda uno o dos minutos.** No es que se haya colgado: está calculando. La pantalla te va informando.
 
 ## Cómo rellenar este documento
 
@@ -43,7 +51,7 @@ Acabas de entrar en tu consulta. Hazte una idea de cómo está: cuántos cliente
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿te ha resultado intuitivo?, ¿qué cambiarías?):
+Comentarios:
 
 &nbsp;
 
@@ -53,7 +61,7 @@ Llega un cliente nuevo a tu consulta. Dale de alta con un nombre inventado. Ponl
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿encontraste dónde hacerlo a la primera?, ¿faltó algún dato que te gustaría registrar?):
+Comentarios:
 
 &nbsp;
 
@@ -63,19 +71,19 @@ En la primera consulta, ese cliente te cuenta que no puede tomar gluten (o la co
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿el formulario habla tu idioma profesional?, ¿echaste en falta algún tipo de restricción?):
+Comentarios:
 
 &nbsp;
 
 ### Tarea 4. Una dieta con el asistente
 
-**Esta tarea, dentro de las franjas del aviso 3.**
+**En esta tarea el resultado puede no ser inmediato (aviso 3): si se queda en espera, vuelve más tarde.**
 
 Pídele a la aplicación una dieta semanal para tu cliente nuevo contándoselo con tus palabras, como se lo contarías a un compañero (por ejemplo: unas 2000 calorías al día, sin gluten, con bastante proteína). Revisa lo que la aplicación dice haber entendido, genera la dieta, mírala con ojo profesional y, si te convence, apruébala.
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿entendió bien lo que pediste?, ¿la dieta resultante te parece un borrador útil como punto de partida?, ¿te fiarías de esta forma de trabajar?):
+Comentarios:
 
 &nbsp;
 
@@ -85,7 +93,7 @@ Piensa en un alimento que uses a menudo en tus dietas. Comprueba si la aplicaci�
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿echaste en falta alimentos o datos nutricionales?):
+Comentarios:
 
 &nbsp;
 
@@ -95,7 +103,7 @@ Llevas unos días sin entrar. Comprueba si algún cliente lleva tiempo esperando
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿viste rápido que alguien esperaba respuesta?):
+Comentarios:
 
 &nbsp;
 
@@ -103,7 +111,7 @@ Comentarios (¿viste rápido que alguien esperaba respuesta?):
 
 ## Tareas como clienta
 
-Cierra la sesión de nutricionista y entra con la cuenta de **Lucía** (te la envío junto a la otra). Ahora eres una clienta que sigue una dieta de su nutricionista.
+Cierra la sesión de nutricionista y entra con la cuenta de **Lucía** (sus datos están al principio del documento). Ahora eres una clienta que sigue una dieta de su nutricionista.
 
 ### Tarea 7. Tu día a día con la dieta
 
@@ -111,7 +119,7 @@ Averigua qué te toca comer hoy, marca las comidas que ya hayas cumplido y apunt
 
 Valoración: `[ ]` Fácil  `[ ]` No obvio  `[ ]` No lo he conseguido
 
-Comentarios (¿lo usaría un cliente tuyo de verdad?, ¿qué le falta?):
+Comentarios:
 
 &nbsp;
 

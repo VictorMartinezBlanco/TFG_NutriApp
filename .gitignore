@@ -64,6 +64,9 @@ local_settings.py
 # runners temporales de verificacion (no van al repo)
 *_verify.*
 *_apply.*
+
+# copia compartible de la guia de prueba con credenciales dentro (no va al repo)
+feedback-docs/guia-prueba-nutricionistas.local.*
 playground.py
 db.sqlite3
 db.sqlite3-journal
