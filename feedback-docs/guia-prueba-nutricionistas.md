@@ -139,36 +139,12 @@ Comentarios:
 
 ## Para terminar, tu opinión general
 
-Con tus propias palabras, sin extenderte más de lo que te apetezca:
+Cuéntamela con tus propias palabras. Sugerencia de respuesta:
 
-1. ¿Qué es lo que más te ha gustado? ¿Y lo que menos?
-
-&nbsp;
-
-2. ¿Hubo algún momento en el que te perdieras o fueras a parar a un sitio equivocado? ¿Cuál?
+- ¿Qué es lo que más te ha gustado? ¿Y lo que menos?
+- Si pudieras cambiar o mejorar cosas, ¿cuáles serían?
+- ¿Usarías esta herramienta para generar dietas si su resultado fuese muy bueno? ¿Por qué sí o por qué no?
 
 &nbsp;
 
-3. ¿Hay algo que esperabas encontrar y no existe?
-
-&nbsp;
-
-4. ¿Usarías una herramienta así en tu consulta? ¿Por qué sí o por qué no?
-
-&nbsp;
-
-5. Comparado con lo que usas ahora (programas de nutrición, Excel, WhatsApp, cuaderno...), ¿esto te parece una mejora?
-
-&nbsp;
-
-6. Si pudieras pedir tres cambios o mejoras, ¿cuáles serían?
-
-&nbsp;
-
-## Notas adicionales
-
-Espacio libre para cualquier otra cosa que quieras contarme.
-
-&nbsp;
-
-Muchas gracias por el tiempo. Este feedback va directo a la memoria del TFG y me ayuda muchísimo.
+Muchas gracias por el tiempo. Este feedback me ayuda muchísimo :)
