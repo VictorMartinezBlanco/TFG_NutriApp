@@ -147,6 +147,20 @@ raciones acotadas topan la energia diaria alcanzable. El defecto es 4, y para
 un objetivo alto el profesional sube las comidas en el propio formulario (el
 campo sigue editable 1-6).
 
+## Produccion (Render, free tier, tras el deploy del bloque)
+
+- Deploy verificado con un discriminador de comportamiento, no por tiempo de
+  espera: un plan de 3 comidas devuelve cena con el mapeo nuevo de franjas
+  (el codigo viejo devolvia desayuno/media manana/comida).
+- `check_e2e` contra https://tfg-nutriapp.onrender.com: **29 PASS, 0 FAIL a la
+  primera pasada**, sin recalibrar ningun umbral (a diferencia del 6f y el 8c,
+  que necesitaron escalera). Sin OOM con SOLVER_WORKERS=2.
+- Sonda de estilo clinico: generacion 7x4 para un cliente de nutri2 (sus 2
+  restricciones de ambito nutricionista en juego) da FACTIBLE en 92 s en la
+  CPU gratuita. El hallazgo 6 del 8c (el estilo dejaba sin incumbente los
+  casos con prohibiciones) no se reproduce con la capa: las reglas duras de
+  plausibilidad acotan dominio y compensan los terminos blandos del estilo.
+
 ## Casos frontera restantes
 
 1. **Tentempies de una pieza** (8 comidas, meriendas de fruta): legitimos por
