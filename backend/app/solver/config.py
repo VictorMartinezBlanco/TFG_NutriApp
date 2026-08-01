@@ -11,9 +11,9 @@ import os
 from dataclasses import dataclass
 
 # gramos por alimento y comida. cota generosa para cualquier ingesta normal.
-# desde el 8e cada alimento trae su perfil de racion (min/max por aparicion) y
+# cada alimento del catalogo trae su perfil de racion (min/max por aparicion) y
 # estos globales quedan como FALLBACK para alimentos sin perfil (los custom que
-# cree un profesional). la auditoria de la fase 0 midio que, como limites
+# cree un profesional). la auditoria de planes generados midio que, como limites
 # universales, actuaban de atractores: el 66% de los items caia en 10 o 300 g.
 GRAMS_MAX = 300
 
@@ -27,7 +27,8 @@ MIN_GRAMS_PRESENT = 10
 FALLBACK_MIN_SERVING_G = 20
 FALLBACK_MAX_SERVING_G = 250
 
-# reglas de plausibilidad por alimento (8e). son restricciones DE CATALOGO:
+# reglas de plausibilidad por alimento (plausibility rules 9-15). son
+# restricciones DE CATALOGO:
 # viven en el modelo y no en diet_constraint, el vocabulario clinico no se toca.
 # comidas principales: piden composicion minima (las franjas de tentempie
 # admiten pieza unica, una manzana de media manana es un tentempie normal).

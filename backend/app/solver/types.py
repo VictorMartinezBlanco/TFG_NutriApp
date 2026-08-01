@@ -44,7 +44,7 @@ class Food:
     id: int
     name: str
     typical_serving_g: Optional[float]
-    # perfil de racion (8e): gramos por aparicion y gramos por unidad si el
+    # perfil de racion: gramos por aparicion y gramos por unidad si el
     # alimento se sirve por piezas. None = usar los fallbacks globales.
     min_serving_g: Optional[float] = None
     max_serving_g: Optional[float] = None

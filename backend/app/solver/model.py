@@ -1,9 +1,13 @@
-"""Construccion del modelo CP-SAT: variables y restricciones estructurales.
+"""Construccion del modelo CP-SAT: variables y restricciones invariantes.
 
-Aqui viven las variables de decision (presencia booleana y gramos enteros) y las
-restricciones invariantes que se aplican siempre: presencia minima por comida,
-cota de items, suelo calorico de Mifflin-St Jeor, rangos humanos de macros y
-variedad semanal. Las restricciones configurables se anaden en catalog.py.
+Aqui viven las variables de decision (presencia booleana, gramos enteros y
+unidades para los alimentos por piezas) y las dos familias de restricciones que
+se aplican siempre: las estructurales (structural rules 1-8: presencia y cota de
+items por comida, suelo calorico de Mifflin-St Jeor, rangos humanos de macros,
+no repetir en el dia y variedad diaria y semanal) y las de plausibilidad del
+catalogo (plausibility rules 9-15: perfil de racion, unidades, franjas del dia,
+composicion de comidas, condimentos y dulce/fruta). Las restricciones
+configurables se anaden en catalog.py.
 
 Escala entera. Un nutriente aportado por un alimento es value_per_100g * g / 100.
 Para no dividir dentro del modelo, se guarda value_per_100g escalado a entero
@@ -110,11 +114,10 @@ def build_base_model(
     days = list(range(1, duration_days + 1))
     meals = list(range(1, meals_per_day + 1))
 
-    # enlace presencia-gramos con el perfil de racion de cada alimento (R9 del
-    # 8e): presente implica una racion dentro de [min, max] del alimento, no de
-    # los limites globales. los alimentos por unidades ademas cuantizan sus
-    # gramos a medias piezas, 2*g = k*grams_per_unit con k entero (R10); los de
-    # WHOLE_UNIT_FOOD_NAMES solo a piezas enteras.
+    # plausibility rule 9: presence implies a serving within the food's own
+    # profile [min, max], not within global limits. plausibility rule 10: foods
+    # served by the piece quantize their grams to half units, 2*g = k*gpu with
+    # k integer; foods in WHOLE_UNIT_FOOD_NAMES allow whole pieces only.
     x: dict[tuple[int, int, int], cp_model.IntVar] = {}
     g: dict[tuple[int, int, int], cp_model.IntVar] = {}
     for f in foods:
@@ -240,11 +243,13 @@ def _structural_constraints(
 def _plausibility_constraints(
     pm: PlanModel, meal_codes: list[str], warnings: list[str]
 ) -> None:
-    """Reglas de plausibilidad por alimento (8e), todas duras.
+    """Reglas de plausibilidad del catalogo (plausibility rules 11-15), duras.
 
     Acotan dominio con el vocabulario del catalogo (roles y franjas): que cada
-    comida parezca una comida, no una combinacion legal de cantidades. R9 y R10
-    (perfil de racion y unidades) viven en el enlace x-g de build_base_model.
+    comida parezca una comida, no una combinacion legal de cantidades. Las
+    reglas 9 y 10 (perfil de racion y unidades) viven en el enlace x-g de
+    build_base_model. Ninguna lleva literal de asuncion: no son relajables por
+    el profesional y no entran en el nucleo de infactibilidad.
     """
     model, foods, days, meals = pm.model, pm.foods, pm.days, pm.meals
 
