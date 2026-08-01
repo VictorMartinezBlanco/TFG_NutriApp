@@ -219,6 +219,7 @@ CLAUDE.md
 .mcp.json
 
 # LaTeX build artifacts
+MEMORIA/**/*.aux
 MEMORIA/*.aux
 MEMORIA/*.log
 MEMORIA/*.out
