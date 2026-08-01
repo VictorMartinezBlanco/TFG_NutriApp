@@ -151,7 +151,7 @@ class EnqueueRequest(BaseModel):
     input_text: Optional[str] = None
     constraints: list[ConstraintIn] = Field(default_factory=list)
     duration_days: int = Field(default=7, ge=1, le=90)
-    meals_per_day: int = Field(default=5, ge=1, le=6)
+    meals_per_day: int = Field(default=4, ge=1, le=6)
 
 
 class EnqueueResponse(BaseModel):

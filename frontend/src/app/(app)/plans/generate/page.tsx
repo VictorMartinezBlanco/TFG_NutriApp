@@ -52,7 +52,7 @@ export default async function GeneratePage({
           taskId={inReview ? taskId : null}
           clientId={Number(searchParams.client) || 0}
           durationDays={Number(searchParams.days) || 7}
-          mealsPerDay={Number(searchParams.meals) || 5}
+          mealsPerDay={Number(searchParams.meals) || 4}
           names={await loadNames(supabase)}
           catalog={await loadConstraintCatalog(supabase)}
         />

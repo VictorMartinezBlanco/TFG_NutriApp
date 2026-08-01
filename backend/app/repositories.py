@@ -126,6 +126,32 @@ async def set_food_nutrients(
     return len(values_per_100g)
 
 
+async def set_food_serving_profile(
+    conn: asyncpg.Connection,
+    food_id: int,
+    *,
+    min_serving_g: Optional[float],
+    max_serving_g: Optional[float],
+    grams_per_unit: Optional[float],
+) -> None:
+    """Escribe el perfil de ración de un alimento (Bloque 8e).
+
+    Va aparte de upsert_food porque el upsert reutiliza filas existentes sin
+    tocarlas; el perfil sí debe actualizarse al recargar el seed.
+    """
+    await conn.execute(
+        """
+        UPDATE food
+        SET min_serving_g = $2, max_serving_g = $3, grams_per_unit = $4
+        WHERE id = $1
+        """,
+        food_id,
+        min_serving_g,
+        max_serving_g,
+        grams_per_unit,
+    )
+
+
 async def set_food_tags(
     conn: asyncpg.Connection,
     food_id: int,

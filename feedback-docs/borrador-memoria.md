@@ -133,25 +133,34 @@ Capítulo nuevo. Es el corazón técnico y el de fuente más cocinada: el docume
 
 Figura: tabla o gráfica antes/después de las reglas estructurales.
 
-**5.3 El catálogo de restricciones configurables**
+**5.3 La capa de sentido común alimentario (R9 a R15)**
+- La distinción arquitectónica que organiza la sección: restricciones CLÍNICAS (las que declara el profesional en su vocabulario, diet_constraint) frente a restricciones DE CATÁLOGO (la plausibilidad de cada alimento, que vive en el modelo y en los datos del catálogo, no en el vocabulario del profesional).
+- La causa raíz medida que la motiva: los límites globales de ración (10/300 g) actuaban de atractores y el 66 % de los items caía en uno de los dos; los límites globales como decisión v0 honesta y su sustitución por perfiles.
+- El perfil de ración por alimento como DATO del catálogo (mínimo, máximo y gramos por unidad), las raciones por piezas (medias unidades, enteros para huevo y yogur) y las reglas nuevas: franjas horarias permitidas por alimento, composición mínima de las comidas principales, el condimento nunca solo y con tope diario, dulce y fruta como complemento.
+- La decisión de 4 comidas por defecto y el fallo que destapó (un plan de 3 comidas se quedaba sin cena por el orden de las franjas); el trade-off medido con objetivos calóricos altos.
+- El validador crece en espejo: una familia nueva que audita exactamente lo que la capa garantiza.
+
+Figura: el antes/después de la auditoría de sinsentidos (la del capítulo 7, referenciada desde aquí).
+
+**5.4 El catálogo de restricciones configurables**
 - Los 16 tipos con su formulación, y la distinción dura/blanda como eje del modelo (naturaleza del tipo, prioridad de la fila, peso que modula la penalización).
 
-**5.4 Función objetivo y resolución**
+**5.5 Función objetivo y resolución**
 - Penalizaciones ponderadas con linealización del valor absoluto (el mismo truco del TFG de Adrián), límite de tiempo, gap del 2 % y la política de devolver factible aunque no haya óptimo demostrado.
 
-**5.5 Diagnóstico de infactibilidad**
+**5.6 Diagnóstico de infactibilidad**
 - Del fallo opaco al subconjunto mínimo de restricciones en conflicto (assumptions del solver) con sugerencia legible: la base sobre la que luego se construye la explicación en lenguaje llano.
 
-**5.6 El validador determinista**
+**5.7 El validador determinista**
 - Segundo par de ojos independiente: recalcula la nutrición desde la base de datos sin fiarse del solver y re-verifica las garantías; dos motores deterministas que deben coincidir.
 - Rechaza solo lo garantizado y avisa de lo no modelado (topes de micronutrientes): la distinción entre plan inseguro y plan mejorable, con el porqué (forzar el rechazo de lo no garantizado haría el veredicto no determinista).
 
-**5.7 API y persistencia**
+**5.8 API y persistencia**
 - FastAPI como capa fina sobre funciones puras; contrato JSON de petición y respuesta (factible e infactible); persistencia del plan y sus items en una transacción atómica (contraste con las mutaciones del frontend); la firma como acto del profesional: el sistema persiste borradores, solo el colegiado los convierte en definitivos.
 - La verificación de este capítulo: banco de 12 casos (6 reales, 6 sintéticos) corrido contra la API desplegada antes de añadir el LLM.
 
 Figura: ninguna nueva (las ecuaciones son el contenido).
-Fuente: solver-formalizacion-v1 (formulación completa), especificación v0 (casos de prueba, métricas, contrato JSON), código del solver y validador.
+Fuente: solver-formalizacion-v1 (formulación completa; pendiente su actualización a v2 con la capa de sentido común, R9 a R15), especificación v0 (casos de prueba, métricas, contrato JSON), código del solver y validador.
 
 ## Capítulo 6. El copiloto de IA
 
@@ -215,7 +224,15 @@ Figura: las 6 gráficas del estudio, ya generadas en PDF para LaTeX (acierto por
 - Metodología: línea base antes de tocar nada para poder atribuir degradaciones, y repeticiones en lugar de pasadas sueltas.
 - Resumen de verificación continua del proyecto: los bancos permanentes (solver, validación previa, aislamiento multi-rol, extremo a extremo) y los datos de demostración generados por el propio pipeline, no escritos a mano.
 
-**7.4 Prueba con nutricionistas** (pendiente de realizar)
+**7.4 La auditoría de sinsentidos y la capa de sentido común**
+- El método: auditar TODOS los planes generados con un instrumento reproducible y catalogar los sinsentidos (raciones fuera de rango, comidas testimoniales, alimentos en franjas absurdas, fruta a granel) ANTES de diseñar las reglas; cada regla de la capa nace de un sinsentido documentado, no al revés. Continúa la línea medir-antes-de-decidir del estudio de formatos.
+- El hallazgo central como dato: el 66 % de los items pegado a los límites globales de ración (los límites como atractores, no como rango).
+- El antes/después como resultado: la misma auditoría sobre los planes regenerados (suelo 35,3 % a 2,4 %, fruta apilada 47 a 0, comidas de solo condimento 18 a 0, comidas de baja energía 25 % a 5 %).
+- El hallazgo de banco: los asserts que comparaban contra una pasada relajada dejaron de tener sentido cuando las reglas pasaron a ser DATOS del catálogo (el mundo "sin reglas" ya no es reproducible relajando constantes).
+
+Figura: la tabla antes/después de la auditoría (la figura del bloque 8e).
+
+**7.5 Prueba con nutricionistas** (pendiente de realizar)
 - Protocolo: prueba remota con tareas guiadas sobre los requisitos, ambos roles, cuenta compartida y ventanas anunciadas de disponibilidad de la IA.
 - Conclusiones y pautas de mejora redactadas (no necesariamente implementadas) como última retroalimentación del ciclo usuario real, prototipo, producto, usuario real.
 
@@ -243,6 +260,7 @@ Fuente: todo lo anterior; se escribe al final.
 
 ## Qué falta por tener antes de completar la memoria
 
-- **La prueba con nutricionistas**: alimenta 7.4 y parte de las conclusiones. Todo lo demás del capítulo 7 puede escribirse ya.
+- **La prueba con nutricionistas**: alimenta 7.5 y parte de las conclusiones. Todo lo demás del capítulo 7 puede escribirse ya.
 - **El cierre de la integración y la demo**: puede aportar ajustes menores al capítulo 4 (despliegue) y a las conclusiones.
+- **La formalización v2**: actualizar solver-formalizacion-v1 con la capa de sentido común (perfiles, unidades, R11 a R15) cuando el modelo quede estable; alimenta 5.3 y el Anexo C.
 - **La bibliografía completa**: las referencias del solver (8), las de la investigación de BD y las de competidores están identificadas; falta consolidarlas en el fichero de bibliografía.

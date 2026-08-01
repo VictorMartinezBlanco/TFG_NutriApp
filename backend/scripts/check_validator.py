@@ -24,6 +24,8 @@ from app.solver import (
     MealItem,
     generate_plan,
 )
+from app.solver import config as SC
+from app.solver.model import serving_bounds
 from app.solver.types import Day, SolveMetrics
 from app.solver.loader import (
     load_client,
@@ -223,6 +225,79 @@ async def main() -> int:
             res = val(tiny, maria_c, [])
             rep.check("cazado", not res.passed)
             rep.check("code min_grams", _has_code(res, Severity.HARD_FAIL, "min_grams"))
+
+            # ---- part 2h: food-level plausibility (family D, 8e) ----
+            condiment = next(f for f in foods if "condiment" in f.tag_codes)
+            fruits = [f for f in foods if "fruit" in f.tag_codes]
+            unit_fruit = next(f for f in fruits if f.grams_per_unit)
+            not_breakfast = next(
+                f for f in foods
+                if "moment_lunch" in f.tag_codes and "moment_breakfast" not in f.tag_codes
+            )
+
+            print("\nBad. serving outside the food profile")
+            big = copy.deepcopy(base)
+            item = big.days[0].meals[0].items[0]
+            _, hi = serving_bounds(food_index[item.food_id])
+            item.grams = hi + 50
+            res = val(big, maria_c, [])
+            rep.check("cazado", not res.passed)
+            rep.check("code serving_profile", _has_code(res, Severity.HARD_FAIL, "serving_profile"))
+
+            print("\nBad. unit food off the half-unit grid")
+            off = copy.deepcopy(base)
+            gpu = float(unit_fruit.grams_per_unit)
+            bad_grams = round(gpu / 2) + 7
+            off.days[0].meals[1].items = [MealItem(food_id=unit_fruit.id, grams=bad_grams)]
+            res = val(off, maria_c, [])
+            rep.check("cazado", not res.passed)
+            rep.check("code serving_units", _has_code(res, Severity.HARD_FAIL, "serving_units"))
+
+            print("\nBad. food outside its allowed meal slots")
+            misplaced = copy.deepcopy(base)
+            lo, _ = serving_bounds(not_breakfast)
+            misplaced.days[0].meals[0].items.append(
+                MealItem(food_id=not_breakfast.id, grams=lo)
+            )
+            res = val(misplaced, maria_c, [])
+            rep.check("cazado", not res.passed)
+            rep.check("code slot_whitelist", _has_code(res, Severity.HARD_FAIL, "slot_whitelist"))
+
+            print("\nBad. main meal with a single item")
+            lone = copy.deepcopy(base)
+            main_meal = next(
+                m for d in lone.days for m in d.meals
+                if m.meal_type_code in SC.MAIN_MEAL_CODES
+            )
+            main_meal.items = main_meal.items[:1]
+            res = val(lone, maria_c, [])
+            rep.check("cazado", not res.passed)
+            rep.check("code main_meal_size", _has_code(res, Severity.HARD_FAIL, "main_meal_size"))
+
+            print("\nBad. condiment alone and over the daily cap")
+            oily = copy.deepcopy(base)
+            clo, _ = serving_bounds(condiment)
+            for m in oily.days[0].meals:
+                m.items.append(MealItem(food_id=condiment.id, grams=clo))
+            oily.days[0].meals[0].items = [MealItem(food_id=condiment.id, grams=clo)]
+            res = val(oily, maria_c, [])
+            rep.check("cazado", not res.passed)
+            rep.check("code condiment_alone", _has_code(res, Severity.HARD_FAIL, "condiment_alone"))
+            rep.check("code condiment_daily_cap",
+                      _has_code(res, Severity.HARD_FAIL, "condiment_daily_cap"))
+
+            print("\nBad. two fruits in one meal")
+            fruity = copy.deepcopy(base)
+            f1, f2 = fruits[0], fruits[1]
+            fruity.days[0].meals[2].items = [
+                MealItem(food_id=f1.id, grams=int(serving_bounds(f1)[0])),
+                MealItem(food_id=f2.id, grams=int(serving_bounds(f2)[0])),
+                MealItem(food_id=base.days[0].meals[2].items[0].food_id,
+                         grams=base.days[0].meals[2].items[0].grams),
+            ]
+            res = val(fruity, maria_c, [])
+            rep.check("cazado", not res.passed)
+            rep.check("code sweet_fruit_cap", _has_code(res, Severity.HARD_FAIL, "sweet_fruit_cap"))
 
             # ---- part 2g: warnings do not break passing ----
             print("\nWarn. missing anthropometric data")

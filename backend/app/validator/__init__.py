@@ -95,6 +95,11 @@ def validate_plan(
     ))
     findings.extend(rules.check_meal_structure(plan))
     findings.extend(rules.check_min_grams(plan))
+    findings.extend(rules.check_serving_profile(plan, food_index))
+    findings.extend(rules.check_slot_whitelist(plan, food_index))
+    findings.extend(rules.check_main_meal_size(plan))
+    findings.extend(rules.check_condiments(plan, food_index))
+    findings.extend(rules.check_sweet_fruit_cap(plan, food_index))
 
     passed = not any(f.severity is Severity.HARD_FAIL for f in findings)
     return ValidationResult(findings=findings, summary=_summary(daily), passed=passed)

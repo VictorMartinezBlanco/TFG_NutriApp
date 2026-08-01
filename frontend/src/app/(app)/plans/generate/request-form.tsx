@@ -87,7 +87,7 @@ export function RequestForm({
               type="number"
               min={1}
               max={6}
-              defaultValue={5}
+              defaultValue={4}
             />
           </div>
         </div>

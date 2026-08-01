@@ -1,0 +1,571 @@
+
+=== plans audited ===
+  plan  11  Maria Gonzalez         7d  signed 63 items
+  plan  12  John Smith             7d  signed 63 items
+  plan  13  Emma Wilson            7d  draft  63 items
+  plan  48  Maria Gonzalez         7d  signed 140 items
+  plan  49  Lucia Fernandez        7d  signed 140 items
+  plan  50  David Romero           7d  signed 140 items
+  plan  51  Sofia Marin            7d  signed 140 items
+  plan  52  Carlos Ruiz            7d  signed 134 items
+  plan  53  Tomas Alvarez          7d  draft  140 items
+  plan  54  Second Tester Client   7d  signed 104 items
+  plan  55  Alba Nieto             7d  signed 140 items
+  plan  56  Hugo Ferrer            7d  draft  115 items
+  total: 12 plans, 1382 items
+
+=== serving size per food (appearances, min/median/max grams) ===
+  Aceite de girasol            (none)          n=   8  min=   10  med=   10  max=   13
+  Aceite de oliva virgen extra (none)          n=  16  min=   10  med=   10  max=  158
+  Aceituna verde               (none)          n=   6  min=   10  med=   12  max=  287
+  Acelga, cruda                vegetable       n=  36  min=   10  med=  296  max=  300
+  Aguacate, crudo              fruit           n=  16  min=   10  med=   10  max=  300
+  Almendras, crudas            (none)          n=  21  min=   10  med=   30  max=   30
+  Alubia blanca, seca          legume          n=   4  min=   10  med=   49  max=  176
+  Alubia pinta, seca           legume          n=   6  min=   10  med=   84  max=  300
+  Arroz blanco, crudo          cereal          n=  16  min=   10  med=   80  max=  300
+  Arroz integral, crudo        cereal          n=   5  min=   10  med=   10  max=   75
+  Arándano, crudo              fruit           n=  12  min=   10  med=  101  max=  300
+  Atún en conserva al natural  protein_source  n=   9  min=   10  med=   10  max=   80
+  Avellanas                    (none)          n=   5  min=   10  med=   10  max=   20
+  Bacalao, crudo               protein_source  n=   7  min=   10  med=  235  max=  300
+  Berenjena, cruda             vegetable       n=  33  min=   10  med=   13  max=  300
+  Boniato, crudo               cereal          n=   7  min=   10  med=  300  max=  300
+  Brócoli, crudo               vegetable       n=  51  min=   10  med=  300  max=  300
+  Bulgur, crudo                cereal          n=   3  min=   10  med=   11  max=   43
+  Caballa, cruda               protein_source  n=   4  min=   10  med=   10  max=   10
+  Calabacín, crudo             vegetable       n=  37  min=   10  med=  300  max=  300
+  Calamar, crudo               protein_source  n=   5  min=   10  med=   10  max=  268
+  Cebolla, cruda               vegetable       n=  34  min=   10  med=  267  max=  300
+  Cereales de desayuno azucarados cereal          n=   2  min=   10  med=  154  max=  297
+  Champiñón, crudo             vegetable       n=  48  min=   10  med=  300  max=  300
+  Ciruela, cruda               fruit           n=  13  min=   10  med=   10  max=  300
+  Clara de huevo               protein_source  n=   5  min=   10  med=   15  max=  300
+  Coliflor, cruda              vegetable       n=  37  min=   10  med=  300  max=  300
+  Copos de avena               cereal          n=  20  min=   10  med=   40  max=  250
+  Crema de cacahuete           (none)          n=   4  min=   10  med=   20  max=   97
+  Cuscús, crudo                cereal          n=   3  min=   10  med=   86  max=   97
+  Edamame                      legume          n=   6  min=   10  med=   10  max=  300
+  Espinacas, crudas            vegetable       n=  47  min=   10  med=  300  max=  300
+  Espárrago verde, crudo       vegetable       n=  29  min=   10  med=  203  max=  300
+  Fresa, cruda                 fruit           n=  10  min=   10  med=   10  max=  300
+  Gambas, crudas               protein_source  n=   5  min=   10  med=  146  max=  292
+  Garbanzos, secos             legume          n=  10  min=   10  med=   45  max=  124
+  Guisante seco, partido       legume          n=   5  min=   10  med=   10  max=  300
+  Guisantes, crudos            vegetable       n=  28  min=   10  med=  300  max=  300
+  Haba seca                    legume          n=   7  min=   10  med=   10  max=  210
+  Huevo de gallina, entero     protein_source  n=  18  min=   10  med=  120  max=  291
+  Jamón cocido                 protein_source  n=   6  min=   10  med=   10  max=  300
+  Judía verde, cruda           vegetable       n=  26  min=   10  med=  296  max=  300
+  Kiwi, crudo                  fruit           n=  11  min=   10  med=   10  max=  299
+  Kéfir                        dairy           n=   5  min=   10  med=   14  max=  300
+  Leche de vaca, desnatada     dairy           n=   6  min=   10  med=   10  max=  299
+  Leche de vaca, entera        dairy           n=   5  min=   10  med=   10  max=  300
+  Leche de vaca, semidesnatada dairy           n=   8  min=   10  med=   48  max=  300
+  Lechuga, cruda               vegetable       n=  32  min=   10  med=  202  max=  300
+  Lenteja roja, seca           legume          n=   7  min=   10  med=   23  max=  174
+  Lentejas, secas              legume          n=  12  min=   10  med=   80  max=  292
+  Lomo de cerdo, crudo         protein_source  n=   5  min=   10  med=   10  max=  262
+  Mango, crudo                 fruit           n=  15  min=   10  med=   10  max=  300
+  Manzana, cruda               fruit           n=  24  min=   10  med=  150  max=  300
+  Maíz dulce, en conserva      cereal          n=   6  min=   10  med=  155  max=  300
+  Mejillón, crudo              protein_source  n=   7  min=   10  med=   15  max=  299
+  Melocotón, crudo             fruit           n=  18  min=   10  med=  299  max=  300
+  Melón, crudo                 fruit           n=  12  min=   10  med=   10  max=  300
+  Merluza, cruda               protein_source  n=   6  min=   10  med=   20  max=  300
+  Mijo, crudo                  cereal          n=   6  min=   10  med=   24  max=  299
+  Mozzarella                   dairy           n=   4  min=   10  med=   10  max=  122
+  Muslo de pollo, crudo        protein_source  n=   5  min=   10  med=   10  max=  291
+  Naranja, cruda               fruit           n=  10  min=   10  med=   10  max=  300
+  Nueces                       (none)          n=   7  min=   10  med=   38  max=  183
+  Pan blanco de trigo          cereal          n=  10  min=   10  med=   50  max=  300
+  Pan de centeno               cereal          n=   4  min=   10  med=  296  max=  300
+  Pan integral de trigo        cereal          n=   4  min=   10  med=   10  max=   12
+  Pasta de trigo, cruda        cereal          n=   9  min=   10  med=   75  max=  227
+  Pasta integral, cruda        cereal          n=   4  min=   10  med=   50  max=  141
+  Patata, cruda                cereal          n=  14  min=   10  med=  180  max=  300
+  Pechuga de pavo, cruda       protein_source  n=   6  min=   10  med=   10  max=   10
+  Pechuga de pollo, cruda      protein_source  n=  19  min=   10  med=  170  max=  300
+  Pepino, crudo                vegetable       n=  34  min=   10  med=  280  max=  300
+  Pera, cruda                  fruit           n=  13  min=   10  med=   10  max=  300
+  Pierna de cordero, cruda     red_meat        n=   6  min=   10  med=   27  max=   85
+  Pimiento rojo, crudo         vegetable       n=  36  min=   10  med=  300  max=  300
+  Pistachos                    (none)          n=   6  min=   10  med=   24  max=  277
+  Piña, cruda                  fruit           n=  16  min=   10  med=   10  max=  300
+  Plátano, crudo               fruit           n=  28  min=   10  med=  120  max=  300
+  Puerro, crudo                vegetable       n=  31  min=   10  med=  279  max=  300
+  Queso azul                   dairy           n=   3  min=   10  med=   10  max=   52
+  Queso curado                 dairy           n=   5  min=   10  med=   10  max=  238
+  Queso de cabra               dairy           n=   4  min=   10  med=   10  max=   10
+  Queso fresco batido desnatado dairy           n=   3  min=   10  med=   10  max=  165
+  Quinoa, cruda                cereal          n=   7  min=   10  med=   10  max=  300
+  Remolacha, cruda             vegetable       n=  29  min=   10  med=  214  max=  300
+  Repollo, crudo               vegetable       n=  29  min=   10  med=  295  max=  300
+  Requesón                     dairy           n=   5  min=   10  med=   98  max=  300
+  Salmón, crudo                protein_source  n=  17  min=   10  med=  125  max=  300
+  Sandía, cruda                fruit           n=  16  min=   10  med=   22  max=  300
+  Sardina en conserva          protein_source  n=   4  min=   10  med=   10  max=   10
+  Semillas de girasol          (none)          n=   4  min=   10  med=   16  max=   37
+  Tempeh                       protein_source  n=   6  min=   10  med=   34  max=  134
+  Ternera magra, cruda         red_meat        n=   7  min=   10  med=   36  max=  196
+  Tofu firme                   protein_source  n=  18  min=   10  med=  120  max=  250
+  Tomate, crudo                vegetable       n=  40  min=   10  med=  120  max=  300
+  Tortitas de arroz            cereal          n=   5  min=   10  med=   10  max=  225
+  Uva, cruda                   fruit           n=  10  min=   10  med=   10  max=  300
+  Yogur griego                 dairy           n=   6  min=   10  med=  202  max=  300
+  Yogur natural                dairy           n=  17  min=   10  med=  125  max=  300
+  Zanahoria, cruda             vegetable       n=  26  min=   10  med=  300  max=  300
+
+=== items pinned to the global limits ===
+  at the 10 g floor:     488 of 1382 (35.3%)
+  at the 300 g ceiling:  429 of 1382 (31.0%)
+
+=== items at extreme servings (<= 25 g or >= 250 g) ===
+  small: 555 items, large: 492 items
+    plan 11 Maria Gonzalez d1 lunch       Aceite de oliva virgen extra    10 g
+    plan 11 Maria Gonzalez d2 lunch       Aceite de oliva virgen extra    10 g
+    plan 11 Maria Gonzalez d3 lunch       Aceite de oliva virgen extra    10 g
+    plan 11 Maria Gonzalez d4 lunch       Aceite de oliva virgen extra    10 g
+    plan 11 Maria Gonzalez d6 lunch       Aceite de oliva virgen extra    10 g
+    plan 13 Emma Wilson d2 lunch       Aceite de oliva virgen extra    10 g
+    plan 13 Emma Wilson d5 lunch       Aceite de oliva virgen extra    10 g
+    plan 13 Emma Wilson d7 lunch       Aceite de oliva virgen extra    10 g
+    plan 48 Maria Gonzalez d1 lunch       Cebolla, cruda                  10 g
+    plan 48 Maria Gonzalez d3 breakfast   Brócoli, crudo                  10 g
+    plan 48 Maria Gonzalez d3 breakfast   Pimiento rojo, crudo            10 g
+    plan 48 Maria Gonzalez d3 breakfast   Acelga, cruda                   10 g
+    plan 48 Maria Gonzalez d3 mid_morning Tomate, crudo                   10 g
+    plan 48 Maria Gonzalez d3 mid_morning Coliflor, cruda                 10 g
+    plan 48 Maria Gonzalez d3 mid_morning Berenjena, cruda                10 g
+    plan 48 Maria Gonzalez d3 lunch       Lechuga, cruda                  10 g
+    plan 48 Maria Gonzalez d3 lunch       Pepino, crudo                   10 g
+    plan 48 Maria Gonzalez d3 snack       Lechuga, cruda                  10 g
+    plan 48 Maria Gonzalez d4 breakfast   Tomate, crudo                   10 g
+    plan 48 Maria Gonzalez d4 breakfast   Berenjena, cruda                10 g
+    plan 48 Maria Gonzalez d4 breakfast   Pepino, crudo                   10 g
+    plan 48 Maria Gonzalez d4 breakfast   Repollo, crudo                  10 g
+    plan 48 Maria Gonzalez d4 lunch       Zanahoria, cruda                10 g
+    plan 48 Maria Gonzalez d4 lunch       Berenjena, cruda                10 g
+    plan 48 Maria Gonzalez d4 dinner      Cebolla, cruda                  10 g
+    plan 48 Maria Gonzalez d5 breakfast   Cebolla, cruda                  10 g
+    plan 48 Maria Gonzalez d6 breakfast   Espinacas, crudas               10 g
+    plan 48 Maria Gonzalez d6 snack       Brócoli, crudo                  10 g
+    plan 48 Maria Gonzalez d6 dinner      Espinacas, crudas               10 g
+    plan 48 Maria Gonzalez d6 dinner      Lechuga, cruda                  10 g
+    plan 48 Maria Gonzalez d7 lunch       Berenjena, cruda                10 g
+    plan 48 Maria Gonzalez d7 lunch       Puerro, crudo                   10 g
+    plan 48 Maria Gonzalez d7 dinner      Guisantes, crudos               10 g
+    plan 48 Maria Gonzalez d7 dinner      Pepino, crudo                   10 g
+    plan 48 Maria Gonzalez d7 dinner      Remolacha, cruda                10 g
+    plan 49 Lucia Fernandez d1 breakfast   Manzana, cruda                  10 g
+    plan 49 Lucia Fernandez d1 breakfast   Guisantes, crudos               10 g
+    plan 49 Lucia Fernandez d1 breakfast   Jamón cocido                    10 g
+    plan 49 Lucia Fernandez d1 mid_morning Uva, cruda                      10 g
+    plan 49 Lucia Fernandez d1 mid_morning Berenjena, cruda                10 g
+    plan 48 Maria Gonzalez d1 breakfast   Champiñón, crudo               300 g
+    plan 48 Maria Gonzalez d1 breakfast   Acelga, cruda                  300 g
+    plan 48 Maria Gonzalez d1 mid_morning Calabacín, crudo               300 g
+    plan 48 Maria Gonzalez d1 mid_morning Coliflor, cruda                300 g
+    plan 48 Maria Gonzalez d1 mid_morning Puerro, crudo                  300 g
+    plan 48 Maria Gonzalez d1 lunch       Brócoli, crudo                 300 g
+    plan 48 Maria Gonzalez d1 lunch       Champiñón, crudo               300 g
+    plan 48 Maria Gonzalez d1 snack       Pepino, crudo                  300 g
+    plan 48 Maria Gonzalez d1 snack       Espárrago verde, crudo         300 g
+    plan 48 Maria Gonzalez d1 snack       Acelga, cruda                  300 g
+    plan 48 Maria Gonzalez d1 dinner      Espinacas, crudas              300 g
+    plan 48 Maria Gonzalez d1 dinner      Berenjena, cruda               300 g
+    plan 48 Maria Gonzalez d1 dinner      Pepino, crudo                  300 g
+    plan 48 Maria Gonzalez d2 breakfast   Calabacín, crudo               300 g
+    plan 48 Maria Gonzalez d2 breakfast   Pepino, crudo                  300 g
+    plan 48 Maria Gonzalez d2 breakfast   Acelga, cruda                  300 g
+    plan 48 Maria Gonzalez d2 mid_morning Puerro, crudo                  300 g
+    plan 48 Maria Gonzalez d2 lunch       Brócoli, crudo                 300 g
+    plan 48 Maria Gonzalez d2 lunch       Pepino, crudo                  300 g
+    plan 48 Maria Gonzalez d2 lunch       Champiñón, crudo               300 g
+    plan 48 Maria Gonzalez d2 lunch       Espárrago verde, crudo         300 g
+    plan 48 Maria Gonzalez d2 snack       Pimiento rojo, crudo           300 g
+    plan 48 Maria Gonzalez d2 snack       Lechuga, cruda                 300 g
+    plan 48 Maria Gonzalez d2 snack       Remolacha, cruda               300 g
+    plan 48 Maria Gonzalez d2 dinner      Brócoli, crudo                 300 g
+    plan 48 Maria Gonzalez d2 dinner      Lechuga, cruda                 300 g
+    plan 48 Maria Gonzalez d2 dinner      Berenjena, cruda               300 g
+    plan 48 Maria Gonzalez d3 snack       Zanahoria, cruda               300 g
+    plan 48 Maria Gonzalez d3 dinner      Repollo, crudo                 300 g
+    plan 48 Maria Gonzalez d4 lunch       Brócoli, crudo                 300 g
+    plan 48 Maria Gonzalez d4 lunch       Pepino, crudo                  300 g
+    plan 48 Maria Gonzalez d4 snack       Brócoli, crudo                 300 g
+    plan 48 Maria Gonzalez d4 snack       Acelga, cruda                  300 g
+    plan 48 Maria Gonzalez d4 snack       Remolacha, cruda               300 g
+    plan 48 Maria Gonzalez d4 dinner      Zanahoria, cruda               300 g
+    plan 48 Maria Gonzalez d4 dinner      Coliflor, cruda                300 g
+    plan 48 Maria Gonzalez d5 breakfast   Brócoli, crudo                 300 g
+    plan 48 Maria Gonzalez d5 breakfast   Judía verde, cruda             300 g
+    plan 48 Maria Gonzalez d5 breakfast   Acelga, cruda                  300 g
+    plan 48 Maria Gonzalez d5 mid_morning Lechuga, cruda                 300 g
+
+=== single-item meals ===
+  60 of 420 meals have a single item
+    plan 11 Maria Gonzalez d1 mid_morning Manzana, cruda                 150 g  (  78 kcal)
+    plan 11 Maria Gonzalez d1 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 11 Maria Gonzalez d2 mid_morning Yogur natural                  125 g  (  76 kcal)
+    plan 11 Maria Gonzalez d2 snack       Manzana, cruda                 150 g  (  78 kcal)
+    plan 11 Maria Gonzalez d3 mid_morning Almendras, crudas               30 g  ( 174 kcal)
+    plan 11 Maria Gonzalez d3 snack       Plátano, crudo                 120 g  ( 107 kcal)
+    plan 11 Maria Gonzalez d4 mid_morning Plátano, crudo                 120 g  ( 107 kcal)
+    plan 11 Maria Gonzalez d4 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 11 Maria Gonzalez d5 mid_morning Yogur natural                  125 g  (  76 kcal)
+    plan 11 Maria Gonzalez d5 snack       Manzana, cruda                 150 g  (  78 kcal)
+    plan 11 Maria Gonzalez d6 mid_morning Almendras, crudas               30 g  ( 174 kcal)
+    plan 11 Maria Gonzalez d6 snack       Yogur natural                  125 g  (  76 kcal)
+    plan 11 Maria Gonzalez d7 mid_morning Manzana, cruda                 150 g  (  78 kcal)
+    plan 11 Maria Gonzalez d7 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 12 John Smith d1 mid_morning Yogur natural                  125 g  (  76 kcal)
+    plan 12 John Smith d1 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 12 John Smith d2 mid_morning Atún en conserva al natural     80 g  (  93 kcal)
+    plan 12 John Smith d2 snack       Yogur natural                  125 g  (  76 kcal)
+    plan 12 John Smith d3 mid_morning Almendras, crudas               30 g  ( 174 kcal)
+    plan 12 John Smith d3 snack       Manzana, cruda                 150 g  (  78 kcal)
+    plan 12 John Smith d4 mid_morning Yogur natural                  125 g  (  76 kcal)
+    plan 12 John Smith d4 snack       Atún en conserva al natural     80 g  (  93 kcal)
+    plan 12 John Smith d5 mid_morning Almendras, crudas               30 g  ( 174 kcal)
+    plan 12 John Smith d5 snack       Yogur natural                  125 g  (  76 kcal)
+    plan 12 John Smith d6 mid_morning Atún en conserva al natural     80 g  (  93 kcal)
+    plan 12 John Smith d6 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 12 John Smith d7 mid_morning Yogur natural                  125 g  (  76 kcal)
+    plan 12 John Smith d7 snack       Manzana, cruda                 150 g  (  78 kcal)
+    plan 13 Emma Wilson d1 mid_morning Almendras, crudas               30 g  ( 174 kcal)
+    plan 13 Emma Wilson d1 snack       Plátano, crudo                 120 g  ( 107 kcal)
+    plan 13 Emma Wilson d2 mid_morning Manzana, cruda                 150 g  (  78 kcal)
+    plan 13 Emma Wilson d2 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 13 Emma Wilson d3 mid_morning Plátano, crudo                 120 g  ( 107 kcal)
+    plan 13 Emma Wilson d3 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 13 Emma Wilson d4 mid_morning Almendras, crudas               30 g  ( 174 kcal)
+    plan 13 Emma Wilson d4 snack       Manzana, cruda                 150 g  (  78 kcal)
+    plan 13 Emma Wilson d5 mid_morning Plátano, crudo                 120 g  ( 107 kcal)
+    plan 13 Emma Wilson d5 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 13 Emma Wilson d6 mid_morning Manzana, cruda                 150 g  (  78 kcal)
+    plan 13 Emma Wilson d6 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 13 Emma Wilson d7 mid_morning Plátano, crudo                 120 g  ( 107 kcal)
+    plan 13 Emma Wilson d7 snack       Almendras, crudas               30 g  ( 174 kcal)
+    plan 52 Carlos Ruiz d3 lunch       Calabacín, crudo               300 g  (  51 kcal)
+    plan 54 Second Tester Client d2 breakfast   Aguacate, crudo                 10 g  (  16 kcal)
+    plan 54 Second Tester Client d2 dinner      Aguacate, crudo                296 g  ( 474 kcal)
+    plan 54 Second Tester Client d2 mid_morning Pan de centeno                  10 g  (  26 kcal)
+    plan 54 Second Tester Client d2 snack       Aceite de oliva virgen extra    98 g  ( 866 kcal)
+    plan 54 Second Tester Client d4 breakfast   Plátano, crudo                  10 g  (   9 kcal)
+    plan 54 Second Tester Client d4 lunch       Cebolla, cruda                  10 g  (   4 kcal)
+    plan 54 Second Tester Client d7 breakfast   Aceite de oliva virgen extra   158 g  (1397 kcal)
+    plan 54 Second Tester Client d7 lunch       Pechuga de pavo, cruda          10 g  (  10 kcal)
+    plan 54 Second Tester Client d7 mid_morning Huevo de gallina, entero        10 g  (  14 kcal)
+    plan 54 Second Tester Client d7 snack       Bacalao, crudo                 300 g  ( 246 kcal)
+    plan 56 Hugo Ferrer d6 breakfast   Repollo, crudo                 300 g  (  75 kcal)
+    plan 56 Hugo Ferrer d6 dinner      Pechuga de pollo, cruda        300 g  ( 330 kcal)
+    plan 56 Hugo Ferrer d6 snack       Queso curado                    10 g  (  39 kcal)
+    plan 56 Hugo Ferrer d7 breakfast   Arroz blanco, crudo            300 g  (1062 kcal)
+    plan 56 Hugo Ferrer d7 dinner      Requesón                        98 g  (  96 kcal)
+    plan 56 Hugo Ferrer d7 lunch       Requesón                       300 g  ( 294 kcal)
+    plan 56 Hugo Ferrer d7 mid_morning Arroz blanco, crudo             89 g  ( 315 kcal)
+
+=== meals made only of no-family foods (fats, nuts, condiments) ===
+  18 meals
+    plan 11 Maria Gonzalez d1 snack       Almendras, crudas 30g
+    plan 11 Maria Gonzalez d3 mid_morning Almendras, crudas 30g
+    plan 11 Maria Gonzalez d4 snack       Almendras, crudas 30g
+    plan 11 Maria Gonzalez d6 mid_morning Almendras, crudas 30g
+    plan 11 Maria Gonzalez d7 snack       Almendras, crudas 30g
+    plan 12 John Smith d1 snack       Almendras, crudas 30g
+    plan 12 John Smith d3 mid_morning Almendras, crudas 30g
+    plan 12 John Smith d5 mid_morning Almendras, crudas 30g
+    plan 12 John Smith d6 snack       Almendras, crudas 30g
+    plan 13 Emma Wilson d1 mid_morning Almendras, crudas 30g
+    plan 13 Emma Wilson d2 snack       Almendras, crudas 30g
+    plan 13 Emma Wilson d3 snack       Almendras, crudas 30g
+    plan 13 Emma Wilson d4 mid_morning Almendras, crudas 30g
+    plan 13 Emma Wilson d5 snack       Almendras, crudas 30g
+    plan 13 Emma Wilson d6 snack       Almendras, crudas 30g
+    plan 13 Emma Wilson d7 snack       Almendras, crudas 30g
+    plan 54 Second Tester Client d2 snack       Aceite de oliva virgen extra 98g
+    plan 54 Second Tester Client d7 breakfast   Aceite de oliva virgen extra 158g
+
+=== food x meal slot (appearances per slot) ===
+  food                         family           break  mid_m  lunch  snack  dinne  late_
+  Aceite de girasol            (none)               2      1      1      4      0      0
+  Aceite de oliva virgen extra (none)               2      1      8      5      0      0
+  Aceituna verde               (none)               1      1      2      1      1      0
+  Almendras, crudas            (none)               1      7      1     11      1      0
+  Avellanas                    (none)               3      1      1      0      0      0
+  Crema de cacahuete           (none)               0      2      0      2      0      0
+  Nueces                       (none)               3      0      1      3      0      0
+  Pistachos                    (none)               2      1      1      2      0      0
+  Semillas de girasol          (none)               2      0      0      2      0      0
+  Arroz blanco, crudo          cereal               1      2     10      2      1      0
+  Arroz integral, crudo        cereal               3      0      2      0      0      0
+  Boniato, crudo               cereal               1      1      2      1      2      0
+  Bulgur, crudo                cereal               1      1      1      0      0      0
+  Cereales de desayuno azucarados cereal               0      2      0      0      0      0
+  Copos de avena               cereal              16      1      1      1      1      0
+  Cuscús, crudo                cereal               0      0      2      0      1      0
+  Maíz dulce, en conserva      cereal               0      3      0      2      1      0
+  Mijo, crudo                  cereal               2      2      0      1      1      0
+  Pan blanco de trigo          cereal               6      0      2      1      1      0
+  Pan de centeno               cereal               0      2      0      1      1      0
+  Pan integral de trigo        cereal               2      1      1      0      0      0
+  Pasta de trigo, cruda        cereal               1      0      5      2      1      0
+  Pasta integral, cruda        cereal               0      2      0      2      0      0
+  Patata, cruda                cereal               0      2      5      0      7      0
+  Quinoa, cruda                cereal               1      4      0      0      2      0
+  Tortitas de arroz            cereal               2      1      0      1      1      0
+  Kéfir                        dairy                0      0      1      3      1      0
+  Leche de vaca, desnatada     dairy                1      2      0      2      1      0
+  Leche de vaca, entera        dairy                1      1      2      1      0      0
+  Leche de vaca, semidesnatada dairy                2      1      2      0      3      0
+  Mozzarella                   dairy                1      0      0      2      1      0
+  Queso azul                   dairy                0      1      1      0      1      0
+  Queso curado                 dairy                0      0      3      2      0      0
+  Queso de cabra               dairy                1      1      0      1      1      0
+  Queso fresco batido desnatado dairy                1      1      0      0      1      0
+  Requesón                     dairy                1      0      1      0      3      0
+  Yogur griego                 dairy                3      0      2      1      0      0
+  Yogur natural                dairy                4      6      1      4      2      0
+  Aguacate, crudo              fruit                2      4      3      1      6      0
+  Arándano, crudo              fruit                0      5      1      3      3      0
+  Ciruela, cruda               fruit                3      1      2      3      4      0
+  Fresa, cruda                 fruit                1      1      4      1      3      0
+  Kiwi, crudo                  fruit                2      4      1      2      2      0
+  Mango, crudo                 fruit                1      2      4      5      3      0
+  Manzana, cruda               fruit                6      8      4      6      0      0
+  Melocotón, crudo             fruit                3      6      4      5      0      0
+  Melón, crudo                 fruit                1      2      2      3      4      0
+  Naranja, cruda               fruit                1      3      2      0      4      0
+  Pera, cruda                  fruit                2      3      3      2      3      0
+  Piña, cruda                  fruit                3      0      4      6      3      0
+  Plátano, crudo               fruit               12      4      3      7      2      0
+  Sandía, cruda                fruit                4      2      2      3      5      0
+  Uva, cruda                   fruit                2      4      2      1      1      0
+  Alubia blanca, seca          legume               2      1      0      1      0      0
+  Alubia pinta, seca           legume               0      1      2      1      2      0
+  Edamame                      legume               1      0      1      2      2      0
+  Garbanzos, secos             legume               1      2      6      0      1      0
+  Guisante seco, partido       legume               0      0      2      1      2      0
+  Haba seca                    legume               4      2      0      0      1      0
+  Lenteja roja, seca           legume               2      1      0      1      3      0
+  Lentejas, secas              legume               1      1      6      3      1      0
+  Atún en conserva al natural  protein_source       0      6      0      2      1      0
+  Bacalao, crudo               protein_source       3      1      1      2      0      0
+  Caballa, cruda               protein_source       0      1      0      3      0      0
+  Calamar, crudo               protein_source       2      1      1      0      1      0
+  Clara de huevo               protein_source       2      2      1      0      0      0
+  Gambas, crudas               protein_source       1      1      0      2      1      0
+  Huevo de gallina, entero     protein_source       7      3      1      1      6      0
+  Jamón cocido                 protein_source       3      0      0      2      1      0
+  Lomo de cerdo, crudo         protein_source       1      1      2      1      0      0
+  Mejillón, crudo              protein_source       1      0      1      4      1      0
+  Merluza, cruda               protein_source       1      0      0      2      3      0
+  Muslo de pollo, crudo        protein_source       1      0      1      3      0      0
+  Pechuga de pavo, cruda       protein_source       1      0      3      1      1      0
+  Pechuga de pollo, cruda      protein_source       1      1      7      1      9      0
+  Salmón, crudo                protein_source       1      4      7      0      5      0
+  Sardina en conserva          protein_source       1      1      2      0      0      0
+  Tempeh                       protein_source       2      1      2      0      1      0
+  Tofu firme                   protein_source       3      3      2      1      9      0
+  Pierna de cordero, cruda     red_meat             0      1      1      4      0      0
+  Ternera magra, cruda         red_meat             0      1      1      1      4      0
+  Acelga, cruda                vegetable           11      7      6      4      8      0
+  Berenjena, cruda             vegetable            6     11      4      5      7      0
+  Brócoli, crudo               vegetable           11      7     15      7     11      0
+  Calabacín, crudo             vegetable            5      7      9      8      8      0
+  Cebolla, cruda               vegetable            8      5      8      7      6      0
+  Champiñón, crudo             vegetable           13     10     11      7      7      0
+  Coliflor, cruda              vegetable            8      8      4      7     10      0
+  Espinacas, crudas            vegetable            8      5     12      8     14      0
+  Espárrago verde, crudo       vegetable            5      8      9      4      3      0
+  Guisantes, crudos            vegetable            5      5      6      3      9      0
+  Judía verde, cruda           vegetable            7      5      4      5      5      0
+  Lechuga, cruda               vegetable            4      6      7      8      7      0
+  Pepino, crudo                vegetable            5      7      8      5      9      0
+  Pimiento rojo, crudo         vegetable            5      8      9      8      6      0
+  Puerro, crudo                vegetable            6      9      8      0      8      0
+  Remolacha, cruda             vegetable            4      6      7      6      6      0
+  Repollo, crudo               vegetable            6      2      4     10      7      0
+  Tomate, crudo                vegetable            7      4     11      7     11      0
+  Zanahoria, cruda             vegetable            3      6      6      3      8      0
+
+=== fruit pile-ups (meals with more than one fruit) ===
+  47 meals
+    plan 49 Lucia Fernandez d1 lunch       Fresa, cruda 13g, Piña, cruda 10g
+    plan 49 Lucia Fernandez d2 lunch       Sandía, cruda 10g, Arándano, crudo 134g
+    plan 51 Sofia Marin d1 mid_morning Aguacate, crudo 10g, Arándano, crudo 10g
+    plan 52 Carlos Ruiz d2 snack       Mango, crudo 300g, Melocotón, crudo 299g
+    plan 53 Tomas Alvarez d4 snack       Sandía, cruda 22g, Ciruela, cruda 299g
+    plan 54 Second Tester Client d4 dinner      Melón, crudo 10g, Sandía, cruda 10g
+    plan 54 Second Tester Client d5 breakfast   Piña, cruda 10g, Mango, crudo 10g
+    plan 54 Second Tester Client d5 mid_morning Naranja, cruda 10g, Melocotón, crudo 11g
+    plan 55 Alba Nieto d1 breakfast   Pera, cruda 10g, Kiwi, crudo 10g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d1 dinner      Aguacate, crudo 10g, Melón, crudo 10g, Ciruela, cruda 10g, Arándano, crudo 68g
+    plan 55 Alba Nieto d1 lunch       Manzana, cruda 10g, Uva, cruda 10g, Piña, cruda 10g, Melocotón, crudo 10g
+    plan 55 Alba Nieto d1 mid_morning Manzana, cruda 10g, Kiwi, crudo 10g, Uva, cruda 10g
+    plan 55 Alba Nieto d1 snack       Piña, cruda 10g, Mango, crudo 10g, Melocotón, crudo 10g, Arándano, crudo 10g
+    plan 55 Alba Nieto d2 breakfast   Pera, cruda 10g, Sandía, cruda 21g, Melocotón, crudo 293g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d2 dinner      Plátano, crudo 15g, Pera, cruda 10g, Uva, cruda 10g, Mango, crudo 300g
+    plan 55 Alba Nieto d2 lunch       Melón, crudo 298g, Mango, crudo 10g
+    plan 55 Alba Nieto d2 mid_morning Manzana, cruda 10g, Naranja, cruda 10g, Uva, cruda 10g, Arándano, crudo 300g
+    plan 55 Alba Nieto d2 snack       Aguacate, crudo 12g, Melón, crudo 10g, Piña, cruda 10g, Melocotón, crudo 300g
+    plan 55 Alba Nieto d3 breakfast   Sandía, cruda 10g, Piña, cruda 10g, Ciruela, cruda 300g
+    plan 55 Alba Nieto d3 dinner      Aguacate, crudo 94g, Melón, crudo 10g, Mango, crudo 300g, Arándano, crudo 300g
+    plan 55 Alba Nieto d3 lunch       Plátano, crudo 10g, Naranja, cruda 10g, Sandía, cruda 300g, Melocotón, crudo 300g
+    plan 55 Alba Nieto d3 mid_morning Kiwi, crudo 10g, Melocotón, crudo 300g
+    plan 55 Alba Nieto d3 snack       Plátano, crudo 284g, Piña, cruda 10g, Ciruela, cruda 300g, Arándano, crudo 10g
+    plan 55 Alba Nieto d4 breakfast   Plátano, crudo 10g, Kiwi, crudo 10g, Uva, cruda 10g, Piña, cruda 300g
+    plan 55 Alba Nieto d4 dinner      Pera, cruda 10g, Fresa, cruda 300g, Arándano, crudo 298g
+    plan 55 Alba Nieto d4 lunch       Plátano, crudo 10g, Fresa, cruda 10g, Aguacate, crudo 300g, Mango, crudo 300g
+    plan 55 Alba Nieto d4 mid_morning Kiwi, crudo 12g, Aguacate, crudo 124g, Melocotón, crudo 19g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d4 snack       Uva, cruda 10g, Sandía, cruda 202g, Piña, cruda 117g, Melocotón, crudo 299g
+    plan 55 Alba Nieto d5 breakfast   Plátano, crudo 10g, Aguacate, crudo 273g, Sandía, cruda 300g
+    plan 55 Alba Nieto d5 dinner      Naranja, cruda 11g, Piña, cruda 10g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d5 lunch       Manzana, cruda 10g, Fresa, cruda 10g, Melocotón, crudo 298g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d5 mid_morning Sandía, cruda 10g, Mango, crudo 10g, Arándano, crudo 10g
+    plan 55 Alba Nieto d5 snack       Manzana, cruda 10g, Melón, crudo 300g, Mango, crudo 10g
+    plan 55 Alba Nieto d6 breakfast   Plátano, crudo 10g, Naranja, cruda 12g, Fresa, cruda 10g, Melón, crudo 300g
+    plan 55 Alba Nieto d6 dinner      Fresa, cruda 10g, Aguacate, crudo 10g, Sandía, cruda 54g, Mango, crudo 10g
+    plan 55 Alba Nieto d6 lunch       Aguacate, crudo 10g, Piña, cruda 19g, Mango, crudo 10g
+    plan 55 Alba Nieto d6 mid_morning Naranja, cruda 10g, Kiwi, crudo 10g, Melón, crudo 11g, Sandía, cruda 10g
+    plan 55 Alba Nieto d6 snack       Plátano, crudo 10g, Pera, cruda 10g, Melocotón, crudo 16g
+    plan 55 Alba Nieto d7 breakfast   Sandía, cruda 10g, Melocotón, crudo 299g
+    plan 55 Alba Nieto d7 dinner      Pera, cruda 10g, Fresa, cruda 10g, Aguacate, crudo 10g, Sandía, cruda 300g
+    plan 55 Alba Nieto d7 lunch       Plátano, crudo 10g, Piña, cruda 300g, Mango, crudo 230g
+    plan 55 Alba Nieto d7 mid_morning Pera, cruda 10g, Melón, crudo 300g, Melocotón, crudo 299g
+    plan 55 Alba Nieto d7 snack       Fresa, cruda 10g, Kiwi, crudo 10g, Melón, crudo 10g, Piña, cruda 298g
+    plan 56 Hugo Ferrer d1 lunch       Pera, cruda 193g, Uva, cruda 300g
+    plan 56 Hugo Ferrer d1 mid_morning Pera, cruda 300g, Uva, cruda 10g
+    plan 56 Hugo Ferrer d2 lunch       Fresa, cruda 10g, Aguacate, crudo 95g, Melón, crudo 10g
+    plan 56 Hugo Ferrer d5 snack       Sandía, cruda 10g, Mango, crudo 10g
+
+=== fruit as the whole main meal ===
+  15 meals
+    plan 54 Second Tester Client d2 breakfast   Aguacate, crudo 10g
+    plan 54 Second Tester Client d2 dinner      Aguacate, crudo 296g
+    plan 54 Second Tester Client d4 breakfast   Plátano, crudo 10g
+    plan 55 Alba Nieto d1 dinner      Aguacate, crudo 10g, Melón, crudo 10g, Ciruela, cruda 10g, Arándano, crudo 68g
+    plan 55 Alba Nieto d1 lunch       Manzana, cruda 10g, Uva, cruda 10g, Piña, cruda 10g, Melocotón, crudo 10g
+    plan 55 Alba Nieto d2 breakfast   Pera, cruda 10g, Sandía, cruda 21g, Melocotón, crudo 293g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d2 dinner      Plátano, crudo 15g, Pera, cruda 10g, Uva, cruda 10g, Mango, crudo 300g
+    plan 55 Alba Nieto d3 dinner      Aguacate, crudo 94g, Melón, crudo 10g, Mango, crudo 300g, Arándano, crudo 300g
+    plan 55 Alba Nieto d3 lunch       Plátano, crudo 10g, Naranja, cruda 10g, Sandía, cruda 300g, Melocotón, crudo 300g
+    plan 55 Alba Nieto d4 breakfast   Plátano, crudo 10g, Kiwi, crudo 10g, Uva, cruda 10g, Piña, cruda 300g
+    plan 55 Alba Nieto d4 lunch       Plátano, crudo 10g, Fresa, cruda 10g, Aguacate, crudo 300g, Mango, crudo 300g
+    plan 55 Alba Nieto d5 lunch       Manzana, cruda 10g, Fresa, cruda 10g, Melocotón, crudo 298g, Ciruela, cruda 10g
+    plan 55 Alba Nieto d6 breakfast   Plátano, crudo 10g, Naranja, cruda 12g, Fresa, cruda 10g, Melón, crudo 300g
+    plan 55 Alba Nieto d6 dinner      Fresa, cruda 10g, Aguacate, crudo 10g, Sandía, cruda 54g, Mango, crudo 10g
+    plan 55 Alba Nieto d7 dinner      Pera, cruda 10g, Fresa, cruda 10g, Aguacate, crudo 10g, Sandía, cruda 300g
+
+=== low-energy meals (< 150 kcal) ===
+  106 of 420 meals
+    plan 54 Second Tester Client d4 lunch          4 kcal  Cebolla, cruda 10g
+    plan 48 Maria Gonzalez d4 breakfast      8 kcal  Tomate, crudo 10g, Berenjena, cruda 10g, Pepino, crudo 10g, Repollo, crudo 10g
+    plan 54 Second Tester Client d4 breakfast      9 kcal  Plátano, crudo 10g
+    plan 48 Maria Gonzalez d3 breakfast     10 kcal  Tomate, crudo 11g, Brócoli, crudo 10g, Pimiento rojo, crudo 10g, Acelga, cruda 10g
+    plan 54 Second Tester Client d7 lunch         10 kcal  Pechuga de pavo, cruda 10g
+    plan 54 Second Tester Client d4 dinner        11 kcal  Espárrago verde, crudo 10g, Repollo, crudo 10g, Melón, crudo 10g, Sandía, cruda 10g
+    plan 54 Second Tester Client d7 mid_morning   14 kcal  Huevo de gallina, entero 10g
+    plan 54 Second Tester Client d5 lunch         15 kcal  Judía verde, cruda 10g, Pera, cruda 10g, Champiñón, crudo 10g, Remolacha, cruda 10g
+    plan 54 Second Tester Client d1 lunch         16 kcal  Leche de vaca, entera 10g, Calamar, crudo 10g
+    plan 54 Second Tester Client d2 breakfast     16 kcal  Aguacate, crudo 10g
+    plan 55 Alba Nieto d6 mid_morning   18 kcal  Naranja, cruda 10g, Kiwi, crudo 10g, Melón, crudo 11g, Sandía, cruda 10g
+    plan 50 David Romero d7 dinner        18 kcal  Zanahoria, cruda 10g, Berenjena, cruda 10g, Puerro, crudo 11g, Remolacha, cruda 12g
+    plan 55 Alba Nieto d1 snack         21 kcal  Piña, cruda 10g, Mango, crudo 10g, Melocotón, crudo 10g, Arándano, crudo 10g
+    plan 55 Alba Nieto d1 lunch         21 kcal  Manzana, cruda 10g, Uva, cruda 10g, Piña, cruda 10g, Melocotón, crudo 10g
+    plan 55 Alba Nieto d1 mid_morning   22 kcal  Manzana, cruda 10g, Kiwi, crudo 10g, Uva, cruda 10g, Remolacha, cruda 10g
+    plan 54 Second Tester Client d2 mid_morning   26 kcal  Pan de centeno 10g
+    plan 54 Second Tester Client d3 lunch         27 kcal  Tomate, crudo 10g, Sardina en conserva 10g, Pimiento rojo, crudo 10g, Lechuga, cruda 10g
+    plan 49 Lucia Fernandez d1 breakfast     34 kcal  Manzana, cruda 10g, Guisantes, crudos 10g, Jamón cocido 10g, Calamar, crudo 11g
+    plan 48 Maria Gonzalez d3 mid_morning   37 kcal  Tomate, crudo 10g, Coliflor, cruda 10g, Berenjena, cruda 10g, Acelga, cruda 161g
+    plan 56 Hugo Ferrer d6 snack         39 kcal  Queso curado 10g
+    plan 54 Second Tester Client d1 dinner        41 kcal  Leche de vaca, semidesnatada 10g, Pan blanco de trigo 10g, Zanahoria, cruda 10g, Puerro, crudo 10g
+    plan 55 Alba Nieto d6 dinner        41 kcal  Fresa, cruda 10g, Aguacate, crudo 10g, Sandía, cruda 54g, Mango, crudo 10g
+    plan 56 Hugo Ferrer d1 breakfast     44 kcal  Pasta de trigo, cruda 10g, Judía verde, cruda 10g, Coliflor, cruda 10g, Berenjena, cruda 10g
+    plan 51 Sofia Marin d1 mid_morning   46 kcal  Sardina en conserva 10g, Cebolla, cruda 10g, Aguacate, crudo 10g, Arándano, crudo 10g
+    plan 54 Second Tester Client d3 mid_morning   48 kcal  Atún en conserva al natural 10g, Fresa, cruda 10g, Pan integral de trigo 10g, Maíz dulce, en conserva 10g
+    plan 52 Carlos Ruiz d3 lunch         51 kcal  Calabacín, crudo 300g
+    plan 56 Hugo Ferrer d2 breakfast     54 kcal  Zanahoria, cruda 10g, Cebolla, cruda 10g, Quinoa, cruda 10g, Calamar, crudo 10g
+    plan 56 Hugo Ferrer d2 dinner        60 kcal  Naranja, cruda 10g, Jamón cocido 10g, Lenteja roja, seca 10g, Mejillón, crudo 10g
+    plan 54 Second Tester Client d6 lunch         63 kcal  Salmón, crudo 10g, Brócoli, crudo 10g, Espinacas, crudas 10g, Arroz integral, crudo 10g
+    plan 55 Alba Nieto d1 dinner        63 kcal  Aguacate, crudo 10g, Melón, crudo 10g, Ciruela, cruda 10g, Arándano, crudo 68g
+    plan 49 Lucia Fernandez d1 dinner        64 kcal  Pasta de trigo, cruda 10g, Merluza, cruda 10g, Melón, crudo 10g, Aceituna verde 12g
+    plan 49 Lucia Fernandez d2 dinner        65 kcal  Lentejas, secas 10g, Brócoli, crudo 10g, Aguacate, crudo 10g, Edamame 10g
+    plan 48 Maria Gonzalez d7 dinner        71 kcal  Guisantes, crudos 10g, Pepino, crudo 10g, Acelga, cruda 300g, Remolacha, cruda 10g
+    plan 56 Hugo Ferrer d6 breakfast     75 kcal  Repollo, crudo 300g
+    plan 54 Second Tester Client d7 dinner        75 kcal  Yogur natural 10g, Ternera magra, cruda 36g, Acelga, cruda 10g
+    plan 11 Maria Gonzalez d2 mid_morning   76 kcal  Yogur natural 125g
+    plan 11 Maria Gonzalez d5 mid_morning   76 kcal  Yogur natural 125g
+    plan 11 Maria Gonzalez d6 snack         76 kcal  Yogur natural 125g
+    plan 12 John Smith d1 mid_morning   76 kcal  Yogur natural 125g
+    plan 12 John Smith d2 snack         76 kcal  Yogur natural 125g
+    plan 12 John Smith d4 mid_morning   76 kcal  Yogur natural 125g
+    plan 12 John Smith d5 snack         76 kcal  Yogur natural 125g
+    plan 12 John Smith d7 mid_morning   76 kcal  Yogur natural 125g
+    plan 56 Hugo Ferrer d3 lunch         78 kcal  Espinacas, crudas 10g, Manzana, cruda 10g, Arroz integral, crudo 10g, Guisante seco, partido 10g
+    plan 11 Maria Gonzalez d1 mid_morning   78 kcal  Manzana, cruda 150g
+    plan 11 Maria Gonzalez d2 snack         78 kcal  Manzana, cruda 150g
+    plan 11 Maria Gonzalez d5 snack         78 kcal  Manzana, cruda 150g
+    plan 11 Maria Gonzalez d7 mid_morning   78 kcal  Manzana, cruda 150g
+    plan 12 John Smith d3 snack         78 kcal  Manzana, cruda 150g
+    plan 12 John Smith d7 snack         78 kcal  Manzana, cruda 150g
+    plan 13 Emma Wilson d2 mid_morning   78 kcal  Manzana, cruda 150g
+    plan 13 Emma Wilson d4 snack         78 kcal  Manzana, cruda 150g
+    plan 13 Emma Wilson d6 mid_morning   78 kcal  Manzana, cruda 150g
+    plan 51 Sofia Marin d2 breakfast     81 kcal  Plátano, crudo 10g, Arroz integral, crudo 10g, Champiñón, crudo 10g, Haba seca 10g
+    plan 50 David Romero d7 mid_morning   83 kcal  Lentejas, secas 10g, Patata, cruda 10g, Haba seca 10g, Clara de huevo 15g
+    plan 51 Sofia Marin d2 dinner        84 kcal  Quinoa, cruda 10g, Puerro, crudo 10g, Piña, cruda 10g, Queso de cabra 10g
+    plan 51 Sofia Marin d1 lunch         85 kcal  Yogur natural 10g, Queso curado 10g, Garbanzos, secos 10g, Zanahoria, cruda 10g
+    plan 56 Hugo Ferrer d4 mid_morning   86 kcal  Copos de avena 10g, Lechuga, cruda 10g, Maíz dulce, en conserva 10g, Cereales de desayuno azucarados 10g
+    plan 51 Sofia Marin d5 snack         87 kcal  Tomate, crudo 10g, Semillas de girasol 10g, Mango, crudo 10g, Caballa, cruda 10g
+    plan 54 Second Tester Client d3 snack         87 kcal  Queso curado 10g, Jamón cocido 10g, Edamame 10g, Mozzarella 10g
+    plan 49 Lucia Fernandez d7 lunch         88 kcal  Pan blanco de trigo 10g, Tomate, crudo 10g, Pan integral de trigo 10g, Alubia pinta, seca 10g
+    plan 49 Lucia Fernandez d2 mid_morning   88 kcal  Almendras, crudas 10g, Guisantes, crudos 10g, Espárrago verde, crudo 10g, Pierna de cordero, cruda 10g
+    plan 54 Second Tester Client d5 dinner        88 kcal  Guisantes, crudos 13g, Kiwi, crudo 10g, Cuscús, crudo 10g, Guisante seco, partido 10g
+    plan 49 Lucia Fernandez d3 breakfast     93 kcal  Zanahoria, cruda 10g, Coliflor, cruda 10g, Champiñón, crudo 11g, Puerro, crudo 137g
+    plan 12 John Smith d2 mid_morning   93 kcal  Atún en conserva al natural 80g
+    plan 12 John Smith d4 snack         93 kcal  Atún en conserva al natural 80g
+    plan 12 John Smith d6 mid_morning   93 kcal  Atún en conserva al natural 80g
+    plan 56 Hugo Ferrer d7 dinner        96 kcal  Requesón 98g
+    plan 54 Second Tester Client d6 dinner        99 kcal  Quinoa, cruda 10g, Merluza, cruda 10g, Queso azul 10g, Tempeh 10g
+    plan 56 Hugo Ferrer d5 snack         99 kcal  Pepino, crudo 10g, Sandía, cruda 10g, Mango, crudo 10g, Aceite de girasol 10g
+    plan 49 Lucia Fernandez d6 snack        103 kcal  Pimiento rojo, crudo 300g, Cebolla, cruda 10g, Judía verde, cruda 10g, Repollo, crudo 10g
+    plan 56 Hugo Ferrer d5 breakfast    107 kcal  Sardina en conserva 10g, Pan integral de trigo 10g, Tempeh 29g, Clara de huevo 10g
+    plan 11 Maria Gonzalez d3 snack        107 kcal  Plátano, crudo 120g
+    plan 11 Maria Gonzalez d4 mid_morning  107 kcal  Plátano, crudo 120g
+    plan 13 Emma Wilson d1 snack        107 kcal  Plátano, crudo 120g
+    plan 13 Emma Wilson d3 mid_morning  107 kcal  Plátano, crudo 120g
+    plan 13 Emma Wilson d5 mid_morning  107 kcal  Plátano, crudo 120g
+    plan 13 Emma Wilson d7 mid_morning  107 kcal  Plátano, crudo 120g
+    plan 50 David Romero d3 dinner       109 kcal  Calabacín, crudo 300g, Lechuga, cruda 10g, Pepino, crudo 300g, Acelga, cruda 62g
+    plan 50 David Romero d3 breakfast    110 kcal  Brócoli, crudo 300g, Pimiento rojo, crudo 10g, Coliflor, cruda 10g, Acelga, cruda 10g
+    plan 50 David Romero d3 lunch        111 kcal  Tomate, crudo 300g, Brócoli, crudo 10g, Calabacín, crudo 300g, Berenjena, cruda 10g
+    plan 48 Maria Gonzalez d6 dinner       113 kcal  Espinacas, crudas 10g, Guisantes, crudos 42g, Lechuga, cruda 10g, Berenjena, cruda 300g
+    plan 55 Alba Nieto d7 dinner       115 kcal  Pera, cruda 10g, Fresa, cruda 10g, Aguacate, crudo 10g, Sandía, cruda 300g
+    plan 55 Alba Nieto d5 snack        116 kcal  Manzana, cruda 10g, Coliflor, cruda 11g, Melón, crudo 300g, Mango, crudo 10g
+    plan 56 Hugo Ferrer d7 snack        116 kcal  Aceite de oliva virgen extra 10g, Mozzarella 11g
+    plan 55 Alba Nieto d5 mid_morning  116 kcal  Sandía, cruda 10g, Mango, crudo 10g, Arándano, crudo 10g, Leche de vaca, desnatada 299g
+    plan 54 Second Tester Client d6 snack        117 kcal  Calabacín, crudo 10g, Semillas de girasol 10g, Queso de cabra 10g, Caballa, cruda 10g
+    plan 55 Alba Nieto d6 breakfast    120 kcal  Plátano, crudo 10g, Naranja, cruda 12g, Fresa, cruda 10g, Melón, crudo 300g
+    plan 50 David Romero d2 dinner       124 kcal  Tomate, crudo 11g, Lechuga, cruda 300g, Coliflor, cruda 300g, Acelga, cruda 10g
+    plan 56 Hugo Ferrer d5 mid_morning  128 kcal  Garbanzos, secos 10g, Caballa, cruda 10g, Pistachos 10g, Aceituna verde 10g
+    plan 48 Maria Gonzalez d7 breakfast    128 kcal  Tomate, crudo 278g, Cebolla, cruda 23g, Berenjena, cruda 13g, Champiñón, crudo 300g
+    plan 52 Carlos Ruiz d4 dinner       129 kcal  Pimiento rojo, crudo 10g, Cebolla, cruda 300g, Espárrago verde, crudo 10g, Leche de vaca, desnatada 11g
+    plan 55 Alba Nieto d5 lunch        129 kcal  Manzana, cruda 10g, Fresa, cruda 10g, Melocotón, crudo 298g, Ciruela, cruda 10g
+    plan 49 Lucia Fernandez d7 snack        130 kcal  Aceite de oliva virgen extra 10g, Tomate, crudo 10g, Pera, cruda 10g, Guisante seco, partido 10g
+    plan 55 Alba Nieto d2 breakfast    131 kcal  Pera, cruda 10g, Sandía, cruda 21g, Melocotón, crudo 293g, Ciruela, cruda 10g
+    plan 50 David Romero d5 snack        132 kcal  Espinacas, crudas 300g, Espárrago verde, crudo 292g, Repollo, crudo 10g, Acelga, cruda 10g
+    plan 49 Lucia Fernandez d1 lunch        132 kcal  Brócoli, crudo 10g, Fresa, cruda 13g, Piña, cruda 10g, Tempeh 62g
+    plan 51 Sofia Marin d5 mid_morning  133 kcal  Salmón, crudo 24g, Berenjena, cruda 266g, Pepino, crudo 10g, Champiñón, crudo 68g
+    plan 49 Lucia Fernandez d5 lunch        136 kcal  Zanahoria, cruda 300g, Espárrago verde, crudo 10g, Puerro, crudo 10g, Remolacha, cruda 11g
+    plan 50 David Romero d7 snack        139 kcal  Yogur natural 10g, Pasta de trigo, cruda 10g, Aceite de oliva virgen extra 10g, Plátano, crudo 10g
+    plan 54 Second Tester Client d4 snack        142 kcal  Arroz blanco, crudo 10g, Pasta de trigo, cruda 10g, Alubia pinta, seca 10g, Lenteja roja, seca 10g
+    plan 52 Carlos Ruiz d4 mid_morning  142 kcal  Zanahoria, cruda 300g, Cebolla, cruda 10g, Puerro, crudo 10g, Calamar, crudo 10g
+    plan 50 David Romero d5 breakfast    145 kcal  Espinacas, crudas 109g, Judía verde, cruda 28g, Lechuga, cruda 300g, Champiñón, crudo 299g
+    plan 55 Alba Nieto d2 snack        145 kcal  Aguacate, crudo 12g, Melón, crudo 10g, Piña, cruda 10g, Melocotón, crudo 300g
+    plan 48 Maria Gonzalez d7 lunch        147 kcal  Judía verde, cruda 300g, Berenjena, cruda 10g, Pepino, crudo 300g, Puerro, crudo 10g
+    plan 51 Sofia Marin d6 lunch        148 kcal  Pimiento rojo, crudo 10g, Pepino, crudo 300g, Acelga, cruda 10g, Remolacha, cruda 228g
+
+=== no-family foods repeated within one day (condiment overuse) ===
+  0 food-days

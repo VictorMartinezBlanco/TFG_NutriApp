@@ -34,6 +34,17 @@ def scale_target(value: float) -> int:
     return round(value * C.NUTRIENT_SCALE * 100)
 
 
+def serving_bounds(food: Food) -> tuple[int, int]:
+    """Gramos minimos y maximos por aparicion segun el perfil del alimento.
+
+    Sin perfil (alimentos custom sin datos) se usan los fallbacks globales,
+    acotados por los limites duros historicos.
+    """
+    lo = food.min_serving_g if food.min_serving_g is not None else C.FALLBACK_MIN_SERVING_G
+    hi = food.max_serving_g if food.max_serving_g is not None else C.FALLBACK_MAX_SERVING_G
+    return max(round(lo), C.MIN_GRAMS_PRESENT), round(hi)
+
+
 def mifflin_bmr(client: ClientProfile) -> float:
     sex = client.sex or C.DEFAULT_SEX
     w = client.weight_kg if client.weight_kg is not None else C.DEFAULT_WEIGHT_KG
@@ -92,22 +103,37 @@ def build_base_model(
     duration_days: int,
     meals_per_day: int,
     foods: list[Food],
+    meal_codes: list[str],
     warnings: list[str],
 ) -> PlanModel:
     model = cp_model.CpModel()
     days = list(range(1, duration_days + 1))
     meals = list(range(1, meals_per_day + 1))
 
+    # enlace presencia-gramos con el perfil de racion de cada alimento (R9 del
+    # 8e): presente implica una racion dentro de [min, max] del alimento, no de
+    # los limites globales. los alimentos por unidades ademas cuantizan sus
+    # gramos a medias piezas, 2*g = k*grams_per_unit con k entero (R10); los de
+    # WHOLE_UNIT_FOOD_NAMES solo a piezas enteras.
     x: dict[tuple[int, int, int], cp_model.IntVar] = {}
     g: dict[tuple[int, int, int], cp_model.IntVar] = {}
     for f in foods:
+        lo, hi = serving_bounds(f)
+        gpu = round(f.grams_per_unit) if f.grams_per_unit is not None else None
         for d in days:
             for m in meals:
                 key = (f.id, d, m)
                 x[key] = model.NewBoolVar(f"x_{f.id}_{d}_{m}")
-                g[key] = model.NewIntVar(0, C.GRAMS_MAX, f"g_{f.id}_{d}_{m}")
-                model.Add(g[key] >= C.MIN_GRAMS_PRESENT).OnlyEnforceIf(x[key])
+                g[key] = model.NewIntVar(0, hi, f"g_{f.id}_{d}_{m}")
+                model.Add(g[key] >= lo).OnlyEnforceIf(x[key])
                 model.Add(g[key] == 0).OnlyEnforceIf(x[key].Not())
+                if gpu:
+                    if f.name in C.WHOLE_UNIT_FOOD_NAMES:
+                        k = model.NewIntVar(0, hi // gpu, f"k_{f.id}_{d}_{m}")
+                        model.Add(g[key] == k * gpu)
+                    else:
+                        k = model.NewIntVar(0, (2 * hi) // gpu, f"k_{f.id}_{d}_{m}")
+                        model.Add(2 * g[key] == k * gpu)
 
     pm = PlanModel(
         model=model, foods=foods, days=days, meals=meals, x=x, g=g,
@@ -118,9 +144,10 @@ def build_base_model(
     # suma se deriva del maximo real del nutriente en el pool, no de una holgura
     # arbitraria, para no inflar dominios (afecta a las auxiliares del objetivo).
     codes = _nutrient_codes_in_use(foods)
+    max_serving = max((serving_bounds(f)[1] for f in foods), default=C.GRAMS_MAX)
     for code in codes:
         max_100 = max((scaled_100(f, code) for f in foods), default=0)
-        max_meal = C.GRAMS_MAX * len(foods) * max_100
+        max_meal = max_serving * len(foods) * max_100
         max_day = max_meal * len(meals)
         pm.nut_upper[code] = max_day
         for d in days:
@@ -134,6 +161,7 @@ def build_base_model(
             pm.daily_nut[(d, code)] = dv
 
     _structural_constraints(pm, client, warnings)
+    _plausibility_constraints(pm, meal_codes, warnings)
     return pm
 
 
@@ -207,3 +235,78 @@ def _structural_constraints(
                 used.append(u)
             target = min(C.MIN_DISTINCT_PER_WEEK, len(foods))
             model.Add(sum(used) >= target)
+
+
+def _plausibility_constraints(
+    pm: PlanModel, meal_codes: list[str], warnings: list[str]
+) -> None:
+    """Reglas de plausibilidad por alimento (8e), todas duras.
+
+    Acotan dominio con el vocabulario del catalogo (roles y franjas): que cada
+    comida parezca una comida, no una combinacion legal de cantidades. R9 y R10
+    (perfil de racion y unidades) viven en el enlace x-g de build_base_model.
+    """
+    model, foods, days, meals = pm.model, pm.foods, pm.days, pm.meals
+
+    code_of = {m: meal_codes[m - 1] for m in meals if m - 1 < len(meal_codes)}
+    condiments = [f for f in foods if C.CONDIMENT_TAG in f.tag_codes]
+    others = [f for f in foods if C.CONDIMENT_TAG not in f.tag_codes]
+    sweetish = [
+        f for f in foods
+        if C.SWEET_TAG in f.tag_codes or C.FRUIT_TAG in f.tag_codes
+    ]
+
+    # plausibility rule 11: slot whitelist. a food with moment tags can only
+    # appear in those meal slots.
+    for f in foods:
+        allowed = {
+            t[len(C.MOMENT_TAG_PREFIX):]
+            for t in f.tag_codes
+            if t.startswith(C.MOMENT_TAG_PREFIX)
+        }
+        if not allowed:
+            continue
+        for d in days:
+            for m in meals:
+                if code_of.get(m) not in allowed:
+                    model.Add(pm.x[(f.id, d, m)] == 0)
+
+    # plausibility rule 12: main meals ask for composition, not a lone item.
+    # snack slots keep the structural minimum of one.
+    min_main = min(C.MIN_ITEMS_MAIN_MEAL, len(foods))
+    for d in days:
+        for m in meals:
+            if code_of.get(m) in C.MAIN_MEAL_CODES:
+                model.Add(sum(pm.x[(f.id, d, m)] for f in foods) >= min_main)
+
+    # plausibility rule 13: a condiment never goes alone, something must
+    # accompany it in the same meal.
+    if condiments and others:
+        for d in days:
+            for m in meals:
+                company = sum(pm.x[(f.id, d, m)] for f in others)
+                for f in condiments:
+                    model.Add(pm.x[(f.id, d, m)] <= company)
+    elif condiments:
+        warnings.append(
+            "Food pool has only condiments; the accompaniment rule was skipped."
+        )
+
+    # plausibility rule 14: daily cap on condiment appearances, combined.
+    if condiments:
+        for d in days:
+            model.Add(
+                sum(pm.x[(f.id, d, m)] for f in condiments for m in meals)
+                <= C.CONDIMENT_MAX_PER_DAY
+            )
+
+    # plausibility rule 15: sweets and fruit are a complement, at most one per
+    # meal between both. with rule 12 this also keeps fruit from being the
+    # whole of a main meal.
+    if sweetish:
+        for d in days:
+            for m in meals:
+                model.Add(
+                    sum(pm.x[(f.id, d, m)] for f in sweetish)
+                    <= C.SWEET_FRUIT_MAX_PER_MEAL
+                )

@@ -44,9 +44,17 @@ class Food:
     id: int
     name: str
     typical_serving_g: Optional[float]
+    # perfil de racion (8e): gramos por aparicion y gramos por unidad si el
+    # alimento se sirve por piezas. None = usar los fallbacks globales.
+    min_serving_g: Optional[float] = None
+    max_serving_g: Optional[float] = None
+    grams_per_unit: Optional[float] = None
     # composicion por 100 g, por code de nutriente.
     nutrients: dict[str, float] = field(default_factory=dict)
     tag_ids: set[int] = field(default_factory=set)
+    # codes de los tags, para las reglas que razonan por vocabulario (roles
+    # condiment/sweet, familia fruit, franjas moment_*).
+    tag_codes: set[str] = field(default_factory=set)
 
 
 @dataclass

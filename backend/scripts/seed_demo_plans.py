@@ -31,7 +31,9 @@ NUTRI1 = "03f06edf-603e-489d-8aed-71bc93f97ef0"
 NUTRI2_NAME = "Dr. Second Tester"
 
 DURATION_DAYS = 7
-MEALS_PER_DAY = 5
+# 4 comidas: el defecto del producto desde el 8e (desayuno, comida, merienda,
+# cena). Para un objetivo calorico alto el profesional sube las comidas.
+MEALS_PER_DAY = 4
 
 # (cliente, planes que deberia tener, firmar el que se genere)
 # Michael y Nadia no aparecen: se quedan sin plan a proposito.

@@ -1,7 +1,8 @@
 """Deterministic validation rules.
 
-Three families: physiological safety, consistency with the client hard
-constraints (an independent recheck of the solver), and structural sanity.
+Four families: physiological safety, consistency with the client hard
+constraints (an independent recheck of the solver), structural sanity, and
+food-level plausibility (serving profiles, roles and meal slots, 8e).
 Each rule is a small function returning a list of findings, empty when it holds.
 Consistency checks mirror the solver handlers in app.solver.catalog.
 """
@@ -11,7 +12,7 @@ from __future__ import annotations
 from typing import Callable, Optional
 
 from app.solver import config as SC
-from app.solver.model import daily_kcal_floor
+from app.solver.model import daily_kcal_floor, serving_bounds
 from app.solver.types import ClientProfile, Constraint, FeasiblePlan, Food
 
 from . import config as VC
@@ -409,4 +410,151 @@ def check_min_grams(plan: FeasiblePlan) -> list[Finding]:
                         f"{it.grams}g, below the {SC.MIN_GRAMS_PRESENT}g minimum.",
                         Location(day_num=d.day_num, meal_type_code=m.meal_type_code, food_id=it.food_id),
                     ))
+    return out
+
+
+# --- family D: food-level plausibility (8e) ----------------------------------
+# every check here mirrors a hard guarantee of the solver's plausibility layer,
+# so a violation is a hard_fail: if it shows up, one of the two engines is wrong.
+
+
+def check_serving_profile(
+    plan: FeasiblePlan, food_index: dict[int, Food]
+) -> list[Finding]:
+    """Item grams must sit inside the food's serving profile (fallbacks for
+    foods without one), and unit-based foods must land on unit multiples
+    (halves, or whole pieces for the whole-only foods)."""
+    out = []
+    for d in plan.days:
+        for m in d.meals:
+            for it in m.items:
+                food = food_index.get(it.food_id)
+                if food is None:
+                    continue
+                loc = Location(day_num=d.day_num, meal_type_code=m.meal_type_code,
+                               food_id=it.food_id)
+                lo, hi = serving_bounds(food)
+                if not (lo <= it.grams <= hi):
+                    out.append(_hard(
+                        "serving_profile",
+                        f"Day {d.day_num} {m.meal_type_code}: {food.name} at "
+                        f"{it.grams}g, outside its {lo}-{hi}g serving profile.",
+                        loc,
+                    ))
+                if food.grams_per_unit:
+                    gpu = float(food.grams_per_unit)
+                    steps = 1 if food.name in SC.WHOLE_UNIT_FOOD_NAMES else 2
+                    k = round(steps * it.grams / gpu)
+                    if abs(steps * it.grams - k * gpu) > 1e-6:
+                        out.append(_hard(
+                            "serving_units",
+                            f"Day {d.day_num} {m.meal_type_code}: {food.name} at "
+                            f"{it.grams}g is not a multiple of "
+                            f"{'whole' if steps == 1 else 'half'} units of {gpu:g}g.",
+                            loc,
+                        ))
+    return out
+
+
+def check_slot_whitelist(
+    plan: FeasiblePlan, food_index: dict[int, Food]
+) -> list[Finding]:
+    """A food with moment tags can only appear in those meal slots."""
+    out = []
+    for d in plan.days:
+        for m in d.meals:
+            for it in m.items:
+                food = food_index.get(it.food_id)
+                if food is None:
+                    continue
+                allowed = {
+                    t[len(SC.MOMENT_TAG_PREFIX):]
+                    for t in food.tag_codes
+                    if t.startswith(SC.MOMENT_TAG_PREFIX)
+                }
+                if allowed and m.meal_type_code not in allowed:
+                    out.append(_hard(
+                        "slot_whitelist",
+                        f"Day {d.day_num}: {food.name} is not plausible at "
+                        f"{m.meal_type_code} (allowed: {', '.join(sorted(allowed))}).",
+                        Location(day_num=d.day_num, meal_type_code=m.meal_type_code,
+                                 food_id=it.food_id),
+                    ))
+    return out
+
+
+def check_main_meal_size(plan: FeasiblePlan) -> list[Finding]:
+    """Main meals ask for at least MIN_ITEMS_MAIN_MEAL items."""
+    out = []
+    for d in plan.days:
+        for m in d.meals:
+            if m.meal_type_code in SC.MAIN_MEAL_CODES and len(m.items) < SC.MIN_ITEMS_MAIN_MEAL:
+                out.append(_hard(
+                    "main_meal_size",
+                    f"Day {d.day_num} {m.meal_type_code} has {len(m.items)} item(s); "
+                    f"a main meal asks for at least {SC.MIN_ITEMS_MAIN_MEAL}.",
+                    Location(day_num=d.day_num, meal_type_code=m.meal_type_code),
+                ))
+    return out
+
+
+def check_condiments(
+    plan: FeasiblePlan, food_index: dict[int, Food]
+) -> list[Finding]:
+    """Condiments never go alone in a meal and respect the daily cap.
+
+    Mirrors the solver guard: if the whole pool is condiments the solver skips
+    the accompaniment rule, so the validator skips it too.
+    """
+    def is_condiment(food_id: int) -> bool:
+        food = food_index.get(food_id)
+        return food is not None and SC.CONDIMENT_TAG in food.tag_codes
+
+    out = []
+    pool_has_others = any(
+        SC.CONDIMENT_TAG not in f.tag_codes for f in food_index.values()
+    )
+    for d in plan.days:
+        day_count = 0
+        for m in d.meals:
+            conds = [it for it in m.items if is_condiment(it.food_id)]
+            day_count += len(conds)
+            if conds and pool_has_others and len(conds) == len(m.items):
+                out.append(_hard(
+                    "condiment_alone",
+                    f"Day {d.day_num} {m.meal_type_code} is condiments only; "
+                    "a condiment needs something to accompany.",
+                    Location(day_num=d.day_num, meal_type_code=m.meal_type_code),
+                ))
+        if day_count > SC.CONDIMENT_MAX_PER_DAY:
+            out.append(_hard(
+                "condiment_daily_cap",
+                f"Day {d.day_num} has {day_count} condiment servings, above the "
+                f"daily cap of {SC.CONDIMENT_MAX_PER_DAY}.",
+                Location(day_num=d.day_num),
+            ))
+    return out
+
+
+def check_sweet_fruit_cap(
+    plan: FeasiblePlan, food_index: dict[int, Food]
+) -> list[Finding]:
+    """At most one sweet or fruit item per meal, they are a complement."""
+    out = []
+    for d in plan.days:
+        for m in d.meals:
+            n = 0
+            for it in m.items:
+                food = food_index.get(it.food_id)
+                if food is not None and (
+                    SC.SWEET_TAG in food.tag_codes or SC.FRUIT_TAG in food.tag_codes
+                ):
+                    n += 1
+            if n > SC.SWEET_FRUIT_MAX_PER_MEAL:
+                out.append(_hard(
+                    "sweet_fruit_cap",
+                    f"Day {d.day_num} {m.meal_type_code} has {n} sweet/fruit items; "
+                    f"at most {SC.SWEET_FRUIT_MAX_PER_MEAL} per meal.",
+                    Location(day_num=d.day_num, meal_type_code=m.meal_type_code),
+                ))
     return out

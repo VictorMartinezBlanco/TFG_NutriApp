@@ -24,6 +24,7 @@ from app.repositories import (
     list_foods,
     nutrient_id_by_code,
     set_food_nutrients,
+    set_food_serving_profile,
     set_food_tags,
     tag_id_by_code,
     upsert_food,
@@ -58,6 +59,13 @@ async def main() -> int:
                         source="custom",
                         typical_serving_g=food.get("typical_serving_g"),
                         nutritionist_id=None,  # catálogo global
+                    )
+                    await set_food_serving_profile(
+                        conn,
+                        food_id,
+                        min_serving_g=food["min_serving_g"],
+                        max_serving_g=food["max_serving_g"],
+                        grams_per_unit=food["grams_per_unit"],
                     )
                     await set_food_nutrients(
                         conn,

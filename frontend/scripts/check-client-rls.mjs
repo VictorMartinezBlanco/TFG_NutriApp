@@ -161,6 +161,7 @@ async function main() {
     appointment: null,
     weightDay: null,
     weightRestore: null,
+    checkDay: null,
     checkMealType: null,
   };
 
@@ -386,31 +387,37 @@ async function main() {
     // ---------- comidas cumplidas ----------
     section("MARCA COMIDAS, Y SOLO LAS QUE PUEDE MARCAR");
 
-    // Comida del dia 1 que el juego de datos no deja ya marcada. Se elige en
-    // caliente para que la pasada no dependa de cuanto lleve marcado la
-    // demostracion, y al limpiar solo se borra esta.
-    const { data: dayOnePlanned } = await nutri1.sb
+    // Comida de un dia ya vivido que el juego de datos no deja marcada. Se
+    // busca en caliente sobre todos los dias que la policy permite marcar
+    // (hasta hoy), para que la pasada no dependa de cuanto lleve marcado la
+    // demostracion (con 4 comidas por dia el dia 1 puede venir completo), y al
+    // limpiar solo se borra esta.
+    const dayMsCheck = 86_400_000;
+    const planStartDay = Math.floor(Date.parse(`${signedPlan.start_date}T00:00:00Z`) / dayMsCheck);
+    const nowDay = Math.floor(Date.parse(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`) / dayMsCheck);
+    const elapsedDays = Math.min(nowDay - planStartDay + 1, signedPlan.duration_days);
+    const { data: allPlanned } = await nutri1.sb
       .from("plan_meal_item")
-      .select("meal_type_id")
+      .select("day_num, meal_type_id")
       .eq("plan_id", signedPlan.id)
-      .eq("day_num", 1);
-    const { data: dayOneChecked } = await client.sb
+      .lte("day_num", elapsedDays);
+    const { data: allChecked } = await client.sb
       .from("meal_check")
-      .select("meal_type_id")
-      .eq("plan_id", signedPlan.id)
-      .eq("day_num", 1);
-    const takenTypes = new Set((dayOneChecked ?? []).map((c) => c.meal_type_id));
-    created.checkMealType =
-      Array.from(new Set((dayOnePlanned ?? []).map((m) => m.meal_type_id))).find(
-        (id) => !takenTypes.has(id)
-      ) ?? null;
-    check("hay una comida del dia 1 sin marcar", created.checkMealType != null);
+      .select("day_num, meal_type_id")
+      .eq("plan_id", signedPlan.id);
+    const takenPairs = new Set((allChecked ?? []).map((c) => `${c.day_num}:${c.meal_type_id}`));
+    const free = (allPlanned ?? []).find(
+      (m) => !takenPairs.has(`${m.day_num}:${m.meal_type_id}`)
+    );
+    created.checkDay = free?.day_num ?? null;
+    created.checkMealType = free?.meal_type_id ?? null;
+    check("hay una comida ya vivida sin marcar", created.checkMealType != null);
 
     const { error: checkErr } = await client.sb
       .from("meal_check")
       .insert({
         plan_id: signedPlan.id,
-        day_num: 1,
+        day_num: created.checkDay,
         meal_type_id: created.checkMealType,
       });
     check("marca una comida de su plan firmado", !checkErr, checkErr?.message);
@@ -419,7 +426,7 @@ async function main() {
       .from("meal_check")
       .select("plan_id, day_num, meal_type_id")
       .eq("plan_id", signedPlan.id)
-      .eq("day_num", 1)
+      .eq("day_num", created.checkDay)
       .eq("meal_type_id", created.checkMealType);
     check("y la relee", ownChecks?.length === 1, `${ownChecks?.length}`);
 
@@ -427,7 +434,7 @@ async function main() {
       .from("meal_check")
       .insert({
         plan_id: signedPlan.id,
-        day_num: 1,
+        day_num: created.checkDay,
         meal_type_id: created.checkMealType,
       });
     check("la misma comida no se marca dos veces", Boolean(dupErr));
@@ -490,7 +497,7 @@ async function main() {
       .from("meal_check")
       .select("plan_id, day_num, meal_type_id")
       .eq("plan_id", signedPlan.id)
-      .eq("day_num", 1)
+      .eq("day_num", created.checkDay)
       .eq("meal_type_id", created.checkMealType);
     check("pero si ve lo que su cliente marco", n1Checks?.length === 1, `${n1Checks?.length}`);
 
@@ -507,7 +514,7 @@ async function main() {
       .from("meal_check")
       .delete()
       .eq("plan_id", signedPlan.id)
-      .eq("day_num", 1)
+      .eq("day_num", created.checkDay)
       .eq("meal_type_id", created.checkMealType)
       .select("plan_id");
     check("desmarca lo que habia marcado", undone?.length === 1);
@@ -889,7 +896,7 @@ async function main() {
         .from("meal_check")
         .delete()
         .eq("plan_id", signedPlan.id)
-        .eq("day_num", 1)
+        .eq("day_num", created.checkDay)
         .eq("meal_type_id", created.checkMealType);
     if (created.weightDay) {
       await client.sb.from("weight_entry").delete().eq("measured_on", created.weightDay);

@@ -57,7 +57,7 @@ export default async function MyPlanPage() {
       .select(
         `id, day_num, item_order, quantity_g, description_free,
          meal_type:meal_type_id (id, code, name_en, default_order),
-         food:food_id (name_en, food_nutrient (value_per_100g, nutrient:nutrient_id (code)))`
+         food:food_id (name_en, grams_per_unit, food_nutrient (value_per_100g, nutrient:nutrient_id (code)))`
       )
       .eq("plan_id", plan.id)
       .order("day_num", { ascending: true })

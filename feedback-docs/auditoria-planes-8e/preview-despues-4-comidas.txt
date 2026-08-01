@@ -1,0 +1,366 @@
+meals_per_day=4
+Maria Gonzalez           optimal   31.0s  kcal_dev=0.00%  validator=ok
+Lucia Fernandez          feasible  90.4s  kcal_dev=-  validator=ok
+David Romero             feasible  90.4s  kcal_dev=0.03%  validator=ok
+Sofia Marin              optimal   66.4s  kcal_dev=-  validator=ok
+Carlos Ruiz              feasible  90.4s  kcal_dev=0.02%  validator=ok
+Tomas Alvarez            optimal   11.1s  kcal_dev=40.87%  validator=ok
+Second Tester Client     feasible  90.4s  kcal_dev=-  validator=ok
+Alba Nieto               feasible  90.5s  kcal_dev=0.00%  validator=ok
+Hugo Ferrer              optimal   21.4s  kcal_dev=-  validator=ok
+
+infeasible=0 validations_failed=0
+
+=== plans audited ===
+  plan 9001  Maria Gonzalez         7d  signed 112 items
+  plan 9002  Lucia Fernandez        7d  signed 112 items
+  plan 9003  David Romero           7d  signed 103 items
+  plan 9004  Sofia Marin            7d  signed 100 items
+  plan 9005  Carlos Ruiz            7d  signed 81 items
+  plan 9006  Tomas Alvarez          7d  signed 111 items
+  plan 9007  Second Tester Client   7d  signed 112 items
+  plan 9008  Alba Nieto             7d  signed 112 items
+  plan 9009  Hugo Ferrer            7d  signed 112 items
+  total: 9 plans, 955 items
+
+=== serving size per food (appearances, min/median/max grams) ===
+  Almonds, raw                 (none)          n=  16  min=   15  med=   40  max=   40
+  Apple, raw                   fruit           n=  10  min=   75  med=  188  max=  300
+  Avocado, raw                 fruit           n=  10  min=   70  med=  140  max=  140
+  Banana, raw                  fruit           n=  10  min=   60  med=  180  max=  240
+  Beetroot, raw                vegetable       n=  12  min=   50  med=  199  max=  200
+  Blue cheese                  dairy           n=   7  min=   15  med=   15  max=   40
+  Blueberry, raw               fruit           n=   9  min=   50  med=   77  max=  150
+  Broccoli, raw                vegetable       n=  15  min=  100  med=  249  max=  250
+  Brown rice, raw              cereal          n=   7  min=   50  med=  112  max=  120
+  Bulgur, raw                  cereal          n=   3  min=   50  med=  100  max=  100
+  Button mushroom, raw         vegetable       n=  11  min=  100  med=  250  max=  250
+  Canned sardines              protein_source  n=   6  min=   40  med=   55  max=  120
+  Canned tuna in water         protein_source  n=   6  min=   60  med=   60  max=  120
+  Carrot, raw                  vegetable       n=  24  min=   50  med=  200  max=  200
+  Cauliflower, raw             vegetable       n=  10  min=  100  med=  250  max=  250
+  Chicken breast, raw          protein_source  n=   6  min=  100  med=  148  max=  181
+  Chicken thigh, raw           protein_source  n=   2  min=  100  med=  175  max=  250
+  Chickpeas, dry               legume          n=   5  min=   60  med=   60  max=   60
+  Cod, raw                     protein_source  n=   5  min=  100  med=  105  max=  149
+  Cooked ham                   protein_source  n=   6  min=   30  med=   60  max=  120
+  Cottage cheese               dairy           n=   4  min=   50  med=   66  max=  150
+  Couscous, raw                cereal          n=   6  min=   50  med=   66  max=  100
+  Cow's milk, semi-skimmed     dairy           n=  13  min=  100  med=  187  max=  300
+  Cow's milk, skimmed          dairy           n=   8  min=  100  med=  126  max=  300
+  Cow's milk, whole            dairy           n=   7  min=  100  med=  100  max=  300
+  Cucumber, raw                vegetable       n=  30  min=   50  med=  200  max=  200
+  Cured cheese                 dairy           n=   8  min=   20  med=   32  max=   60
+  Dry broad beans              legume          n=   5  min=   60  med=   60  max=   84
+  Edamame                      legume          n=  15  min=   50  med=   52  max=  150
+  Egg white                    protein_source  n=  12  min=   30  med=  194  max=  200
+  Egg, whole                   protein_source  n=  14  min=   60  med=  120  max=  180
+  Eggplant, raw                vegetable       n=  12  min=  100  med=  250  max=  250
+  Extra virgin olive oil       (none)          n=  17  min=   10  med=   18  max=   20
+  Firm tofu                    protein_source  n=   3  min=   80  med=   80  max=   80
+  Goat cheese                  dairy           n=   9  min=   20  med=   23  max=   60
+  Grapes, raw                  fruit           n=   6  min=   80  med=  105  max=  200
+  Greek yogurt                 dairy           n=   8  min=  125  med=  125  max=  250
+  Green asparagus, raw         vegetable       n=  19  min=  100  med=  249  max=  250
+  Green beans, raw             vegetable       n=  17  min=  100  med=  250  max=  250
+  Green olives                 (none)          n=  11  min=   20  med=   33  max=   60
+  Green peas, raw              vegetable       n=  22  min=  100  med=  250  max=  250
+  Hake, raw                    protein_source  n=   4  min=  100  med=  100  max=  239
+  Hazelnuts                    (none)          n=  13  min=   15  med=   16  max=   40
+  Kefir                        dairy           n=   8  min=  100  med=  234  max=  250
+  Kiwi, raw                    fruit           n=   6  min=   80  med=   80  max=  160
+  Lamb leg, raw                protein_source  n=   3  min=  100  med=  103  max=  150
+  Lean beef, raw               protein_source  n=   4  min=  100  med=  100  max=  113
+  Leek, raw                    vegetable       n=  22  min=   50  med=  200  max=  200
+  Lentils, dry                 legume          n=   6  min=   60  med=   60  max=  110
+  Lettuce, raw                 vegetable       n=  13  min=   30  med=  150  max=  150
+  Mackerel, raw                protein_source  n=   3  min=  100  med=  100  max=  125
+  Mango, raw                   fruit           n=   8  min=  100  med=  233  max=  250
+  Melon, raw                   fruit           n=   8  min=  150  med=  152  max=  300
+  Millet, raw                  cereal          n=   9  min=   40  med=   90  max=   90
+  Mozzarella                   dairy           n=   6  min=   30  med=  120  max=  125
+  Mussels, raw                 protein_source  n=   3  min=   60  med=   97  max=  136
+  Oat flakes                   cereal          n=  15  min=   30  med=   79  max=   80
+  Onion, raw                   vegetable       n=  10  min=   30  med=  100  max=  100
+  Orange, raw                  fruit           n=  12  min=   75  med=   75  max=  300
+  Peach, raw                   fruit           n=   8  min=   75  med=  150  max=  300
+  Peanut butter                (none)          n=  11  min=   10  med=   37  max=   40
+  Pear, raw                    fruit           n=  16  min=   80  med=  280  max=  320
+  Pineapple, raw               fruit           n=   9  min=  100  med=  243  max=  250
+  Pinto beans, dry             legume          n=   3  min=   60  med=   60  max=  119
+  Pistachios                   (none)          n=  10  min=   15  med=   15  max=   40
+  Plain yogurt                 dairy           n=   7  min=  125  med=  250  max=  250
+  Plum, raw                    fruit           n=   7  min=   60  med=   60  max=  180
+  Pork loin, raw               protein_source  n=   3  min=  100  med=  100  max=  102
+  Potato, raw                  cereal          n=   5  min=  100  med=  100  max=  300
+  Quinoa, raw                  cereal          n=   4  min=   50  med=   50  max=   50
+  Red bell pepper, raw         vegetable       n=  17  min=   50  med=  200  max=  200
+  Red lentils, dry             legume          n=   4  min=   60  med=   60  max=  120
+  Rice cakes                   cereal          n=  10  min=   15  med=   18  max=   45
+  Rye bread                    cereal          n=   8  min=   30  med=   34  max=  120
+  Salmon, raw                  protein_source  n=   7  min=  100  med=  100  max=  200
+  Shrimp, raw                  protein_source  n=   4  min=   64  med=  190  max=  200
+  Skim quark                   dairy           n=   7  min=  100  med=  153  max=  239
+  Spinach, raw                 vegetable       n=  16  min=  100  med=  185  max=  250
+  Split peas, dry              legume          n=   6  min=   60  med=   60  max=   74
+  Squid, raw                   protein_source  n=   5  min=  100  med=  103  max=  228
+  Strawberry, raw              fruit           n=  10  min=  100  med=  241  max=  250
+  Sugary breakfast cereal      cereal          n=   2  min=   30  med=   45  max=   60
+  Sunflower oil                (none)          n=  13  min=   10  med=   15  max=   20
+  Sunflower seeds              (none)          n=  14  min=   10  med=   13  max=   30
+  Sweet corn, canned           cereal          n=   6  min=   40  med=   40  max=  140
+  Sweet potato, raw            cereal          n=   9  min=  100  med=  104  max=  300
+  Swiss chard, raw             vegetable       n=  13  min=  100  med=  222  max=  250
+  Tempeh                       protein_source  n=   5  min=   81  med=  178  max=  200
+  Tomato, raw                  vegetable       n=  52  min=   50  med=  250  max=  250
+  Turkey breast, raw           protein_source  n=   4  min=  100  med=  101  max=  108
+  Walnuts                      (none)          n=  12  min=   15  med=   39  max=   40
+  Watermelon, raw              fruit           n=   7  min=  150  med=  299  max=  300
+  Wheat pasta, raw             cereal          n=   5  min=   60  med=   60  max=  125
+  White beans, dry             legume          n=   4  min=   60  med=   60  max=   60
+  White cabbage, raw           vegetable       n=  17  min=  100  med=  250  max=  250
+  White rice, raw              cereal          n=   7  min=   50  med=   50  max=  115
+  White wheat bread            cereal          n=   6  min=   30  med=   70  max=  120
+  Whole wheat bread            cereal          n=   8  min=   30  med=   96  max=  120
+  Whole wheat pasta, raw       cereal          n=   4  min=   60  med=   60  max=   60
+  Zucchini, raw                vegetable       n=  11  min=  100  med=  123  max=  250
+
+=== items pinned to the global limits ===
+  at the 10 g floor:      18 of 955 (1.9%)
+  at the 300 g ceiling:   33 of 955 (3.5%)
+
+=== items at extreme servings (<= 25 g or >= 250 g) ===
+  small: 93 items, large: 170 items
+    plan 9001 Maria Gonzalez d1 dinner      Sunflower oil                   10 g
+    plan 9002 Lucia Fernandez d2 dinner      Extra virgin olive oil          10 g
+    plan 9002 Lucia Fernandez d3 breakfast   Extra virgin olive oil          10 g
+    plan 9002 Lucia Fernandez d5 breakfast   Sunflower seeds                 10 g
+    plan 9002 Lucia Fernandez d5 dinner      Sunflower seeds                 10 g
+    plan 9002 Lucia Fernandez d6 breakfast   Sunflower seeds                 10 g
+    plan 9002 Lucia Fernandez d7 breakfast   Sunflower seeds                 10 g
+    plan 9003 David Romero d2 breakfast   Peanut butter                   10 g
+    plan 9003 David Romero d3 snack       Sunflower oil                   10 g
+    plan 9004 Sofia Marin d1 breakfast   Extra virgin olive oil          10 g
+    plan 9004 Sofia Marin d3 breakfast   Peanut butter                   10 g
+    plan 9004 Sofia Marin d4 breakfast   Sunflower seeds                 10 g
+    plan 9004 Sofia Marin d6 breakfast   Extra virgin olive oil          10 g
+    plan 9004 Sofia Marin d7 breakfast   Sunflower oil                   10 g
+    plan 9005 Carlos Ruiz d2 lunch       Extra virgin olive oil          10 g
+    plan 9005 Carlos Ruiz d5 breakfast   Sunflower seeds                 10 g
+    plan 9005 Carlos Ruiz d5 lunch       Peanut butter                   10 g
+    plan 9006 Tomas Alvarez d1 snack       Peanut butter                   10 g
+    plan 9002 Lucia Fernandez d1 snack       Peanut butter                   11 g
+    plan 9003 David Romero d1 breakfast   Sunflower oil                   11 g
+    plan 9003 David Romero d6 dinner      Extra virgin olive oil          11 g
+    plan 9004 Sofia Marin d5 breakfast   Sunflower seeds                 12 g
+    plan 9006 Tomas Alvarez d6 breakfast   Sunflower oil                   12 g
+    plan 9001 Maria Gonzalez d3 breakfast   Sunflower seeds                 14 g
+    plan 9006 Tomas Alvarez d3 dinner      Sunflower oil                   14 g
+    plan 9001 Maria Gonzalez d1 breakfast   Rice cakes                      15 g
+    plan 9001 Maria Gonzalez d3 breakfast   Pistachios                      15 g
+    plan 9001 Maria Gonzalez d5 breakfast   Walnuts                         15 g
+    plan 9001 Maria Gonzalez d5 breakfast   Blue cheese                     15 g
+    plan 9001 Maria Gonzalez d6 breakfast   Rice cakes                      15 g
+    plan 9001 Maria Gonzalez d6 snack       Blue cheese                     15 g
+    plan 9001 Maria Gonzalez d7 snack       Almonds, raw                    15 g
+    plan 9001 Maria Gonzalez d7 snack       Blue cheese                     15 g
+    plan 9002 Lucia Fernandez d2 snack       Rice cakes                      15 g
+    plan 9002 Lucia Fernandez d3 breakfast   Almonds, raw                    15 g
+    plan 9002 Lucia Fernandez d3 breakfast   Pistachios                      15 g
+    plan 9002 Lucia Fernandez d3 snack       Pistachios                      15 g
+    plan 9002 Lucia Fernandez d5 breakfast   Pistachios                      15 g
+    plan 9002 Lucia Fernandez d7 breakfast   Hazelnuts                       15 g
+    plan 9003 David Romero d5 dinner      Pistachios                      15 g
+    plan 9005 Carlos Ruiz d1 breakfast   Pear, raw                      320 g
+    plan 9005 Carlos Ruiz d1 lunch       Pear, raw                      320 g
+    plan 9005 Carlos Ruiz d7 snack       Pear, raw                      320 g
+    plan 9007 Second Tester Client d2 breakfast   Pear, raw                      320 g
+    plan 9008 Alba Nieto d3 snack       Pear, raw                      320 g
+    plan 9008 Alba Nieto d5 breakfast   Pear, raw                      320 g
+    plan 9008 Alba Nieto d5 snack       Pear, raw                      320 g
+    plan 9009 Hugo Ferrer d3 breakfast   Pear, raw                      320 g
+    plan 9001 Maria Gonzalez d6 breakfast   Cow's milk, semi-skimmed       300 g
+    plan 9001 Maria Gonzalez d7 lunch       Watermelon, raw                300 g
+    plan 9002 Lucia Fernandez d5 snack       Peach, raw                     300 g
+    plan 9003 David Romero d3 lunch       Potato, raw                    300 g
+    plan 9003 David Romero d7 breakfast   Apple, raw                     300 g
+    plan 9004 Sofia Marin d4 breakfast   Cow's milk, skimmed            300 g
+    plan 9005 Carlos Ruiz d5 lunch       Apple, raw                     300 g
+    plan 9006 Tomas Alvarez d5 lunch       Orange, raw                    300 g
+    plan 9006 Tomas Alvarez d5 snack       Cow's milk, semi-skimmed       300 g
+    plan 9007 Second Tester Client d2 lunch       Apple, raw                     300 g
+    plan 9007 Second Tester Client d3 breakfast   Melon, raw                     300 g
+    plan 9007 Second Tester Client d4 snack       Watermelon, raw                300 g
+    plan 9007 Second Tester Client d5 snack       Peach, raw                     300 g
+    plan 9007 Second Tester Client d7 snack       Orange, raw                    300 g
+    plan 9007 Second Tester Client d7 dinner      Sweet potato, raw              300 g
+    plan 9008 Alba Nieto d1 breakfast   Peach, raw                     300 g
+    plan 9008 Alba Nieto d3 breakfast   Apple, raw                     300 g
+    plan 9008 Alba Nieto d4 snack       Orange, raw                    300 g
+    plan 9008 Alba Nieto d5 breakfast   Cow's milk, skimmed            300 g
+    plan 9008 Alba Nieto d7 snack       Watermelon, raw                300 g
+    plan 9009 Hugo Ferrer d1 breakfast   Cow's milk, whole              300 g
+    plan 9004 Sofia Marin d3 breakfast   Cow's milk, semi-skimmed       299 g
+    plan 9004 Sofia Marin d4 lunch       Watermelon, raw                299 g
+    plan 9005 Carlos Ruiz d1 dinner      Sweet potato, raw              299 g
+    plan 9006 Tomas Alvarez d6 breakfast   Cow's milk, whole              298 g
+    plan 9004 Sofia Marin d6 dinner      Melon, raw                     285 g
+    plan 9005 Carlos Ruiz d1 lunch       Sweet potato, raw              280 g
+    plan 9001 Maria Gonzalez d2 dinner      Green beans, raw               250 g
+    plan 9001 Maria Gonzalez d6 breakfast   Plain yogurt                   250 g
+    plan 9001 Maria Gonzalez d7 lunch       Cauliflower, raw               250 g
+    plan 9001 Maria Gonzalez d7 dinner      Button mushroom, raw           250 g
+    plan 9002 Lucia Fernandez d1 lunch       White cabbage, raw             250 g
+
+=== single-item meals ===
+  8 of 252 meals have a single item
+    plan 9003 David Romero d1 snack       Skim quark                     100 g  (  68 kcal)
+    plan 9003 David Romero d5 snack       Tomato, raw                     50 g  (   9 kcal)
+    plan 9004 Sofia Marin d5 snack       Egg, whole                      60 g  (  86 kcal)
+    plan 9005 Carlos Ruiz d1 snack       Edamame                         50 g  (  60 kcal)
+    plan 9005 Carlos Ruiz d2 snack       Edamame                         52 g  (  63 kcal)
+    plan 9005 Carlos Ruiz d3 snack       Edamame                        139 g  ( 168 kcal)
+    plan 9005 Carlos Ruiz d5 snack       Edamame                        110 g  ( 133 kcal)
+    plan 9005 Carlos Ruiz d6 snack       Edamame                         50 g  (  60 kcal)
+
+=== meals made only of no-family foods (fats, nuts, condiments) ===
+  0 meals
+
+=== food x meal slot (appearances per slot) ===
+  food                         family           break  mid_m  lunch  snack  dinne  late_
+  Almonds, raw                 (none)               8      0      1      4      3      0
+  Extra virgin olive oil       (none)              10      0      1      4      2      0
+  Green olives                 (none)               4      0      1      5      1      0
+  Hazelnuts                    (none)               9      0      2      1      1      0
+  Peanut butter                (none)               6      0      1      4      0      0
+  Pistachios                   (none)               5      0      0      4      1      0
+  Sunflower oil                (none)               6      0      2      2      3      0
+  Sunflower seeds              (none)              12      0      1      0      1      0
+  Walnuts                      (none)               4      0      1      4      3      0
+  Brown rice, raw              cereal               0      0      4      0      3      0
+  Bulgur, raw                  cereal               0      0      1      0      2      0
+  Couscous, raw                cereal               0      0      4      0      2      0
+  Millet, raw                  cereal               8      0      0      0      1      0
+  Oat flakes                   cereal               9      0      0      6      0      0
+  Potato, raw                  cereal               0      0      5      0      0      0
+  Quinoa, raw                  cereal               0      0      2      0      2      0
+  Rice cakes                   cereal               6      0      0      4      0      0
+  Rye bread                    cereal               5      0      1      2      0      0
+  Sugary breakfast cereal      cereal               2      0      0      0      0      0
+  Sweet corn, canned           cereal               0      0      3      0      3      0
+  Sweet potato, raw            cereal               0      0      4      0      5      0
+  Wheat pasta, raw             cereal               0      0      2      0      3      0
+  White rice, raw              cereal               0      0      4      0      3      0
+  White wheat bread            cereal               2      0      0      3      1      0
+  Whole wheat bread            cereal               6      0      0      2      0      0
+  Whole wheat pasta, raw       cereal               0      0      2      0      2      0
+  Blue cheese                  dairy                3      0      1      3      0      0
+  Cottage cheese               dairy                1      0      0      2      1      0
+  Cow's milk, semi-skimmed     dairy                8      0      0      3      2      0
+  Cow's milk, skimmed          dairy                6      0      0      2      0      0
+  Cow's milk, whole            dairy                4      0      0      2      1      0
+  Cured cheese                 dairy                2      0      1      4      1      0
+  Goat cheese                  dairy                6      0      0      3      0      0
+  Greek yogurt                 dairy                6      0      0      1      1      0
+  Kefir                        dairy                4      0      2      1      1      0
+  Mozzarella                   dairy                3      0      1      2      0      0
+  Plain yogurt                 dairy                5      0      0      2      0      0
+  Skim quark                   dairy                3      0      0      4      0      0
+  Apple, raw                   fruit                4      0      4      1      1      0
+  Avocado, raw                 fruit                5      0      1      1      3      0
+  Banana, raw                  fruit                3      0      1      3      3      0
+  Blueberry, raw               fruit                3      0      1      3      2      0
+  Grapes, raw                  fruit                0      0      2      2      2      0
+  Kiwi, raw                    fruit                0      0      3      2      1      0
+  Mango, raw                   fruit                3      0      0      3      2      0
+  Melon, raw                   fruit                2      0      2      1      3      0
+  Orange, raw                  fruit                3      0      2      7      0      0
+  Peach, raw                   fruit                3      0      0      4      1      0
+  Pear, raw                    fruit                9      0      2      5      0      0
+  Pineapple, raw               fruit                6      0      0      1      2      0
+  Plum, raw                    fruit                2      0      2      2      1      0
+  Strawberry, raw              fruit                3      0      1      5      1      0
+  Watermelon, raw              fruit                2      0      2      3      0      0
+  Chickpeas, dry               legume               0      0      2      0      3      0
+  Dry broad beans              legume               0      0      4      0      1      0
+  Edamame                      legume               0      0      2     11      2      0
+  Lentils, dry                 legume               0      0      1      0      5      0
+  Pinto beans, dry             legume               0      0      1      0      2      0
+  Red lentils, dry             legume               0      0      1      0      3      0
+  Split peas, dry              legume               0      0      0      0      6      0
+  White beans, dry             legume               0      0      2      0      2      0
+  Canned sardines              protein_source       0      0      0      4      2      0
+  Canned tuna in water         protein_source       0      0      1      4      1      0
+  Chicken breast, raw          protein_source       0      0      3      0      3      0
+  Chicken thigh, raw           protein_source       0      0      2      0      0      0
+  Cod, raw                     protein_source       0      0      2      0      3      0
+  Cooked ham                   protein_source       2      0      1      2      1      0
+  Egg white                    protein_source       8      0      1      0      3      0
+  Egg, whole                   protein_source       5      0      0      7      2      0
+  Firm tofu                    protein_source       0      0      2      0      1      0
+  Hake, raw                    protein_source       0      0      2      0      2      0
+  Lamb leg, raw                protein_source       0      0      2      0      1      0
+  Lean beef, raw               protein_source       0      0      1      0      3      0
+  Mackerel, raw                protein_source       0      0      0      0      3      0
+  Mussels, raw                 protein_source       0      0      1      0      2      0
+  Pork loin, raw               protein_source       0      0      2      0      1      0
+  Salmon, raw                  protein_source       0      0      5      0      2      0
+  Shrimp, raw                  protein_source       0      0      2      0      2      0
+  Squid, raw                   protein_source       0      0      3      0      2      0
+  Tempeh                       protein_source       0      0      3      0      2      0
+  Turkey breast, raw           protein_source       0      0      2      0      2      0
+  Beetroot, raw                vegetable            0      0      5      0      7      0
+  Broccoli, raw                vegetable            0      0      9      0      6      0
+  Button mushroom, raw         vegetable            0      0      4      0      7      0
+  Carrot, raw                  vegetable            0      0      2     22      0      0
+  Cauliflower, raw             vegetable            0      0      6      0      4      0
+  Cucumber, raw                vegetable            0      0      2     27      1      0
+  Eggplant, raw                vegetable            0      0      6      0      6      0
+  Green asparagus, raw         vegetable            0      0     12      0      7      0
+  Green beans, raw             vegetable            0      0      9      0      8      0
+  Green peas, raw              vegetable            0      0     11      0     11      0
+  Leek, raw                    vegetable            0      0     12      0     10      0
+  Lettuce, raw                 vegetable            0      0      7      0      6      0
+  Onion, raw                   vegetable            0      0      7      0      3      0
+  Red bell pepper, raw         vegetable            0      0      7      0     10      0
+  Spinach, raw                 vegetable            0      0      6      0     10      0
+  Swiss chard, raw             vegetable            0      0      7      0      6      0
+  Tomato, raw                  vegetable           26      0      3     21      2      0
+  White cabbage, raw           vegetable            0      0     10      0      7      0
+  Zucchini, raw                vegetable            0      0      7      0      4      0
+
+=== fruit pile-ups (meals with more than one fruit) ===
+  0 meals
+
+=== fruit as the whole main meal ===
+  0 meals
+
+=== low-energy meals (< 150 kcal) ===
+  16 of 252 meals
+    plan 9003 David Romero d5 snack          9 kcal  Tomato, raw 50g
+    plan 9005 Carlos Ruiz d6 breakfast     38 kcal  Tomato, raw 50g, Peach, raw 75g
+    plan 9005 Carlos Ruiz d1 snack         60 kcal  Edamame 50g
+    plan 9005 Carlos Ruiz d6 snack         60 kcal  Edamame 50g
+    plan 9005 Carlos Ruiz d2 snack         63 kcal  Edamame 52g
+    plan 9003 David Romero d1 snack         68 kcal  Skim quark 100g
+    plan 9004 Sofia Marin d4 snack         78 kcal  Cottage cheese 50g, Peach, raw 75g
+    plan 9004 Sofia Marin d5 snack         86 kcal  Egg, whole 60g
+    plan 9002 Lucia Fernandez d5 dinner        86 kcal  Red bell pepper, raw 50g, Lettuce, raw 30g, Sunflower seeds 10g, Cucumber, raw 50g
+    plan 9004 Sofia Marin d3 snack        114 kcal  Canned sardines 41g, Blueberry, raw 50g
+    plan 9003 David Romero d2 snack        116 kcal  Carrot, raw 50g, Cucumber, raw 50g, Plum, raw 60g, Edamame 50g
+    plan 9002 Lucia Fernandez d2 snack        121 kcal  Carrot, raw 50g, Orange, raw 75g, Cucumber, raw 50g, Rice cakes 15g
+    plan 9002 Lucia Fernandez d3 lunch        131 kcal  Potato, raw 100g, Cauliflower, raw 100g, Cucumber, raw 50g, Beetroot, raw 51g
+    plan 9004 Sofia Marin d6 snack        133 kcal  Strawberry, raw 250g, Blue cheese 15g
+    plan 9005 Carlos Ruiz d5 snack        133 kcal  Edamame 110g
+    plan 9003 David Romero d6 snack        134 kcal  Plain yogurt 125g, Rice cakes 15g
+
+=== no-family foods repeated within one day (condiment overuse) ===
+  8 food-days
+    plan 9002 d3 Extra virgin olive oil       x2
+    plan 9002 d3 Pistachios                   x2
+    plan 9002 d4 Almonds, raw                 x2
+    plan 9002 d5 Sunflower seeds              x2
+    plan 9003 d6 Almonds, raw                 x2
+    plan 9005 d2 Hazelnuts                    x2
+    plan 9005 d7 Extra virgin olive oil       x2
+    plan 9006 d4 Green olives                 x2

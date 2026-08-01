@@ -286,8 +286,12 @@ async def process_task(
 async def worker_loop(engines: Engines, *, stop: asyncio.Event) -> None:
     """Poll, claim, process, forever. The whole database round trip sits inside
     the retry guard: the pooler drops idle connections, and the first statement
-    on a dead one raises. The loop backs off, reacquires and goes on. A task
-    already claimed stays in_progress and is never claimed twice."""
+    on a dead one raises. The pooler can also kill the connection while the loop
+    holds it; asyncpg then frees the holder on its own and the release at the
+    end of the acquire block raises InternalClientError (which subclasses plain
+    Exception, not InterfaceError). Both land in the same guard: the loop backs
+    off, reacquires and goes on. A task already claimed stays in_progress and is
+    never claimed twice."""
     async with connection_pool() as pool:
         print("worker up, polling generation_task")
         backoff = POLL_INTERVAL_S
@@ -302,7 +306,8 @@ async def worker_loop(engines: Engines, *, stop: asyncio.Event) -> None:
                     await process_task(conn, task, engines)
                     print(f"task {task['id']} finished")
                 backoff = POLL_INTERVAL_S
-            except (asyncpg.PostgresConnectionError, asyncpg.InterfaceError, OSError) as exc:
+            except (asyncpg.PostgresConnectionError, asyncpg.InterfaceError,
+                    asyncpg.InternalClientError, OSError) as exc:
                 print(f"database connection lost ({type(exc).__name__}: {exc}); "
                       f"retrying in {backoff:.0f}s")
                 await _wait(stop, backoff)

@@ -91,7 +91,7 @@ export async function enqueueTask(p: EnqueuePayload): Promise<EnqueueResult> {
         input_text: p.inputText ?? null,
         constraints: p.constraints ?? [],
         duration_days: p.durationDays ?? 7,
-        meals_per_day: p.mealsPerDay ?? 5,
+        meals_per_day: p.mealsPerDay ?? 4,
       }),
       cache: "no-store",
     });

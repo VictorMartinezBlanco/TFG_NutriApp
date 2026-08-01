@@ -95,22 +95,30 @@ async function main() {
     .order("start_date", { ascending: false })
     .limit(1)
     .single();
-  // Comida del dia 1 que el juego de datos NO deja ya marcada, para que el
-  // experimento mueva el porcentaje de verdad.
-  const { data: dayOneMeals } = await client.sb
+  // Comida de un dia ya vivido que el juego de datos NO deja marcada, para que
+  // el experimento mueva el porcentaje de verdad. Se busca sobre todos los dias
+  // marcables (hasta hoy): con 4 comidas por dia el dia 1 puede venir completo.
+  const dayMs = 86_400_000;
+  const planStart = Math.floor(Date.parse(`${plan.start_date}T00:00:00Z`) / dayMs);
+  const today = Math.floor(Date.parse(`${new Date().toISOString().slice(0, 10)}T00:00:00Z`) / dayMs);
+  const elapsedDays = Math.min(today - planStart + 1, plan.duration_days);
+  const { data: livedMeals } = await client.sb
     .from("plan_meal_item")
-    .select("meal_type_id")
+    .select("day_num, meal_type_id")
     .eq("plan_id", plan.id)
-    .eq("day_num", 1);
-  const { data: dayOneChecks } = await client.sb
+    .lte("day_num", elapsedDays);
+  const { data: livedChecks } = await client.sb
     .from("meal_check")
-    .select("meal_type_id")
-    .eq("plan_id", plan.id)
-    .eq("day_num", 1);
-  const alreadyChecked = new Set((dayOneChecks ?? []).map((c) => c.meal_type_id));
-  const freeMealTypeId = Array.from(
-    new Set((dayOneMeals ?? []).map((m) => m.meal_type_id))
-  ).find((id) => !alreadyChecked.has(id));
+    .select("day_num, meal_type_id")
+    .eq("plan_id", plan.id);
+  const alreadyChecked = new Set(
+    (livedChecks ?? []).map((c) => `${c.day_num}:${c.meal_type_id}`)
+  );
+  const freeMeal = (livedMeals ?? []).find(
+    (m) => !alreadyChecked.has(`${m.day_num}:${m.meal_type_id}`)
+  );
+  const freeMealTypeId = freeMeal?.meal_type_id;
+  const freeMealDay = freeMeal?.day_num;
 
   section("PANTALLAS DEL CLIENTE");
 
@@ -149,8 +157,8 @@ async function main() {
 
   const { error: markErr } = await client.sb
     .from("meal_check")
-    .insert({ plan_id: plan.id, day_num: 1, meal_type_id: freeMealTypeId });
-  check("marca una comida pendiente del dia 1", !markErr, markErr?.message);
+    .insert({ plan_id: plan.id, day_num: freeMealDay, meal_type_id: freeMealTypeId });
+  check("marca una comida pendiente de un dia vivido", !markErr, markErr?.message);
 
   const after = await get("/my/dashboard", client.header);
   const afterPct = adherencePct(after.body);
@@ -164,7 +172,7 @@ async function main() {
     .from("meal_check")
     .delete()
     .eq("plan_id", plan.id)
-    .eq("day_num", 1)
+    .eq("day_num", freeMealDay)
     .eq("meal_type_id", freeMealTypeId);
 
   const restored = await get("/my/dashboard", client.header);

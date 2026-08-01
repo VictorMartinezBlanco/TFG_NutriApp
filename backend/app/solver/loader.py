@@ -101,7 +101,8 @@ async def load_food_pool(
     """Alimentos globales mas los del nutricionista, con nutrientes y tags."""
     foods = await conn.fetch(
         """
-        SELECT id, name_en, typical_serving_g
+        SELECT id, name_en, typical_serving_g,
+               min_serving_g, max_serving_g, grams_per_unit
         FROM food
         WHERE deleted_at IS NULL
           AND (nutritionist_id IS NULL OR nutritionist_id = $1)
@@ -123,7 +124,11 @@ async def load_food_pool(
         ids,
     )
     tag_rows = await conn.fetch(
-        "SELECT food_id, tag_id FROM food_tag WHERE food_id = ANY($1::int[])",
+        """
+        SELECT ft.food_id, ft.tag_id, t.code
+        FROM food_tag ft JOIN tag t ON t.id = ft.tag_id
+        WHERE ft.food_id = ANY($1::int[])
+        """,
         ids,
     )
 
@@ -131,26 +136,53 @@ async def load_food_pool(
     for r in nut_rows:
         by_food_nut[r["food_id"]][r["code"]] = float(r["value_per_100g"])
     by_food_tag: dict[int, set[int]] = {i: set() for i in ids}
+    by_food_code: dict[int, set[str]] = {i: set() for i in ids}
     for r in tag_rows:
         by_food_tag[r["food_id"]].add(r["tag_id"])
+        by_food_code[r["food_id"]].add(r["code"])
+
+    def _f(value) -> Optional[float]:
+        return float(value) if value is not None else None
 
     return [
         Food(
             id=f["id"],
             name=f["name_en"],
-            typical_serving_g=(
-                float(f["typical_serving_g"]) if f["typical_serving_g"] is not None else None
-            ),
+            typical_serving_g=_f(f["typical_serving_g"]),
+            min_serving_g=_f(f["min_serving_g"]),
+            max_serving_g=_f(f["max_serving_g"]),
+            grams_per_unit=_f(f["grams_per_unit"]),
             nutrients=by_food_nut[f["id"]],
             tag_ids=by_food_tag[f["id"]],
+            tag_codes=by_food_code[f["id"]],
         )
         for f in foods
     ]
 
 
+# franjas que usa un plan segun sus comidas al dia. Coger "las primeras N por
+# default_order" dejaba un plan de 3 comidas en desayuno/media manana/comida,
+# sin cena; las principales entran primero y los tentempies se anaden despues.
+_SLOTS_BY_COUNT = {
+    1: ["lunch"],
+    2: ["lunch", "dinner"],
+    3: ["breakfast", "lunch", "dinner"],
+    4: ["breakfast", "lunch", "snack", "dinner"],
+    5: ["breakfast", "mid_morning", "lunch", "snack", "dinner"],
+    6: ["breakfast", "mid_morning", "lunch", "snack", "dinner", "late_snack"],
+}
+
+
 async def load_meal_type_codes(conn: asyncpg.Connection, meals_per_day: int) -> list[str]:
-    """Los primeros meals_per_day tipos de comida por su orden por defecto."""
+    """Las franjas del plan, en orden cronologico (default_order)."""
+    codes = _SLOTS_BY_COUNT.get(meals_per_day)
+    if codes is None:
+        rows = await conn.fetch(
+            "SELECT code FROM meal_type ORDER BY default_order LIMIT $1", meals_per_day
+        )
+        return [r["code"] for r in rows]
     rows = await conn.fetch(
-        "SELECT code FROM meal_type ORDER BY default_order LIMIT $1", meals_per_day
+        "SELECT code FROM meal_type WHERE code = ANY($1::text[]) ORDER BY default_order",
+        codes,
     )
     return [r["code"] for r in rows]

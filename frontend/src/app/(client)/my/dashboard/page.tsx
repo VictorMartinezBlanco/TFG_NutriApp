@@ -108,7 +108,7 @@ export default async function ClientDashboardPage() {
             .select(
               `id, day_num, item_order, quantity_g, description_free,
                meal_type:meal_type_id (id, code, name_en, default_order),
-               food:food_id (name_en)`
+               food:food_id (name_en, grams_per_unit)`
             )
             .eq("plan_id", plan.id)
             .eq("day_num", todayNum)

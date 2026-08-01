@@ -11,11 +11,40 @@ import os
 from dataclasses import dataclass
 
 # gramos por alimento y comida. cota generosa para cualquier ingesta normal.
+# desde el 8e cada alimento trae su perfil de racion (min/max por aparicion) y
+# estos globales quedan como FALLBACK para alimentos sin perfil (los custom que
+# cree un profesional). la auditoria de la fase 0 midio que, como limites
+# universales, actuaban de atractores: el 66% de los items caia en 10 o 300 g.
 GRAMS_MAX = 300
 
 # gramos minimos cuando un alimento esta presente en una comida. evita que el
 # solver meta alimentos a 1 g solo para cumplir presencia o variedad barata.
 MIN_GRAMS_PRESENT = 10
+
+# fallback del perfil de racion para alimentos sin min/max propio. mas estrecho
+# que los limites duros de arriba: un alimento nuevo sin perfil se sirve en
+# raciones prudentes.
+FALLBACK_MIN_SERVING_G = 20
+FALLBACK_MAX_SERVING_G = 250
+
+# reglas de plausibilidad por alimento (8e). son restricciones DE CATALOGO:
+# viven en el modelo y no en diet_constraint, el vocabulario clinico no se toca.
+# comidas principales: piden composicion minima (las franjas de tentempie
+# admiten pieza unica, una manzana de media manana es un tentempie normal).
+MAIN_MEAL_CODES = {"breakfast", "lunch", "dinner"}
+MIN_ITEMS_MAIN_MEAL = 2
+# apariciones de condimentos (rol condiment) permitidas por dia, entre todos.
+CONDIMENT_MAX_PER_DAY = 2
+# dulces y fruta como complemento: maximo por comida entre ambos.
+SWEET_FRUIT_MAX_PER_MEAL = 1
+# vocabulario de tags que consumen estas reglas.
+CONDIMENT_TAG = "condiment"
+SWEET_TAG = "sweet"
+FRUIT_TAG = "fruit"
+MOMENT_TAG_PREFIX = "moment_"
+# alimentos por unidades que solo admiten piezas enteras; el resto admite
+# medias. convencion v0 por name_en; si la lista crece, pasara a columna.
+WHOLE_UNIT_FOOD_NAMES = {"Egg, whole", "Plain yogurt", "Greek yogurt"}
 
 # los nutrientes de food_nutrient vienen con hasta 4 decimales; se escalan a
 # enteros multiplicando por esta constante para no meter reales en CP-SAT.

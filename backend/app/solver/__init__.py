@@ -51,7 +51,9 @@ def generate_plan(
     time_limit_s: float = C.SOLVE_TIME_LIMIT_S,
 ) -> PlanResult:
     warnings: list[str] = []
-    pm = build_base_model(client, duration_days, meals_per_day, food_pool, warnings)
+    pm = build_base_model(
+        client, duration_days, meals_per_day, food_pool, meal_codes, warnings
+    )
 
     tag_members: dict[int, list[int]] = {}
     for f in food_pool:

@@ -16,6 +16,7 @@ import asyncio
 from app.db import connection_pool
 from app.solver import Constraint, FeasiblePlan, InfeasiblePlan, generate_plan
 from app.solver import config as C
+from app.solver.model import serving_bounds
 from app.solver.loader import (
     load_client,
     load_constraints,
@@ -90,6 +91,45 @@ def _min_distinct_per_day(plan):
         len({it.food_id for meal in day.meals for it in meal.items})
         for day in plan.days
     )
+
+
+def _plausibility_violations(plan, foods_by_id):
+    """Cuenta violaciones de cada garantia de la capa de plausibilidad (8e)."""
+    v = {"profile": 0, "units": 0, "slots": 0, "main_size": 0,
+         "condiment_alone": 0, "condiment_cap": 0, "sweet_fruit": 0}
+    for day in plan.days:
+        day_conds = 0
+        for meal in day.meals:
+            n_sweetfruit = 0
+            n_cond = 0
+            for it in meal.items:
+                f = foods_by_id[it.food_id]
+                lo, hi = serving_bounds(f)
+                if not (lo <= it.grams <= hi):
+                    v["profile"] += 1
+                if f.grams_per_unit:
+                    steps = 1 if f.name in C.WHOLE_UNIT_FOOD_NAMES else 2
+                    if (steps * it.grams) % round(f.grams_per_unit):
+                        v["units"] += 1
+                allowed = {t[len(C.MOMENT_TAG_PREFIX):] for t in f.tag_codes
+                           if t.startswith(C.MOMENT_TAG_PREFIX)}
+                if allowed and meal.meal_type_code not in allowed:
+                    v["slots"] += 1
+                if C.CONDIMENT_TAG in f.tag_codes:
+                    n_cond += 1
+                if C.SWEET_TAG in f.tag_codes or C.FRUIT_TAG in f.tag_codes:
+                    n_sweetfruit += 1
+            if (meal.meal_type_code in C.MAIN_MEAL_CODES
+                    and len(meal.items) < C.MIN_ITEMS_MAIN_MEAL):
+                v["main_size"] += 1
+            if n_cond and n_cond == len(meal.items):
+                v["condiment_alone"] += 1
+            if n_sweetfruit > C.SWEET_FRUIT_MAX_PER_MEAL:
+                v["sweet_fruit"] += 1
+            day_conds += n_cond
+        if day_conds > C.CONDIMENT_MAX_PER_DAY:
+            v["condiment_cap"] += 1
+    return v
 
 
 def _max_appearances_in_plan(plan):
@@ -319,25 +359,43 @@ async def main() -> int:
                           f"min distintos/dia={_min_distinct_per_day(plan)}, "
                           f"max apariciones/plan={_max_appearances_in_plan(plan)}")
             # Cada regla se comprueba contra lo que ella garantiza, no contra el
-            # valor que la pasada relajada saque por su cuenta. Con un catalogo
-            # amplio el suelo de variedad diaria deja de morder: sin reglas ya
-            # salen 15 alimentos distintos al dia, muy por encima del minimo de
-            # 4, asi que exigir que el suelo lo suba mide ruido del solver y no
-            # el efecto de la regla. Las dos duras y el reparto si siguen siendo
-            # comprobables.
-            if isinstance(before, FeasiblePlan) and isinstance(after, FeasiblePlan):
+            # valor que la pasada relajada saque por su cuenta (leccion 8c: los
+            # asserts que comparaban dos solves no deterministas oscilaban entre
+            # pasadas). Desde el 8e la comparacion es ademas imposible de
+            # plantear limpia: los perfiles de racion son DATOS del catalogo,
+            # no constantes, asi que la capa de plausibilidad tambien acota la
+            # pasada "sin reglas" y el mundo pre-6f ya no se puede reproducir
+            # relajando config. La pasada relajada queda como impresion
+            # informativa; el antes/despues global del 8e es la re-auditoria de
+            # audit_plans sobre los planes regenerados.
+            if isinstance(after, FeasiblePlan):
                 rep.check("con reglas, ningun alimento pasa del tope diario",
                           _max_same_food_in_a_day(after) <= C.MAX_SAME_FOOD_PER_DAY,
                           f"{_max_same_food_in_a_day(after)} <= {C.MAX_SAME_FOOD_PER_DAY}")
-                rep.check("sin reglas, ese tope si se pasaba",
-                          _max_same_food_in_a_day(before) > C.MAX_SAME_FOOD_PER_DAY,
-                          f"{_max_same_food_in_a_day(before)} > {C.MAX_SAME_FOOD_PER_DAY}")
                 rep.check("con reglas, se cumple el suelo de variedad diaria",
                           _min_distinct_per_day(after) >= C.MIN_DISTINCT_PER_DAY,
                           f"{_min_distinct_per_day(after)} >= {C.MIN_DISTINCT_PER_DAY}")
-                rep.check("las reglas reparten mejor las apariciones",
-                          _max_appearances_in_plan(after) <= _max_appearances_in_plan(before),
-                          f"{_max_appearances_in_plan(after)} <= {_max_appearances_in_plan(before)}")
+
+            # Capa de plausibilidad (8e): cada regla contra SU garantia, sobre
+            # el mismo plan real de 7x5. El antes/despues global del bloque es
+            # la re-auditoria de audit_plans sobre los planes regenerados.
+            print("\nCapa de plausibilidad (mismo plan de Maria, 7x5)")
+            if isinstance(after, FeasiblePlan):
+                v = _plausibility_violations(after, foods_by_id)
+                rep.check("raciones dentro del perfil de cada alimento",
+                          v["profile"] == 0, f"violaciones={v['profile']}")
+                rep.check("alimentos por unidades en la rejilla de medias piezas",
+                          v["units"] == 0, f"violaciones={v['units']}")
+                rep.check("ningun alimento fuera de sus franjas",
+                          v["slots"] == 0, f"violaciones={v['slots']}")
+                rep.check("las comidas principales llevan composicion minima",
+                          v["main_size"] == 0, f"violaciones={v['main_size']}")
+                rep.check("ningun condimento va solo",
+                          v["condiment_alone"] == 0, f"violaciones={v['condiment_alone']}")
+                rep.check("tope diario de condimentos respetado",
+                          v["condiment_cap"] == 0, f"dias fuera={v['condiment_cap']}")
+                rep.check("dulce/fruta como maximo uno por comida",
+                          v["sweet_fruit"] == 0, f"violaciones={v['sweet_fruit']}")
 
     print(f"\n== {rep.passed} PASS, {rep.failed} FAIL ==")
     return 0 if rep.failed == 0 else 1

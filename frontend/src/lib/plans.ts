@@ -40,7 +40,13 @@ export type MealItemRow = {
   description_free: string | null;
   // el id del meal_type solo lo piden las pantallas que marcan comidas
   meal_type: { id?: number; code: string; name_en: string; default_order: number } | null;
-  food: { name_en: string; food_nutrient?: MealItemFoodNutrient[] } | null;
+  // grams_per_unit viene del perfil de racion: los alimentos por piezas se
+  // muestran en unidades con los gramos al lado. En BD sigue viviendo quantity_g.
+  food: {
+    name_en: string;
+    grams_per_unit?: number | null;
+    food_nutrient?: MealItemFoodNutrient[];
+  } | null;
 };
 
 export type PlanMeal = {
@@ -91,12 +97,25 @@ export function groupItemsByDay(items: MealItemRow[]): PlanDay[] {
     });
 }
 
-// Texto de un item: el alimento con sus gramos, o el texto libre del plan flexible.
+// Cantidad en piezas cuando el alimento va por unidades y los gramos caen en la
+// rejilla de medias piezas. Null si no caen (items de planes anteriores al
+// perfil de racion): el llamante vuelve a los gramos.
+function unitQuantityText(grams: number, gramsPerUnit: number): string | null {
+  const pieces = grams / gramsPerUnit;
+  const snapped = Math.round(pieces * 2) / 2;
+  if (Math.abs(pieces - snapped) > 1e-6 || snapped === 0) return null;
+  const label = snapped === 1 ? "1 piece" : `${snapped} pieces`;
+  return `${label} (~${grams} g)`;
+}
+
+// Texto de un item: el alimento con su cantidad (piezas si va por unidades,
+// gramos si no), o el texto libre del plan flexible.
 export function mealItemText(item: MealItemRow): string {
   if (item.food) {
-    return item.quantity_g != null
-      ? `${item.food.name_en}, ${item.quantity_g} g`
-      : item.food.name_en;
+    if (item.quantity_g == null) return item.food.name_en;
+    const gpu = item.food.grams_per_unit;
+    const inUnits = gpu ? unitQuantityText(item.quantity_g, gpu) : null;
+    return `${item.food.name_en}, ${inUnits ?? `${item.quantity_g} g`}`;
   }
   return item.description_free ?? "Item";
 }
