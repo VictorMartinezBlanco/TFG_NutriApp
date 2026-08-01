@@ -1,31 +1,9 @@
 \chapter{Introducción}
 \label{cap:introduccion}
 
-\chapterquote{Frase célebre dicha por alguien inteligente}{Autor}
+%\chapterquote{Frase célebre}{Autor}
 
-Según la normativa  para Trabajos de Fin de Grado\footnote{\url{https://informatica.ucm.es/file/normativatfg-2021-2022?ver} (ver versión actualizada para cada curso académico)}, la memoria incluirá una portada normalizada con la siguiente información: título en castellano, título en inglés, autores, profesor director, codirector si es el caso, curso
-académico e identificación de la asignatura (Trabajo de fin de grado del Grado en -
-nombre del grado correspondiente-, Facultad de Informática, Universidad Complutense de Madrid). Los datos referentes al título y director (y codirector en su caso) deben corresponder a los publicados en la página web de TFG.
-
-La memoria debe incluir la descripción detallada de la propuesta hardware/software realizada y ha de contener:
-\begin{enumerate}
-\renewcommand{\theenumi}{\alph{enumi}}
-	\item un índice,
-	\item un resumen y una lista de no más de 10 palabras clave para su búsqueda bibliográfica, ambos en castellano e inglés,
-	\item una introducción con los antecedentes, objetivos y plan de trabajo,
-	\item resultados y discusión crítica y razonada de los mismos, con sus conclusiones,
-	\item bibliografía.
-\end{enumerate}
-Para facilitar la escritura de la memoria siguiendo esta estructura, el estudiante podrá usar las plantillas en LaTeX o Word preparadas al efecto y publicadas en la página web de TFG.
-
-La memoria constará de un mínimo de 25 páginas para los proyectos realizados por un único estudiante, y de al menos 5 páginas más por cada integrante adicional del grupo. En este número de páginas solo se tiene en cuenta el contenido correspondiente a los apartados c y d del punto anterior.
-
-La memoria puede estar escrita en castellano o inglés, pero en el primer caso la introducción y las conclusiones deben aparecer también en inglés. Las memorias de los TFG matriculados en el grupo I deberán estar escritas íntegramente en inglés, excepto por lo especificado en los puntos 1 y 2 anteriores (título, resumen y lista de palabras clave).
-
-En caso de trabajos no unipersonales, cada participante indicará en la memoria su contribución al proyecto con una extensión de al menos dos páginas por cada uno de los participantes.
-
-Todo el material no original, ya sea texto o figuras, deberá ser convenientemente citado y referenciado. En el caso de material complementario se deben respetar las licencias y \emph{copyrights} asociados al software y hardware que se emplee. En caso contrario no se autorizará la defensa, sin menoscabo de otras acciones que correspondan.
-
+Este capítulo presenta el punto de partida del proyecto: la motivación que lo origina, los objetivos que persigue y el plan de trabajo que ha guiado su desarrollo.
 
 \section{Motivación}
 Al plantear este Trabajo de Fin de Grado, existía una premisa clara: que el resultado tuviera una aplicación real. No se trataba de resolver un problema inventado para cumplir un requisito académico, sino de utilizar los conocimientos adquiridos durante la carrera para abordar una necesidad concreta de alguien cercano. La idea era que el trabajo sirviera como ejercicio técnico y, al mismo tiempo, como solución a un problema que alguien experimentaba en su día a día profesional.
@@ -34,11 +12,15 @@ Ese alguien resultó ser un amigo que trabaja como nutricionista. En una convers
 
 A partir de esa conversación surgió la idea central de este proyecto: diseñar una plataforma que centralizara todas esas herramientas dispersas en un único punto de acceso. Si toda la información de los clientes ---formularios, citas, mensajes, notas, planes nutricionales, registros diarios--- viviera en una misma base de datos, no solo se eliminaría la fragmentación, sino que se abrirían posibilidades imposibles con herramientas desconectadas: detectar patrones de forma automática, generar alertas cuando un cliente muestra señales de abandono, o construir un perfil completo sin tener que cruzar datos a mano. En definitiva, que el nutricionista pudiera dedicar su tiempo a lo que realmente importa ---diseñar dietas, acompañar a sus clientes, lograr que los tratamientos funcionen--- en lugar de invertirlo en tareas administrativas que una aplicación bien diseñada puede resolver.
 
+Esa visión inicial ---una plataforma que centralizara todo el flujo de trabajo--- guio la primera versión del proyecto: se catalogó todo lo que una herramienta así podría ofrecer y se diseñó un prototipo completo con ello, desde formularios personalizables hasta un marketplace de recursos educativos. Al presentar la propuesta a más nutricionistas en ejercicio, su reacción obligó a repensar el enfoque. Lo que de verdad demandaban no era tenerlo todo en un mismo sitio, sino ayuda con la tarea que más tiempo les consume: elaborar cada dieta a medida. La ficha del cliente ---sus datos, mediciones y restricciones--- les importaba como apoyo de esa tarea; la comunicación con el cliente la veían como un complemento, no como el núcleo; y la centralización del resto de sus procesos, en la práctica, depende de la clínica en la que trabajan, no de la herramienta que ellos elijan.
+
+Ese contraste con la demanda real motivó la reformulación del proyecto que se detalla en el capítulo~\ref{cap:analisisRequisitos}. El centro dejó de ser la plataforma total y pasó a ser un copiloto de generación de planes nutricionales: el nutricionista describe lo que necesita en su propio idioma, el sistema construye un borrador que cumple restricciones verificables, y el profesional lo revisa, lo ajusta y lo firma antes de que llegue al cliente. La plataforma sigue existiendo alrededor ---clientes, citas, mensajes, seguimiento--- pero como soporte de ese núcleo, no como fin en sí misma.
+
 
 \section{Objetivos}
-Este Trabajo de Fin de Grado se desarrolla en el marco del Doble Grado en Ingeniería Informática y Administración y Dirección de Empresas, lo cual permite abordarlo desde dos perspectivas complementarias: la técnica, apoyada en los conocimientos adquiridos en la asignatura de Ampliación de Bases de Datos, y la de negocio, aplicando herramientas de análisis de mercado y viabilidad de producto propias de la formación en ADE. El objetivo no es simplemente cumplir un requisito académico, sino aprovechar esta doble formación para construir un proyecto con aplicación real.
+Este Trabajo de Fin de Grado se desarrolla en el marco del Doble Grado en Ingeniería Informática y Administración y Dirección de Empresas, lo cual permite abordarlo desde dos perspectivas complementarias: la técnica, que abarca desde el diseño de la base de datos hasta la integración de un motor de optimización y modelos de lenguaje; y la de negocio, aplicando herramientas de análisis de mercado y viabilidad de producto propias de la formación en ADE. El objetivo no es simplemente cumplir un requisito académico, sino aprovechar esta doble formación para construir un proyecto con aplicación real.
 
-El objetivo general de este trabajo es diseñar e implementar la base de datos de una aplicación web orientada a la gestión integral de consultas de nutrición, que centralice el flujo de trabajo del nutricionista profesional y mejore la experiencia del cliente. Se busca llevar a la práctica, en un proyecto desarrollado desde cero, los conocimientos técnicos de diseño y gestión de bases de datos junto con la capacidad de análisis de mercado y enfoque de producto, de modo que el resultado no solo sea técnicamente sólido sino también viable como herramienta real.
+El objetivo general de este trabajo es diseñar, construir y evaluar una plataforma web para nutricionistas cuyo núcleo es un copiloto de generación de planes nutricionales: el profesional expresa en su propio idioma las necesidades de un cliente, la inteligencia artificial las traduce a restricciones formales, un motor de optimización construye un borrador que las satisface y un validador independiente lo audita, quedando siempre la decisión final en manos del profesional. Se busca recorrer el proceso completo de un producto real ---del refinamiento de la idea con profesionales en ejercicio al despliegue público y la evaluación empírica---, de modo que el resultado no solo sea técnicamente sólido sino también defendible como herramienta real.
 
 Para alcanzar este objetivo general, se plantean los siguientes objetivos específicos:
 
@@ -47,12 +29,16 @@ Para alcanzar este objetivo general, se plantean los siguientes objetivos espec�
 
     \item Realizar un estudio de mercado y análisis de la competencia en el ámbito de las plataformas de nutrición, aplicando conocimientos propios de la formación en ADE. Esto incluye identificar los principales competidores, analizar sus fortalezas y debilidades, detectar carencias y oportunidades en el mercado, y posicionar NutriApp con funcionalidades diferenciadoras que aporten valor real. El objetivo es que la propuesta no solo sea técnicamente correcta, sino que tenga sentido como producto viable en un mercado existente.
 
-    \item Diseñar un esquema de base de datos relacional completo que refleje toda la lógica de negocio de la aplicación. Esto abarca el modelado de las entidades y sus relaciones, el uso de triggers para automatizar comportamientos ---como la generación de alertas a partir de respuestas de formularios---, consultas complejas con agregaciones temporales ---como el cálculo de rachas de check-ins consecutivos---, y relaciones avanzadas como las muchos-a-muchos auto-referenciadas del sistema de sustituciones de alimentos. El diseño de la base de datos constituye el eje central del proyecto y debe demostrar un dominio profundo de los conceptos trabajados en Ampliación de Bases de Datos.
+    \item Diseñar la arquitectura del sistema y su modelo de datos: dos paneles ---nutricionista y cliente--- sobre una misma base de datos, con el aislamiento entre profesionales garantizado en la propia capa de datos y verificado empíricamente, y con una tabla de restricciones que actúa como interfaz estable entre quien las produce (el profesional o la IA) y el motor que las consume.
+
+    \item Construir un motor de generación de planes basado en programación con restricciones, acompañado de un validador clínico determinista e independiente, capaz de funcionar por sí solo, sin depender de ningún componente de inteligencia artificial.
+
+    \item Integrar la capa de IA que hace usable ese motor en lenguaje natural ---traducción de las peticiones del profesional a restricciones formales, validación previa de los mensajes y generación asíncrona--- manteniendo al profesional como árbitro de cada decisión, y evaluar empíricamente el sistema resultante con criterios definidos antes de medir.
 \end{enumerate}
 
 
 \section{Plan de trabajo}
-El desarrollo de este proyecto ha seguido un proceso iterativo en el que cada fase se apoya en los resultados de la anterior. A continuación se describe el trabajo realizado hasta el momento, organizado en las fases que han guiado el avance del proyecto.
+El desarrollo de este proyecto ha seguido un proceso iterativo en el que cada fase se apoya en los resultados de la anterior. A continuación se describen las fases que lo han guiado, desde la investigación inicial con profesionales hasta la evaluación del sistema final.
 
 \subsection*{Fase 1 --- Investigación con nutricionistas reales}
 
@@ -94,4 +80,30 @@ El resultado de esta fase es un prototipo navegable completo con veinticuatro pa
 
 Con el prototipo completo, se preparó un proceso de validación con usuarios reales para recoger feedback sobre la intuición de los flujos y la calidad del diseño. Para ello se redactaron dos guías de prueba de usabilidad ---una para el panel del nutricionista y otra para el panel del cliente--- en formato editable (\texttt{.docx}), cada una con una docena de flujos de navegación planteados en orden aleatorio. Los flujos se formulan como pequeños retos (``quieres consultar la adherencia media de tus clientes, ¿a qué sección del menú lateral irías?''), de modo que el evaluador tenga que tomar una decisión de navegación en cada caso y marcar si le ha resultado obvia, si ha tenido que pasar por una pantalla equivocada antes, o si directamente no sabría cómo llegar. Ambos documentos se preparan en castellano e inglés para poder enviarse a profesionales de distintos contextos.
 
-%% PENDIENTE: añadir fases restantes (diseño de base de datos, implementación, pruebas, etc.) %%
+\subsection*{Fase 7 --- Reformulación del alcance}
+
+El prototipo completo resultó ser la mejor herramienta para contrastar la idea. Al presentarlo a más nutricionistas en ejercicio quedó claro que el valor no estaba en abarcar todas las funcionalidades posibles, sino en automatizar la elaboración de dietas a medida, la tarea que más tiempo les consume. Junto con los directores del trabajo se decidió reformular el alcance: reducir el catálogo de requisitos a lo que sostiene esa tarea y concentrar el esfuerzo técnico en el copiloto de generación de planes. El capítulo~\ref{cap:analisisRequisitos} documenta el triaje completo y sus criterios.
+
+\subsection*{Fase 8 --- Diseño e implementación de la base de datos}
+
+Siguiendo el orden recomendado por los directores ---primero la base de datos, después su conexión, por último las pantallas---, se diseñó e implementó el modelo de datos completo sobre PostgreSQL gestionado: las tablas de catálogos, personas, restricciones y planes; las políticas de seguridad a nivel de fila que garantizan el aislamiento entre profesionales; y los datos de arranque necesarios para trabajar con casos realistas desde el primer día.
+
+\subsection*{Fase 9 --- Construcción de la aplicación web}
+
+Sobre esa base se construyó la aplicación: primero la conexión del backend en Python y del frontend en Next.js, y después las pantallas del panel del nutricionista ---clientes, planes, alimentos, calendario, mensajería y ajustes---, leyendo siempre datos reales de la base de datos y sin simular funcionalidad que no existiera. La aplicación se desplegó públicamente en una fase temprana para poder enseñarla y probarla en condiciones reales.
+
+\subsection*{Fase 10 --- Motor de generación de planes}
+
+El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones, su implementación con un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y el diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo de forma aislada antes de continuar.
+
+\subsection*{Fase 11 --- Capa de inteligencia artificial}
+
+Con el motor verificado se añadió la capa que lo hace usable en lenguaje natural: el traductor que convierte las peticiones del nutricionista en restricciones formales, las validaciones previas que examinan cada mensaje antes de traducirlo, la generación asíncrona ---el profesional lanza la tarea y sigue trabajando mientras consulta su estado--- y el estilo clínico declarativo que cada profesional define una vez y se aplica a todos sus planes.
+
+\subsection*{Fase 12 --- Panel del cliente}
+
+El segundo rol de la aplicación: el cliente accede a su plan firmado, marca las comidas que ha completado, registra su peso y solicita citas, y toda esa información vuelve al panel del nutricionista como métricas de seguimiento. Con esta fase queda cerrado el ciclo completo entre profesional y cliente.
+
+\subsection*{Fase 13 --- Evaluación}
+
+La última fase, todavía en curso al cierre de esta memoria: un estudio pre-registrado sobre el efecto del formato de los mensajes en la traducción, mediciones de rendimiento del motor en el entorno de producción, una auditoría sistemática de la calidad de los planes generados y una prueba guiada con nutricionistas reales sobre la aplicación desplegada.
