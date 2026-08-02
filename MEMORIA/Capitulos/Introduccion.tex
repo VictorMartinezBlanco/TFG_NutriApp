@@ -25,15 +25,15 @@ El objetivo general de este trabajo es diseñar, construir y evaluar una platafo
 Para alcanzar este objetivo general, se plantean los siguientes objetivos específicos:
 
 \begin{enumerate}
-    \item Analizar el flujo de trabajo real de un nutricionista profesional para extraer los requisitos funcionales del sistema. Esto implica comprender cómo trabaja en su día a día, qué herramientas utiliza actualmente, qué problemas enfrenta y qué necesita realmente. Los requisitos no se inventan en abstracto, sino que se derivan de la observación directa de un caso real, lo que garantiza que el diseño responda a necesidades concretas y no a suposiciones.
+    \item Analizar el flujo de trabajo real de un nutricionista profesional para extraer los requisitos funcionales del sistema. Esto implica comprender cómo trabaja en su día a día, qué herramientas utiliza actualmente, qué problemas enfrenta y qué necesita realmente. De este modo, los requisitos no se inventan, sino que se extraen de la observación directa de un caso real, garantizando que el diseño responda a necesidades concretas y no a suposiciones.
 
-    \item Realizar un estudio de mercado y análisis de la competencia en el ámbito de las plataformas de nutrición, aplicando conocimientos propios de la formación en ADE. Esto incluye identificar los principales competidores, analizar sus fortalezas y debilidades, detectar carencias y oportunidades en el mercado, y posicionar NutriApp con funcionalidades diferenciadoras que aporten valor real. El objetivo es que la propuesta no solo sea técnicamente correcta, sino que tenga sentido como producto viable en un mercado existente.
+    \item Realizar un estudio de mercado y análisis de la competencia en el ámbito de las plataformas de nutrición, aplicando conocimientos propios de la formación en ADE. Esto incluye identificar los principales competidores, analizar sus fortalezas y debilidades, detectar carencias y oportunidades en el mercado, y posicionar NutriApp con funcionalidades innovadoras y diferenciadoras que aporten valor real. El objetivo es que la propuesta no solo sea técnicamente correcta, sino que tenga sentido como producto viable en un mercado existente.
 
-    \item Diseñar la arquitectura del sistema y su modelo de datos: dos paneles ---nutricionista y cliente--- sobre una misma base de datos, con el aislamiento entre profesionales garantizado en la propia capa de datos y verificado empíricamente, y con una tabla de restricciones que actúa como interfaz estable entre quien las produce (el profesional o la IA) y el motor que las consume.
+    \item Diseñar la arquitectura del sistema y su modelo de datos: dos paneles -nutricionista y cliente- sobre una misma base de datos, con el aislamiento entre profesionales garantizado en la propia capa de datos, y con una tabla de restricciones que actúa como interfaz entre quien las produce (el profesional o la IA) y el motor que las consume.
 
     \item Construir un motor de generación de planes basado en programación con restricciones, acompañado de un validador clínico determinista e independiente, capaz de funcionar por sí solo, sin depender de ningún componente de inteligencia artificial.
 
-    \item Integrar la capa de IA que hace usable ese motor en lenguaje natural ---traducción de las peticiones del profesional a restricciones formales, validación previa de los mensajes y generación asíncrona--- manteniendo al profesional como árbitro de cada decisión, y evaluar empíricamente el sistema resultante con criterios definidos antes de medir.
+    \item Integrar la capa de IA que hace usable ese motor en lenguaje natural: traducción de las peticiones del profesional a restricciones formales, validación previa de los mensajes y generación asíncrona manteniendo al profesional como árbitro de cada decisión.
 \end{enumerate}
 
 
