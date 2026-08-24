@@ -1,27 +1,31 @@
 \chapter{Análisis de Requisitos}
 \label{cap:analisisRequisitos}
 
-A partir de la investigación con nutricionistas reales y del análisis de mercado descritos en el plan de trabajo, se extrajeron los requisitos que debe cumplir la plataforma. Este capítulo recoge tanto las restricciones de calidad del sistema (requisitos no funcionales) como las funcionalidades concretas que debe ofrecer (requisitos funcionales), junto con las dependencias entre ellos, las funcionalidades resultantes que dan forma al diseño final de NutriApp y las decisiones tecnológicas que lo sostienen.
+A partir de la investigación con nutricionistas reales y del análisis de mercado descritos en el plan de trabajo, se extrajeron los requisitos que debe cumplir la plataforma. Este capítulo recoge tanto las restricciones de calidad del sistema (requisitos no funcionales) como las funcionalidades concretas que debe ofrecer (requisitos funcionales), sus dependencias, las funcionalidades resultantes y las decisiones tecnológicas que lo sostienen.
 
 %% ====================================================================
 \section{Reformulación del alcance}
 \label{sec:reformulacionAlcance}
 %% ====================================================================
 
-El catálogo inicial de requisitos recogía \textbf{61 requisitos funcionales y 7 no funcionales}, estructurados alrededor de ocho innovaciones clave, y respondía a una pregunta deliberadamente ambiciosa: todo lo que una plataforma de gestión para nutricionistas podría llegar a ofrecer. Ese catálogo se conserva íntegro en el Anexo~\ref{apendice:catalogoV1} como registro del punto de partida del proyecto.
+El catálogo inicial de requisitos recogía \textbf{61 requisitos funcionales y 7 no funcionales}, estructurados alrededor de ocho innovaciones clave, y respondía a una pregunta demasiado ambiciosa: todo lo que una plataforma de gestión para nutricionistas podría llegar a ofrecer. Este catálogo se conserva en el Anexo~\ref{apendice:catalogoV1} como registro del punto de partida del proyecto.
 
-El contraste con la realidad profesional fue lo que obligó a matizarlo. Tras una primera reunión con los directores en abril de 2026 ---en la que ya se acordó una reducción a unos 44 requisitos de primer nivel, por la inviabilidad de abarcarlo todo en un desarrollo en solitario---, la presentación de la propuesta a más nutricionistas en ejercicio reveló dónde estaba la demanda real. Lo que más valor les aporta es automatizar la elaboración de cada dieta a medida, que es la tarea que más tiempo les quita; la ficha del cliente les importa como apoyo de esa tarea; la comunicación con el cliente es un complemento, no el núcleo; y la centralización del resto de sus procesos depende de las clínicas en las que trabajan, no de la herramienta. La decisión resultante no fue un recorte por falta de tiempo, sino una elección informada por ese feedback: \textbf{concentrar todo el esfuerzo técnico en una única funcionalidad diferencial de alta complejidad}, un \textit{copiloto} de generación de planes nutricionales en el que la inteligencia artificial propone, y el profesional revisa, ajusta y firma cada plan antes de entregarlo.
+Como ya comenté, las necesidades más importantes de los profesionales fueron lo que obligaron a matizarlo. Tras una reunión con Pablo y Alejandro en abril de 2026, acordamos una reducción a unos 44 requisitos de primer nivel, ya que era inviable abarcarlo todo en un desarrollo en solitario.
+
+Al descubrir la demanda real de los nutricionistas, automatizar la elaboración de cada dieta a medida (la tarea que más tiempo les quita); clasifiqué la importancia de las funcionalidades relacionadas: la ficha del cliente como apoyo de esa tarea es útil; la comunicación con el cliente es un complemento, no el núcleo; y la centralización del resto de sus procesos depende de las clínicas en las que trabajan, no de la herramienta. 
+
+Por ello, la decisión resultante no fue un recorte por falta de tiempo, sino más bien una elección informada por ese feedback: \textbf{concentrar todo el esfuerzo técnico en una única funcionalidad diferencial de alta complejidad}, un \textit{copiloto} de generación de planes nutricionales en el que la inteligencia artificial propone, y el profesional revisa, ajusta y firma cada plan antes de entregarlo.
 
 Este giro obliga a reformular los requisitos en dos direcciones complementarias:
 
 \begin{itemize}
-    \item \textbf{Recorte en amplitud}. Se eliminan por completo del alcance de implementación los bloques que no contribuyen al núcleo del copiloto o a su evaluación: formularios personalizables, sistema de alertas inteligentes, lista de la compra, marketplace de recursos educativos, motor de automatizaciones configurable, reconocimiento de alimentos por imagen, videollamadas y chat entre clientes. Varios bloques adicionales se conservan en forma reducida (calendario, check-in, progreso, informes).
+    \item \textbf{Recorte en amplitud}. Se elimina por completo la implementación de bloques que no contribuyen al núcleo del copiloto o a su evaluación: formularios personalizables, sistema de alertas inteligentes, lista de la compra, marketplace de recursos educativos, motor de automatizaciones configurable, reconocimiento de alimentos por imagen, videollamadas y chat entre clientes. Varios bloques adicionales se conservan en forma reducida (calendario, check-in, progreso, informes).
     \item \textbf{Ampliación en profundidad}. Se añaden \textbf{ocho nuevos requisitos funcionales} que describen el copiloto con el detalle necesario para su implementación (traducción de lenguaje natural a restricciones formales, validación previa del mensaje, arbitraje del profesional sobre cada propuesta, generación mediante un motor de optimización, validación clínica automatizada, explicación de infactibilidades, estilo clínico del profesional y seguimiento de generaciones asíncronas), así como \textbf{cinco nuevos requisitos no funcionales} específicos de la parte de inteligencia artificial (latencia, validación clínica obligatoria, trazabilidad, protección de datos de salud y explicabilidad).
 \end{itemize}
 
-El resultado es un catálogo final de \textbf{29 requisitos funcionales} (21 conservados del catálogo inicial, 8 nuevos del copiloto) y \textbf{14 requisitos no funcionales} (7 generales, 7 específicos de IA); tres de estos últimos no nacen del pivote sino del propio desarrollo posterior, como se detalla en la sección~\ref{sec:rnf}. La reducción global de requisitos funcionales respecto al catálogo original es del 52\,\%, mientras que la carga de trabajo real no disminuye en la misma proporción: cada uno de los ocho requisitos nuevos del copiloto arrastra consigo una arquitectura técnica compleja (traducción de lenguaje natural a restricciones formales mediante modelos de lenguaje, optimización con programación de restricciones, validación clínica determinista, generación asíncrona) que equivale a varias semanas de desarrollo por requisito.
+El resultado es un catálogo final de \textbf{29 requisitos funcionales} (21 conservados del catálogo inicial, 8 nuevos del copiloto) y \textbf{14 requisitos no funcionales} (7 generales, 7 específicos de IA). La reducción global de requisitos funcionales respecto al catálogo original es del 52\,\%, mientras que la carga de trabajo real no disminuye en la misma proporción ya que cada uno de los ocho requisitos nuevos del copiloto arrastra consigo una arquitectura técnica compleja.
 
-También se redefine el cómputo de innovaciones clave. De las ocho innovaciones planteadas inicialmente, siete pasan a \textit{trabajo futuro} (formularios con reglas de alerta, lista de la compra inteligente, \textit{check-in} gamificado, base de alimentos con reconocimiento por IA, \textit{marketplace}, motor de automatizaciones y comunidad entre clientes), y su sitio lo ocupa una única innovación principal de mucha mayor ambición técnica: el \textbf{copiloto de planes nutricionales per-nutricionista}. La innovación del \textit{sistema de alertas inteligentes} no desaparece del todo: su concepto queda parcialmente absorbido en el validador clínico automatizado del copiloto (RF-66), que evalúa cada borrador generado contra reglas configurables de alergias, intolerancias, rangos de macronutrientes y restricciones asociadas a patologías concretas.
+De esta forma se redefine el cómputo de innovaciones clave; pasan de ser ocho inicialmente a centrar el foco en una única innovación principal de mucha mayor ambición técnica: el \textbf{copiloto de planes nutricionales per-nutricionista}. Las otras siete pasan a \textit{trabajo futuro} (formularios con reglas de alerta, lista de la compra inteligente, \textit{check-in} gamificado, base de alimentos con reconocimiento por IA, \textit{marketplace}, motor de automatizaciones y comunidad entre clientes).
 
 La tabla~\ref{tab:reformulacionResumen} resume el antes y el después del alcance del TFG.
 
@@ -47,7 +51,7 @@ Bloques de funcionalidad & 13 & 8 (parcialmente reducidos) & $-5$ bloques elimin
 
 \subsection{Criterio de decisión aplicado en el triaje}
 
-Con la demanda expresada por los profesionales como brújula, cada requisito del catálogo original se ha clasificado aplicando el siguiente criterio, en este orden de prioridad:
+Con la solicitud por parte de los nutricionista como referencia, cada requisito del catálogo original se ha clasificado aplicando el siguiente criterio, en este orden de prioridad:
 
 \begin{enumerate}
     \item \textbf{¿Contribuye al funcionamiento del copiloto IA?} Requisitos como el perfil del cliente con mediciones (RF-01, RF-04, RF-05), la base de datos de alimentos (RF-25, RF-45, RF-48) o la estructura básica de planes (RF-24, RF-26, RF-27, RF-29) se mantienen porque alimentan directamente el \textit{pipeline} de generación.
@@ -56,7 +60,7 @@ Con la demanda expresada por los profesionales como brújula, cada requisito del
     \item \textbf{Todo lo demás pasa a trabajo futuro}. Los requisitos que no cumplen ninguno de los tres criterios anteriores, por valiosos que sean como producto, se documentan en el capítulo de conclusiones como extensiones naturales del TFG para una segunda versión post-defensa.
 \end{enumerate}
 
-Las siguientes secciones de este capítulo presentan los requisitos finales agrupados por bloque temático, manteniendo la estructura del catálogo original del Anexo~\ref{apendice:catalogoV1} para facilitar la trazabilidad.
+Acontinuación, se presentan los requisitos finales agrupados por bloque temático en secciones, manteniendo la estructura del catálogo original del Anexo~\ref{apendice:catalogoV1} para facilitar la trazabilidad.
 
 \subsection{Bloques eliminados completos y su justificación}
 
@@ -88,14 +92,14 @@ Adicionalmente, se eliminan requisitos individuales de otros bloques: videollama
 
 La reformulación también operó en sentido inverso. El prototipo original, pese a su amplitud, tenía huecos que la implementación tuvo que cubrir: no existía pantalla de inicio de sesión ---la navegación arrancaba directamente en el panel--- ni catálogo de alimentos propio del nutricionista, dos piezas imprescindibles en cuanto la aplicación dejó de ser un diseño navegable y pasó a ser un producto con datos reales. Ambas se incorporaron al alcance durante el desarrollo.
 
-Con esta reformulación cerrada, las secciones siguientes presentan el catálogo definitivo de requisitos que guían el diseño e implementación del TFG.
+Con esta reformulación cerrada, el diseño e implementación del TFG se guiará por las siguientes secciones de requisitos.
 
 %% ====================================================================
 \section{Requisitos no funcionales}
 \label{sec:rnf}
 %% ====================================================================
 
-Los requisitos no funcionales definen las restricciones y condiciones de calidad que debe cumplir el sistema, independientemente de las funcionalidades concretas que ofrezca. Respecto al catálogo V1 (Anexo~\ref{apendice:catalogoV1}), cinco se conservan sin cambios, uno se reformula y uno se elimina al quedar fuera del alcance las clínicas como entidad. A ellos se suman ocho nuevos: cinco específicos del copiloto que nacen con la reformulación, y tres más ---uno general y dos de IA--- que se consolidaron durante el desarrollo, cuando decisiones tomadas en las reuniones de dirección y en la revisión externa del diseño demostraron ser en realidad requisitos del sistema.
+Los requisitos no funcionales definen las restricciones y condiciones de calidad que debe cumplir el sistema, independientemente de las funcionalidades concretas que ofrezca. Respecto al catálogo V1 (Anexo~\ref{apendice:catalogoV1}), cinco se conservan sin cambios, uno se reformula y uno se elimina al quedar fuera del alcance las clínicas como entidad. A ellos se suman ocho nuevos: cinco específicos del copiloto que nacen con la reformulación, y tres más (uno general y dos de IA) que se consolidaron durante el desarrollo, cuando decisiones tomadas en las reuniones de dirección y en la revisión externa del diseño demostraron ser en realidad requisitos del sistema.
 
 \subsection{Requisitos no funcionales generales}
 
@@ -106,19 +110,19 @@ Durante las entrevistas con nutricionistas se constató que tanto los profesiona
 Al tratarse de una aplicación web, no requiere instalación ni configuración local. Esto es especialmente relevante porque muchos nutricionistas trabajan en varias clínicas distintas y no siempre utilizan el mismo equipo. Acceder desde cualquier navegador garantiza disponibilidad sin dependencia del hardware.
 
 \paragraph{RNF-03 --- Interfaz moderna, limpia y profesional.}
-La aplicación va a ser utilizada por profesionales de la salud en su entorno de trabajo, por lo que debe transmitir confianza y profesionalidad. Se tomó como referencia visual Nutrium, el líder del mercado identificado durante el análisis de competencia, por su interfaz limpia y orientada a productividad. El objetivo es que el nutricionista perciba la herramienta como un instrumento profesional, no como un producto genérico.
+La aplicación va a ser utilizada por profesionales de la salud en su entorno de trabajo, por lo que debe transmitir confianza y profesionalidad. Se tomó como referencia visual Nutrium, por su interfaz limpia y orientada a productividad. El objetivo es que el nutricionista perciba la herramienta como un instrumento profesional, no como un producto genérico.
 
 \paragraph{RNF-04 --- Sidebar permanente adaptable.}
 Al tratarse de una herramienta de uso diario, el nutricionista necesita acceder rápidamente a cualquier sección sin perder el contexto de lo que está haciendo. NutriApp ofrece un \textit{sidebar} fijo y siempre visible, con dos modos de visualización conmutables por el usuario: un modo expandido en el que cada entrada incluye icono y etiqueta de texto, y un modo compacto en el que solo se muestran los iconos para aprovechar más espacio horizontal en pantalla. Este enfoque, inspirado en aplicaciones como Notion, permite conservar la navegación permanente sin penalizar el espacio disponible para el contenido principal. Se descartó el menú tipo hamburguesa porque en una interfaz de escritorio hay espacio suficiente para mantener la navegación siempre visible.
 
 \paragraph{RNF-05 --- Separación clara entre panel de nutricionista y panel de cliente.}
-Ambos perfiles de usuario tienen necesidades completamente distintas: el nutricionista gestiona múltiples clientes, citas y planes; el cliente interactúa con sus propios datos, su plan y su progreso. Mezclar ambas experiencias en una sola interfaz generaría confusión. Por ello, cada perfil dispone de su propio panel con navegación, funcionalidades y diseño adaptados, aunque ambos paneles comparten la misma base de datos subyacente.
+Ambos perfiles de usuario tienen necesidades completamente distintas: el nutricionista gestiona múltiples clientes, citas y planes; el cliente interactúa con sus propios datos, su plan y su progreso. Mezclar ambas experiencias en una sola interfaz generaría confusión. Por ello, cada perfil dispone de su propio panel con navegación, funcionalidades y diseño adaptados, aunque ambos paneles comparten la misma base de datos.
 
 \paragraph{RNF-07 --- Seguridad y privacidad de datos.}
 La plataforma maneja datos de salud de los clientes, que son especialmente sensibles. El sistema debe contemplar autenticación segura, roles diferenciados y acceso restringido a la información según el perfil del usuario. Por ejemplo, las notas privadas que el nutricionista escribe sobre un cliente no deben ser visibles para dicho cliente en ningún caso. Este requisito se complementa con RNF-IA-4 para el tratamiento específico de datos de salud empleados en la generación de planes por IA.
 
 \paragraph{RNF-08 --- Aislamiento multi-tenant verificado.}
-Cada nutricionista solo puede ver y modificar sus propios datos, y cada cliente los suyos. Este aislamiento no puede depender de que la interfaz no muestre lo ajeno: debe estar garantizado en la propia capa de datos, de forma que manipular una URL o llamar directamente al API devuelva cero resultados. El requisito exige además verificación empírica: el aislamiento se comprueba con baterías de pruebas automatizadas que intentan lecturas y escrituras cruzadas entre cuentas y confirman que ninguna alcanza datos ajenos. Este requisito se consolidó durante el desarrollo a petición de los directores del trabajo.
+Cada nutricionista solo puede ver y modificar sus propios datos, y cada cliente los suyos. Este aislamiento no puede depender de que la interfaz no muestre lo ajeno: debe estar garantizado en la propia capa de datos, de forma que manipular una URL o llamar directamente al API devuelva cero resultados. El requisito exige además verificación empírica: el aislamiento se comprueba con baterías de pruebas automatizadas que intentan lecturas y escrituras cruzadas entre cuentas y confirman que ninguna alcanza datos ajenos. Este requisito se consolidó durante el desarrollo a petición de los tutores del trabajo.
 
 \subsection{Requisitos no funcionales específicos del copiloto IA}
 
@@ -134,16 +138,16 @@ Toda generación debe pasar por un validador clínico determinista antes de ser 
 Cada generación queda trazada extremo a extremo: \textit{prompt} enviado, modelo utilizado y su versión concreta, tokens consumidos, latencia y coste de la llamada, restricciones resultantes de la traducción y veredicto del validador clínico. La motivación es doble: auditoría posterior en caso de incidencia clínica y recogida de datos para la evaluación experimental del sistema.
 
 \paragraph{RNF-IA-4 --- Protección de datos de salud conforme al RGPD.}
-El tratamiento de los datos de salud de los clientes debe cumplir lo establecido por el Reglamento General de Protección de Datos para las categorías especiales definidas en su artículo~9. Esto incluye consentimiento explícito para el uso de los datos en la generación por IA, cifrado en tránsito y en reposo, ausencia de retención por parte de los proveedores externos de modelos de lenguaje, y la posibilidad efectiva de ejercer los derechos de acceso, rectificación y supresión.
+El tratamiento de los datos de salud de los clientes debe cumplir lo establecido por el Reglamento General de Protección de Datos para las categorías especiales definidas en su artículo~9. Esto incluye consentimiento explícito para el uso de los datos en la generación por IA, cifrado en tránsito y en reposo, ausencia de retención por parte de los proveedores externos de modelos de lenguaje, y la posibilidad efectiva de ejercer los derechos de acceso, rectificación y supresión.  **explícamelo más adelante por favor**
 
 \paragraph{RNF-IA-5 --- Explicabilidad mínima.}
-El sistema debe permitir al nutricionista entender por qué se le propone lo que se le propone. Esto se concreta en tres frentes: las restricciones que gobiernan cada generación son visibles y editables ---nada se aplica sin que el profesional lo haya aceptado---, cada traducción de lenguaje natural queda registrada con su entrada y su salida, y cuando un plan resulta imposible el sistema señala qué restricciones entran en conflicto en lugar de fallar sin explicación. La motivación académica es garantizar que el copiloto no se comporta como una caja negra ---decisión clave para defender el sistema ante un tribunal del TFG y, a futuro, ante un colegio profesional---, y la motivación práctica es que el nutricionista pueda intervenir en el punto exacto en el que el sistema se equivoca.
+El sistema debe permitir al nutricionista entender por qué se le propone lo que se le propone. Esto se concreta en tres frentes: las restricciones que gobiernan cada generación son visibles y editables (nada se aplica sin que el profesional lo haya aceptado), cada traducción de lenguaje natural queda registrada con su entrada y su salida, y cuando un plan resulta imposible el sistema señala qué restricciones entran en conflicto en lugar de fallar sin explicación. La motivación académica es garantizar que el copiloto no se comporta como una caja negra, la motivación práctica es que el nutricionista pueda intervenir en el punto exacto en el que el sistema se equivoca.
 
 \paragraph{RNF-IA-6 --- Firma profesional obligatoria.}
-Ningún plan generado llega al cliente sin la firma explícita del nutricionista. El sistema puede producir y almacenar tantos borradores como haga falta, pero la frontera entre borrador y plan entregable solo la cruza una acción deliberada del profesional, y esa frontera se aplica en la propia capa de datos: para el cliente, los borradores no existen. Este requisito, propuesto en la revisión externa del diseño con perspectiva clínica, es el que convierte al sistema en un asistente del profesional colegiado y no en un generador autónomo de dietas.
+Ningún plan generado llega al cliente sin la firma explícita del nutricionista. El sistema puede producir y almacenar tantos borradores como haga falta, pero solo pasará a ser un plan entregable al cliente si el profesional lo autoriza y firma, esa excepción se aplica en la propia capa de datos: para el cliente, los borradores no existen. Este requisito es el que convierte al sistema en un asistente del profesional colegiado y no en un generador autónomo de dietas.
 
 \paragraph{RNF-IA-7 --- Independencia del motor respecto al LLM.}
-El motor de generación debe funcionar sin el componente de inteligencia artificial: las restricciones pueden introducirse manualmente por el profesional y el plan resultante es exactamente el mismo. Esta decisión, acordada en las reuniones de dirección, ordena toda la arquitectura ---el modelo de lenguaje es una capa de conveniencia sobre una interfaz estable de restricciones, no una pieza imprescindible--- y garantiza que la plataforma sigue siendo útil si el modelo no está disponible o su calidad resulta insuficiente para un caso concreto.
+El motor de generación debe funcionar sin el componente de inteligencia artificial: las restricciones pueden introducirse manualmente por el profesional y el plan resultante es exactamente el mismo. Esta decisión, acordada con los tutores, ordena toda la arquitectura: el modelo de lenguaje es una capa de conveniencia sobre una interfaz estable de restricciones, no una pieza imprescindible, y garantiza que la plataforma siga siendo útil si el modelo no está disponible o su calidad resulta insuficiente para un caso concreto.
 
 %% ====================================================================
 \section{Requisitos funcionales}
@@ -261,7 +265,7 @@ RF-29 & Consultar el plan nutricional actual con vista semanal, desglose por com
 \label{subsec:rf-copiloto}
 %% -------------------------------------------
 
-Este bloque constituye la \textbf{única innovación clave} de NutriApp tras la reformulación. Los ocho requisitos que lo componen describen el copiloto sobre un principio rector: la inteligencia artificial propone y el profesional decide. El modelo de lenguaje no genera dietas; traduce las peticiones del nutricionista a restricciones formales de un vocabulario cerrado, y es un motor de optimización determinista quien construye el plan a partir de ellas, de modo que las garantías clínicas nunca dependen de un componente probabilístico. La arquitectura técnica completa se describe en el capítulo~\ref{cap:descripcionTrabajo}; los requisitos no funcionales asociados son RNF-IA-1 a RNF-IA-5 (sección~\ref{sec:rnf}).
+Este bloque constituye la \textbf{única innovación clave} de NutriApp tras la reformulación. El copiloto se describe sobre un principio rector: el motor de restrcciones (**esto estaba mal definido no? (ponía: "la IA define" en vez del motor)**) propone y el profesional decide. El modelo de lenguaje no genera dietas; traduce las peticiones del nutricionista a restricciones formales de un vocabulario cerrado, y es un motor de optimización determinista quien construye el plan a partir de ellas, de modo que las garantías clínicas nunca dependen de un componente probabilístico. La arquitectura técnica completa se describe en el capítulo~\ref{cap:descripcionTrabajo}; los requisitos no funcionales asociados son RNF-IA-1 a RNF-IA-5 (sección~\ref{sec:rnf}).
 
 \begin{table}[H]
 \centering
@@ -382,22 +386,22 @@ RF-39 & Visualizar un \textit{dashboard} con métricas del copiloto IA: tasa de 
 Los requisitos del catálogo original que no forman parte del alcance implementado se posponen a trabajo futuro y se documentarán con mayor detalle en el capítulo~\ref{cap:conclusiones}. A continuación se enumeran agrupados por el bloque al que pertenecen originalmente, con una breve razón de posposición.
 
 \paragraph{Formularios personalizables (RF-14 a RF-17).}
-Editor visual \textit{drag-and-drop} con plantillas y asignación manual o programada. Se posponen al sustituir el concepto de diagnóstico basado en formularios por la variable más directa que alimenta al copiloto: las mediciones y restricciones clínicas registradas en el perfil del cliente. Detalle en el capítulo~\ref{cap:conclusiones}.
+Editor visual \textit{drag-and-drop} con plantillas y asignación manual o programada. Se posponen al sustituir el concepto de diagnóstico basado en formularios por la variable más directa que alimenta al copiloto: las mediciones y restricciones clínicas registradas en el perfil del cliente.
 
 \paragraph{Sistema de alertas inteligentes (RF-18 a RF-23).}
-Motor de reglas condicionales sobre las respuestas de los formularios, \textit{dashboard} de gestión con prioridades y respuestas rápidas desde la alerta. Aunque este bloque era una de las innovaciones clave en V1, su núcleo conceptual ---evaluación automática y bloqueo ante situaciones anómalas--- queda absorbido en el validador clínico del copiloto IA (RF-66), que aplica reglas deterministas sobre cada plan generado. El sistema completo de alertas sobre formularios se pospone al capítulo~\ref{cap:conclusiones}.
+Motor de reglas condicionales sobre las respuestas de los formularios, \textit{dashboard} de gestión con prioridades y respuestas rápidas desde la alerta. Aunque este bloque era una de las innovaciones clave en V1, su núcleo conceptual ---evaluación automática y bloqueo ante situaciones anómalas--- queda absorbido en el validador clínico del copiloto IA (RF-66), que aplica reglas deterministas sobre cada plan generado.
 
 \paragraph{Lista de la compra (RF-30 a RF-32).}
-Generación automática de lista agregada, sustituciones sobre ingredientes no disponibles y marcado de compras. Su implementación es trivialmente derivable de los planes generados por el copiloto, pero no aporta al núcleo IA y se deja fuera del TFG. Detalle en el capítulo~\ref{cap:conclusiones}.
+Generación automática de lista agregada, sustituciones sobre ingredientes no disponibles y marcado de compras. Su implementación es trivialmente derivable de los planes generados por el copiloto, pero no aporta al núcleo IA y se deja fuera del TFG.
 
 \paragraph{\textit{Marketplace} de recursos educativos (RF-51 a RF-55).}
-Catálogo, publicación, gestión de ventas y biblioteca personal del cliente. Implica un subsistema completo de comercio electrónico (pagos, inventario, reseñas) sin aporte académico al núcleo IA. Detalle en el capítulo~\ref{cap:conclusiones}.
+Catálogo, publicación, gestión de ventas y biblioteca personal del cliente. Implica un subsistema completo de comercio electrónico (pagos, inventario, reseñas) sin aporte académico al núcleo IA. 
 
 \paragraph{Motor de automatizaciones (RF-41, RF-42, RF-56 a RF-58).}
-Envío programado de formularios, notificaciones genéricas y motor de reglas configurables con disparadores y acciones. Su alta complejidad, unida al hecho de que los bloques de formularios y alertas que disparaban la mayor parte de sus acciones también salen del alcance, justifica su posposición completa. Detalle en el capítulo~\ref{cap:conclusiones}.
+Envío programado de formularios, notificaciones genéricas y motor de reglas configurables con disparadores y acciones. Su alta complejidad, unida al hecho de que los bloques de formularios y alertas que disparaban la mayor parte de sus acciones también salen del alcance, justifica su posposición completa.
 
 \paragraph{Ampliación clínica de la ficha del cliente.}
-La revisión externa del diseño con perspectiva clínica propuso ampliar la ficha del cliente con más de veinticinco variables adicionales ---patologías codificadas, medicación, bioquímica, hábitos de vida---, que permitirían afinar tanto la generación como la validación de los planes. Se registra aquí como requisito identificado y se pospone de forma consciente: el modelo de datos actual cubre las variables que el motor consume hoy, y ampliar la ficha sin que ninguna pieza del sistema explote esos datos añadiría coste sin aportar valor. Detalle en el capítulo~\ref{cap:conclusiones}.
+La revisión externa del diseño con perspectiva clínica propuso ampliar la ficha del cliente con más de veinticinco variables adicionales ---patologías codificadas, medicación, bioquímica, hábitos de vida---, que permitirían afinar tanto la generación como la validación de los planes. Se registra aquí como requisito identificado y se pospone de forma consciente: el modelo de datos actual cubre las variables que el motor consume hoy, y ampliar la ficha sin que ninguna pieza del sistema explote esos datos añadiría coste sin aportar valor.
 
 \paragraph{Requisitos individuales de otros bloques.}
 La tabla~\ref{tab:rfIndividualesFuera} recoge los requisitos sueltos pospuestos y la razón concreta de cada uno.
