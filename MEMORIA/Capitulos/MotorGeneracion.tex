@@ -1,0 +1,127 @@
+\chapter{El motor de generación}
+\label{cap:motorGeneracion}
+
+Este capítulo describe el motor de generación de planes: el componente que, a partir del perfil de un cliente y de un conjunto de restricciones, construye un borrador de plan nutricional que las cumple o explica por qué no existe ninguno que pueda cumplirlas. El motor funciona sin depender de ningún modelo de lenguaje: las restricciones le llegan ya estructuradas, tanto si las escribió el nutricionista en un formulario como si las propuso el traductor del capítulo~\ref{cap:copilotoIA}. Esa independencia se acordó con los tutores y ordenó todo el desarrollo: primero un motor que funciona por sí solo, después la capa de IA por encima.
+
+La sección~\ref{sec:formulacionMotor} plantea el problema y su formulación. Las secciones~\ref{sec:reglasModelo} y~\ref{sec:catalogoClinico} recorren las dos familias de restricciones: las que el modelo aplica siempre y las que configura el profesional. La sección~\ref{sec:objetivoResolucion} recoge la función objetivo y la estrategia de resolución, y las dos últimas cubren el diagnóstico de infactibilidad y el validador que audita cada plan. El cuerpo del capítulo se queda con las decisiones y las ecuaciones que las sustentan; la formalización completa, con las 15 reglas y los 16 tipos uno a uno, está en el Anexo~\ref{apendice:formalizacion}. Las pruebas del motor y las medidas de rendimiento se presentan en el capítulo~\ref{cap:evaluacion}.
+
+\section{Formulación del problema}
+\label{sec:formulacionMotor}
+
+El problema se puede enunciar en una frase: dados un cliente, una duración en días, un número de comidas por día y un conjunto de restricciones, decidir qué alimentos aparecen en cada comida y en qué cantidad, cumpliendo todas las restricciones obligatorias y acercándose lo máximo posible a las preferencias.
+
+\subsection{El problema y su contrato}
+
+El resultado es un borrador editable, no un plan cerrado: el nutricionista lo revisa, lo ajusta y decide si lo firma. De ese posicionamiento salen tres propiedades que atraviesan todo el modelo: el plan expone qué restricciones aplicó, el profesional puede relajar las suyas, y cuando el problema no tiene solución el motor explica el conflicto en lugar de fallar sin más.
+
+En la implementación, el motor es una función pura: recibe todos sus datos como argumentos y no consulta la base de datos ni escribe en ella. Esto permite probarlo de forma aislada, con casos construidos a mano, antes de integrarlo en la aplicación. La lectura de datos y la persistencia del plan corresponden a la capa de servicio que lo expone (capítulo~\ref{cap:disenoSistema}).
+
+La salida distingue dos casos disjuntos. Si existe un plan que cumple todas las restricciones obligatorias, se devuelve el plan (días, comidas y alimentos con sus gramos) junto con las métricas de la resolución y los avisos no bloqueantes que se hayan acumulado. Si no existe, se devuelve un diagnóstico: el subconjunto mínimo de restricciones en conflicto, una sugerencia legible y la lista de restricciones que se pueden relajar (sección~\ref{sec:infactibilidad}). Quien llama al motor tiene que tratar los dos casos por separado; no hay forma de confundir un plan con un fallo.
+
+Tres cosas quedan fuera a propósito. El motor no consulta ningún modelo de lenguaje, y quién produjo las restricciones le resulta indiferente. No valida clínicamente el resultado: esa auditoría es un paso posterior e independiente (sección~\ref{sec:validador}). Y no decide la estructura del plan: el número de días y de comidas son parámetros de entrada.
+
+\subsection{Elección de tecnología}
+
+El enfoque general se acordó con Alejandro, como comenté en el plan de trabajo: un solver de restricciones que construya el plan y un diagnóstico de infactibilidad cuando no exista. Para implementarlo había tres candidatas razonables: MiniZinc~\citep{minizinc}, un lenguaje de modelado que delega la resolución en distintos solvers; Z3, un solver de satisfacibilidad sobre fórmulas lógicas; y CP-SAT, el solver de programación con restricciones sobre dominios enteros de la biblioteca OR-Tools de Google~\citep{ortools}.
+
+Opté por CP-SAT por dos razones. La primera es de integración: se usa como una biblioteca más de Python, así que el modelo convive con la carga de datos y con el resto del backend en el mismo lenguaje y el mismo proceso, sin un lenguaje de modelado intermedio. La segunda pesó más: CP-SAT permite declarar las restricciones como asunciones y, si el problema no tiene solución, señala qué subconjunto de ellas lo hace imposible. Sobre esa capacidad se construye el diagnóstico de la sección~\ref{sec:infactibilidad}, que convierte el fallo del solver en una explicación útil para el profesional.
+
+La notación del resto del capítulo es independiente de la herramienta; la implementación es CP-SAT.
+
+\subsection{Conjuntos y parámetros}
+
+Se definen cuatro conjuntos base:
+
+\begin{itemize}
+    \item $F$: alimentos del catálogo visible para la generación (los globales más los propios del nutricionista). Cada alimento lleva su composición nutricional por cada 100\,g, un conjunto de etiquetas (familias, alérgenos, roles y franjas) y un perfil de ración con sus gramos mínimos y máximos por aparición.
+    \item $D = \{1, \dots, \texttt{duration\_days}\}$: días del plan.
+    \item $M = \{1, \dots, \texttt{meals\_per\_day}\}$: comidas de un día. Cada comida $m$ lleva asociado un código de franja $c(m)$ (desayuno, comida, cena, tentempiés).
+    \item $N$: códigos de nutriente presentes en el catálogo (energía, proteína, hidratos, grasa, sodio, calcio y el resto de nutrientes cargados).
+\end{itemize}
+
+El tamaño del problema queda fijado por $|F| \cdot |D| \cdot |M|$. La duración y el número de comidas son la dimensión del problema, no algo que el solver decida: entran como argumentos de la función.
+
+Antes de construir el modelo se precalculan en Python los parámetros de entrada. Los que hacen falta para seguir el capítulo son:
+
+\begin{itemize}
+    \item $\text{kcal100}(f)$ y $\text{nut100}(f, n)$: energía y valor del nutriente $n$ por 100\,g del alimento $f$, escalados a entero (la escala se explica más abajo). Si el alimento no tiene dato para un nutriente, vale 0.
+    \item $\text{min}_f$ y $\text{max}_f$: gramos mínimos y máximos por aparición del alimento, derivados de su perfil de ración (sección~\ref{sec:plausibilidad}).
+    \item $\text{floor}(c)$: suelo calórico diario de seguridad del cliente, y las cotas diarias de proteína derivadas de su peso (sección~\ref{sec:estructurales}).
+    \item $\text{miembros}(t)$: para una etiqueta $t$, el subconjunto de alimentos que la llevan. Es la pieza con la que las restricciones razonan sobre familias enteras: prohibir la etiqueta \texttt{lactose} prohíbe todos sus miembros.
+    \item Los umbrales estructurales del modelo (máximo de alimentos por comida, mínimos de variedad, y los demás que irán apareciendo), todos constantes con nombre en la configuración del solver. El listado completo con sus valores está en el Anexo~\ref{apendice:formalizacion}.
+\end{itemize}
+
+\subsection{Variables de decisión}
+
+Al plantear las variables consideré dos formulaciones. La primera, una única variable entera de gramos por cada terna alimento, día y comida, donde el cero significa que el alimento no está. La segunda, separar la presencia de la cantidad: una variable booleana que dice si el alimento aparece en esa comida y una entera con sus gramos. Elegí la segunda porque gran parte del modelo razona sobre presencia (prohibiciones, variedad, repeticiones) y expresar esas condiciones sobre una booleana es directo; los gramos solo importan cuando el alimento está presente.
+
+\begin{equation*}
+x[f,d,m] \in \{0, 1\}, \qquad g[f,d,m] \in \{0, 1, \dots, \text{max}_f\}, \qquad \forall f \in F,\ d \in D,\ m \in M
+\end{equation*}
+
+Las dos familias se enlazan para que los gramos sean cero si el alimento no está, y una ración dentro de su perfil si lo está:
+
+\begin{equation*}
+x[f,d,m] = 1 \;\Rightarrow\; g[f,d,m] \ge \text{min}_f, \qquad x[f,d,m] = 0 \;\Rightarrow\; g[f,d,m] = 0
+\end{equation*}
+
+El mínimo del enlace importa más de lo que parece. En la primera versión bastaba con un gramo para contar como presente, y el solver lo aprovechaba: metía alimentos a 1\,g solo para cumplir la presencia mínima por comida o para sumar variedad barata. Por ello existe un suelo absoluto de presencia de 10\,g, y desde la capa de plausibilidad el mínimo y el máximo reales de cada alimento son los de su perfil de ración (sección~\ref{sec:plausibilidad}).
+
+Los alimentos que se sirven por piezas (un huevo, un yogur) llevan además una variable entera de unidades que cuantiza sus gramos a piezas o medias piezas. Se presenta con el resto de la capa de plausibilidad, que es donde tiene su papel.
+
+\subsection{Trabajo en enteros}
+
+CP-SAT opera sobre dominios enteros, y mantener todo el modelo en enteros es la forma natural de trabajar con él. Los valores nutricionales, que en las tablas de composición vienen con decimales, se escalan a entero multiplicándolos por una constante $s = 10$ y redondeando. Así, la suma de un nutriente $n$ en un día $d$,
+
+\begin{equation*}
+\text{nut}_{d,n} \;=\; \sum_{m \in M}\ \sum_{f \in F} \text{nut100}(f, n) \cdot g[f,d,m],
+\end{equation*}
+
+representa la cantidad real del nutriente multiplicada por $100 \cdot s$: los coeficientes son por 100\,g y no se divide dentro del modelo. Para comparar esa suma con un valor real $v$ (un objetivo calórico, un mínimo de proteína), se lleva $v$ a la misma escala y se comparan dos enteros.
+
+El mismo patrón, multiplicar en cruz en lugar de dividir, resuelve cualquier restricción expresada como porcentaje o cociente; aparecerá varias veces en las secciones siguientes. La resolución resultante, de un gramo y una décima de unidad nutricional, es de sobra para la práctica: ninguna pauta se prescribe con más precisión que esa.
+
+\section{Restricciones del modelo}
+\label{sec:reglasModelo}
+
+% TODO: entrada de la sección.
+
+\subsection{Restricciones estructurales}
+\label{sec:estructurales}
+
+% TODO: R1 a R8, suelo calórico como metabolismo basal, evidencia de los
+% planes válidos pero irreales.
+
+\subsection{La capa de plausibilidad del catálogo}
+\label{sec:plausibilidad}
+
+% TODO: perfiles de ración como dato, unidades, R9 a R15, cuatro comidas
+% por defecto.
+
+\subsection{Restricciones clínicas y restricciones de catálogo}
+\label{sec:clinicasCatalogo}
+
+% TODO: quién define cada familia y por qué la plausibilidad no es
+% vocabulario del profesional.
+
+\section{El catálogo de restricciones clínicas}
+\label{sec:catalogoClinico}
+
+% TODO: los 16 tipos con la tabla resumen y la distinción dura/blanda.
+
+\section{Función objetivo y resolución}
+\label{sec:objetivoResolucion}
+
+% TODO: linealización del valor absoluto, pesos en dos niveles, tiempo,
+% gap e hilos por entorno.
+
+\section{Diagnóstico de infactibilidad}
+\label{sec:infactibilidad}
+
+% TODO: asunciones solo en las clínicas duras, núcleo mínimo y sugerencia.
+
+\section{El validador determinista}
+\label{sec:validador}
+
+% TODO: segundo par de ojos, rechaza lo garantizado y avisa de lo no
+% modelado. Cierre del capítulo remitiendo la evaluación al capítulo 7.
