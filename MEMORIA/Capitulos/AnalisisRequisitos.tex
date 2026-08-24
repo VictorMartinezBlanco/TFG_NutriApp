@@ -51,7 +51,7 @@ Bloques de funcionalidad & 13 & 8 (parcialmente reducidos) & $-5$ bloques elimin
 
 \subsection{Criterio de decisión aplicado en el triaje}
 
-Con la solicitud por parte de los nutricionista como referencia, cada requisito del catálogo original se ha clasificado aplicando el siguiente criterio, en este orden de prioridad:
+Con la solicitud por parte de los nutricionistas como referencia, cada requisito del catálogo original se ha clasificado aplicando el siguiente criterio, en este orden de prioridad:
 
 \begin{enumerate}
     \item \textbf{¿Contribuye al funcionamiento del copiloto IA?} Requisitos como el perfil del cliente con mediciones (RF-01, RF-04, RF-05), la base de datos de alimentos (RF-25, RF-45, RF-48) o la estructura básica de planes (RF-24, RF-26, RF-27, RF-29) se mantienen porque alimentan directamente el \textit{pipeline} de generación.
@@ -60,7 +60,7 @@ Con la solicitud por parte de los nutricionista como referencia, cada requisito 
     \item \textbf{Todo lo demás pasa a trabajo futuro}. Los requisitos que no cumplen ninguno de los tres criterios anteriores, por valiosos que sean como producto, se documentan en el capítulo de conclusiones como extensiones naturales del TFG para una segunda versión post-defensa.
 \end{enumerate}
 
-Acontinuación, se presentan los requisitos finales agrupados por bloque temático en secciones, manteniendo la estructura del catálogo original del Anexo~\ref{apendice:catalogoV1} para facilitar la trazabilidad.
+A continuación, se presentan los requisitos finales agrupados por bloque temático en secciones, manteniendo la estructura del catálogo original del Anexo~\ref{apendice:catalogoV1} para facilitar la trazabilidad.
 
 \subsection{Bloques eliminados completos y su justificación}
 
@@ -138,7 +138,7 @@ Toda generación debe pasar por un validador clínico determinista antes de ser 
 Cada generación queda trazada extremo a extremo: \textit{prompt} enviado, modelo utilizado y su versión concreta, tokens consumidos, latencia y coste de la llamada, restricciones resultantes de la traducción y veredicto del validador clínico. La motivación es doble: auditoría posterior en caso de incidencia clínica y recogida de datos para la evaluación experimental del sistema.
 
 \paragraph{RNF-IA-4 --- Protección de datos de salud conforme al RGPD.}
-El tratamiento de los datos de salud de los clientes debe cumplir lo establecido por el Reglamento General de Protección de Datos para las categorías especiales definidas en su artículo~9. Esto incluye consentimiento explícito para el uso de los datos en la generación por IA, cifrado en tránsito y en reposo, ausencia de retención por parte de los proveedores externos de modelos de lenguaje, y la posibilidad efectiva de ejercer los derechos de acceso, rectificación y supresión.  **explícamelo más adelante por favor**
+El tratamiento de los datos de salud de los clientes debe cumplir lo establecido por el Reglamento General de Protección de Datos para las categorías especiales definidas en su artículo~9. Esto incluye consentimiento explícito para el uso de los datos en la generación por IA, cifrado en tránsito y en reposo, ausencia de retención por parte de los proveedores externos de modelos de lenguaje, y la posibilidad efectiva de ejercer los derechos de acceso, rectificación y supresión.
 
 \paragraph{RNF-IA-5 --- Explicabilidad mínima.}
 El sistema debe permitir al nutricionista entender por qué se le propone lo que se le propone. Esto se concreta en tres frentes: las restricciones que gobiernan cada generación son visibles y editables (nada se aplica sin que el profesional lo haya aceptado), cada traducción de lenguaje natural queda registrada con su entrada y su salida, y cuando un plan resulta imposible el sistema señala qué restricciones entran en conflicto en lugar de fallar sin explicación. La motivación académica es garantizar que el copiloto no se comporta como una caja negra, la motivación práctica es que el nutricionista pueda intervenir en el punto exacto en el que el sistema se equivoca.
@@ -265,7 +265,7 @@ RF-29 & Consultar el plan nutricional actual con vista semanal, desglose por com
 \label{subsec:rf-copiloto}
 %% -------------------------------------------
 
-Este bloque constituye la \textbf{única innovación clave} de NutriApp tras la reformulación. El copiloto se describe sobre un principio rector: el motor de restrcciones (**esto estaba mal definido no? (ponía: "la IA define" en vez del motor)**) propone y el profesional decide. El modelo de lenguaje no genera dietas; traduce las peticiones del nutricionista a restricciones formales de un vocabulario cerrado, y es un motor de optimización determinista quien construye el plan a partir de ellas, de modo que las garantías clínicas nunca dependen de un componente probabilístico. La arquitectura técnica completa se describe en el capítulo~\ref{cap:descripcionTrabajo}; los requisitos no funcionales asociados son RNF-IA-1 a RNF-IA-5 (sección~\ref{sec:rnf}).
+Este bloque constituye la \textbf{única innovación clave} de NutriApp tras la reformulación. El copiloto se describe sobre un principio rector: el sistema propone y el profesional decide. El modelo de lenguaje no genera dietas; traduce las peticiones del nutricionista a restricciones formales de un vocabulario cerrado, y es un motor de optimización determinista quien construye el plan a partir de ellas, de modo que las garantías clínicas nunca dependen de un componente probabilístico. La arquitectura técnica completa se describe en el capítulo~\ref{cap:descripcionTrabajo}; los requisitos no funcionales asociados son RNF-IA-1 a RNF-IA-5 (sección~\ref{sec:rnf}).
 
 \begin{table}[H]
 \centering
