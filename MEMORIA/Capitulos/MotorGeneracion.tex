@@ -22,7 +22,7 @@ Tres cosas quedan fuera a propósito. El motor no consulta ningún modelo de len
 
 \subsection{Elección de tecnología}
 
-El enfoque general se acordó con Alejandro, como comenté en el plan de trabajo: un solver de restricciones que construya el plan y un diagnóstico de infactibilidad cuando no exista. Para implementarlo, me indico que probablemente la mejor opción fuese CP-SAT, el solver de programación con restricciones sobre dominios enteros de la biblioteca OR-Tools de Google~\citep{ortools}.
+El enfoque general se acordó con Alejandro, como comenté en el plan de trabajo: un solver de restricciones que construya el plan y un diagnóstico de infactibilidad cuando no exista. Para implementarlo, me indicó que probablemente la mejor opción fuese CP-SAT, el solver de programación con restricciones sobre dominios enteros de la biblioteca OR-Tools de Google~\citep{ortools}.
 
 CP-SAT tenía dos ventajas. La primera es de integración: se usa como una biblioteca más de Python, así que el modelo convive con la carga de datos y con el resto del backend en el mismo lenguaje y el mismo proceso, sin un lenguaje de modelado intermedio. La otra es que CP-SAT permite declarar las restricciones como asunciones y, si el problema no tiene solución, señala qué subconjunto de ellas lo hace imposible. De esta forma, se construye el diagnóstico de la sección~\ref{sec:infactibilidad}, para convertir el fallo del solver en una explicación útil para el profesional.
 
@@ -84,44 +84,211 @@ El mismo patrón, multiplicar en cruz en lugar de dividir, resuelve cualquier re
 \section{Restricciones del modelo}
 \label{sec:reglasModelo}
 
-% TODO: entrada de la sección.
+Las restricciones de esta sección no las configura el profesional: se aplican siempre, a cualquier plan, con independencia de lo que llegue en la entrada. Son dos familias. Las estructurales (R1 a R8) dan al plan su lógica de conjunto: suelos fisiológicos, variedad y reparto. Las de plausibilidad (R9 a R15) llegaron después, al auditar los planes generados, y se ocupan de la composición de cada comida. La subsección~\ref{sec:clinicasCatalogo} pone la frontera entre estas reglas y las del profesional.
 
 \subsection{Restricciones estructurales}
 \label{sec:estructurales}
 
-% TODO: R1 a R8, suelo calórico como metabolismo basal, evidencia de los
-% planes válidos pero irreales.
+Todas son duras: acotan el espacio de soluciones, y un plan que las incumpla no existe para el solver. Son ocho:
+
+\begin{itemize}
+    \item \textbf{R1. Presencia mínima.} Cada comida contiene al menos un alimento.
+    \item \textbf{R2. Tope de alimentos por comida.} Como mucho 4 alimentos distintos por comida.
+    \item \textbf{R3. Suelo calórico diario.} La energía de cada día no baja del metabolismo basal del cliente (se desarrolla abajo).
+    \item \textbf{R4. Rango humano de proteína.} La proteína diaria se mantiene entre 0,8 y 2,2\,g por kilo de peso, pidan lo que pidan las restricciones.
+    \item \textbf{R5. Grasa mínima.} La grasa aporta al menos el 15\,\% de la energía diaria, necesario para absorber las vitaminas liposolubles.
+    \item \textbf{R6. No repetir alimento en el día.} Un mismo alimento aparece como mucho 2 veces entre las comidas de un día.
+    \item \textbf{R7. Variedad diaria.} Cada día usa al menos 4 alimentos distintos.
+    \item \textbf{R8. Variedad semanal.} Cada ventana de 7 días usa al menos 10 alimentos distintos.
+\end{itemize}
+
+El suelo calórico de R3 es el metabolismo basal, no el gasto energético total. El basal se estima con la ecuación de Mifflin-St Jeor~\citep{mifflin1990} a partir del peso $w_c$ (kg), la altura $h_c$ (cm) y la edad $a_c$ del cliente:
+
+\begin{equation*}
+\text{BMR}(c) = 10\,w_c + 6.25\,h_c - 5\,a_c +
+\begin{cases}
++5 & \text{en hombres} \\
+-161 & \text{en mujeres}
+\end{cases}
+\end{equation*}
+
+y el suelo diario es el mayor entre ese basal y un suelo absoluto por sexo (1200\,kcal en mujeres, 1500 en hombres). La distinción tiene consecuencia clínica. Al principio usé como suelo el gasto total (el basal por un factor de actividad), y con un cliente activo el suelo quedaba por encima de su objetivo de pérdida de peso, haciéndolo inalcanzable. El gasto total orienta el objetivo calórico que fije el profesional; el suelo que ninguna dieta puede cruzar es el basal, para permitir los planes de déficit. Si faltan los datos antropométricos, se usa el suelo absoluto por sexo y se emite un aviso.
+
+R6 y R7 no estaban en el diseño inicial. Las añadí después de que los tutores probasen el motor ya desplegado y viesen que los planes salían matemáticamente válidos pero irreales: concentraban todo el pollo en un día y rellenaban el resto casi al azar, solo para cumplir los números. La tercera regla de sentido común, repartir un mismo alimento a lo largo del plan, es blanda a propósito y se cuenta con la función objetivo (sección~\ref{sec:objetivoResolucion}): si el catálogo aprieta, el solver puede concentrar algo antes que declararse infactible, y se prefiere un plan imperfecto a un fallo. R6 y R7 sí son duras porque ningún plan real las viola. La tabla~\ref{tab:reglasBase} resume su efecto sobre un mismo caso de una semana, generado con y sin las reglas.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|c|c|}
+\hline
+ & \textbf{Sin reglas} & \textbf{Con reglas} \\
+\hline
+Máximo de veces de un alimento en un día & 3 & 2 \\
+\hline
+Mínimo de alimentos distintos por día & 3 & 6 \\
+\hline
+Máximo de apariciones de un alimento en el plan & 10 & 5 \\
+\hline
+\end{tabular}
+\caption{Efecto de las reglas de sentido común sobre un mismo caso (7 días, 5 comidas).}
+\label{tab:reglasBase}
+\end{table}
 
 \subsection{La capa de plausibilidad del catálogo}
 \label{sec:plausibilidad}
 
-% TODO: perfiles de ración como dato, unidades, R9 a R15, cuatro comidas
-% por defecto.
+Las reglas anteriores dan lógica al plan en su conjunto, pero no dicen nada de qué es una ración razonable ni de cómo se compone una comida. Ese hueco lo destapó una auditoría de todos los planes generados hasta entonces (el método y las cifras están en el capítulo~\ref{cap:evaluacion}): en torno a dos de cada tres cantidades servidas caían exactamente en uno de los dos límites globales de gramos del modelo, raciones de relleno de 10\,g para cumplir la variedad y raciones de 300\,g de un solo alimento como volumen calórico barato. Los límites universales eran una decisión honesta de partida, pero actuaban de atractores: el modelo no sabía que una ración razonable depende del alimento, y 10\,g de fruta o 300\,g de aceite eran soluciones legales.
+
+La respuesta fue sustituir los límites globales por un perfil de ración por alimento, que es un dato del catálogo y no una constante del modelo: cada alimento guarda sus gramos mínimos y máximos por aparición y, si se sirve por piezas, sus gramos por unidad. De ahí salen los límites de la formulación:
+
+\begin{gather*}
+\text{min}_f = \max\big(\text{round}(\text{min\_serving\_g}(f)),\ 10\big) \\
+\text{max}_f = \text{round}(\text{max\_serving\_g}(f))
+\end{gather*}
+
+Un alimento sin perfil (típicamente uno dado de alta a mano por un profesional) usa unos valores por defecto de 20 y 250\,g, más estrechos que los límites históricos, para que un alimento sin datos se sirva en raciones prudentes.
+
+Con los perfiles llegan las siete reglas de la capa, que continúan la numeración estructural. Las dos primeras ya se han visto: \textbf{R9} es el propio enlace presencia-gramos con los límites del perfil, y \textbf{R10} es la cuantización por unidades. Los alimentos con gramos por unidad $\text{gpu}(f)$ solo admiten piezas y medias piezas,
+
+\begin{equation*}
+2 \cdot g[f,d,m] = k[f,d,m] \cdot \text{gpu}(f),
+\end{equation*}
+
+con $k$ entero contando medias piezas ($k = 3$ son 1,5 piezas), y un pequeño grupo que no se parte (huevo, yogur) solo admite piezas enteras. Los gramos por unidad se eligieron pares para que las medias piezas caigan en gramos enteros. En base de datos el plan sigue guardando gramos; las unidades son a la vez una restricción del modelo y la forma natural de enseñar esos alimentos en pantalla.
+
+Las otras cinco reglas se apoyan en dos vocabularios nuevos del catálogo, montados sobre las etiquetas existentes: los roles (condimento, dulce) y los momentos del día que admite cada alimento.
+
+\begin{itemize}
+    \item \textbf{R11. Lista blanca de franjas.} Un alimento etiquetado con momentos del día solo aparece en esas franjas (la merluza no es un desayuno); un alimento sin etiquetas de momento no queda restringido.
+    \item \textbf{R12. Composición mínima de las principales.} Desayuno, comida y cena piden al menos 2 alimentos: una manzana a media mañana es un tentempié normal, una comida de un solo alimento no es una comida.
+    \item \textbf{R13. El condimento nunca va solo.} Un condimento exige en su comida al menos un alimento que no lo sea.
+    \item \textbf{R14. Tope diario de condimentos.} Entre todos los condimentos, como mucho 2 apariciones al día.
+    \item \textbf{R15. Dulce y fruta como complemento.} Como mucho una aparición de dulce o fruta por comida; junto con R12, esto impide que la fruta sea el plato único de una comida principal.
+\end{itemize}
+
+Como muestra del patrón, R13 se expresa acotando cada condimento por la suma de sus posibles acompañantes:
+
+\begin{equation*}
+x[f,d,m] \;\le\; \sum_{f' \in F \setminus \text{COND}} x[f',d,m], \qquad \forall f \in \text{COND},\ d \in D,\ m \in M
+\end{equation*}
+
+donde COND son los alimentos con rol de condimento. Las siete formulaciones completas están en el Anexo~\ref{apendice:formalizacion}.
+
+Las franjas de un plan las decide el llamante según su número de comidas, con las principales primero: 3 comidas son desayuno, comida y cena; 4 añaden la merienda; 5 la media mañana; 6 la recena. Parece un detalle, pero la versión inicial usaba las primeras franjas en orden cronológico y dejaba un plan de 3 comidas en desayuno, media mañana y comida, sin cena. El número de comidas por defecto de la aplicación es 4: bajarlo desde 5 redujo las comidas testimoniales de muy baja energía, a cambio de que los objetivos calóricos muy altos necesiten subir el número de comidas para caber en raciones acotadas. Las medidas de este ajuste están en el capítulo~\ref{cap:evaluacion}.
+
+Las siete reglas son duras, porque una comida implausible no se compensa con nada, y a diferencia de las clínicas duras no entran nunca en el diagnóstico de infactibilidad: no son algo que el profesional pueda reducir (sección~\ref{sec:infactibilidad}). La propiedad transversal de la capa es que las reglas son fijas pero su alcance es dato: qué alimentos son condimento, qué franjas admite cada uno y qué ración es razonable vive en el catálogo. Dar de alta un alimento nuevo con su perfil y sus etiquetas lo somete a todas las reglas sin tocar el código.
 
 \subsection{Restricciones clínicas y restricciones de catálogo}
 \label{sec:clinicasCatalogo}
 
-% TODO: quién define cada familia y por qué la plausibilidad no es
-% vocabulario del profesional.
+Llegados aquí conviene hacer explícita la frontera que organiza todas las restricciones del modelo, porque responde a una pregunta de diseño que atraviesa el sistema: quién define cada cosa.
+
+Las restricciones clínicas son las del profesional. Viven como filas en la base de datos, en un vocabulario cerrado de 16 tipos (sección~\ref{sec:catalogoClinico}), con un ámbito (un cliente concreto, o el estilo clínico del nutricionista aplicado a todos los suyos) y la prioridad que él decida. Expresan juicio clínico: una alergia, un objetivo calórico, una preferencia de dieta. Quién las produce es intercambiable (el formulario manual o el traductor del capítulo~\ref{cap:copilotoIA}), y el motor las consume sin distinguir el origen.
+
+Las restricciones de catálogo son las del modelo: las estructurales y las de plausibilidad. No las escribe nadie por cliente; se aplican siempre. Expresan lo que cualquiera da por hecho antes de hablar de nutrición: que una comida no es un chorro de aceite ni la merluza un desayuno. Este conocimiento no es vocabulario del profesional, y ponérselo delante sería ruido: ningún nutricionista prescribe que el aceite vaya acompañado, igual que no prescribe que los platos se sirvan en un plato.
+
+La frontera delimita también la responsabilidad ante un plan malo: si viola una clínica, el fallo es del motor y el validador posterior lo cazaría (sección~\ref{sec:validador}); si es implausible, lo que falta es una regla o un dato de catálogo. Dónde vive cada mitad en la base de datos y cómo evoluciona se recoge en el capítulo~\ref{cap:disenoSistema}.
 
 \section{El catálogo de restricciones clínicas}
 \label{sec:catalogoClinico}
 
-% TODO: los 16 tipos con la tabla resumen y la distinción dura/blanda.
+Las restricciones del profesional llegan al motor en un vocabulario cerrado de 16 tipos. Cerrar ese vocabulario antes de tocar ningún modelo de lenguaje fue lo que ordenó las dos mitades del sistema: cualquier productor tiene que expresarse en estos tipos, y el motor solo entiende de ellos. Cada fila trae el tipo, su objetivo (un alimento, una etiqueta, un nutriente, un valor), la prioridad que la hace dura o blanda y un peso de 1 a 10 que gradúa su importancia si es blanda.
+
+Dos de los 16 tipos son estructurales (número de comidas y duración del plan): fijan la dimensión del problema y no generan restricción. Los otros 14 se agrupan en objetivos de energía y macros, límites de nutrientes, prohibiciones y preferencias, reparto y frecuencia, variedad y combinaciones. La tabla~\ref{tab:catalogoClinico} los resume; las formulaciones completas están en el Anexo~\ref{apendice:formalizacion}.
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabular}{|l|l|l|l|}
+\hline
+\textbf{Tipo} & \textbf{Familia} & \textbf{Por defecto} & \textbf{Patrón} \\
+\hline
+\texttt{meals\_per\_day} & estructural & estructural & dimensiona las comidas \\
+\hline
+\texttt{plan\_duration\_days} & estructural & estructural & dimensiona los días \\
+\hline
+\texttt{kcal\_target} & energía & blanda & desviación absoluta \\
+\hline
+\texttt{macro\_target} & macros & blanda & desviación absoluta \\
+\hline
+\texttt{nutrient\_min} & nutrientes & configurable & suma $\ge$ / defecto blando \\
+\hline
+\texttt{nutrient\_max} & nutrientes & configurable & suma $\le$ / exceso blando \\
+\hline
+\texttt{nutrient\_ratio} & nutrientes & configurable & multiplicación cruzada \\
+\hline
+\texttt{forbid\_food} & prohibición & dura & fija a cero \\
+\hline
+\texttt{forbid\_tag} & prohibición & dura & fija a cero por familia \\
+\hline
+\texttt{prefer\_food} & preferencia & blanda & bonifica en el objetivo \\
+\hline
+\texttt{prefer\_tag} & preferencia & blanda & bonifica por familia \\
+\hline
+\texttt{meal\_kcal\_ratio} & reparto & blanda & desviación del reparto \\
+\hline
+\texttt{max\_servings\_per\_period} & frecuencia & configurable & suma en ventana \\
+\hline
+\texttt{no\_repeat\_food} & variedad & blanda & ventana por alimento \\
+\hline
+\texttt{no\_repeat\_tag} & variedad & blanda & ventana por familia \\
+\hline
+\texttt{forbid\_combination} & combinación & dura & suma por comida $\le 1$ \\
+\hline
+\end{tabular}
+\caption{Catálogo de restricciones clínicas: los 16 tipos.}
+\label{tab:catalogoClinico}
+\end{table}
+
+El patrón de cada tipo se ve con dos ejemplos. Una prohibición de etiqueta (el mecanismo de las alergias e intolerancias) es dura por defecto y fija a cero todas las apariciones de los alimentos afectados:
+
+\begin{equation*}
+x[f,d,m] = 0, \qquad \forall f \in \text{miembros}(t),\ d \in D,\ m \in M
+\end{equation*}
+
+Un objetivo calórico es blando por defecto: no acota el espacio de soluciones, penaliza en la función objetivo la desviación absoluta de la energía diaria respecto al valor pedido, con la linealización de la sección~\ref{sec:objetivoResolucion}. Si el profesional lo marca como duro, pasa a ser una igualdad exacta por día.
+
+Qué es duro y qué es blando se decide en tres niveles. Por la naturaleza del tipo: las prohibiciones son duras por defecto (una alergia es absoluta) y los objetivos y preferencias son blandos (son dianas a las que acercarse). Por la fila: el profesional tiene la última palabra y puede marcar cada restricción como dura o blanda. Y por decisión del modelo: las reglas de catálogo de la sección anterior son duras, salvo el reparto, que es blando para no volver infactible un caso con el catálogo justo.
+
+Hay un límite conocido: la variante blanda del cociente entre nutrientes no se modela, porque penalizar la desviación de un cociente exige linealizar el propio cociente y no una simple multiplicación cruzada. Cuando llega, el motor no la aplica pero emite un aviso, para no silenciar una restricción que el profesional puso.
 
 \section{Función objetivo y resolución}
 \label{sec:objetivoResolucion}
 
-% TODO: linealización del valor absoluto, pesos en dos niveles, tiempo,
-% gap e hilos por entorno.
+Las restricciones blandas se agregan en una función objetivo que el solver minimiza: una suma de penalizaciones menos bonificaciones (las preferencias premian, y entran con signo negativo porque se minimiza), más dos términos estructurales de variedad y reparto:
+
+\begin{equation*}
+\min \Big( \sum_{i} \text{penalización}_i \;-\; \sum_{j} \text{bonificación}_j \;+\; w_{\text{variety}} \cdot P_{\text{variety}} \;+\; w_{\text{spread}} \cdot P_{\text{spread}} \Big)
+\end{equation*}
+
+Acercarse a un objetivo es minimizar $|\text{suma} - \text{objetivo}|$, que no es una expresión lineal. Se linealiza con el patrón estándar de dos variables no negativas de exceso y defecto:
+
+\begin{equation*}
+\text{suma} - \text{objetivo} = \text{over} - \text{under}, \qquad |\text{suma} - \text{objetivo}| = \text{over} + \text{under}
+\end{equation*}
+
+Un detalle de este patrón resultó importante en la práctica: las cotas de las variables de exceso y defecto se derivan del catálogo real (el exceso llega como mucho a la cota superior del nutriente menos el objetivo, y el defecto como mucho al objetivo) en vez de usar una holgura fija. Con una cota fija, al crecer el catálogo el rango real de las sumas la superaba y el solver rechazaba el modelo entero; acotar ajustado además mejora la propagación.
+
+$P_{\text{variety}}$ penaliza suavemente cada alimento del catálogo que no se use en todo el plan, para favorecer usar más alimentos distintos cuando nada más lo decide. $P_{\text{spread}}$ es la tercera regla de sentido común de la sección~\ref{sec:estructurales}: penaliza que un alimento supere un tope de apariciones en el plan (unas 4 en una semana), para que la ingesta se reparta en vez de concentrarse.
+
+Cada término lleva un peso efectivo que es el producto de dos niveles: un peso fijo por familia (10 el objetivo calórico, 8 la proteína, 4 las preferencias; el resto está en el Anexo~\ref{apendice:formalizacion}) y el peso de 1 a 10 de la fila concreta. Un objetivo calórico con peso de fila 7 pesa 70; una preferencia de familia con peso 4 pesa 16. Esto da una regla de prioridad clara sin exponer al profesional un panel de ajuste global.
+
+El modelo se resuelve con un límite de tiempo de 90 segundos, una brecha relativa del 2\,\% y un número de hilos de búsqueda configurable por entorno. Los tres parámetros cuentan lo mismo: un borrador editable no necesita el óptimo demostrado. El solver para al llegar al 2\,\% de la cota inferior y, si el tiempo expira, devuelve la mejor solución factible encontrada, distinguiendo en las métricas el óptimo demostrado del factible. El límite de tiempo está calibrado contra la CPU del alojamiento gratuito donde corre el backend, no contra la máquina de desarrollo. Y los hilos son 8 en desarrollo y 2 en ese alojamiento: cada hilo mantiene su propia copia del estado de búsqueda, y con 8 hilos el proceso superó el límite de memoria de la instancia. Adecuar el paralelismo a los recursos es una decisión de despliegue, no del modelo; el coste asumido es que más casos terminan en factible en vez de en óptimo, con la misma calidad de plan útil. Las medidas están en el capítulo~\ref{cap:evaluacion}.
 
 \section{Diagnóstico de infactibilidad}
 \label{sec:infactibilidad}
 
-% TODO: asunciones solo en las clínicas duras, núcleo mínimo y sugerencia.
+Cuando las restricciones duras no admiten solución, el motor no falla sin más: devuelve el subconjunto mínimo de restricciones en conflicto. Se apoya en las asunciones de CP-SAT. Cada restricción clínica dura se envuelve en un literal booleano de activación, se aplica condicionada a ese literal y se declara el literal como asunción. Si el modelo resulta infactible, el solver devuelve el conjunto de literales responsables, que se traducen de vuelta a sus restricciones.
+
+Solo las clínicas duras llevan literal. Las reglas de catálogo se aplican sin condición, así que nunca aparecen en el diagnóstico: el conflicto se explica siempre en términos de cosas que el profesional puso y puede cambiar.
+
+El resultado lleva tres piezas: el núcleo mínimo, una sugerencia redactada a partir de los tipos del núcleo y la lista de restricciones que se pueden reducir. Por ejemplo, un objetivo duro de 900\,kcal junto a un mínimo duro de 180\,g de proteína devuelve el núcleo con esas dos restricciones: 180\,g de proteína aportan unas 720\,kcal y, sumando el mínimo del resto de macros, superan las 900. Sobre este diagnóstico se construye después la explicación en lenguaje llano del capítulo~\ref{cap:copilotoIA}.
 
 \section{El validador determinista}
 \label{sec:validador}
 
-% TODO: segundo par de ojos, rechaza lo garantizado y avisa de lo no
-% modelado. Cierre del capítulo remitiendo la evaluación al capítulo 7.
+El plan factible no se da por bueno solo porque lo diga el solver. Antes de llegar al profesional pasa por un validador independiente: otra función pura que recalcula la nutrición del plan desde los datos del catálogo, sin fiarse de las métricas del solver, y lo audita en cuatro familias de reglas: seguridad fisiológica (suelo calórico, rangos de macros, topes de toxicidad de micronutrientes), consistencia con las restricciones clínicas duras (las re-verifica una a una sobre el plan ya construido), estructura (tamaño de las comidas, mínimos de gramos) y plausibilidad (las mismas garantías de la sección~\ref{sec:plausibilidad}). Son dos motores deterministas que deben coincidir: si el solver tuviera un error, el validador lo cazaría antes de la firma.
+
+Cada hallazgo del validador es un rechazo o un aviso, y el criterio para asignarlos no es clínico, es de coherencia: el validador solo rechaza lo que el solver garantiza (las duras, los suelos, la estructura, la plausibilidad) y avisa de lo que el solver no modela. El caso que fijó el criterio fueron los micronutrientes: el solver no les pone techo, así que el calcio o el hierro de un plan válido oscilan de una generación a otra y a veces cruzan un tope de toxicidad. Con ese tope como rechazo, el veredicto dejaba de ser determinista y el mismo caso pasaba o fallaba según la corrida. Como aviso, la distinción queda donde debe: un plan inseguro se rechaza, un plan mejorable se enseña al profesional con sus avisos, y es él quien decide.
+
+Con el validador se cierra el recorrido del motor: de un perfil y unas restricciones a un borrador auditado, o a una explicación de por qué no puede existir. La evaluación de todo ello (los bancos de casos, los tiempos y el efecto medido de cada capa de reglas) está en el capítulo~\ref{cap:evaluacion}, y cómo se expone el motor como servicio dentro de la aplicación, con su persistencia y la firma del profesional, en el capítulo~\ref{cap:disenoSistema}.
