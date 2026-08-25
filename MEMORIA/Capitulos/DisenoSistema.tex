@@ -4,7 +4,127 @@
 % los capítulos 2 y 3 a la arquitectura técnica resuelven aquí.
 \label{cap:descripcionTrabajo}
 
-% TODO: capítulo organizado por capas, con la descripción general al abrir.
-% Secciones previstas: arquitectura general, modelo de datos, seguridad y
-% multi-tenancy, capa de servicio (API, persistencia y firma), despliegue,
-% metodología de desarrollo y patrones del frontend.
+Este capítulo describe el diseño del sistema: la arquitectura que conecta sus piezas, el modelo de datos, la seguridad que aísla a cada usuario, la capa de servicio que persiste y firma los planes, el despliegue y la manera de verificar cada parte. Los dos componentes con más peso propio, el motor de generación y el copiloto de IA, tienen sus capítulos aparte (\ref{cap:motorGeneracion} y~\ref{cap:copilotoIA}); aquí se explica la aplicación sobre la que trabajan. Cada tecnología se justifica en la capa donde se usa, con los motivos que pesaron al elegirla.
+
+La sección~\ref{sec:arquitecturaGeneral} presenta la arquitectura y la decisión que ordena todo el diseño: una tabla de restricciones como interfaz entre quien las produce y quien las consume. Las cuatro siguientes recorren las capas una a una, de los datos al despliegue, y la sección~\ref{sec:validacionTesting} cierra con la forma de verificar cada bloque de trabajo. Las pruebas y sus resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
+
+\section{Arquitectura general}
+\label{sec:arquitecturaGeneral}
+
+La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep{nextjs}, una base de datos PostgreSQL gestionada a través de Supabase~\citep{supabase} y un backend propio en Python. A ellas se suma el worker de generación, un proceso que ejecuta los trabajos de IA desde el ordenador del profesional y que se explica con el despliegue (sección~\ref{sec:despliegue}). La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
+
+\begin{figure}[t]
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  caja/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=5pt, fill=white},
+  grupo/.style={draw, dashed, rounded corners=3pt, inner sep=6pt},
+  nomcapa/.style={font=\scriptsize\itshape, anchor=west},
+  fl/.style={-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt},
+  fl2/.style={{Latex[length=2.2mm]}-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt},
+  etiqfl/.style={font=\scriptsize, align=center, fill=white, inner sep=1.5pt}
+]
+% presentación
+\node[caja] (navnutri) {Navegador del\\nutricionista};
+\node[caja, right=16mm of navnutri] (navcli) {Navegador del\\cliente};
+\path ($(navnutri.south)!0.5!(navcli.south)$) coordinate (medio);
+\node[caja, below=10mm of medio] (front) {Frontend Next.js\\\textit{Server Components} y \textit{Server Actions}};
+% datos
+\node[caja, below=13mm of front] (bd) {PostgreSQL gestionado (Supabase)\\autenticación y RLS};
+% servicio
+\node[caja, below=13mm of bd, xshift=-24mm] (backend) {Backend FastAPI\\motor, validador,\\persistencia y firma};
+\node[caja, below=13mm of bd, xshift=24mm] (worker) {Worker de generación\\traductor y LLM local\\(ordenador del profesional)};
+% flechas
+\draw[fl] (navnutri) -- (front);
+\draw[fl] (navcli) -- (front);
+\draw[fl2] (front) -- (bd) node[etiqfl, midway, right=1mm] {sesión del usuario,\\filtrada por RLS};
+\draw[fl2] (backend) -- (bd) node[etiqfl, midway, left=1mm] {clave de\\servicio};
+\draw[fl2] (worker) -- (bd) node[etiqfl, midway, right=1mm] {cola de\\tareas};
+\draw[fl, rounded corners=3pt] (front.west) -- ++(-13mm,0) |- (backend.west)
+  node[etiqfl, pos=0.28, left=1mm] {servidor a servidor\\(generar, encolar,\\firmar)};
+% capas
+\node[grupo, fit=(front)] (gpres) {};
+\node[nomcapa] at ($(gpres.east)+(2mm,0)$) {presentación};
+\node[grupo, fit=(bd)] (gdatos) {};
+\node[nomcapa] at ($(gdatos.east)+(2mm,0)$) {datos};
+\node[grupo, fit=(backend)(worker)] (gserv) {};
+\node[nomcapa] at ($(gserv.east)+(2mm,0)$) {servicio};
+\end{tikzpicture}
+\caption{Arquitectura del sistema: la capa de presentación, la de datos y la de servicio, con el worker de generación como pieza desplazada al ordenador del profesional.}
+\label{fig:arquitecturaCapas}
+\end{center}
+\end{figure}
+
+El reparto lo acordé con los tutores antes de escribir la primera línea de código, junto con un criterio y un orden: cada pieza debía ser la opción más simple que soportara los requisitos del capítulo~\ref{cap:analisisRequisitos}, y la construcción iría de los datos hacia la interfaz (primero la base de datos, después su conexión, por último las pantallas), de modo que cada capa se apoyara sobre una anterior ya verificada.
+
+El backend de generación es un servicio propio con FastAPI. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; la secundaria es que el solver necesita un proceso persistente con límites de tiempo largos, un patrón que encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
+
+La capa de presentación usa Next.js con \textit{Server Components}: las páginas se montan en el servidor y leen directamente de la base de datos bajo la sesión del usuario, con las políticas de seguridad de la sección~\ref{sec:capaSeguridad} como filtro. Así desaparece la capa de API intermedia para casi toda la aplicación. Las escrituras sencillas (dar de alta un alimento, añadir una restricción) siguen el mismo camino con \textit{Server Actions}, funciones que corren en el servidor y validan la entrada antes de tocar los datos. Las operaciones que exigen más garantías (generar, encolar y firmar planes) se delegan en el backend con una llamada de servidor a servidor autenticada por un secreto compartido, como se detalla en la sección~\ref{sec:capaServicio}.
+
+Para el sistema de diseño seguí la recomendación de los tutores: Radix UI~\citep{radix} como base de componentes accesibles sin estilos propios, y Tailwind CSS para aplicarles la paleta y la tipografía del prototipo de Figma del que partió cada pantalla.
+
+Por encima del reparto en capas hay una decisión que ordena todo el sistema: las restricciones dietéticas viven en una tabla propia, \texttt{diet\_constraint}, con un vocabulario cerrado de 16 tipos, y esa tabla es la interfaz entre quien produce las restricciones y quien las consume. Los productores son tres: el formulario de la ficha del cliente, el formulario del estilo clínico del nutricionista y el traductor de texto libre del capítulo~\ref{cap:copilotoIA}. El consumidor es uno: el motor de generación, al que le resulta indiferente quién escribió cada fila. La figura~\ref{fig:productorConsumidor} recoge el esquema.
+
+\begin{figure}[t]
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  caja/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=5pt, fill=white},
+  grupo/.style={draw, dashed, rounded corners=3pt, inner sep=6pt},
+  nomgrupo/.style={font=\scriptsize\itshape},
+  fl/.style={-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt}
+]
+\node[caja] (formcli) {Formulario de la\\ficha del cliente};
+\node[caja, below=4mm of formcli] (formstyle) {Formulario del\\estilo clínico};
+\node[caja, below=4mm of formstyle] (traductor) {Traductor LLM\\(texto libre)};
+\node[caja, right=22mm of formstyle, text width=32mm] (tabla) {\texttt{diet\_constraint}\\[1mm]vocabulario cerrado\\de 16 tipos, con ámbito\\y prioridad por fila};
+\node[caja, right=22mm of tabla] (motor) {Motor de\\generación};
+\draw[fl] (formcli.east) -- (tabla.west);
+\draw[fl] (formstyle.east) -- (tabla.west);
+\draw[fl] (traductor.east) -- (tabla.west);
+\draw[fl] (tabla) -- (motor);
+\node[grupo, fit=(formcli)(formstyle)(traductor)] (gprod) {};
+\node[nomgrupo, above=1mm of gprod.north] {productores};
+\node[grupo, fit=(motor)] (gcons) {};
+\node[nomgrupo, above=1mm of gcons.north] {consumidor};
+\end{tikzpicture}
+\caption{La tabla de restricciones como interfaz: tres productores escriben filas del mismo vocabulario y un único consumidor las aplica sin distinguir su origen.}
+\label{fig:productorConsumidor}
+\end{center}
+\end{figure}
+
+Ese vocabulario se cerró antes de integrar ningún modelo de lenguaje: primero se construyó y verificó el motor con restricciones escritas a mano, y la capa de IA llegó después como un productor más. La vía manual quedó como respaldo permanente: si el traductor falla o el profesional prefiere escribir la restricción él mismo, el formulario alimenta al motor exactamente igual. Los 16 tipos del vocabulario se describen en la sección~\ref{sec:catalogoClinico}.
+
+Del resto de decisiones de la capa de presentación, las que más condicionaron el desarrollo se resumen en cuatro:
+
+\begin{itemize}
+    \item Un único inicio de sesión para los dos roles: la raíz de la aplicación lleva a cada usuario a su panel, y el panel del cliente vive bajo su propio prefijo de rutas, con guardas equivalentes en cada sección.
+    \item Un único formulario adaptativo cubre los 13 tipos de restricción que se pueden dar de alta desde la interfaz, y sirve en tres contextos distintos (la ficha del cliente, el estilo clínico y la pantalla de generación) cambiando sus propiedades.
+    \item Las pantallas que esperan datos nuevos se actualizan por sondeo (cada 15 segundos en la mensajería, cada 4 durante una generación), en vez de mantener una conexión abierta: menos piezas para una necesidad de tiempo real modesta.
+    \item Los totales nutricionales de un plan se calculan en la presentación, agregando el modelo alimento-nutriente de la sección~\ref{sec:capaDatos} y avisando cuando falta algún dato de composición.
+\end{itemize}
+
+\section{Capa de datos}
+\label{sec:capaDatos}
+
+% TODO: modelo actual, decisiones de modelado no obvias, clínicas frente a catálogo.
+
+\section{Capa de seguridad}
+\label{sec:capaSeguridad}
+
+% TODO: dos roles solo con policies, funciones con privilegios, la firma como frontera.
+
+\section{Capa de servicio}
+\label{sec:capaServicio}
+
+% TODO: API sobre funciones puras, persistencia atómica, borrador y firma.
+
+\section{Despliegue}
+\label{sec:despliegue}
+
+% TODO: las cuatro patas y el worker local, límites del hosting, mitigaciones.
+
+\section{Validación y testing}
+\label{sec:validacionTesting}
+
+% TODO: bancos por bloque, E2E contra producción, runners RLS, párrafo de la auditoría.
