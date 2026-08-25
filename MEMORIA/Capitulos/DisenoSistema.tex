@@ -4,14 +4,14 @@
 % los capítulos 2 y 3 a la arquitectura técnica resuelven aquí.
 \label{cap:descripcionTrabajo}
 
-Este capítulo describe el diseño del sistema: la arquitectura que conecta sus piezas, el modelo de datos, la seguridad que aísla a cada usuario, la capa de servicio que persiste y firma los planes, el despliegue y la manera de verificar cada parte. Los dos componentes con más peso propio, el motor de generación y el copiloto de IA, tienen sus capítulos aparte (\ref{cap:motorGeneracion} y~\ref{cap:copilotoIA}); aquí se explica la aplicación sobre la que trabajan. Cada tecnología se justifica en la capa donde se usa, con los motivos que pesaron al elegirla.
+Este capítulo describe el diseño del sistema: la arquitectura que conecta sus piezas, el modelo de datos, la seguridad que aísla a cada usuario, la capa de servicio que persiste y firma los planes, el despliegue y la manera de verificar cada parte. Los dos componentes con más peso propio, el motor de generación y el copiloto de IA, tienen sus capítulos aparte (\ref{cap:motorGeneracion} y~\ref{cap:copilotoIA}); aquí se explica la aplicación sobre la que trabajan. Cada tecnología se justifica con los motivos por los que se eligieron en la capa donde se usa.
 
-La sección~\ref{sec:arquitecturaGeneral} presenta la arquitectura y la decisión que ordena todo el diseño: una tabla de restricciones como interfaz entre quien las produce y quien las consume. Las cuatro siguientes recorren las capas una a una, de los datos al despliegue, y la sección~\ref{sec:validacionTesting} cierra con la forma de verificar cada bloque de trabajo. Las pruebas y sus resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
+La sección~\ref{sec:arquitecturaGeneral} muestra la arquitectura y la decisión que ordena todo el diseño: una tabla de restricciones como interfaz entre quien las produce y quien las consume. Las siguientes cuatro secciones explican las capas una a una, desde los datos al despliegue, y la sección~\ref{sec:validacionTesting} muestra como se verifica cada bloque de trabajo. Las pruebas y sus resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
 
 \section{Arquitectura general}
 \label{sec:arquitecturaGeneral}
 
-La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep{nextjs}, una base de datos PostgreSQL gestionada a través de Supabase~\citep{supabase} y un backend propio en Python. A ellas se suma el worker de generación, un proceso que ejecuta los trabajos de IA desde el ordenador del profesional y que se explica con el despliegue (sección~\ref{sec:despliegue}). La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
+La aplicación tiene tres piezas principales: un frontend web con Next.js, una base de datos PostgreSQL gestionada a través de Supabase y un backend propio en Python. Además, se suma el worker de generación, el proceso que ejecuta los trabajos de IA. Durante el desarrollo corre en mi propio ordenador, porque ahí vive el modelo de lenguaje local; la sección~\ref{sec:despliegue} explica ese reparto y sus alternativas.La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
 
 \begin{figure}[t]
 \begin{center}
@@ -33,7 +33,7 @@ La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep
 \node[caja, below=13mm of front] (bd) {PostgreSQL gestionado (Supabase)\\autenticación y RLS};
 % servicio
 \node[caja, below=13mm of bd, xshift=-24mm] (backend) {Backend FastAPI\\motor, validador,\\persistencia y firma};
-\node[caja, below=13mm of bd, xshift=24mm] (worker) {Worker de generación\\traductor y LLM local\\(ordenador del profesional)};
+\node[caja, below=13mm of bd, xshift=24mm] (worker) {Worker de generación\\traductor y LLM local\\(en local durante el desarrollo)};
 % flechas
 \draw[fl] (navnutri) -- (front);
 \draw[fl] (navcli) -- (front);
@@ -50,20 +50,20 @@ La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep
 \node[grupo, fit=(backend)(worker)] (gserv) {};
 \node[nomcapa] at ($(gserv.east)+(2mm,0)$) {servicio};
 \end{tikzpicture}
-\caption{Arquitectura del sistema: la capa de presentación, la de datos y la de servicio, con el worker de generación como pieza desplazada al ordenador del profesional.}
+\caption{Arquitectura del sistema: la capa de presentación, la de datos y la de servicio, con el worker de generación como pieza que corre en un ordenador local.}
 \label{fig:arquitecturaCapas}
 \end{center}
 \end{figure}
 
-El reparto lo acordé con los tutores antes de escribir la primera línea de código, junto con un criterio y un orden: cada pieza debía ser la opción más simple que soportara los requisitos del capítulo~\ref{cap:analisisRequisitos}, y la construcción iría de los datos hacia la interfaz (primero la base de datos, después su conexión, por último las pantallas), de modo que cada capa se apoyara sobre una anterior ya verificada.
+El reparto lo acordé con los tutores antes de empezar a programar, con un criterio y orden: cada pieza debía ser la opción más simple que soportara los requisitos del capítulo~\ref{cap:analisisRequisitos}, y la construcción iría de los datos hacia la interfaz (primero la base de datos, después su conexión y luego las pantallas), para que cada capa se apoyara sobre una anterior ya verificada.
 
-El backend de generación es un servicio propio con FastAPI. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; la secundaria es que el solver necesita un proceso persistente con límites de tiempo largos, un patrón que encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
+El backend de generación es un servicio propio con FastAPI. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cuál encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
 
-La capa de presentación usa Next.js con \textit{Server Components}: las páginas se montan en el servidor y leen directamente de la base de datos bajo la sesión del usuario, con las políticas de seguridad de la sección~\ref{sec:capaSeguridad} como filtro. Así desaparece la capa de API intermedia para casi toda la aplicación. Las escrituras sencillas (dar de alta un alimento, añadir una restricción) siguen el mismo camino con \textit{Server Actions}, funciones que corren en el servidor y validan la entrada antes de tocar los datos. Las operaciones que exigen más garantías (generar, encolar y firmar planes) se delegan en el backend con una llamada de servidor a servidor autenticada por un secreto compartido, como se detalla en la sección~\ref{sec:capaServicio}.
+La capa de presentación usa Next.js con \textit{Server Components}: las páginas se montan en el servidor y leen directamente de la base de datos bajo la sesión del usuario, con las políticas de seguridad de la sección~\ref{sec:capaSeguridad} como filtro. Así desaparece la capa de API intermedia para casi toda la aplicación. Las escrituras sencillas (dar de alta un alimento, añadir una restricción) siguen el mismo camino con \textit{Server Actions}, funciones que corren en el servidor y validan la entrada antes de tocar los datos. Las operaciones que exigen más garantías como generar, encolar y firmar planes se delegan en el backend con una llamada de servidor a servidor autenticada por un secreto compartido, como se detalla en la sección~\ref{sec:capaServicio}.
 
-Para el sistema de diseño seguí la recomendación de los tutores: Radix UI~\citep{radix} como base de componentes accesibles sin estilos propios, y Tailwind CSS para aplicarles la paleta y la tipografía del prototipo de Figma del que partió cada pantalla.
+Para el sistema de diseño seguí la recomendación de Pablo: Radix UI, como base de componentes accesibles sin estilos propios, y Tailwind CSS para aplicarles la paleta tipografía del prototipo de Figma que servía de referencia.
 
-Por encima del reparto en capas hay una decisión que ordena todo el sistema: las restricciones dietéticas viven en una tabla propia, \texttt{diet\_constraint}, con un vocabulario cerrado de 16 tipos, y esa tabla es la interfaz entre quien produce las restricciones y quien las consume. Los productores son tres: el formulario de la ficha del cliente, el formulario del estilo clínico del nutricionista y el traductor de texto libre del capítulo~\ref{cap:copilotoIA}. El consumidor es uno: el motor de generación, al que le resulta indiferente quién escribió cada fila. La figura~\ref{fig:productorConsumidor} recoge el esquema.
+Por encima del reparto en capas hay una decisión que ordena todo el sistema: las restricciones dietéticas viven en una tabla propia, \texttt{diet\_constraint}, con un vocabulario cerrado de 16 tipos, y esa tabla es la interfaz entre quien produce las restricciones (el formulario de la ficha del cliente, el formulario del estilo clínico del nutricionista o el traductor de texto libre del capítulo~\ref{cap:copilotoIA}) y quien las consume (el motor de generación). La figura~\ref{fig:productorConsumidor} recoge el esquema.
 
 \begin{figure}[t]
 \begin{center}
@@ -93,14 +93,14 @@ Por encima del reparto en capas hay una decisión que ordena todo el sistema: la
 \end{center}
 \end{figure}
 
-Ese vocabulario se cerró antes de integrar ningún modelo de lenguaje: primero se construyó y verificó el motor con restricciones escritas a mano, y la capa de IA llegó después como un productor más. La vía manual quedó como respaldo permanente: si el traductor falla o el profesional prefiere escribir la restricción él mismo, el formulario alimenta al motor exactamente igual. Los 16 tipos del vocabulario se describen en la sección~\ref{sec:catalogoClinico}.
+Este vocabulario se concluyó antes de integrar ningún modelo de lenguaje: primero se construyó y verificó el motor con restricciones escritas a mano, y luego e integró la capa de IA. La vía manual quedó como respaldo: si el traductor falla o el profesional prefiere escribir la restricción él mismo, el formulario alimenta al motor exactamente igual. Los 16 tipos del vocabulario se describen en la sección~\ref{sec:catalogoClinico}.
 
 Del resto de decisiones de la capa de presentación, las que más condicionaron el desarrollo se resumen en cuatro:
 
 \begin{itemize}
-    \item Un único inicio de sesión para los dos roles: la raíz de la aplicación lleva a cada usuario a su panel, y el panel del cliente vive bajo su propio prefijo de rutas, con guardas equivalentes en cada sección.
-    \item Un único formulario adaptativo cubre los 13 tipos de restricción que se pueden dar de alta desde la interfaz, y sirve en tres contextos distintos (la ficha del cliente, el estilo clínico y la pantalla de generación) cambiando sus propiedades.
-    \item Las pantallas que esperan datos nuevos se actualizan por sondeo (cada 15 segundos en la mensajería, cada 4 durante una generación), en vez de mantener una conexión abierta: menos piezas para una necesidad de tiempo real modesta.
+    \item Un único inicio de sesión para los dos roles: la aplicación lleva a cada usuario a su panel, y el panel del cliente vive bajo su propio prefijo de rutas, con guardas equivalentes en cada sección.
+    \item Los 13 tipos de restricción se pueden dar de alta desde la interfaz mediante un único formulario que sirve en tres contextos distintos (la ficha del cliente, el estilo clínico y la pantalla de generación) cambiando sus propiedades.
+    \item Las pantallas que esperan datos nuevos se actualizan por sondeo (cada 15 segundos en la mensajería, cada 4 durante una generación), no es necesario gastar recursos en mantener una conexión abierta, esos tiempos son bastante aceptables.
     \item Los totales nutricionales de un plan se calculan en la presentación, agregando el modelo alimento-nutriente de la sección~\ref{sec:capaDatos} y avisando cuando falta algún dato de composición.
 \end{itemize}
 
