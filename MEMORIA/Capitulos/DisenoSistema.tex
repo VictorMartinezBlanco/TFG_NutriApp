@@ -1,17 +1,14 @@
 \chapter{Diseño del sistema}
 \label{cap:disenoSistema}
-% Alias del antiguo capítulo de descripción del trabajo: las referencias de
-% los capítulos 2 y 3 a la arquitectura técnica resuelven aquí.
-\label{cap:descripcionTrabajo}
 
-Este capítulo describe el diseño del sistema: la arquitectura que conecta sus piezas, el modelo de datos, la seguridad que aísla a cada usuario, la capa de servicio que persiste y firma los planes, el despliegue y la manera de verificar cada parte. Los dos componentes con más peso propio, el motor de generación y el copiloto de IA, tienen sus capítulos aparte (\ref{cap:motorGeneracion} y~\ref{cap:copilotoIA}); aquí se explica la aplicación sobre la que trabajan. Cada tecnología se justifica con los motivos por los que se eligieron en la capa donde se usa.
+Este capítulo describe el diseño del sistema: la arquitectura que conecta sus piezas, el modelo de datos, la seguridad que aísla a cada usuario, la capa de servicio que persiste y firma los planes, el despliegue y la manera de verificar cada parte. Los dos componentes con más peso propio, el motor de generación y el copiloto de IA, tienen sus capítulos aparte (\ref{cap:motorGeneracion} y~\ref{cap:copilotoIA}); aquí se explica la aplicación sobre la que trabajan. Cada tecnología se justifica con los motivos por los que se eligió en la capa donde se usa.
 
-La sección~\ref{sec:arquitecturaGeneral} muestra la arquitectura y la decisión que ordena todo el diseño: una tabla de restricciones como interfaz entre quien las produce y quien las consume. Las siguientes cuatro secciones explican las capas una a una, desde los datos al despliegue, y la sección~\ref{sec:validacionTesting} muestra como se verifica cada bloque de trabajo. Las pruebas y sus resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
+La sección~\ref{sec:arquitecturaGeneral} muestra la arquitectura y la decisión que ordena todo el diseño: una tabla de restricciones como interfaz entre quien las produce y quien las consume. Las siguientes cuatro secciones explican las capas una a una, desde los datos al despliegue, y la sección~\ref{sec:validacionTesting} muestra cómo se verifica cada bloque de trabajo. Las pruebas y sus resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
 
 \section{Arquitectura general}
 \label{sec:arquitecturaGeneral}
 
-La aplicación tiene tres piezas principales: un frontend web con Next.js, una base de datos PostgreSQL gestionada a través de Supabase y un backend propio en Python. Además, se suma el worker de generación, el proceso que ejecuta los trabajos de IA. Durante el desarrollo corre en mi propio ordenador, porque ahí vive el modelo de lenguaje local; la sección~\ref{sec:despliegue} explica ese reparto y sus alternativas.La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
+La aplicación tiene tres piezas principales: un frontend web con Next.js, una base de datos PostgreSQL gestionada a través de Supabase y un backend propio en Python. Además, se suma el worker de generación, el proceso que ejecuta los trabajos de IA. Durante el desarrollo corre en mi propio ordenador, porque ahí vive el modelo de lenguaje local; la sección~\ref{sec:despliegue} explica ese reparto y sus alternativas. La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
 
 \begin{figure}[t]
 \begin{center}
@@ -57,11 +54,11 @@ La aplicación tiene tres piezas principales: un frontend web con Next.js, una b
 
 El reparto lo acordé con los tutores antes de empezar a programar, con un criterio y orden: cada pieza debía ser la opción más simple que soportara los requisitos del capítulo~\ref{cap:analisisRequisitos}, y la construcción iría de los datos hacia la interfaz (primero la base de datos, después su conexión y luego las pantallas), para que cada capa se apoyara sobre una anterior ya verificada.
 
-El backend de generación es un servicio propio con FastAPI. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cuál encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
+El backend de generación es un servicio propio con FastAPI. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cual encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
 
 La capa de presentación usa Next.js con \textit{Server Components}: las páginas se montan en el servidor y leen directamente de la base de datos bajo la sesión del usuario, con las políticas de seguridad de la sección~\ref{sec:capaSeguridad} como filtro. Así desaparece la capa de API intermedia para casi toda la aplicación. Las escrituras sencillas (dar de alta un alimento, añadir una restricción) siguen el mismo camino con \textit{Server Actions}, funciones que corren en el servidor y validan la entrada antes de tocar los datos. Las operaciones que exigen más garantías como generar, encolar y firmar planes se delegan en el backend con una llamada de servidor a servidor autenticada por un secreto compartido, como se detalla en la sección~\ref{sec:capaServicio}.
 
-Para el sistema de diseño seguí la recomendación de Pablo: Radix UI, como base de componentes accesibles sin estilos propios, y Tailwind CSS para aplicarles la paleta tipografía del prototipo de Figma que servía de referencia.
+Para el sistema de diseño seguí la recomendación de Pablo: Radix UI, como base de componentes accesibles sin estilos propios, y Tailwind CSS para aplicarles la paleta y tipografía del prototipo de Figma que servía de referencia.
 
 Por encima del reparto en capas hay una decisión que ordena todo el sistema: las restricciones dietéticas viven en una tabla propia, \texttt{diet\_constraint}, con un vocabulario cerrado de 16 tipos, y esa tabla es la interfaz entre quien produce las restricciones (el formulario de la ficha del cliente, el formulario del estilo clínico del nutricionista o el traductor de texto libre del capítulo~\ref{cap:copilotoIA}) y quien las consume (el motor de generación). La figura~\ref{fig:productorConsumidor} recoge el esquema.
 
@@ -93,7 +90,7 @@ Por encima del reparto en capas hay una decisión que ordena todo el sistema: la
 \end{center}
 \end{figure}
 
-Este vocabulario se concluyó antes de integrar ningún modelo de lenguaje: primero se construyó y verificó el motor con restricciones escritas a mano, y luego e integró la capa de IA. La vía manual quedó como respaldo: si el traductor falla o el profesional prefiere escribir la restricción él mismo, el formulario alimenta al motor exactamente igual. Los 16 tipos del vocabulario se describen en la sección~\ref{sec:catalogoClinico}.
+Este vocabulario se concluyó antes de integrar ningún modelo de lenguaje: primero se construyó y verificó el motor con restricciones escritas a mano, y luego se integró la capa de IA. La vía manual quedó como respaldo: si el traductor falla o el profesional prefiere escribir la restricción él mismo, el formulario alimenta al motor exactamente igual. Los 16 tipos del vocabulario se describen en la sección~\ref{sec:catalogoClinico}.
 
 Del resto de decisiones de la capa de presentación, las que más condicionaron el desarrollo se resumen en cuatro:
 
@@ -107,24 +104,162 @@ Del resto de decisiones de la capa de presentación, las que más condicionaron 
 \section{Capa de datos}
 \label{sec:capaDatos}
 
-% TODO: modelo actual, decisiones de modelado no obvias, clínicas frente a catálogo.
+La base de datos es PostgreSQL gestionado a través de Supabase. La elegí por tres necesidades directas del catálogo de requisitos: autenticación integrada para resolver los dos roles de la aplicación (RNF-05), políticas de seguridad a nivel de fila para aislar los datos de cada nutricionista en la propia base de datos (RNF-08), y alojamiento en la Unión Europea (la instancia está en Fráncfort), coherente con la protección de datos de salud (RNF-IA-4).
+
+El esquema tiene 22 tablas. La figura~\ref{fig:modeloDatos} enseña las que soportan el núcleo de la aplicación, con el resto agrupado por dominios: la agenda y la mensajería, el seguimiento que registra el cliente y las trazas de los trabajos de IA. El modelo pasó por varias iteraciones durante el desarrollo; aquí se describe el actual, con las decisiones que no son estándar.
+
+\begin{figure}[t]
+\begin{center}
+\begin{tikzpicture}[
+  font=\scriptsize,
+  tabla/.style={draw, rounded corners=2pt, align=center, inner sep=4pt, fill=white},
+  dominio/.style={draw, dashed, rounded corners=3pt, align=left, inner sep=5pt},
+  rel/.style={shorten >=1pt, shorten <=1pt},
+  card/.style={font=\tiny, inner sep=1pt, fill=white}
+]
+\node[tabla] (nutri) {\texttt{nutritionist}};
+\node[tabla, right=26mm of nutri] (cliente) {\texttt{client}};
+\node[tabla, below=9mm of nutri, xshift=-14mm] (food) {\texttt{food}\\perfil de ración};
+\node[tabla, below=9mm of cliente, xshift=14mm] (plan) {\texttt{plan}\\\texttt{approved\_at}};
+\node[tabla, below=8mm of $(nutri.south)!0.5!(cliente.south)$] (dc) {\texttt{diet\_constraint}\\tipo + \texttt{context} JSONB};
+\node[tabla, below=10mm of plan] (pmi) {\texttt{plan\_meal\_item}};
+\node[tabla, below=5mm of pmi] (mealtype) {\texttt{meal\_type}};
+\node[tabla, below=10mm of food] (fn) {\texttt{food\_nutrient}\\valor por 100\,g};
+\node[tabla, right=8mm of fn] (nutriente) {\texttt{nutrient}};
+\node[tabla, left=8mm of fn] (tagt) {\texttt{tag}};
+% relaciones 1-N
+\draw[rel] (nutri) -- (cliente) node[card, midway, above] {1..N};
+\draw[rel] (nutri) -- (food) node[card, midway, above left] {1..N propios};
+\draw[rel] (cliente) -- (plan) node[card, midway, above right] {1..N};
+\draw[rel] (plan) -- (pmi) node[card, midway, right] {1..N};
+\draw[rel] (mealtype) -- (pmi) node[card, midway, right] {1..N};
+\draw[rel] (food) -- (fn) node[card, midway, left] {1..N};
+\draw[rel] (fn) -- (nutriente) node[card, midway, above] {N..1};
+\draw[rel] (food) -- (tagt) node[card, midway, left] {N..M};
+\draw[rel] (food.east) -- (pmi.west) node[card, pos=0.35, above] {1..N};
+\draw[rel] (dc.west) -- (nutri.south) node[card, pos=0.6, left] {ámbito};
+\draw[rel] (dc.east) -- (cliente.south) node[card, pos=0.6, right] {ámbito};
+% dominios agrupados
+\node[dominio, below=8mm of tagt, xshift=8mm, text width=30mm] (gagenda) {\textit{agenda y mensajería}\\\texttt{appointment}, \texttt{availability}, \texttt{message}};
+\node[dominio, right=6mm of gagenda, text width=30mm] (gseg) {\textit{seguimiento}\\\texttt{meal\_check},\\\texttt{weight\_entry}};
+\node[dominio, right=6mm of gseg, text width=34mm] (gia) {\textit{trazas de IA}\\\texttt{generation\_task},\\\texttt{llm\_translation}};
+\node[dominio, below=4mm of gseg, xshift=14mm, text width=68mm] (gcat) {\textit{resto del catálogo}: \texttt{unit}, \texttt{recipe}, \texttt{recipe\_ingredient}, \texttt{external\_food\_mapping}};
+\end{tikzpicture}
+\caption{Modelo de datos: las tablas del núcleo con sus relaciones y el resto del esquema agrupado por dominios. Las restricciones apuntan además a su objetivo (un alimento, una etiqueta o un nutriente).}
+\label{fig:modeloDatos}
+\end{center}
+\end{figure}
+
+La composición nutricional vive en una tabla propia, \texttt{food\_nutrient}, con una fila por alimento y nutriente (el valor por cada 100\,g), en vez de en columnas planas de la tabla de alimentos. Así, añadir un nutriente nuevo es una fila más en \texttt{nutrient}, sin tocar el esquema, a cambio de agregar al leer los totales.
+
+Los planes son dos tablas: \texttt{plan} y \texttt{plan\_meal\_item}, con una fila por alimento en cada comida de cada día. No hay tabla intermedia de comidas: la jerarquía días-comidas-alimentos se reconstruye al presentar. Tampoco hay columna de estado: un plan es borrador hasta que tiene fecha de firma (\texttt{approved\_at}), y esa fecha la escribe solo la capa de servicio (sección~\ref{sec:capaServicio}).
+
+El catálogo global y los alimentos propios de cada nutricionista comparten la tabla \texttt{food}: un alimento con dueño es privado y uno sin dueño es de todos. Y los argumentos heterogéneos de las restricciones (la cantidad y unidad de un límite, la etiqueta de una exclusión) van en una columna JSONB dentro del esquema fijo de \texttt{diet\_constraint}: los 16 tipos comparten tabla y difieren en el contenido de esa columna, que la aplicación valida antes de escribir.
+
+Del resto de decisiones de modelado, las específicas de esta aplicación:
+
+\begin{itemize}
+    \item Claves primarias naturales compuestas donde el propio esquema debe impedir duplicados: una marca de comida por plan, día y comida, y un peso por cliente y día.
+    \item La adherencia no se guarda: se calcula a partir de las marcas al leerla, con el mismo criterio en los dos paneles.
+    \item El vínculo entre la ficha del cliente y su cuenta de acceso admite nulos y se rompe sin borrar la ficha si la cuenta desaparece; un disparador crea la fila de perfil que toca al registrarse una cuenta, según su rol.
+    \item Las familias de alimentos son etiquetas, con el dato ausente permitido: un alimento sin clasificar no rompe nada, simplemente no participa en las reglas que dependen de su familia.
+\end{itemize}
+
+El capítulo~\ref{cap:motorGeneracion} distingue dos familias de restricciones, y cada una vive en un sitio distinto de la base de datos. El vocabulario clínico son las filas de \texttt{diet\_constraint} y su enumeración de 16 tipos: crece con una migración del esquema. La plausibilidad alimentaria son datos del catálogo: las etiquetas de cada alimento (familias, alérgenos, franjas) y su perfil de ración (gramos mínimos y máximos por aparición, gramos por pieza). Dar de alta un alimento con su perfil y sus etiquetas amplía lo que el motor sabe hacer sin tocar ni el esquema ni el código.
+
+La capa de acceso desde el frontend impone dos límites que condicionaron el diseño. Las mutaciones desde el navegador van fila a fila, sin transacción que las agrupe: el alta de un alimento con su composición se hace en dos pasos y, si el segundo falla, el primero se deshace con un borrado de compensación. Y las lecturas cortan a un número máximo de filas por consulta, así que los totales de macros se agregan plan a plan en vez de pedirse de golpe. Las operaciones que no toleran estos límites se llevan al backend, que escribe en transacción (sección~\ref{sec:capaServicio}).
 
 \section{Capa de seguridad}
 \label{sec:capaSeguridad}
 
-% TODO: dos roles solo con policies, funciones con privilegios, la firma como frontera.
+La seguridad tiene tres líneas. La sesión viaja en una cookie e identifica al usuario en cada petición. Las guardas de cada sección comprueban el rol y redirigen si no corresponde. Y la última palabra la tiene la base de datos: cada tabla lleva políticas de fila (RLS) que filtran por el usuario de la sesión, así que forzar la URL de un cliente ajeno devuelve cero filas; el filtro lo aplica la propia base de datos, no la pantalla.
+
+Los dos roles conviven sobre las mismas tablas solo con políticas. Como las políticas permisivas se combinan con O lógico, el panel del cliente se añadió escribiendo sus políticas de lectura sin tocar las del nutricionista. Cuando una operación mezcla columnas del actor con columnas que no le pertenecen (el cliente marca una comida, pero el plan es del nutricionista), la política no basta: la escritura pasa por una función con privilegios del sistema que valida la fila y escribe solo lo permitido.
+
+Dos criterios atraviesan todas las políticas. El primero es qué dato puede autorizar: nunca uno que el propio usuario pueda editar; el vínculo entre cuenta y ficha vive en una tabla que solo escribe el servidor. El segundo es que la política también encierra reglas de negocio: el cliente no puede marcar comidas de días futuros ni de comidas que no están en su plan, y los campos que dicen quién envió un mensaje los fija el servidor.
+
+La firma es además una frontera de visibilidad: para el cliente solo existen los planes firmados. Esa regla vive en la política de lectura de \texttt{plan}, así que un borrador es invisible para el cliente aunque ninguna pantalla lo compruebe. La figura~\ref{fig:rlsRoles} resume el reparto.
+
+\begin{figure}[t]
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  actor/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=5pt, fill=white},
+  tablab/.style={draw, align=left, inner sep=5pt, fill=white, text width=52mm},
+  fl/.style={-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt},
+  etiqfl/.style={font=\scriptsize, align=center, fill=white, inner sep=1.5pt}
+]
+\node[tablab] (tplan) {\texttt{plan}: el nutricionista ve los suyos;\\el cliente, solo los firmados};
+\node[tablab, below=3mm of tplan] (tmsg) {\texttt{message}: cada uno su conversación;\\el remitente lo fija el servidor};
+\node[tablab, below=3mm of tmsg] (tcheck) {\texttt{meal\_check}: el cliente escribe\\a través de una función con privilegios};
+\node[actor, left=13mm of tmsg] (nutri) {Nutricionista\\(sesión)};
+\node[actor, right=13mm of tmsg] (cli) {Cliente\\(sesión)};
+\draw[fl] (nutri) -- (tmsg.west) node[etiqfl, midway, above=2.5mm] {políticas\\de su rol};
+\draw[fl] (cli) -- (tmsg.east) node[etiqfl, midway, above=2.5mm] {políticas\\de su rol};
+\end{tikzpicture}
+\caption{Dos roles sobre las mismas tablas: cada uno entra con su sesión y ve o escribe lo que sus políticas permiten, con tres tablas como ejemplo.}
+\label{fig:rlsRoles}
+\end{center}
+\end{figure}
+
+Las claves siguen el mismo reparto: la clave pública que viaja al navegador solo puede lo que la RLS permite, y la clave de servicio, que se salta las políticas, no sale del backend. Aun operando con privilegios, el backend vuelve a comprobar que el cliente pertenece al nutricionista antes de generar o firmar. Cada bloque de desarrollo que tocó la seguridad cerró con una tanda de comprobaciones multi-actor (leer y escribir como un nutricionista, como otro y como un cliente), acumuladas en un banco que se ejecuta con un comando; sus resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
 
 \section{Capa de servicio}
 \label{sec:capaServicio}
 
-% TODO: API sobre funciones puras, persistencia atómica, borrador y firma.
+La capa de servicio son el backend FastAPI y el worker de generación. La API es pequeña: generar un plan, encolar un trabajo de IA y firmar. Cada endpoint es una capa fina sobre las funciones puras de los capítulos~\ref{cap:motorGeneracion} y~\ref{cap:copilotoIA}: lee los datos del cliente, llama a la función y persiste el resultado. La respuesta distingue los dos casos del motor (un plan con sus métricas, o el conflicto explicado), y el frontend la enseña tal cual.
+
+La persistencia es el motivo de que estas operaciones no usen la vía del navegador. Guardar un plan generado son decenas de filas en dos tablas, y aquí sí hay transacción: o se escriben todas o ninguna, mientras que las mutaciones del frontend van fila a fila (sección~\ref{sec:capaDatos}).
+
+Firmar es la operación con más peso de diseño y la más simple de código: poner la fecha en \texttt{approved\_at}. Antes de hacerlo, el endpoint vuelve a validar el plan y la propiedad del cliente; como esa fecha solo la escribe el backend, un plan firmado siempre pasó por la re-validación. Con la política de visibilidad de la sección~\ref{sec:capaSeguridad}, firmar es el acto con el que el profesional convierte su borrador en el plan que el cliente ve: la regla de que el sistema propone y el profesional decide (capítulo~\ref{cap:analisisRequisitos}) queda escrita en la capa de datos.
+
+Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en la cola \texttt{generation\_task} y responde al momento con su identificador. El worker reclama tareas pendientes con un bloqueo que impide que dos procesos cojan la misma (en SQL, \texttt{FOR UPDATE SKIP LOCKED}), ejecuta el mismo pipeline que el camino síncrono y escribe el resultado en la propia fila; el frontend consulta el estado por sondeo bajo RLS. Usar la base de datos como cola evitó una pieza de infraestructura nueva, y el estado de cada tarea (en cola, en curso, terminada o fallida) se consulta como cualquier otro dato.
 
 \section{Despliegue}
 \label{sec:despliegue}
 
-% TODO: las cuatro patas y el worker local, límites del hosting, mitigaciones.
+El sistema desplegado tiene cuatro patas: el frontend en Netlify, la base de datos en Supabase (Fráncfort), el backend en Render (también Fráncfort) y el worker de generación en un ordenador local. Todo el alojamiento es gratuito. La figura~\ref{fig:despliegue} enseña el reparto.
+
+\begin{figure}[t]
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  pata/.style={draw, rounded corners=2pt, align=center, minimum height=9mm, inner sep=5pt, fill=white},
+  fl2/.style={{Latex[length=2.2mm]}-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt},
+  zona/.style={draw, dashed, rounded corners=3pt, inner sep=7pt},
+  nomzona/.style={font=\scriptsize\itshape, anchor=west}
+]
+\node[pata] (netlify) {Netlify\\frontend Next.js};
+\node[pata, right=12mm of netlify] (supa) {Supabase (Fráncfort)\\PostgreSQL y autenticación};
+\node[pata, below=10mm of netlify] (render) {Render (Fráncfort)\\backend FastAPI};
+\node[pata, below=27mm of supa, xshift=14mm] (local) {Ordenador local\\worker y Ollama};
+\draw[fl2] (netlify) -- (supa);
+\draw[fl2] (netlify) -- (render);
+\draw[fl2] (render) -- (supa);
+\draw[fl2] (local.north) -- (supa.south);
+\node[zona, fit=(netlify)(supa)(render)] (gnube) {};
+\node[nomzona] at ($(gnube.south west)+(1mm,-2.5mm)$) {nube, planes gratuitos};
+\node[zona, fit=(local)] (glocal) {};
+\node[nomzona] at ($(glocal.south west)+(1mm,-2.5mm)$) {máquina local};
+\end{tikzpicture}
+\caption{Despliegue: tres patas en planes gratuitos de nube y el worker en una máquina local, todas comunicadas a través de la base de datos o de llamadas de servidor a servidor.}
+\label{fig:despliegue}
+\end{center}
+\end{figure}
+
+El worker corre en local por el modelo de lenguaje. La decisión de privacidad del capítulo~\ref{cap:copilotoIA} fija que el dato clínico no sale hacia ningún proveedor de IA, así que el modelo se ejecuta con Ollama en una máquina propia; y como el alojamiento gratuito no puede correr un modelo de lenguaje, esa máquina es, durante el desarrollo y la evaluación, mi propio ordenador, que hace las veces del ordenador del profesional. Si el worker está apagado, la aplicación funciona entera y las tareas de IA esperan en la cola. En un despliegue real la misma pieza podría correr en un servidor de la clínica o cambiar a un motor remoto con garantías contractuales; queda como trabajo futuro en el capítulo~\ref{cap:conclusiones}.
+
+Los límites del alojamiento gratuito están asumidos y medidos. El backend se apaga tras un rato sin tráfico, y la primera petición paga el arranque en frío. El límite de tiempo del solver se calibró contra la CPU de producción, bastante más lenta que la de desarrollo. Y el paralelismo del solver se configura por entorno, porque la memoria del plan gratuito no soporta la configuración de desarrollo (ocho hilos en local, dos en producción). Las medidas se enseñan en el capítulo~\ref{cap:evaluacion}.
+
+Como el prototipo es público, lleva mitigaciones acordes a su carácter académico: un aviso de uso académico en la propia interfaz, datos de demostración con seudónimos y las credenciales fuera del repositorio. El repositorio es privado y sin protección de rama, una limitación asumida para un proyecto de una persona.
 
 \section{Validación y testing}
 \label{sec:validacionTesting}
 
-% TODO: bancos por bloque, E2E contra producción, runners RLS, párrafo de la auditoría.
+El desarrollo fue iterativo por bloques (la base de datos, su conexión, el frontend, el motor, la capa de IA, el panel del cliente), y cada bloque cerró con su propia verificación. Esas verificaciones quedan como bancos de pruebas permanentes que se re-ejecutan al cerrar los bloques siguientes, para detectar regresiones al seguir construyendo.
+
+Hay tres familias de verificación. Los bancos deterministas del motor y del validador, con casos construidos a mano y veredictos esperados. Los runners de seguridad multi-actor, que entran como dos nutricionistas y un cliente y comprueban lectura y escritura tabla a tabla (sección~\ref{sec:capaSeguridad}). Y una prueba de extremo a extremo contra el despliegue real, que genera, valida, persiste y firma un plan en producción. Los resultados se enseñan en el capítulo~\ref{cap:evaluacion}.
+
+El prototipo de Figma hizo de contrato inicial de la interfaz, y a mitad del desarrollo lo audité contra la aplicación real: inventarié 169 diferencias, las clasifiqué por severidad y resolví cada una con un veredicto (actualizar el diseño, actualizar el código o justificar la divergencia). Lo relevante del tercer grupo se ha ido justificando en este capítulo al explicar cada decisión; el grueso son recortes conscientes de la filosofía de versión mínima acordada con los tutores: la aplicación solo enseña lo que tiene una tabla detrás, sin funcionalidad fingida.
+
+Quedan limitaciones asumidas: pantallas con recortes frente al diseño, datos de siembra con fechas relativas que caducan, y la deuda de diseño anterior a la reformulación que la auditoría destapó. Se retoman como trabajo futuro en el capítulo~\ref{cap:conclusiones}.

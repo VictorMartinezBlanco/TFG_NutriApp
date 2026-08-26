@@ -32,7 +32,7 @@ La tabla~\ref{tab:reformulacionResumen} resume el antes y el después del alcanc
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{|l|c|c|l|}
+\begin{tabular}{|p{3.1cm}|c|c|p{3.2cm}|}
 \hline
 \textbf{Categoría} & \textbf{V1 (original)} & \textbf{V2 (final)} & \textbf{Variación} \\
 \hline
@@ -69,7 +69,7 @@ Cinco bloques completos del catálogo original se eliminan de la implementación
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{|p{3.8cm}|c|p{8.5cm}|}
+\begin{tabular}{|p{3.2cm}|p{2.2cm}|p{5.9cm}|}
 \hline
 \textbf{Bloque eliminado} & \textbf{RFs afectados} & \textbf{Razón de exclusión} \\
 \hline
@@ -265,7 +265,7 @@ RF-29 & Consultar el plan nutricional actual con vista semanal, desglose por com
 \label{subsec:rf-copiloto}
 %% -------------------------------------------
 
-Este bloque constituye la \textbf{única innovación clave} de NutriApp tras la reformulación. El copiloto se describe sobre un principio rector: el sistema propone y el profesional decide. El modelo de lenguaje no genera dietas; traduce las peticiones del nutricionista a restricciones formales de un vocabulario cerrado, y es un motor de optimización determinista quien construye el plan a partir de ellas, de modo que las garantías clínicas nunca dependen de un componente probabilístico. La arquitectura técnica completa se describe en el capítulo~\ref{cap:descripcionTrabajo}; los requisitos no funcionales asociados son RNF-IA-1 a RNF-IA-5 (sección~\ref{sec:rnf}).
+Este bloque constituye la \textbf{única innovación clave} de NutriApp tras la reformulación. El copiloto se describe sobre un principio rector: el sistema propone y el profesional decide. El modelo de lenguaje no genera dietas; traduce las peticiones del nutricionista a restricciones formales de un vocabulario cerrado, y es un motor de optimización determinista quien construye el plan a partir de ellas, de modo que las garantías clínicas nunca dependen de un componente probabilístico. La arquitectura técnica completa se describe en el capítulo~\ref{cap:disenoSistema}; los requisitos no funcionales asociados son RNF-IA-1 a RNF-IA-5 (sección~\ref{sec:rnf}).
 
 \begin{table}[H]
 \centering
@@ -409,7 +409,7 @@ La tabla~\ref{tab:rfIndividualesFuera} recoge los requisitos sueltos pospuestos 
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{|l|p{7.5cm}|p{5.5cm}|}
+\begin{tabular}{|p{1.9cm}|p{6.6cm}|p{4.6cm}|}
 \hline
 \textbf{ID} & \textbf{Requisito} & \textbf{Razón de posposición} \\
 \hline
@@ -504,7 +504,7 @@ A partir de los requisitos V2 definidos y sus dependencias, las funcionalidades 
 
 \paragraph{Estructura base de planes nutricionales} (RF-24 a RF-27, RF-29). Constructor de planes organizados por día y por comida, base de alimentos con información nutricional oficial (BEDCA), registro de recetas como combinación de ingredientes, sistema de sustituciones por equivalencia de macronutrientes, y vista semanal del plan para el cliente. Este bloque define la estructura de datos sobre la que opera el copiloto IA.
 
-\paragraph{Copiloto de planes nutricionales} (RF-62 a RF-69). \textit{Innovación clave.} Sistema de generación semi-automática de planes: el nutricionista describe lo que necesita en su idioma, la inteligencia artificial lo traduce a restricciones formales, un motor de optimización construye el borrador y un validador clínico independiente lo audita. El profesional arbitra cada restricción propuesta y siempre aprueba el plan antes de entregarlo; su estilo clínico, declarado una vez, se aplica a todas sus generaciones. La arquitectura técnica se describe en el capítulo~\ref{cap:descripcionTrabajo}.
+\paragraph{Copiloto de planes nutricionales} (RF-62 a RF-69). \textit{Innovación clave.} Sistema de generación semi-automática de planes: el nutricionista describe lo que necesita en su idioma, la inteligencia artificial lo traduce a restricciones formales, un motor de optimización construye el borrador y un validador clínico independiente lo audita. El profesional arbitra cada restricción propuesta y siempre aprueba el plan antes de entregarlo; su estilo clínico, declarado una vez, se aplica a todas sus generaciones. La arquitectura técnica se describe en el capítulo~\ref{cap:disenoSistema}.
 
 \paragraph{Base de datos de alimentos} (RF-45, RF-48). Búsqueda por nombre sobre BEDCA y extensión con alimentos personalizados por el nutricionista (recetas propias, productos locales). Sirve de catálogo tanto para el constructor manual de planes como para el copiloto IA.
 
@@ -516,16 +516,3 @@ A partir de los requisitos V2 definidos y sus dependencias, las funcionalidades 
 
 
 %% ====================================================================
-\section{Decisiones tecnológicas}
-\label{sec:decisionesTecnologicas}
-%% ====================================================================
-
-Cerrado el alcance, la elección de tecnologías se validó con los directores del trabajo antes de escribir la primera línea de código. Más que una lista de herramientas, lo que se acordó fue un criterio: cada pieza debía ser la opción más simple que soportara los requisitos, y el orden de construcción debía ir de los datos hacia la interfaz ---primero la base de datos, después su conexión, por último las pantallas---, de modo que cada capa se apoyara sobre una anterior ya verificada.
-
-La base de datos es PostgreSQL gestionado a través de Supabase. La elección responde a tres necesidades directas del catálogo de requisitos: autenticación integrada con la que resolver los dos roles de la aplicación (RNF-05), políticas de seguridad a nivel de fila con las que materializar el aislamiento multi-tenant en la propia capa de datos (RNF-08), y alojamiento en la Unión Europea ---la instancia se creó en Fráncfort--- coherente con la protección de datos de salud (RNF-IA-4).
-
-El backend de generación es un servicio propio en Python con FastAPI. La razón principal es que tanto el solver de programación con restricciones como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; la secundaria es que el solver necesita un proceso persistente con límites de tiempo largos, un patrón que encaja mal en las funciones \textit{serverless} que ofrecen las plataformas de despliegue del frontend.
-
-El frontend es Next.js con \textit{Server Components} y \textit{Server Actions}, acompañado de Radix UI y Tailwind CSS para el sistema de diseño. Las lecturas se hacen directamente contra la base de datos bajo la sesión del usuario ---las políticas de seguridad hacen de filtro---, lo que elimina la necesidad de una capa intermedia de API para la mayor parte de la aplicación.
-
-Para el modelo de lenguaje se optó por un modelo abierto ejecutado en local como motor preferente: el dato clínico no sale hacia ningún tercero, en línea con RNF-IA-4, y el coste por consulta es nulo. La integración se hizo a través de una interfaz de cliente que admite un motor remoto como alternativa intercambiable, dejando la comparación entre ambos como línea de evaluación futura.
