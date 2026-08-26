@@ -1,6 +1,81 @@
 \chapter{El copiloto de IA}
 \label{cap:copilotoIA}
 
-% TODO: marco de editor inteligente, traductor en dos capas, elección del
-% motor LLM, validación previa del mensaje, generación asíncrona, arbitraje
-% del profesional y estilo clínico.
+El copiloto de IA es la capa que permite al nutricionista pedir un plan escribiendo lo que quiere en su propio lenguaje. Sobre el motor determinista del capítulo~\ref{cap:motorGeneracion} se añade un modelo de lenguaje que convierte ese texto en restricciones del vocabulario cerrado, y una interfaz que enseña cada paso intermedio. El planteamiento es el de un asistente de redacción: la IA propone restricciones, y el profesional decide cuáles se aplican, cuáles se guardan y qué plan llega al cliente. Este capítulo recorre el copiloto desde su punto de vista: qué escribe, qué le devuelve el sistema y qué decisiones quedan siempre en su mano.
+
+La sección~\ref{sec:flujoCopiloto} presenta el flujo completo y los puntos donde decide el profesional. Las tres siguientes desarrollan sus piezas: cómo se convierte el texto en restricciones (sección~\ref{sec:textoRestricciones}), por qué el modelo de lenguaje se ejecuta en local (sección~\ref{sec:eleccionLLM}) y cómo se revisa y arbitra lo que la IA propone (sección~\ref{sec:arbitraje}). La sección~\ref{sec:peticionPlan} cierra el recorrido desde la petición hasta el plan firmado. La generación asíncrona y la validación se cuentan aquí solo en lo que el profesional percibe, porque sus mecanismos ya están descritos en las secciones~\ref{sec:capaServicio} y~\ref{sec:validador}; y las pruebas de los modelos de lenguaje, con sus bancos y mediciones, se enseñan en el capítulo~\ref{cap:evaluacion}.
+
+\section{El flujo del copiloto}
+\label{sec:flujoCopiloto}
+
+El punto de partida del diseño es que el responsable del plan es el profesional colegiado que lo firma. Por eso el copiloto no genera dietas por su cuenta: redacta restricciones a partir de lo que el nutricionista escribe, se las enseña antes de aplicarlas y no guarda nada sin su decisión. Lo que se le pide es ahorrar el trabajo de traducir la petición a parámetros, manteniendo el control clínico donde estaba.
+
+El flujo se entiende mejor siguiendo una petición real. El nutricionista elige al cliente y escribe el encargo como lo apuntaría en consulta: "sin gluten, unas 2000 kcal al día y al menos 120 g de proteína". El sistema revisa primero el mensaje y, si detecta que falta un dato, que algo choca con lo ya guardado o que la petición se sale de su ámbito, se lo devuelve con el motivo concreto para que lo corrija. Si el mensaje es viable, el traductor lo convierte en restricciones del vocabulario del capítulo~\ref{cap:motorGeneracion} y se las presenta en frases llanas, sin jerga técnica. La figura~\ref{fig:flujoCopiloto} recoge el recorrido completo.
+
+\begin{figure}[t]
+\begin{center}
+\begin{tikzpicture}[
+  font=\footnotesize,
+  caja/.style={draw, rounded corners=2pt, align=center, minimum height=10mm, inner sep=4pt, fill=white, text width=27mm},
+  grupo/.style={draw, dashed, rounded corners=3pt, inner sep=6pt},
+  nomgrupo/.style={font=\scriptsize\itshape, anchor=west},
+  fl/.style={-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt},
+  flret/.style={-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt, dashed},
+  etiqfl/.style={font=\scriptsize, align=center, fill=white, inner sep=1.5pt}
+]
+\node[caja] (escribe) {Escribe la petición en su lenguaje};
+\node[caja, right=10mm of escribe] (arbitra) {Arbitra cada restricción propuesta};
+\node[caja, right=10mm of arbitra] (firma) {Revisa el borrador y lo firma};
+\node[caja, below=13mm of escribe] (revisa) {Revisión previa del mensaje};
+\node[caja, below=13mm of arbitra] (traduce) {Traducción a restricciones};
+\node[caja, below=13mm of firma] (motor) {Motor y\\validador};
+\draw[fl] ([xshift=-5mm]escribe.south) -- ([xshift=-5mm]revisa.north);
+\draw[flret] ([xshift=5mm]revisa.north) -- ([xshift=5mm]escribe.south)
+  node[etiqfl, midway, right=1mm] {qué falta\\o choca};
+\draw[fl] (revisa) -- (traduce);
+\draw[fl] (traduce) -- (arbitra) node[etiqfl, midway, right=1mm] {propuestas\\en frases llanas};
+\draw[fl] (arbitra.south east) -- (motor.north west);
+\draw[fl] ([xshift=5mm]motor.north) -- ([xshift=5mm]firma.south)
+  node[etiqfl, midway, right=1mm] {borrador\\con avisos};
+\coordinate (retbajo) at ($(motor.south)+(0,-8mm)$);
+\coordinate (retizq) at ($(escribe.west)+(-6mm,0)$);
+\draw[flret, rounded corners=3pt] (motor.south) -- (retbajo)
+  -- (retbajo -| retizq) node[etiqfl, midway, below=1mm] {si no hay plan posible: el conflicto, explicado}
+  -- (retizq) -- (escribe.west);
+\node[grupo, fit=(escribe)(arbitra)(firma)] (gprof) {};
+\node[nomgrupo] at ($(gprof.north west)+(1mm,2.5mm)$) {el profesional};
+\node[grupo, fit=(revisa)(traduce)(motor)] (gsist) {};
+\node[nomgrupo] at ($(gsist.south west)+(1mm,-2.5mm)$) {el sistema};
+\end{tikzpicture}
+\caption{El flujo del copiloto. La fila superior son las decisiones del profesional y la inferior el trabajo del sistema: ningún resultado avanza hacia el cliente sin pasar antes por una decisión suya.}
+\label{fig:flujoCopiloto}
+\end{center}
+\end{figure}
+
+Sobre cada restricción propuesta el profesional decide una de tres cosas: guardarla en el perfil del cliente, usarla solo para esta generación o descartarla. Lo que el traductor no entendió también se le enseña con su motivo, en vez de desaparecer en silencio. Y en la misma pantalla puede añadir restricciones a mano, así que las propuestas de la IA y las suyas conviven en una única lista antes de generar.
+
+Con las restricciones decididas, el motor construye el borrador y el validador lo audita. Si no existe ningún plan que cumpla todo, el conflicto se le explica en una frase con los nombres de su propio catálogo (sección~\ref{sec:peticionPlan}). El plan generado queda como borrador, y solo pasa a ser visible para el cliente cuando el profesional lo firma, con la política de visibilidad de la sección~\ref{sec:capaSeguridad}.
+
+El copiloto es además opcional en cada paso. La misma pantalla permite saltarlo y fijar las restricciones a mano, y los formularios de la ficha del cliente y del estilo clínico escriben sobre la misma tabla que el traductor (figura~\ref{fig:productorConsumidor}): el motor no distingue el origen. La vía manual queda así como respaldo permanente: si el modelo de lenguaje no está disponible, la aplicación entera funciona igual y el profesional solo pierde la comodidad de escribir en su lenguaje.
+
+% TODO 9b-3: secciones pendientes de redactar tras la revisión de la muestra.
+
+\section{Del texto a las restricciones}
+\label{sec:textoRestricciones}
+
+% TODO: pasadas previas con errores útiles (descripción general) + traducción en dos capas.
+
+\section{La elección del modelo de lenguaje}
+\label{sec:eleccionLLM}
+
+% TODO: la herencia del cap 3 (privacidad RNF-IA-4, coste, motor intercambiable, runtime vs modelo).
+
+\section{Revisión y arbitraje}
+\label{sec:arbitraje}
+
+% TODO: lista unificada AI/Manual, tres decisiones, lenguaje llano, rechazos visibles, estilo clínico.
+
+\section{De la petición al plan firmado}
+\label{sec:peticionPlan}
+
+% TODO: async y validación en descripción general con \ref, infactibilidad llana, la firma.
