@@ -1,14 +1,14 @@
 \chapter{El copiloto de IA}
 \label{cap:copilotoIA}
 
-El copiloto de IA es la capa que permite al nutricionista pedir un plan escribiendo lo que quiere en su propio lenguaje. Sobre el motor determinista del capítulo~\ref{cap:motorGeneracion} se añade un modelo de lenguaje que convierte ese texto en restricciones del vocabulario cerrado, y una interfaz que enseña cada paso intermedio. El planteamiento es el de un asistente de redacción: la IA propone restricciones, y el profesional decide cuáles se aplican, cuáles se guardan y qué plan llega al cliente. Este capítulo recorre el copiloto desde su punto de vista: qué escribe, qué le devuelve el sistema y qué decisiones quedan siempre en su mano.
+El copiloto de IA es la capa que permite al nutricionista pedir un plan escribiendo lo que quiere en su propio lenguaje. Sobre el motor determinista del capítulo~\ref{cap:motorGeneracion} se añade un modelo de lenguaje que convierte ese texto en restricciones del vocabulario cerrado, y una interfaz que enseña cada paso intermedio. Realmente funciona como un asistente de redacción: la IA propone restricciones, y el profesional decide cuáles se aplican, cuáles se guardan y qué plan llega al cliente. Este capítulo explica qué escribe, qué le devuelve el sistema y qué decisiones toma el copiloto.
 
 La sección~\ref{sec:flujoCopiloto} presenta el flujo completo y los puntos donde decide el profesional. Las tres siguientes desarrollan sus piezas: cómo se convierte el texto en restricciones (sección~\ref{sec:textoRestricciones}), por qué el modelo de lenguaje se ejecuta en local (sección~\ref{sec:eleccionLLM}) y cómo se revisa y arbitra lo que la IA propone (sección~\ref{sec:arbitraje}). La sección~\ref{sec:peticionPlan} cierra el recorrido desde la petición hasta el plan firmado. La generación asíncrona y la validación se cuentan aquí solo en lo que el profesional percibe, porque sus mecanismos ya están descritos en las secciones~\ref{sec:capaServicio} y~\ref{sec:validador}; y las pruebas de los modelos de lenguaje, con sus bancos y mediciones, se enseñan en el capítulo~\ref{cap:evaluacion}.
 
 \section{El flujo del copiloto}
 \label{sec:flujoCopiloto}
 
-El punto de partida del diseño es que el responsable del plan es el profesional colegiado que lo firma. Por eso el copiloto no genera dietas por su cuenta: redacta restricciones a partir de lo que el nutricionista escribe, se las enseña antes de aplicarlas y no guarda nada sin su decisión. Lo que se le pide es ahorrar el trabajo de traducir la petición a parámetros, manteniendo el control clínico donde estaba.
+El punto de partida del diseño es que el responsable del plan es el profesional colegiado que lo firma. Por eso el copiloto no genera dietas por su cuenta: redacta restricciones a partir de lo que el nutricionista escribe, se las enseña antes de aplicarlas y no guarda nada sin su decisión. Lo que se le pide es traducir la petición a parámetros, para agilizar el proceso.
 
 El flujo se entiende mejor siguiendo una petición real. El nutricionista elige al cliente y escribe el encargo como lo apuntaría en consulta: "sin gluten, unas 2000 kcal al día y al menos 120 g de proteína". El sistema revisa primero el mensaje y, si detecta que falta un dato, que algo choca con lo ya guardado o que la petición se sale de su ámbito, se lo devuelve con el motivo concreto para que lo corrija. Si el mensaje es viable, el traductor lo convierte en restricciones del vocabulario del capítulo~\ref{cap:motorGeneracion} y se las presenta en frases llanas, sin jerga técnica. La figura~\ref{fig:flujoCopiloto} recoge el recorrido completo.
 
@@ -52,30 +52,58 @@ El flujo se entiende mejor siguiendo una petición real. El nutricionista elige 
 \end{center}
 \end{figure}
 
-Sobre cada restricción propuesta el profesional decide una de tres cosas: guardarla en el perfil del cliente, usarla solo para esta generación o descartarla. Lo que el traductor no entendió también se le enseña con su motivo, en vez de desaparecer en silencio. Y en la misma pantalla puede añadir restricciones a mano, así que las propuestas de la IA y las suyas conviven en una única lista antes de generar.
+Sobre cada restricción propuesta el profesional decide una de tres cosas: guardarla en el perfil del cliente, usarla solo para esta generación o descartarla. Lo que el traductor no entendió también se le enseña con su motivo. Y en la misma pantalla puede añadir restricciones a mano, así que las propuestas de la IA y las suyas conviven en una única lista antes de generar.
 
 Con las restricciones decididas, el motor construye el borrador y el validador lo audita. Si no existe ningún plan que cumpla todo, el conflicto se le explica en una frase con los nombres de su propio catálogo (sección~\ref{sec:peticionPlan}). El plan generado queda como borrador, y solo pasa a ser visible para el cliente cuando el profesional lo firma, con la política de visibilidad de la sección~\ref{sec:capaSeguridad}.
 
-El copiloto es además opcional en cada paso. La misma pantalla permite saltarlo y fijar las restricciones a mano, y los formularios de la ficha del cliente y del estilo clínico escriben sobre la misma tabla que el traductor (figura~\ref{fig:productorConsumidor}): el motor no distingue el origen. La vía manual queda así como respaldo permanente: si el modelo de lenguaje no está disponible, la aplicación entera funciona igual y el profesional solo pierde la comodidad de escribir en su lenguaje.
-
-% TODO 9b-3: secciones pendientes de redactar tras la revisión de la muestra.
+El copiloto es además opcional en cada paso; la misma pantalla permite saltarlo y fijar las restricciones a mano, y los formularios de la ficha del cliente y del estilo clínico escriben sobre la misma tabla que el traductor (figura~\ref{fig:productorConsumidor}): el motor no distingue el origen. La vía manual queda así como respaldo permanente: si el modelo de lenguaje no está disponible, la aplicación entera funciona igual y el profesional solo pierde la comodidad de escribir en su lenguaje.
 
 \section{Del texto a las restricciones}
 \label{sec:textoRestricciones}
 
-% TODO: pasadas previas con errores útiles (descripción general) + traducción en dos capas.
+El mensaje no va directo al modelo de lenguaje. Antes pasa por una revisión previa: una comprobación determinista descarta los idiomas que el sistema no soporta, y tres comprobaciones separadas, cada una con una llamada aislada al modelo, valoran si la petición es del ámbito dietético, si está completa y si se contradice a sí misma. Cuando alguna falla, la tarea termina ahí y el profesional recibe el veredicto con sus detalles; la pantalla le devuelve el mensaje original precargado para corregirlo sin reescribirlo.
+
+Cada comprobación usa el modelo más pequeño que hace bien ese trabajo. Al medirlas por separado con un banco de mensajes propio, el tamaño necesario resultó distinto en cada una: el modelo que basta para juzgar el ámbito falla la completitud, y ningún modelo único daba buen resultado en las tres. La matriz de esa medición se enseña en el capítulo~\ref{cap:evaluacion}.
+
+Las contradicciones se reparten entre tres capas, cada problema en la capa más fiable que puede resolverlo. El modelo de lenguaje detecta las categoriales dentro del mensaje, como quitar la carne y a la vez pedir más ternera; el código puro compara las restricciones propuestas entre sí y con las ya guardadas del cliente, y avisa con los nombres reales de lo que choca; y las aritméticas, como un objetivo calórico incompatible con un mínimo de proteína, no las juzga nadie por adelantado: las detecta el motor como infactibilidad y se explican como cuenta la sección~\ref{sec:peticionPlan}.
+
+Superada la revisión, la traducción se reparte entre el modelo y una capa determinista. El modelo de lenguaje solo extrae la intención: el tipo de restricción, elegido de la lista cerrada de tipos del catálogo que va en el propio prompt, el objetivo (un nutriente o una familia por su código, un alimento por su nombre) y el valor. La capa determinista resuelve después cada código y cada nombre contra el catálogo real de la base de datos y valida la restricción con las mismas reglas que el formulario manual.
+
+El criterio del reparto es que todo lo verificable en código queda fuera del modelo: el modelo elige de un menú, no inventa identificadores, y lo que no se puede resolver se rechaza con su motivo en vez de adivinarse. Si el nutricionista escribe un alimento que no existe en su catálogo, esa petición aparece entre las no aplicadas con su explicación, y el resto del mensaje se traduce igual. Una restricción que supera este camino es idéntica a una creada a mano: mismas columnas, misma validación, mismo consumidor.
+
+Este reparto hace además al traductor poco sensible a cómo esté redactado el mensaje: la lista cerrada y la validación posterior absorben la variación de formato. El estudio que lo midió se enseña en el capítulo~\ref{cap:evaluacion}.
 
 \section{La elección del modelo de lenguaje}
 \label{sec:eleccionLLM}
 
-% TODO: la herencia del cap 3 (privacidad RNF-IA-4, coste, motor intercambiable, runtime vs modelo).
+Decidí ejecutar el modelo de lenguaje en local. Es la decisión de privacidad que la sección~\ref{sec:despliegue} dejaba remitida a este capítulo: los mensajes del profesional hablan de datos clínicos de personas concretas, y uno de los requisitos no funcionales del capítulo~\ref{cap:analisisRequisitos} fija que ese dato no se envía a ningún proveedor de IA. Con un modelo abierto ejecutado en la propia máquina, el texto no sale del entorno del profesional; la consecuencia sobre el despliegue, que el worker corre donde corre el modelo, ya se contó en la sección~\ref{sec:despliegue}.
+
+El modelo es qwen2.5~\citep{qwen25}, una familia abierta con variantes de varios tamaños, ejecutada con Ollama, el entorno que sirve modelos en local y admite salida con esquema. El traductor usa la variante 7B ajustada a instrucciones; las comprobaciones de la revisión previa usan variantes más pequeñas de la misma familia, elegidas como se contó en la sección~\ref{sec:textoRestricciones}.
+
+A la privacidad se suma el coste: cada consulta a un modelo local cuesta cero, y eso permitió medir, probar y repetir durante todo el desarrollo sin presupuesto. Las API gratuitas en la nube tenían la pega contraria: en sus planes sin coste, el proveedor puede usar los mensajes para entrenar, justo lo que el requisito prohíbe.
+
+El traductor no depende de esta elección. Habla con el modelo a través de una interfaz mínima, una función que recibe el prompt y el esquema de salida y devuelve la respuesta, así que cambiar a un motor remoto con garantías contractuales de no retención sería escribir otra implementación de esa interfaz, sin tocar el resto. Esa puerta queda abierta por diseño, y la comparación entre el motor local y uno remoto queda como trabajo futuro en el capítulo~\ref{cap:conclusiones}. Cada llamada deja además una fila de traza en la base de datos, con la entrada, la salida, el modelo, los tokens y la latencia: la materia prima de las mediciones del capítulo~\ref{cap:evaluacion}.
 
 \section{Revisión y arbitraje}
 \label{sec:arbitraje}
 
-% TODO: lista unificada AI/Manual, tres decisiones, lenguaje llano, rechazos visibles, estilo clínico.
+Todas las restricciones que van a alimentar una generación pasan por la misma pantalla de revisión. Las que propuso el traductor aparecen con su origen marcado, y el profesional puede añadir otras a mano en la misma lista, con el mismo formulario de la ficha del cliente; al persistirse, cada fila conserva su origen real. Sobre cada una toma una de las tres decisiones que adelantó la sección~\ref{sec:flujoCopiloto}: guardarla en el perfil del cliente (queda en su ficha, como si la hubiera creado a mano), aplicarla solo a esta generación (viaja con la tarea y no se guarda) o descartarla.
+
+Los fallos también tienen su sitio en esta pantalla. Las peticiones que el traductor no supo aplicar se enseñan con su motivo; cada veredicto de la revisión previa tiene su aviso con el detalle y el camino de corrección, con el mensaje precargado para editarlo; y las generaciones fallidas quedan listadas con su explicación.
+
+Los tutores pidieron además que todo esto hablara el idioma del profesional. Una restricción se enseña siempre como una frase (nunca incluir gluten, unas 2000 kcal al día) y su prioridad como obligatoria o preferible, sin los nombres internos de la base de datos. Las frases salen de una única función compartida por la ficha del cliente, los ajustes y esta pantalla, para que la misma fila se lea igual en toda la aplicación. También el formulario manual se reorganizó por intención (fijar un objetivo, evitar un alimento o una familia, dar forma a las comidas) en vez de por el nombre técnico de cada tipo.
+
+Además de las restricciones del cliente, el profesional mantiene en sus ajustes sus reglas de estilo: las que aplica a todos sus planes, como no repetir carne roja en días seguidos. Usan el mismo vocabulario y el mismo formulario, y el motor las une con las del cliente en cada generación; es el tercer productor de la figura~\ref{fig:productorConsumidor}. La versión ambiciosa de esta idea, aprender el estilo del profesional a partir de sus correcciones, queda como trabajo futuro en el capítulo~\ref{cap:conclusiones}.
 
 \section{De la petición al plan firmado}
 \label{sec:peticionPlan}
 
-% TODO: async y validación en descripción general con \ref, infactibilidad llana, la firma.
+Generar con IA es lento para una petición web: entre el modelo de lenguaje y el solver, una generación tarda desde varios segundos hasta más de un minuto. La primera versión lo hacía todo en la misma petición y bloqueaba la pantalla mientras tanto. Pablo me recomendó el patrón que lo resuelve: encolar el trabajo, responder al instante y consultar el estado periódicamente. La mecánica, con la cola en la base de datos y el worker que la consume, se describió en la sección~\ref{sec:capaServicio}.
+
+Para el profesional, el efecto es que la aplicación no se queda colgada: confirma la generación, puede irse a otra pantalla y el apartado de planes enseña cada tarea con su estado hasta que el plan aparece. Si el worker no está encendido, la interfaz avisa de que la tarea sigue esperándolo (sección~\ref{sec:despliegue}).
+
+Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{sec:infactibilidad} se convierte en una frase con los nombres reales del catálogo, del estilo de: el objetivo de 900\,kcal choca con el mínimo de 180\,g de proteína, y ninguna combinación de los alimentos disponibles cumple los dos. La generación fallida queda en la lista con esa explicación y el detalle del conflicto, y el profesional decide si reduce una de las dos restricciones o cambia el mensaje.
+
+El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}).
+
+Con la firma se cierra el recorrido del capítulo: de una petición escrita en el lenguaje del profesional a un plan auditado que él decidió restricción a restricción. La evaluación de las piezas de IA, con los bancos de las comprobaciones, el estudio de formatos y el comportamiento medido del modelo local, está en el capítulo~\ref{cap:evaluacion}.
