@@ -1,6 +1,6 @@
 # Formalización matemática del solver de planes (v2)
 
-**Agosto de 2026. Formalización del modelo real tras la capa de plausibilidad del catálogo: perfiles de ración por alimento, cantidades por unidades y reglas de composición de las comidas.**
+**Agosto de 2026. Formalización del modelo real tras la capa de plausibilidad del catálogo: perfiles de ración por alimento, cantidades por unidades y reglas de composición de las comidas. Actualizada en septiembre de 2026 con dos ajustes de eficiencia medidos: pesos del objetivo conmensurables (sección 2.2) y cotas de dominio apoyadas en la regla R2 (sección 8.2).**
 
 > Este documento formaliza matemáticamente el generador de planes de NutriApp tal como está implementado, no como se diseñó en papel. Es la segunda versión de la formalización: la primera recogió el modelo con las reglas estructurales de sentido común; desde entonces el modelo ha incorporado una capa de plausibilidad alimentaria que sustituye los límites globales de gramos por perfiles de ración por alimento, cuantiza ciertos alimentos a piezas y medias piezas, y añade reglas de composición de las comidas (franjas del día, acompañamiento de condimentos, papel del dulce y la fruta). Aquí se recoge el modelo definitivo, con notación matemática, para que sirva de fuente única de la sección de formalización de la memoria y de guía del código. La versión anterior se conserva como registro del modelo previo. El motor es correcto y está verificado; este documento no lo rehace, lo describe con rigor.
 
@@ -96,7 +96,7 @@ Antes de construir el modelo se preparan en Python los siguientes parámetros. T
 - **tag(f)** ⊆ etiquetas: familias, marcadores, roles y franjas del alimento *f* (por ejemplo `vegetable`, `lactose`, `red_meat`, `condiment`, `moment_breakfast`). Para una etiqueta *t*, se define **miembros(t)** = { f ∈ F : t ∈ tag(f) }. Los subconjuntos que consumen las reglas de plausibilidad se definen en la sección 2.4.
 - Umbrales estructurales, todos en `config.py`: `MIN_GRAMS_PRESENT` = 10, `MAX_ITEMS_PER_MEAL` = 4, `MAX_SAME_FOOD_PER_DAY` = 2, `MIN_DISTINCT_PER_DAY` = 4, `MIN_DISTINCT_PER_WEEK` = 10, `MAX_APPEARANCES_PER_DAY_RATIO` = 0.6, `FAT_MIN_PCT_ENERGY` = 15, rango de proteína (0.8, 2.2) g/kg.
 - Umbrales de plausibilidad, también en `config.py`: `MIN_ITEMS_MAIN_MEAL` = 2, `CONDIMENT_MAX_PER_DAY` = 2, `SWEET_FRUIT_MAX_PER_MEAL` = 1, y los fallbacks del perfil `FALLBACK_MIN_SERVING_G` = 20 y `FALLBACK_MAX_SERVING_G` = 250.
-- Pesos del objetivo por familia (`ObjectiveWeights`): w_kcal = 10, w_protein = 8, w_carb = 6, w_fat = 6, w_prefer = 4, w_no_repeat = 5, w_variety = 5, w_spread = 4. Sobre ellos, cada fila de restricción modula con su peso propio, de 1 a 10 (sección 8.4).
+- Pesos del objetivo por familia (`ObjectiveWeights`): w_kcal = 10, w_protein = 8, w_carb = 6, w_fat = 6, w_prefer = 4.000, w_no_repeat = 5.000, w_variety = 5.000, w_spread = 4.000. Sobre ellos, cada fila de restricción modula con su peso propio, de 1 a 10 (sección 8.4). Los pesos de las familias no nutricionales llevan incorporado un factor de 1.000 que compensa la escala entera de las desviaciones: una desviación nutricional se mide en unidades escaladas (1 kcal o 1 g son 1.000 unidades, sección 2.5) mientras que una preferencia o un alimento sin usar se miden en unidades de 1, y sin ese factor mover una familia estructural entera no compensaba ni una unidad natural de desviación. Con él, las intenciones relativas de los pesos (10 frente a 5 frente a 4) operan sobre unidades conmensurables: un alimento sin usar equivale a medio punto de kcal de desviación, no a media milésima.
 
 ### 2.3 El perfil de ración como dato del catálogo
 
@@ -478,7 +478,7 @@ $$
 |\text{suma} - \text{objetivo}| = \text{over} + \text{under}
 $$
 
-Los dominios de over y under se acotan ajustados en lugar de con una cota holgada común: el exceso llega como mucho a (cota_superior − objetivo) y el defecto como mucho a objetivo. La cota superior de cada nutriente se deriva del máximo real del nutriente en el catálogo y del mayor máximo de ración de los perfiles, no de una holgura arbitraria; con catálogos grandes una cota fija podía superar el rango de la suma y hacer que el solver rechazara el modelo. Acotar ajustado mejora además la propagación.
+Los dominios de over y under se acotan ajustados en lugar de con una cota holgada común: el exceso llega como mucho a (cota_superior − objetivo) y el defecto como mucho a objetivo. La cota superior de cada nutriente por comida se apoya en la propia regla R2: como una comida lleva a lo sumo MAX_ITEMS_PER_MEAL alimentos distintos, la cota es la suma de las MAX_ITEMS_PER_MEAL mayores aportaciones individuales alcanzables (ración máxima del alimento por su densidad escalada), y la diaria es esa cota por el número de comidas. La formulación anterior suponía el catálogo entero coincidiendo en una comida, cada alimento con la mayor ración y la mayor densidad del catálogo; la cota actual es entre uno y dos órdenes de magnitud menor sin excluir ninguna solución, y los dominios pequeños mejoran la propagación y reducen la memoria del proceso.
 
 ### 8.3 Términos estructurales de variedad y reparto
 
@@ -509,7 +509,7 @@ $$
 \text{peso efectivo} = w_{\text{familia}} \cdot \text{peso de la fila}
 $$
 
-Esto da una regla de prioridad clara sin necesidad de exponer un panel de ajuste global. Un objetivo calórico con peso de fila 7 pesa 10 · 7 = 70; una preferencia de familia con peso 4 pesa 4 · 4 = 16.
+Esto da una regla de prioridad clara sin necesidad de exponer un panel de ajuste global. Un objetivo calórico con peso de fila 7 pesa 10 · 7 = 70 por unidad escalada de desviación (70.000 por kcal); una preferencia de familia con peso 4 pesa 4.000 · 4 = 16.000 por aparición, que en unidades naturales son magnitudes comparables (sección 2.2).
 
 ---
 

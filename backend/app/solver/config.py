@@ -112,16 +112,23 @@ SOLVE_WORKERS = int(os.environ.get("SOLVER_WORKERS", "8"))
 SOLVE_RELATIVE_GAP = 0.02
 
 
+# las desviaciones nutricionales del objetivo se miden en unidades escaladas
+# (1 kcal o 1 g = NUTRIENT_SCALE * 100 = 1000 unidades), mientras que las
+# familias de preferencia y estructura cuentan de 1 en 1 (apariciones,
+# alimentos sin usar). los pesos de estas ultimas llevan ese factor 1000
+# incorporado para que las familias sean conmensurables: sin el, mover una
+# familia estructural entera compensaba menos de 0.1 kcal de desviacion
+# (medido en el analisis de magnitudes del objetivo).
 @dataclass(frozen=True)
 class ObjectiveWeights:
     w_kcal: int = 10
     w_protein: int = 8
     w_carb: int = 6
     w_fat: int = 6
-    w_prefer: int = 4
-    w_no_repeat: int = 5
-    w_variety: int = 5
-    w_spread: int = 4
+    w_prefer: int = 4000
+    w_no_repeat: int = 5000
+    w_variety: int = 5000
+    w_spread: int = 4000
 
 
 DEFAULT_WEIGHTS = ObjectiveWeights()

@@ -144,13 +144,18 @@ def build_base_model(
     )
 
     # sumas escaladas de nutriente, precomputadas para reuso. la cota de cada
-    # suma se deriva del maximo real del nutriente en el pool, no de una holgura
-    # arbitraria, para no inflar dominios (afecta a las auxiliares del objetivo).
+    # suma es la mayor aportacion alcanzable de verdad en una comida: como una
+    # comida lleva a lo sumo MAX_ITEMS_PER_MEAL alimentos distintos, basta la
+    # suma de las mayores contribuciones individuales (racion maxima del
+    # alimento por su densidad), no el catalogo entero a la vez. dominios mas
+    # ajustados propagan mejor (afecta a las auxiliares del objetivo).
     codes = _nutrient_codes_in_use(foods)
-    max_serving = max((serving_bounds(f)[1] for f in foods), default=C.GRAMS_MAX)
     for code in codes:
-        max_100 = max((scaled_100(f, code) for f in foods), default=0)
-        max_meal = max_serving * len(foods) * max_100
+        contribs = sorted(
+            (serving_bounds(f)[1] * scaled_100(f, code) for f in foods),
+            reverse=True,
+        )
+        max_meal = sum(contribs[:C.MAX_ITEMS_PER_MEAL])
         max_day = max_meal * len(meals)
         pm.nut_upper[code] = max_day
         for d in days:
