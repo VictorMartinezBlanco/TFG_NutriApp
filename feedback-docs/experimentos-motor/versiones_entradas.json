@@ -1,0 +1,4445 @@
+{
+ "nutrient_codes": {
+  "1": "energy_kcal",
+  "2": "protein_g",
+  "3": "carb_g",
+  "4": "fat_g",
+  "5": "sat_fat_g",
+  "6": "fiber_g",
+  "7": "sodium_mg",
+  "8": "sugar_added_g",
+  "9": "iron_mg",
+  "10": "calcium_mg",
+  "11": "vit_d_ug",
+  "12": "vit_b12_ug"
+ },
+ "foods": [
+  {
+   "id": 2,
+   "name": "Chicken breast, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 110.0,
+    "protein_g": 23.0,
+    "carb_g": 0.0,
+    "fat_g": 1.9,
+    "sat_fat_g": 0.5,
+    "fiber_g": 0.0,
+    "sodium_mg": 65.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.7,
+    "calcium_mg": 11.0,
+    "vit_b12_ug": 0.3
+   },
+   "tag_ids": [
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 3,
+   "name": "Salmon, raw",
+   "typical_serving_g": 125.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 208.0,
+    "protein_g": 20.0,
+    "carb_g": 0.0,
+    "fat_g": 13.0,
+    "sat_fat_g": 3.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 59.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.8,
+    "calcium_mg": 12.0,
+    "vit_d_ug": 11.0,
+    "vit_b12_ug": 3.2
+   },
+   "tag_ids": [
+    5,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fish_allergen",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 4,
+   "name": "Egg, whole",
+   "typical_serving_g": 60.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 180.0,
+   "grams_per_unit": 60.0,
+   "nutrients": {
+    "energy_kcal": 143.0,
+    "protein_g": 12.6,
+    "carb_g": 0.7,
+    "fat_g": 9.5,
+    "sat_fat_g": 3.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 142.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.8,
+    "calcium_mg": 56.0,
+    "vit_d_ug": 2.0,
+    "vit_b12_ug": 1.1
+   },
+   "tag_ids": [
+    4,
+    11,
+    13,
+    14,
+    27
+   ],
+   "tag_codes": [
+    "eggs_allergen",
+    "halal",
+    "no_pork",
+    "protein_source",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 5,
+   "name": "Cow's milk, semi-skimmed",
+   "typical_serving_g": 200.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 46.0,
+    "protein_g": 3.3,
+    "carb_g": 4.8,
+    "fat_g": 1.6,
+    "sat_fat_g": 1.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 44.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.0,
+    "calcium_mg": 120.0,
+    "vit_d_ug": 0.0,
+    "vit_b12_ug": 0.4
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 6,
+   "name": "Plain yogurt",
+   "typical_serving_g": 125.0,
+   "min_serving_g": 125.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": 125.0,
+   "nutrients": {
+    "energy_kcal": 61.0,
+    "protein_g": 3.5,
+    "carb_g": 4.7,
+    "fat_g": 3.3,
+    "sat_fat_g": 2.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 46.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 121.0,
+    "vit_b12_ug": 0.4
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 7,
+   "name": "Cured cheese",
+   "typical_serving_g": 40.0,
+   "min_serving_g": 20.0,
+   "max_serving_g": 60.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 387.0,
+    "protein_g": 25.0,
+    "carb_g": 1.4,
+    "fat_g": 32.0,
+    "sat_fat_g": 20.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 700.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 850.0,
+    "vit_d_ug": 0.6,
+    "vit_b12_ug": 1.5
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    15,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "high_sodium",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 8,
+   "name": "White rice, raw",
+   "typical_serving_g": 70.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 354.0,
+    "protein_g": 7.0,
+    "carb_g": 78.0,
+    "fat_g": 0.6,
+    "sat_fat_g": 0.2,
+    "fiber_g": 1.3,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.8,
+    "calcium_mg": 10.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    18,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "high_gi",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 9,
+   "name": "White wheat bread",
+   "typical_serving_g": 50.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 265.0,
+    "protein_g": 9.0,
+    "carb_g": 49.0,
+    "fat_g": 3.2,
+    "sat_fat_g": 0.7,
+    "fiber_g": 2.7,
+    "sodium_mg": 490.0,
+    "sugar_added_g": 3.0,
+    "iron_mg": 1.5,
+    "calcium_mg": 90.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    15,
+    18,
+    24
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "high_gi",
+    "high_sodium",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 10,
+   "name": "Oat flakes",
+   "typical_serving_g": 40.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 80.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 379.0,
+    "protein_g": 13.0,
+    "carb_g": 58.0,
+    "fat_g": 7.0,
+    "sat_fat_g": 1.2,
+    "fiber_g": 10.0,
+    "sodium_mg": 4.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 4.3,
+    "calcium_mg": 52.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    24,
+    30,
+    31,
+    33
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "moment_breakfast",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 11,
+   "name": "Wheat pasta, raw",
+   "typical_serving_g": 75.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 125.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 359.0,
+    "protein_g": 12.5,
+    "carb_g": 71.0,
+    "fat_g": 1.5,
+    "sat_fat_g": 0.3,
+    "fiber_g": 3.0,
+    "sodium_mg": 6.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.4,
+    "calcium_mg": 22.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 12,
+   "name": "Lentils, dry",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 336.0,
+    "protein_g": 24.0,
+    "carb_g": 52.0,
+    "fat_g": 1.8,
+    "sat_fat_g": 0.3,
+    "fiber_g": 11.5,
+    "sodium_mg": 24.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 7.5,
+    "calcium_mg": 56.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 13,
+   "name": "Chickpeas, dry",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 364.0,
+    "protein_g": 19.0,
+    "carb_g": 61.0,
+    "fat_g": 6.0,
+    "sat_fat_g": 0.6,
+    "fiber_g": 17.0,
+    "sodium_mg": 24.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 6.2,
+    "calcium_mg": 105.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 14,
+   "name": "Extra virgin olive oil",
+   "typical_serving_g": 10.0,
+   "min_serving_g": 10.0,
+   "max_serving_g": 20.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "iron_mg": 0.0,
+    "calcium_mg": 1.0,
+    "energy_kcal": 884.0,
+    "protein_g": 0.0,
+    "carb_g": 0.0,
+    "fat_g": 100.0,
+    "sat_fat_g": 14.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 0.0,
+    "sugar_added_g": 0.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    28
+   ],
+   "tag_codes": [
+    "condiment",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 15,
+   "name": "Almonds, raw",
+   "typical_serving_g": 30.0,
+   "min_serving_g": 15.0,
+   "max_serving_g": 40.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 579.0,
+    "protein_g": 21.0,
+    "carb_g": 22.0,
+    "fat_g": 50.0,
+    "sat_fat_g": 3.8,
+    "fiber_g": 12.5,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 3.7,
+    "calcium_mg": 269.0
+   },
+   "tag_ids": [
+    8,
+    11,
+    12,
+    13,
+    14
+   ],
+   "tag_codes": [
+    "halal",
+    "no_pork",
+    "tree_nuts",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 16,
+   "name": "Tomato, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 18.0,
+    "protein_g": 0.9,
+    "carb_g": 3.9,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.2,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 10.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    30,
+    31,
+    32,
+    33,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_breakfast",
+    "moment_dinner",
+    "moment_lunch",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 17,
+   "name": "Broccoli, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 34.0,
+    "protein_g": 2.8,
+    "carb_g": 7.0,
+    "fat_g": 0.4,
+    "sat_fat_g": 0.1,
+    "fiber_g": 2.6,
+    "sodium_mg": 33.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.7,
+    "calcium_mg": 47.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 18,
+   "name": "Spinach, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "fat_g": 0.4,
+    "sat_fat_g": 0.1,
+    "fiber_g": 2.2,
+    "sodium_mg": 79.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.7,
+    "calcium_mg": 99.0,
+    "energy_kcal": 23.0,
+    "protein_g": 2.9,
+    "carb_g": 3.6
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    16,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "high_potassium",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 19,
+   "name": "Potato, raw",
+   "typical_serving_g": 180.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 77.0,
+    "protein_g": 2.0,
+    "carb_g": 17.0,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.2,
+    "sodium_mg": 6.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.8,
+    "calcium_mg": 12.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    16,
+    18,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "high_gi",
+    "high_potassium",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 20,
+   "name": "Apple, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 75.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": 150.0,
+   "nutrients": {
+    "energy_kcal": 52.0,
+    "protein_g": 0.3,
+    "carb_g": 14.0,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.4,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 6.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 21,
+   "name": "Banana, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 240.0,
+   "grams_per_unit": 120.0,
+   "nutrients": {
+    "energy_kcal": 89.0,
+    "protein_g": 1.1,
+    "carb_g": 23.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.1,
+    "fiber_g": 2.6,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 5.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    16,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "high_potassium",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 22,
+   "name": "Canned tuna in water",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": 60.0,
+   "nutrients": {
+    "energy_kcal": 116.0,
+    "protein_g": 26.0,
+    "carb_g": 0.0,
+    "fat_g": 1.0,
+    "sat_fat_g": 0.3,
+    "fiber_g": 0.0,
+    "sodium_mg": 320.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.3,
+    "calcium_mg": 11.0,
+    "vit_d_ug": 1.7,
+    "vit_b12_ug": 2.2
+   },
+   "tag_ids": [
+    5,
+    13,
+    14,
+    15,
+    27,
+    31,
+    32,
+    33,
+    34
+   ],
+   "tag_codes": [
+    "fish_allergen",
+    "halal",
+    "high_sodium",
+    "moment_dinner",
+    "moment_lunch",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 23,
+   "name": "Firm tofu",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 80.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 144.0,
+    "protein_g": 15.0,
+    "carb_g": 2.8,
+    "fat_g": 8.7,
+    "sat_fat_g": 1.3,
+    "fiber_g": 2.0,
+    "sodium_mg": 14.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.7,
+    "calcium_mg": 350.0
+   },
+   "tag_ids": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source",
+    "soy",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 28,
+   "name": "Lean beef, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 187.0,
+    "protein_g": 21.0,
+    "carb_g": 0.0,
+    "fat_g": 11.0,
+    "sat_fat_g": 4.5,
+    "fiber_g": 0.0,
+    "sodium_mg": 55.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.6,
+    "calcium_mg": 12.0,
+    "vit_b12_ug": 2.5
+   },
+   "tag_ids": [
+    13,
+    14,
+    21,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source",
+    "red_meat"
+   ]
+  },
+  {
+   "id": 29,
+   "name": "Turkey breast, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 104.0,
+    "protein_g": 24.0,
+    "carb_g": 0.0,
+    "fat_g": 1.0,
+    "sat_fat_g": 0.3,
+    "fiber_g": 0.0,
+    "sodium_mg": 63.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.0,
+    "calcium_mg": 12.0,
+    "vit_b12_ug": 1.6
+   },
+   "tag_ids": [
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 30,
+   "name": "Peanut butter",
+   "typical_serving_g": 20.0,
+   "min_serving_g": 10.0,
+   "max_serving_g": 40.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 588.0,
+    "protein_g": 25.0,
+    "carb_g": 20.0,
+    "fat_g": 50.0,
+    "sat_fat_g": 10.0,
+    "fiber_g": 6.0,
+    "sodium_mg": 17.0,
+    "sugar_added_g": 5.0,
+    "iron_mg": 1.9,
+    "calcium_mg": 43.0
+   },
+   "tag_ids": [
+    9,
+    11,
+    12,
+    13,
+    14,
+    28
+   ],
+   "tag_codes": [
+    "condiment",
+    "halal",
+    "no_pork",
+    "peanuts",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 31,
+   "name": "Skim quark",
+   "typical_serving_g": 125.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 68.0,
+    "protein_g": 12.0,
+    "carb_g": 4.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.2,
+    "fiber_g": 0.0,
+    "sodium_mg": 40.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 90.0,
+    "vit_b12_ug": 0.8
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 32,
+   "name": "Green peas, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 81.0,
+    "protein_g": 5.4,
+    "carb_g": 14.0,
+    "fat_g": 0.4,
+    "sat_fat_g": 0.1,
+    "fiber_g": 5.1,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.5,
+    "calcium_mg": 25.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 33,
+   "name": "Canned sardines",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 40.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 208.0,
+    "protein_g": 24.6,
+    "carb_g": 0.0,
+    "fat_g": 11.5,
+    "sat_fat_g": 1.5,
+    "fiber_g": 0.0,
+    "sodium_mg": 307.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.9,
+    "calcium_mg": 382.0,
+    "vit_d_ug": 4.8,
+    "vit_b12_ug": 8.9
+   },
+   "tag_ids": [
+    5,
+    13,
+    14,
+    15,
+    27,
+    31,
+    32,
+    33,
+    34
+   ],
+   "tag_codes": [
+    "fish_allergen",
+    "halal",
+    "high_sodium",
+    "moment_dinner",
+    "moment_lunch",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 34,
+   "name": "Carrot, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 41.0,
+    "protein_g": 0.9,
+    "carb_g": 9.6,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.8,
+    "sodium_mg": 69.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 33.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    31,
+    32,
+    33,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 35,
+   "name": "Zucchini, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 17.0,
+    "protein_g": 1.2,
+    "carb_g": 3.1,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.1,
+    "fiber_g": 1.0,
+    "sodium_mg": 8.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 16.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 36,
+   "name": "Red bell pepper, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 31.0,
+    "protein_g": 1.0,
+    "carb_g": 6.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.1,
+    "fiber_g": 2.1,
+    "sodium_mg": 4.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 7.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 37,
+   "name": "Onion, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 100.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 40.0,
+    "protein_g": 1.1,
+    "carb_g": 9.3,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.7,
+    "sodium_mg": 4.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2,
+    "calcium_mg": 23.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    22,
+    28,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "condiment",
+    "fodmap_high",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 38,
+   "name": "Green beans, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 31.0,
+    "protein_g": 1.8,
+    "carb_g": 7.0,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 3.4,
+    "sodium_mg": 6.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.0,
+    "calcium_mg": 37.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 39,
+   "name": "Lettuce, raw",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 150.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 15.0,
+    "protein_g": 1.4,
+    "carb_g": 2.9,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.3,
+    "sodium_mg": 28.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.9,
+    "calcium_mg": 36.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 40,
+   "name": "Orange, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 75.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": 150.0,
+   "nutrients": {
+    "energy_kcal": 47.0,
+    "protein_g": 0.9,
+    "carb_g": 12.0,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.4,
+    "sodium_mg": 0.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 40.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 41,
+   "name": "Pear, raw",
+   "typical_serving_g": 160.0,
+   "min_serving_g": 80.0,
+   "max_serving_g": 320.0,
+   "grams_per_unit": 160.0,
+   "nutrients": {
+    "energy_kcal": 57.0,
+    "protein_g": 0.4,
+    "carb_g": 15.0,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 3.1,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2,
+    "calcium_mg": 9.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 42,
+   "name": "Strawberry, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "fiber_g": 2.0,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 16.0,
+    "energy_kcal": 32.0,
+    "protein_g": 0.7,
+    "carb_g": 7.7,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 43,
+   "name": "Kiwi, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 80.0,
+   "max_serving_g": 160.0,
+   "grams_per_unit": 80.0,
+   "nutrients": {
+    "energy_kcal": 61.0,
+    "protein_g": 1.1,
+    "carb_g": 15.0,
+    "fat_g": 0.5,
+    "sat_fat_g": 0.0,
+    "fiber_g": 3.0,
+    "sodium_mg": 3.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 34.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 44,
+   "name": "Grapes, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 80.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 69.0,
+    "protein_g": 0.7,
+    "carb_g": 18.0,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.1,
+    "fiber_g": 0.9,
+    "sodium_mg": 2.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 10.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    18,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "high_gi",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 45,
+   "name": "Brown rice, raw",
+   "typical_serving_g": 70.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 362.0,
+    "protein_g": 7.5,
+    "carb_g": 76.0,
+    "fat_g": 2.7,
+    "sat_fat_g": 0.5,
+    "fiber_g": 3.5,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.5,
+    "calcium_mg": 23.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 46,
+   "name": "Whole wheat bread",
+   "typical_serving_g": 50.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 247.0,
+    "protein_g": 13.0,
+    "carb_g": 41.0,
+    "fat_g": 3.4,
+    "sat_fat_g": 0.7,
+    "fiber_g": 7.0,
+    "sodium_mg": 450.0,
+    "sugar_added_g": 2.0,
+    "iron_mg": 2.5,
+    "calcium_mg": 107.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    15,
+    24
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "high_sodium",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 47,
+   "name": "Quinoa, raw",
+   "typical_serving_g": 70.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 100.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 368.0,
+    "protein_g": 14.0,
+    "carb_g": 64.0,
+    "fat_g": 6.1,
+    "sat_fat_g": 0.7,
+    "fiber_g": 7.0,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 4.6,
+    "calcium_mg": 47.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 48,
+   "name": "Couscous, raw",
+   "typical_serving_g": 70.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 100.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 376.0,
+    "protein_g": 13.0,
+    "carb_g": 77.0,
+    "fat_g": 0.6,
+    "sat_fat_g": 0.1,
+    "fiber_g": 5.0,
+    "sodium_mg": 10.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.1,
+    "calcium_mg": 24.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 49,
+   "name": "Sweet potato, raw",
+   "typical_serving_g": 180.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 86.0,
+    "protein_g": 1.6,
+    "carb_g": 20.0,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 3.0,
+    "sodium_mg": 55.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.6,
+    "calcium_mg": 30.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    16,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "high_potassium",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 50,
+   "name": "Sweet corn, canned",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 40.0,
+   "max_serving_g": 140.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 86.0,
+    "protein_g": 3.2,
+    "carb_g": 19.0,
+    "fat_g": 1.2,
+    "sat_fat_g": 0.2,
+    "fiber_g": 2.7,
+    "sodium_mg": 210.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.5,
+    "calcium_mg": 2.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 51,
+   "name": "White beans, dry",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 333.0,
+    "protein_g": 21.0,
+    "carb_g": 60.0,
+    "fat_g": 1.2,
+    "sat_fat_g": 0.3,
+    "fiber_g": 15.0,
+    "sodium_mg": 16.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 6.0,
+    "calcium_mg": 143.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 52,
+   "name": "Split peas, dry",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 341.0,
+    "protein_g": 25.0,
+    "carb_g": 60.0,
+    "fat_g": 1.2,
+    "sat_fat_g": 0.2,
+    "fiber_g": 26.0,
+    "sodium_mg": 15.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 4.4,
+    "calcium_mg": 55.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 53,
+   "name": "Cow's milk, whole",
+   "typical_serving_g": 200.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 63.0,
+    "protein_g": 3.2,
+    "carb_g": 4.7,
+    "fat_g": 3.6,
+    "sat_fat_g": 2.3,
+    "fiber_g": 0.0,
+    "sodium_mg": 43.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.0,
+    "calcium_mg": 118.0,
+    "vit_d_ug": 0.0,
+    "vit_b12_ug": 0.5
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 54,
+   "name": "Greek yogurt",
+   "typical_serving_g": 125.0,
+   "min_serving_g": 125.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": 125.0,
+   "nutrients": {
+    "energy_kcal": 97.0,
+    "protein_g": 9.0,
+    "carb_g": 3.6,
+    "fat_g": 5.0,
+    "sat_fat_g": 3.3,
+    "fiber_g": 0.0,
+    "sodium_mg": 36.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 100.0,
+    "vit_b12_ug": 0.5
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 55,
+   "name": "Cottage cheese",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 150.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 98.0,
+    "protein_g": 11.0,
+    "carb_g": 3.4,
+    "fat_g": 4.3,
+    "sat_fat_g": 1.7,
+    "fiber_g": 0.0,
+    "sodium_mg": 364.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 83.0,
+    "vit_b12_ug": 0.4
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    15,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "high_sodium",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 56,
+   "name": "Hake, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 72.0,
+    "protein_g": 17.0,
+    "carb_g": 0.0,
+    "fat_g": 0.8,
+    "sat_fat_g": 0.2,
+    "fiber_g": 0.0,
+    "sodium_mg": 100.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 27.0,
+    "vit_d_ug": 1.0,
+    "vit_b12_ug": 1.1
+   },
+   "tag_ids": [
+    5,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fish_allergen",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 57,
+   "name": "Shrimp, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 85.0,
+    "protein_g": 20.0,
+    "carb_g": 0.2,
+    "fat_g": 0.5,
+    "sat_fat_g": 0.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 224.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.5,
+    "calcium_mg": 64.0,
+    "vit_b12_ug": 1.5
+   },
+   "tag_ids": [
+    6,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "crustaceans",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 58,
+   "name": "Pork loin, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 143.0,
+    "protein_g": 21.0,
+    "carb_g": 0.0,
+    "fat_g": 6.0,
+    "sat_fat_g": 2.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 53.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.9,
+    "calcium_mg": 8.0,
+    "vit_b12_ug": 0.7
+   },
+   "tag_ids": [
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "moment_dinner",
+    "moment_lunch",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 59,
+   "name": "Chicken thigh, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 121.0,
+    "protein_g": 20.0,
+    "carb_g": 0.0,
+    "fat_g": 4.3,
+    "sat_fat_g": 1.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 86.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.9,
+    "calcium_mg": 8.0,
+    "vit_b12_ug": 0.5
+   },
+   "tag_ids": [
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 60,
+   "name": "Cooked ham",
+   "typical_serving_g": 50.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 107.0,
+    "protein_g": 18.0,
+    "carb_g": 1.0,
+    "fat_g": 3.5,
+    "sat_fat_g": 1.2,
+    "fiber_g": 0.0,
+    "sodium_mg": 950.0,
+    "sugar_added_g": 0.5,
+    "iron_mg": 0.8,
+    "calcium_mg": 8.0,
+    "vit_b12_ug": 0.6
+   },
+   "tag_ids": [
+    15,
+    19,
+    27
+   ],
+   "tag_codes": [
+    "high_sodium",
+    "nova_4",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 61,
+   "name": "Walnuts",
+   "typical_serving_g": 30.0,
+   "min_serving_g": 15.0,
+   "max_serving_g": 40.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 654.0,
+    "protein_g": 15.0,
+    "carb_g": 14.0,
+    "fat_g": 65.0,
+    "sat_fat_g": 6.1,
+    "fiber_g": 6.7,
+    "sodium_mg": 2.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.9,
+    "calcium_mg": 98.0
+   },
+   "tag_ids": [
+    8,
+    11,
+    12,
+    13,
+    14
+   ],
+   "tag_codes": [
+    "halal",
+    "no_pork",
+    "tree_nuts",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 62,
+   "name": "Avocado, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 70.0,
+   "max_serving_g": 140.0,
+   "grams_per_unit": 140.0,
+   "nutrients": {
+    "energy_kcal": 160.0,
+    "protein_g": 2.0,
+    "carb_g": 9.0,
+    "fat_g": 15.0,
+    "sat_fat_g": 2.1,
+    "fiber_g": 6.7,
+    "sodium_mg": 7.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.6,
+    "calcium_mg": 12.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    16,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "high_potassium",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 63,
+   "name": "Sunflower seeds",
+   "typical_serving_g": 25.0,
+   "min_serving_g": 10.0,
+   "max_serving_g": 30.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 584.0,
+    "protein_g": 21.0,
+    "carb_g": 20.0,
+    "fat_g": 51.0,
+    "sat_fat_g": 4.5,
+    "fiber_g": 8.6,
+    "sodium_mg": 9.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 5.2,
+    "calcium_mg": 78.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14
+   ],
+   "tag_codes": [
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 76,
+   "name": "Cauliflower, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 25.0,
+    "protein_g": 1.9,
+    "carb_g": 5.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.1,
+    "fiber_g": 2.0,
+    "sodium_mg": 30.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 22.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 77,
+   "name": "Eggplant, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 25.0,
+    "protein_g": 1.0,
+    "carb_g": 6.0,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 3.0,
+    "sodium_mg": 2.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2,
+    "calcium_mg": 9.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 78,
+   "name": "Cucumber, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 15.0,
+    "protein_g": 0.7,
+    "carb_g": 3.6,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 0.5,
+    "sodium_mg": 2.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 16.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    31,
+    32,
+    33,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 79,
+   "name": "Button mushroom, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 22.0,
+    "protein_g": 3.1,
+    "carb_g": 3.3,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.1,
+    "fiber_g": 1.0,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.5,
+    "calcium_mg": 3.0,
+    "vit_d_ug": 0.2
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 80,
+   "name": "Green asparagus, raw",
+   "typical_serving_g": 125.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 20.0,
+    "protein_g": 2.2,
+    "carb_g": 3.9,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.1,
+    "sodium_mg": 2.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.1,
+    "calcium_mg": 24.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 81,
+   "name": "Leek, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 61.0,
+    "protein_g": 1.5,
+    "carb_g": 14.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.8,
+    "sodium_mg": 20.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.1,
+    "calcium_mg": 59.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 82,
+   "name": "White cabbage, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "sat_fat_g": 0.0,
+    "energy_kcal": 25.0,
+    "protein_g": 1.3,
+    "carb_g": 5.8,
+    "fat_g": 0.1,
+    "fiber_g": 2.5,
+    "sodium_mg": 18.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.5,
+    "calcium_mg": 40.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 83,
+   "name": "Swiss chard, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 19.0,
+    "protein_g": 1.8,
+    "carb_g": 3.7,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.6,
+    "sodium_mg": 213.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.8,
+    "calcium_mg": 51.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    16,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "high_potassium",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 84,
+   "name": "Beetroot, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 43.0,
+    "protein_g": 1.6,
+    "carb_g": 9.6,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.8,
+    "sodium_mg": 78.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.8,
+    "calcium_mg": 16.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    22,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetable",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 85,
+   "name": "Melon, raw",
+   "typical_serving_g": 200.0,
+   "min_serving_g": 150.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 34.0,
+    "protein_g": 0.8,
+    "carb_g": 8.2,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 0.9,
+    "sodium_mg": 16.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2,
+    "calcium_mg": 9.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 86,
+   "name": "Watermelon, raw",
+   "typical_serving_g": 200.0,
+   "min_serving_g": 150.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 30.0,
+    "protein_g": 0.6,
+    "carb_g": 7.6,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 0.4,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2,
+    "calcium_mg": 7.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    18,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "high_gi",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 87,
+   "name": "Pineapple, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 50.0,
+    "protein_g": 0.5,
+    "carb_g": 13.0,
+    "fat_g": 0.1,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.4,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 13.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 88,
+   "name": "Mango, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "calcium_mg": 11.0,
+    "energy_kcal": 60.0,
+    "protein_g": 0.8,
+    "carb_g": 15.0,
+    "fat_g": 0.4,
+    "sat_fat_g": 0.1,
+    "fiber_g": 1.6,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 89,
+   "name": "Peach, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 75.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": 150.0,
+   "nutrients": {
+    "energy_kcal": 39.0,
+    "protein_g": 0.9,
+    "carb_g": 9.5,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.5,
+    "sodium_mg": 0.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 6.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 90,
+   "name": "Plum, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 180.0,
+   "grams_per_unit": 60.0,
+   "nutrients": {
+    "energy_kcal": 46.0,
+    "protein_g": 0.7,
+    "carb_g": 11.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.0,
+    "fiber_g": 1.4,
+    "sodium_mg": 0.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.2,
+    "calcium_mg": 6.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 91,
+   "name": "Blueberry, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 150.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 57.0,
+    "protein_g": 0.7,
+    "carb_g": 14.0,
+    "fat_g": 0.3,
+    "sat_fat_g": 0.0,
+    "fiber_g": 2.4,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 6.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    23
+   ],
+   "tag_codes": [
+    "fruit",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 92,
+   "name": "Bulgur, raw",
+   "typical_serving_g": 70.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 100.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 342.0,
+    "protein_g": 12.0,
+    "carb_g": 76.0,
+    "fat_g": 1.3,
+    "sat_fat_g": 0.2,
+    "fiber_g": 18.0,
+    "sodium_mg": 17.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.5,
+    "calcium_mg": 35.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 93,
+   "name": "Whole wheat pasta, raw",
+   "typical_serving_g": 75.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 125.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 348.0,
+    "protein_g": 14.0,
+    "carb_g": 67.0,
+    "fat_g": 2.5,
+    "sat_fat_g": 0.5,
+    "fiber_g": 8.0,
+    "sodium_mg": 8.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 3.6,
+    "calcium_mg": 40.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    24,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 94,
+   "name": "Rye bread",
+   "typical_serving_g": 50.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 259.0,
+    "protein_g": 8.5,
+    "carb_g": 48.0,
+    "fat_g": 3.3,
+    "sat_fat_g": 0.6,
+    "fiber_g": 5.8,
+    "sodium_mg": 603.0,
+    "sugar_added_g": 1.0,
+    "iron_mg": 2.8,
+    "calcium_mg": 73.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    12,
+    13,
+    14,
+    15,
+    24
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "high_sodium",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 95,
+   "name": "Rice cakes",
+   "typical_serving_g": 20.0,
+   "min_serving_g": 15.0,
+   "max_serving_g": 45.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 387.0,
+    "protein_g": 8.2,
+    "carb_g": 82.0,
+    "fat_g": 2.8,
+    "sat_fat_g": 0.6,
+    "fiber_g": 4.2,
+    "sodium_mg": 10.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.5,
+    "calcium_mg": 11.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    18,
+    24,
+    30,
+    31,
+    33
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "high_gi",
+    "moment_breakfast",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 96,
+   "name": "Sugary breakfast cereal",
+   "typical_serving_g": 40.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 60.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 379.0,
+    "protein_g": 6.0,
+    "carb_g": 84.0,
+    "fat_g": 2.5,
+    "sat_fat_g": 0.7,
+    "fiber_g": 3.0,
+    "sodium_mg": 400.0,
+    "sugar_added_g": 30.0,
+    "iron_mg": 8.0,
+    "calcium_mg": 20.0
+   },
+   "tag_ids": [
+    1,
+    11,
+    13,
+    14,
+    15,
+    18,
+    19,
+    24,
+    29,
+    30,
+    31,
+    33
+   ],
+   "tag_codes": [
+    "cereal",
+    "gluten",
+    "halal",
+    "high_gi",
+    "high_sodium",
+    "moment_breakfast",
+    "moment_mid_morning",
+    "moment_snack",
+    "no_pork",
+    "nova_4",
+    "sweet",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 97,
+   "name": "Millet, raw",
+   "typical_serving_g": 70.0,
+   "min_serving_g": 40.0,
+   "max_serving_g": 90.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 378.0,
+    "protein_g": 11.0,
+    "carb_g": 73.0,
+    "fat_g": 4.2,
+    "sat_fat_g": 0.7,
+    "fiber_g": 8.5,
+    "sodium_mg": 5.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 3.0,
+    "calcium_mg": 8.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    24,
+    30,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "cereal",
+    "halal",
+    "moment_breakfast",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 98,
+   "name": "Dry broad beans",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 341.0,
+    "protein_g": 26.0,
+    "carb_g": 58.0,
+    "fat_g": 1.5,
+    "sat_fat_g": 0.3,
+    "fiber_g": 25.0,
+    "sodium_mg": 13.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 6.7,
+    "calcium_mg": 103.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 99,
+   "name": "Pinto beans, dry",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 347.0,
+    "protein_g": 21.0,
+    "carb_g": 63.0,
+    "fat_g": 1.2,
+    "sat_fat_g": 0.2,
+    "fiber_g": 15.5,
+    "sodium_mg": 12.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 5.1,
+    "calcium_mg": 113.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 100,
+   "name": "Red lentils, dry",
+   "typical_serving_g": 80.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 120.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 358.0,
+    "protein_g": 24.0,
+    "carb_g": 63.0,
+    "fat_g": 1.1,
+    "sat_fat_g": 0.2,
+    "fiber_g": 11.0,
+    "sodium_mg": 7.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 7.4,
+    "calcium_mg": 51.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    20,
+    25,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fodmap_high",
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 101,
+   "name": "Edamame",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 50.0,
+   "max_serving_g": 150.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 121.0,
+    "protein_g": 12.0,
+    "carb_g": 8.9,
+    "fat_g": 5.2,
+    "sat_fat_g": 0.6,
+    "fiber_g": 5.2,
+    "sodium_mg": 6.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.3,
+    "calcium_mg": 63.0
+   },
+   "tag_ids": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    25,
+    32,
+    33,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "legume",
+    "moment_dinner",
+    "moment_lunch",
+    "moment_snack",
+    "no_pork",
+    "soy",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 102,
+   "name": "Cow's milk, skimmed",
+   "typical_serving_g": 200.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 300.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 34.0,
+    "protein_g": 3.4,
+    "carb_g": 5.0,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 42.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.0,
+    "calcium_mg": 122.0,
+    "vit_b12_ug": 0.4
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 103,
+   "name": "Kefir",
+   "typical_serving_g": 200.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 60.0,
+    "protein_g": 3.4,
+    "carb_g": 4.4,
+    "fat_g": 3.0,
+    "sat_fat_g": 2.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 40.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 120.0,
+    "vit_b12_ug": 0.3
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 104,
+   "name": "Mozzarella",
+   "typical_serving_g": 60.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 125.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 254.0,
+    "protein_g": 18.0,
+    "carb_g": 2.2,
+    "fat_g": 19.0,
+    "sat_fat_g": 12.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 486.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 505.0,
+    "vit_d_ug": 0.4,
+    "vit_b12_ug": 1.0
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    15,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "high_sodium",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 105,
+   "name": "Goat cheese",
+   "typical_serving_g": 40.0,
+   "min_serving_g": 20.0,
+   "max_serving_g": 60.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 364.0,
+    "protein_g": 22.0,
+    "carb_g": 2.5,
+    "fat_g": 30.0,
+    "sat_fat_g": 21.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 515.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.6,
+    "calcium_mg": 298.0,
+    "vit_b12_ug": 0.2
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    15,
+    26
+   ],
+   "tag_codes": [
+    "dairy",
+    "halal",
+    "high_sodium",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 106,
+   "name": "Blue cheese",
+   "typical_serving_g": 30.0,
+   "min_serving_g": 15.0,
+   "max_serving_g": 40.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 353.0,
+    "protein_g": 21.0,
+    "carb_g": 2.3,
+    "fat_g": 29.0,
+    "sat_fat_g": 19.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 1395.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.3,
+    "calcium_mg": 528.0,
+    "vit_b12_ug": 1.2
+   },
+   "tag_ids": [
+    2,
+    3,
+    11,
+    13,
+    14,
+    15,
+    17,
+    26,
+    28
+   ],
+   "tag_codes": [
+    "condiment",
+    "dairy",
+    "halal",
+    "high_phosphorus",
+    "high_sodium",
+    "lactose",
+    "milk_allergen",
+    "no_pork",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 107,
+   "name": "Cod, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 82.0,
+    "protein_g": 18.0,
+    "carb_g": 0.0,
+    "fat_g": 0.7,
+    "sat_fat_g": 0.1,
+    "fiber_g": 0.0,
+    "sodium_mg": 54.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.4,
+    "calcium_mg": 16.0,
+    "vit_d_ug": 0.9,
+    "vit_b12_ug": 0.9
+   },
+   "tag_ids": [
+    5,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fish_allergen",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 108,
+   "name": "Mackerel, raw",
+   "typical_serving_g": 125.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 205.0,
+    "protein_g": 19.0,
+    "carb_g": 0.0,
+    "fat_g": 14.0,
+    "sat_fat_g": 3.3,
+    "fiber_g": 0.0,
+    "sodium_mg": 90.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.6,
+    "calcium_mg": 12.0,
+    "vit_d_ug": 8.2,
+    "vit_b12_ug": 8.7
+   },
+   "tag_ids": [
+    5,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "fish_allergen",
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 109,
+   "name": "Mussels, raw",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 60.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 86.0,
+    "protein_g": 12.0,
+    "carb_g": 3.7,
+    "fat_g": 2.2,
+    "sat_fat_g": 0.4,
+    "fiber_g": 0.0,
+    "sodium_mg": 286.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 4.0,
+    "calcium_mg": 26.0,
+    "vit_d_ug": 0.2,
+    "vit_b12_ug": 12.0
+   },
+   "tag_ids": [
+    7,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "mollusks_allergen",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 110,
+   "name": "Squid, raw",
+   "typical_serving_g": 120.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 92.0,
+    "protein_g": 16.0,
+    "carb_g": 3.1,
+    "fat_g": 1.4,
+    "sat_fat_g": 0.4,
+    "fiber_g": 0.0,
+    "sodium_mg": 44.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.7,
+    "calcium_mg": 32.0,
+    "vit_b12_ug": 1.3
+   },
+   "tag_ids": [
+    7,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "mollusks_allergen",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source"
+   ]
+  },
+  {
+   "id": 111,
+   "name": "Lamb leg, raw",
+   "typical_serving_g": 150.0,
+   "min_serving_g": 100.0,
+   "max_serving_g": 250.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 201.0,
+    "protein_g": 18.0,
+    "carb_g": 0.0,
+    "fat_g": 14.0,
+    "sat_fat_g": 6.2,
+    "fiber_g": 0.0,
+    "sodium_mg": 65.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 1.6,
+    "calcium_mg": 9.0,
+    "vit_b12_ug": 2.6
+   },
+   "tag_ids": [
+    13,
+    14,
+    21,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source",
+    "red_meat"
+   ]
+  },
+  {
+   "id": 112,
+   "name": "Tempeh",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 80.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 193.0,
+    "protein_g": 19.0,
+    "carb_g": 9.4,
+    "fat_g": 11.0,
+    "sat_fat_g": 2.2,
+    "fiber_g": 1.4,
+    "sodium_mg": 9.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 2.7,
+    "calcium_mg": 111.0,
+    "vit_b12_ug": 0.1
+   },
+   "tag_ids": [
+    10,
+    11,
+    12,
+    13,
+    14,
+    27,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "halal",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source",
+    "soy",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 113,
+   "name": "Egg white",
+   "typical_serving_g": 100.0,
+   "min_serving_g": 30.0,
+   "max_serving_g": 200.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 52.0,
+    "protein_g": 11.0,
+    "carb_g": 0.7,
+    "fat_g": 0.2,
+    "sat_fat_g": 0.0,
+    "fiber_g": 0.0,
+    "sodium_mg": 166.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.1,
+    "calcium_mg": 7.0,
+    "vit_b12_ug": 0.1
+   },
+   "tag_ids": [
+    4,
+    11,
+    13,
+    14,
+    27,
+    30,
+    32,
+    34
+   ],
+   "tag_codes": [
+    "eggs_allergen",
+    "halal",
+    "moment_breakfast",
+    "moment_dinner",
+    "moment_lunch",
+    "no_pork",
+    "protein_source",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 114,
+   "name": "Pistachios",
+   "typical_serving_g": 30.0,
+   "min_serving_g": 15.0,
+   "max_serving_g": 40.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 562.0,
+    "protein_g": 20.0,
+    "carb_g": 28.0,
+    "fat_g": 45.0,
+    "sat_fat_g": 5.5,
+    "fiber_g": 10.3,
+    "sodium_mg": 1.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 3.9,
+    "calcium_mg": 105.0
+   },
+   "tag_ids": [
+    8,
+    11,
+    12,
+    13,
+    14
+   ],
+   "tag_codes": [
+    "halal",
+    "no_pork",
+    "tree_nuts",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 115,
+   "name": "Hazelnuts",
+   "typical_serving_g": 30.0,
+   "min_serving_g": 15.0,
+   "max_serving_g": 40.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 628.0,
+    "protein_g": 15.0,
+    "carb_g": 17.0,
+    "fat_g": 61.0,
+    "sat_fat_g": 4.5,
+    "fiber_g": 9.7,
+    "sodium_mg": 0.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 4.7,
+    "calcium_mg": 114.0
+   },
+   "tag_ids": [
+    8,
+    11,
+    12,
+    13,
+    14
+   ],
+   "tag_codes": [
+    "halal",
+    "no_pork",
+    "tree_nuts",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 116,
+   "name": "Green olives",
+   "typical_serving_g": 30.0,
+   "min_serving_g": 20.0,
+   "max_serving_g": 60.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 145.0,
+    "protein_g": 1.0,
+    "carb_g": 3.8,
+    "fat_g": 15.0,
+    "sat_fat_g": 2.0,
+    "fiber_g": 3.3,
+    "sodium_mg": 1556.0,
+    "sugar_added_g": 0.0,
+    "iron_mg": 0.5,
+    "calcium_mg": 52.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    15,
+    28
+   ],
+   "tag_codes": [
+    "condiment",
+    "halal",
+    "high_sodium",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  },
+  {
+   "id": 117,
+   "name": "Sunflower oil",
+   "typical_serving_g": 10.0,
+   "min_serving_g": 10.0,
+   "max_serving_g": 20.0,
+   "grams_per_unit": null,
+   "nutrients": {
+    "energy_kcal": 884.0,
+    "protein_g": 0.0,
+    "carb_g": 0.0,
+    "fat_g": 100.0,
+    "sat_fat_g": 10.3,
+    "fiber_g": 0.0,
+    "sodium_mg": 0.0,
+    "sugar_added_g": 0.0
+   },
+   "tag_ids": [
+    11,
+    12,
+    13,
+    14,
+    28
+   ],
+   "tag_codes": [
+    "condiment",
+    "halal",
+    "no_pork",
+    "vegan",
+    "vegetarian"
+   ]
+  }
+ ],
+ "cases": [
+  {
+   "name": "bank2_kcal_only",
+   "client": {
+    "id": 8,
+    "sex": "F",
+    "age": 36,
+    "height_cm": 165.0,
+    "weight_kg": 68.0,
+    "activity_level": "active"
+   },
+   "duration_days": 7,
+   "meals_per_day": 5,
+   "meal_codes": [
+    "breakfast",
+    "mid_morning",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 5,
+     "type": "kcal_target",
+     "priority": "soft",
+     "weight": 7,
+     "operator": "eq",
+     "value": 1500.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "bank3_kcal_prefer",
+   "client": {
+    "id": 8,
+    "sex": "F",
+    "age": 36,
+    "height_cm": 165.0,
+    "weight_kg": 68.0,
+    "activity_level": "active"
+   },
+   "duration_days": 7,
+   "meals_per_day": 5,
+   "meal_codes": [
+    "breakfast",
+    "mid_morning",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 5,
+     "type": "kcal_target",
+     "priority": "soft",
+     "weight": 7,
+     "operator": "eq",
+     "value": 1500.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 6,
+     "type": "prefer_tag",
+     "priority": "soft",
+     "weight": 4,
+     "operator": "prefer",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 11,
+     "target_nutrient_id": null,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "bank4_forbid_protmin",
+   "client": {
+    "id": 9,
+    "sex": "M",
+    "age": 40,
+    "height_cm": 180.0,
+    "weight_kg": 88.0,
+    "activity_level": "moderate"
+   },
+   "duration_days": 7,
+   "meals_per_day": 5,
+   "meal_codes": [
+    "breakfast",
+    "mid_morning",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 7,
+     "type": "forbid_tag",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 9,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 8,
+     "type": "nutrient_min",
+     "priority": "soft",
+     "weight": 6,
+     "operator": "min",
+     "value": 140.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": 2,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "bank5_forbid_sodmax",
+   "client": {
+    "id": 10,
+    "sex": "F",
+    "age": 48,
+    "height_cm": 170.0,
+    "weight_kg": 74.0,
+    "activity_level": "light"
+   },
+   "duration_days": 7,
+   "meals_per_day": 5,
+   "meal_codes": [
+    "breakfast",
+    "mid_morning",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 9,
+     "type": "forbid_tag",
+     "priority": "hard",
+     "weight": 9,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 3,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 10,
+     "type": "nutrient_max",
+     "priority": "soft",
+     "weight": 7,
+     "operator": "max",
+     "value": 2000.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": 7,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "bank8_design",
+   "client": {
+    "id": 8,
+    "sex": "F",
+    "age": 36,
+    "height_cm": 165.0,
+    "weight_kg": 68.0,
+    "activity_level": "active"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": -201,
+     "type": "no_repeat_tag",
+     "priority": "hard",
+     "weight": 5,
+     "operator": "forbid",
+     "value": 2,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 5,
+     "target_nutrient_id": null,
+     "context": {
+      "granularity": "day"
+     }
+    },
+    {
+     "id": -202,
+     "type": "max_servings_per_period",
+     "priority": "hard",
+     "weight": 5,
+     "operator": "max",
+     "value": 2,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 21,
+     "target_nutrient_id": null,
+     "context": {
+      "window_days": 7
+     }
+    },
+    {
+     "id": -203,
+     "type": "meal_kcal_ratio",
+     "priority": "soft",
+     "weight": 5,
+     "operator": "approx",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {
+      "split": {
+       "breakfast": 25,
+       "lunch": 35,
+       "dinner": 25,
+       "snack": 15
+      }
+     }
+    },
+    {
+     "id": -204,
+     "type": "prefer_food",
+     "priority": "soft",
+     "weight": 4,
+     "operator": "prefer",
+     "value": null,
+     "value2": null,
+     "target_food_id": 10,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {
+      "meal_type": "breakfast"
+     }
+    }
+   ]
+  },
+  {
+   "name": "demo_27_david",
+   "client": {
+    "id": 27,
+    "sex": "M",
+    "age": 46,
+    "height_cm": 176.0,
+    "weight_kg": 95.0,
+    "activity_level": "sedentary"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 91,
+     "type": "nutrient_max",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "max",
+     "value": 1500.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": 7,
+     "context": {}
+    },
+    {
+     "id": 92,
+     "type": "forbid_tag",
+     "priority": "soft",
+     "weight": 5,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 15,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 93,
+     "type": "kcal_target",
+     "priority": "soft",
+     "weight": 7,
+     "operator": "eq",
+     "value": 1900.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "demo_28_lucia",
+   "client": {
+    "id": 28,
+    "sex": "F",
+    "age": 28,
+    "height_cm": 162.0,
+    "weight_kg": 57.0,
+    "activity_level": "light"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 87,
+     "type": "forbid_tag",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 2,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 88,
+     "type": "forbid_tag",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 4,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 89,
+     "type": "prefer_tag",
+     "priority": "soft",
+     "weight": 6,
+     "operator": "prefer",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 12,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 90,
+     "type": "nutrient_min",
+     "priority": "soft",
+     "weight": 6,
+     "operator": "min",
+     "value": 18.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": 9,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "demo_29_sofia",
+   "client": {
+    "id": 29,
+    "sex": "F",
+    "age": 33,
+    "height_cm": 168.0,
+    "weight_kg": 61.0,
+    "activity_level": "moderate"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 94,
+     "type": "forbid_tag",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 1,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 95,
+     "type": "nutrient_min",
+     "priority": "soft",
+     "weight": 5,
+     "operator": "min",
+     "value": 25.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": 6,
+     "context": {}
+    }
+   ]
+  },
+  {
+   "name": "demo_30_tomas",
+   "client": {
+    "id": 30,
+    "sex": "M",
+    "age": 22,
+    "height_cm": 183.0,
+    "weight_kg": 72.0,
+    "activity_level": "very_active"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 102,
+     "type": "macro_target",
+     "priority": "soft",
+     "weight": 7,
+     "operator": "eq",
+     "value": 150.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": 2,
+     "context": {}
+    },
+    {
+     "id": 103,
+     "type": "kcal_target",
+     "priority": "soft",
+     "weight": 8,
+     "operator": "eq",
+     "value": 3000.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 104,
+     "type": "meal_kcal_ratio",
+     "priority": "soft",
+     "weight": 5,
+     "operator": "approx",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {
+      "split": {
+       "lunch": 30,
+       "snack": 15,
+       "dinner": 25,
+       "breakfast": 20,
+       "mid_morning": 10
+      }
+     }
+    }
+   ]
+  },
+  {
+   "name": "demo_31_carlos",
+   "client": {
+    "id": 31,
+    "sex": "M",
+    "age": 58,
+    "height_cm": 172.0,
+    "weight_kg": 89.0,
+    "activity_level": "light"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 96,
+     "type": "forbid_tag",
+     "priority": "hard",
+     "weight": 9,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 18,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 97,
+     "type": "kcal_target",
+     "priority": "soft",
+     "weight": 7,
+     "operator": "eq",
+     "value": 1800.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 98,
+     "type": "max_servings_per_period",
+     "priority": "hard",
+     "weight": 6,
+     "operator": "max",
+     "value": 1.0,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 19,
+     "target_nutrient_id": null,
+     "context": {
+      "window_days": 7
+     }
+    }
+   ]
+  },
+  {
+   "name": "demo_32_nadia",
+   "client": {
+    "id": 32,
+    "sex": "F",
+    "age": 29,
+    "height_cm": 158.0,
+    "weight_kg": 54.0,
+    "activity_level": "active"
+   },
+   "duration_days": 7,
+   "meals_per_day": 4,
+   "meal_codes": [
+    "breakfast",
+    "lunch",
+    "snack",
+    "dinner"
+   ],
+   "constraints": [
+    {
+     "id": 99,
+     "type": "forbid_food",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": 58,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 100,
+     "type": "forbid_food",
+     "priority": "hard",
+     "weight": 10,
+     "operator": "forbid",
+     "value": null,
+     "value2": null,
+     "target_food_id": 60,
+     "target_tag_id": null,
+     "target_nutrient_id": null,
+     "context": {}
+    },
+    {
+     "id": 101,
+     "type": "prefer_tag",
+     "priority": "soft",
+     "weight": 6,
+     "operator": "prefer",
+     "value": null,
+     "value2": null,
+     "target_food_id": null,
+     "target_tag_id": 13,
+     "target_nutrient_id": null,
+     "context": {}
+    }
+   ]
+  }
+ ]
+}

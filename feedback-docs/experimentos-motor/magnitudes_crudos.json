@@ -1,0 +1,563 @@
+{
+ "bank2_kcal_only": {
+  "status": "optimal",
+  "solve_time_ms": 5280,
+  "objective_value": 0,
+  "objective_recomputed": 0,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": 0.0,
+  "dominant_step_scaled": 70000,
+  "duration_days": 7,
+  "meals_per_day": 5,
+  "terms": [
+   {
+    "family": "kcal_target",
+    "weight_family": 10,
+    "weight_row": 7,
+    "effective_weight": 70,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 9890300000,
+    "weighted_bound": 692321000000,
+    "detail": "target 1500.0 kcal, dev in scaled units"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "bank3_kcal_prefer": {
+  "status": "optimal",
+  "solve_time_ms": 30734,
+  "objective_value": -2124,
+  "objective_recomputed": -2124,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": 0.0,
+  "dominant_step_scaled": 70000,
+  "duration_days": 7,
+  "meals_per_day": 5,
+  "terms": [
+   {
+    "family": "kcal_target",
+    "weight_family": 10,
+    "weight_row": 7,
+    "effective_weight": 70,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 9890300000,
+    "weighted_bound": 692321000000,
+    "detail": "target 1500.0 kcal, dev in scaled units"
+   },
+   {
+    "family": "prefer",
+    "weight_family": 4,
+    "weight_row": 4,
+    "effective_weight": 16,
+    "raw_realized": 139,
+    "weighted_realized": 2224,
+    "raw_bound": 140,
+    "weighted_bound": 2240,
+    "detail": "bonus, appearances"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 20,
+    "weighted_realized": 100,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "bank4_forbid_protmin": {
+  "status": "feasible",
+  "solve_time_ms": 90011,
+  "objective_value": 39,
+  "objective_recomputed": 39,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": null,
+  "dominant_step_scaled": 48000,
+  "duration_days": 7,
+  "meals_per_day": 5,
+  "terms": [
+   {
+    "family": "nutrient_min",
+    "weight_family": 8,
+    "weight_row": 6,
+    "effective_weight": 48,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 980000,
+    "weighted_bound": 47040000,
+    "detail": "protein_g min 140.0"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 7,
+    "weighted_realized": 35,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 1,
+    "weighted_realized": 4,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "bank5_forbid_sodmax": {
+  "status": "optimal",
+  "solve_time_ms": 88124,
+  "objective_value": 60,
+  "objective_recomputed": 60,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": null,
+  "dominant_step_scaled": 70000,
+  "duration_days": 7,
+  "meals_per_day": 5,
+  "terms": [
+   {
+    "family": "nutrient_max",
+    "weight_family": 10,
+    "weight_row": 7,
+    "effective_weight": 70,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 17413200000,
+    "weighted_bound": 1218924000000,
+    "detail": "sodium_mg max 2000.0"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 12,
+    "weighted_realized": 60,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "bank8_design": {
+  "status": "feasible",
+  "solve_time_ms": 90006,
+  "objective_value": 33036100103,
+  "objective_recomputed": 33036100103,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": null,
+  "dominant_step_scaled": 50000000,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "meal_kcal_ratio",
+    "weight_family": 10,
+    "weight_row": 5,
+    "effective_weight": 50,
+    "raw_realized": 660722000,
+    "weighted_realized": 33036100000,
+    "raw_bound": 31682560000000,
+    "weighted_bound": 1584128000000000,
+    "detail": "dev in scaled units x1000"
+   },
+   {
+    "family": "prefer",
+    "weight_family": 4,
+    "weight_row": 4,
+    "effective_weight": 16,
+    "raw_realized": 6,
+    "weighted_realized": 96,
+    "raw_bound": 14,
+    "weighted_bound": 224,
+    "detail": "bonus, appearances"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 39,
+    "weighted_realized": 195,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 1,
+    "weighted_realized": 4,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "demo_27_david": {
+  "status": "feasible",
+  "solve_time_ms": 90005,
+  "objective_value": 119219,
+  "objective_recomputed": 119219,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": 0.01,
+  "dominant_step_scaled": 70000,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "kcal_target",
+    "weight_family": 10,
+    "weight_row": 7,
+    "effective_weight": 70,
+    "raw_realized": 1700,
+    "weighted_realized": 119000,
+    "raw_bound": 7907340000,
+    "weighted_bound": 553513800000,
+    "detail": "target 1900.0 kcal, dev in scaled units"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 43,
+    "weighted_realized": 215,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 1,
+    "weighted_realized": 4,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "demo_28_lucia": {
+  "status": "feasible",
+  "solve_time_ms": 90003,
+  "objective_value": -2458,
+  "objective_recomputed": -2458,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": null,
+  "dominant_step_scaled": 48000,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "prefer",
+    "weight_family": 4,
+    "weight_row": 6,
+    "effective_weight": 24,
+    "raw_realized": 112,
+    "weighted_realized": 2688,
+    "raw_bound": 112,
+    "weighted_bound": 2688,
+    "detail": "bonus, appearances"
+   },
+   {
+    "family": "nutrient_min",
+    "weight_family": 8,
+    "weight_row": 6,
+    "effective_weight": 48,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 126000,
+    "weighted_bound": 6048000,
+    "detail": "iron_mg min 18.0"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 46,
+    "weighted_realized": 230,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "demo_29_sofia": {
+  "status": "optimal",
+  "solve_time_ms": 53205,
+  "objective_value": 45,
+  "objective_recomputed": 45,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": null,
+  "dominant_step_scaled": 40000,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "nutrient_min",
+    "weight_family": 8,
+    "weight_row": 5,
+    "effective_weight": 40,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 175000,
+    "weighted_bound": 7000000,
+    "detail": "fiber_g min 25.0"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 9,
+    "weighted_realized": 45,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "demo_30_tomas": {
+  "status": "optimal",
+  "solve_time_ms": 12479,
+  "objective_value": 63208283423,
+  "objective_recomputed": 63208281855,
+  "recompute_exact": false,
+  "kcal_mean_deviation_pct": 41.37,
+  "dominant_step_scaled": 50000000,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "macro_target",
+    "weight_family": 8,
+    "weight_row": 7,
+    "effective_weight": 56,
+    "raw_realized": 87495,
+    "weighted_realized": 4899720,
+    "raw_bound": 231910000,
+    "weighted_bound": 12986960000,
+    "detail": "protein_g target 150.0"
+   },
+   {
+    "family": "kcal_target",
+    "weight_family": 10,
+    "weight_row": 8,
+    "effective_weight": 80,
+    "raw_realized": 8686650,
+    "weighted_realized": 694932000,
+    "raw_bound": 7899640000,
+    "weighted_bound": 631971200000,
+    "detail": "target 3000.0 kcal, dev in scaled units"
+   },
+   {
+    "family": "meal_kcal_ratio",
+    "weight_family": 10,
+    "weight_row": 5,
+    "effective_weight": 50,
+    "raw_realized": 1250169000,
+    "weighted_realized": 62508450000,
+    "raw_bound": 39603200000000,
+    "weighted_bound": 1980160000000000,
+    "detail": "dev in scaled units x1000"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 27,
+    "weighted_realized": 135,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "demo_31_carlos": {
+  "status": "feasible",
+  "solve_time_ms": 90006,
+  "objective_value": 51320,
+  "objective_recomputed": 51320,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": 0.01,
+  "dominant_step_scaled": 70000,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "kcal_target",
+    "weight_family": 10,
+    "weight_row": 7,
+    "effective_weight": 70,
+    "raw_realized": 730,
+    "weighted_realized": 51100,
+    "raw_bound": 7908040000,
+    "weighted_bound": 553562800000,
+    "detail": "target 1800.0 kcal, dev in scaled units"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 44,
+    "weighted_realized": 220,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ },
+ "demo_32_nadia": {
+  "status": "optimal",
+  "solve_time_ms": 53955,
+  "objective_value": -2628,
+  "objective_recomputed": -2628,
+  "recompute_exact": true,
+  "kcal_mean_deviation_pct": null,
+  "dominant_step_scaled": 0,
+  "duration_days": 7,
+  "meals_per_day": 4,
+  "terms": [
+   {
+    "family": "prefer",
+    "weight_family": 4,
+    "weight_row": 6,
+    "effective_weight": 24,
+    "raw_realized": 112,
+    "weighted_realized": 2688,
+    "raw_bound": 112,
+    "weighted_bound": 2688,
+    "detail": "bonus, appearances"
+   },
+   {
+    "family": "variety",
+    "weight_family": 5,
+    "weight_row": 1,
+    "effective_weight": 5,
+    "raw_realized": 12,
+    "weighted_realized": 60,
+    "raw_bound": 100,
+    "weighted_bound": 500,
+    "detail": "unused foods"
+   },
+   {
+    "family": "spread",
+    "weight_family": 4,
+    "weight_row": 1,
+    "effective_weight": 4,
+    "raw_realized": 0,
+    "weighted_realized": 0,
+    "raw_bound": 900,
+    "weighted_bound": 3600,
+    "detail": "appearances over cap 5"
+   }
+  ]
+ }
+}
