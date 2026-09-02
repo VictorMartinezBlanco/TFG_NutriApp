@@ -3,7 +3,16 @@
 
 Este capítulo describe el motor de generación de planes: el componente que, a partir del perfil de un cliente y de un conjunto de restricciones, construye un borrador de plan nutricional que las cumple o explica por qué no existe ninguno que pueda cumplirlas. Funciona sin depender de ningún modelo de lenguaje: las restricciones le llegan ya estructuradas, tanto si las escribió el nutricionista en un formulario como si las propuso el traductor del capítulo~\ref{cap:copilotoIA}. Esa independencia se acordó con los tutores y ordenó todo el desarrollo: primero un motor que funciona por sí solo, después la capa de IA por encima.
 
-La sección~\ref{sec:formulacionMotor} plantea el problema y su formulación. Las secciones~\ref{sec:reglasModelo} y~\ref{sec:catalogoClinico} recorren las dos familias de restricciones: las que el modelo aplica siempre y las que configura el profesional. La sección~\ref{sec:objetivoResolucion} recoge la función objetivo y la estrategia de resolución, y las dos últimas cubren el diagnóstico de infactibilidad y el validador que audita cada plan. El cuerpo del capítulo se queda con las decisiones y las ecuaciones que las sustentan; la formalización completa, con las 15 reglas y los 16 tipos está en el Anexo~\ref{apendice:formalizacion}. Las pruebas del motor y las medidas de rendimiento se enseñan en el capítulo~\ref{cap:evaluacion}.
+La sección~\ref{sec:introCP} presenta brevemente el paradigma en el que se apoya el capítulo, y la sección~\ref{sec:formulacionMotor} plantea el problema y su formulación. Las secciones~\ref{sec:reglasModelo} y~\ref{sec:catalogoClinico} recorren las dos familias de restricciones: las que el modelo aplica siempre y las que configura el profesional. La sección~\ref{sec:objetivoResolucion} recoge la función objetivo y la estrategia de resolución, y las dos últimas cubren el diagnóstico de infactibilidad y el validador que audita cada plan. El cuerpo del capítulo se queda con las decisiones y las ecuaciones que las sustentan; la formalización completa, con las 15 reglas y los 16 tipos está en el Anexo~\ref{apendice:formalizacion}. Las pruebas del motor y las medidas de rendimiento se enseñan en el capítulo~\ref{cap:evaluacion}.
+
+\section{La programación con restricciones}
+\label{sec:introCP}
+
+La programación con restricciones es un paradigma declarativo: en lugar de programar los pasos que construyen una solución, se describe qué condiciones debe cumplir. Un problema se plantea como un modelo con tres piezas: unas variables de decisión (las incógnitas), un dominio para cada una (los valores que puede tomar) y un conjunto de restricciones que las relacionan. Un solver genérico explora los dominios buscando una asignación de valores que satisfaga todas las restricciones; el programa no dice cómo buscarla.
+
+Las restricciones pueden ser de dos clases. Las duras definen qué es una solución válida: el solver descarta cualquier asignación que incumpla alguna. Las blandas expresan preferencias, y se agregan en una función objetivo que mide la calidad de cada solución, para que el solver busque, entre las válidas, la mejor.
+
+Para este problema el paradigma tiene una ventaja más: el modelo se construye antes de cada resolución, así que se puede decidir en ese momento qué restricciones entran. El esqueleto es el mismo para todos los clientes, y sobre él cada generación añade las del cliente concreto: sus alergias, su objetivo calórico, sus preferencias. De esa modularidad sale el catálogo de restricciones de la sección~\ref{sec:catalogoClinico}, que el profesional combina sin que haya que tocar el motor.
 
 \section{Formulación del problema}
 \label{sec:formulacionMotor}
@@ -18,7 +27,7 @@ En la implementación, el motor es una función pura: recibe todos sus datos com
 
 La salida distingue dos casos. Si existe un plan que cumple todas las restricciones obligatorias, se devuelve el plan (días, comidas y alimentos con sus gramos) junto con las métricas de la resolución y los avisos no bloqueantes que hayan surgido. Si no existe, se devuelve el subconjunto mínimo de restricciones en conflicto acompañado de una sugerencia legible y la lista de restricciones que se pueden reducir (sección~\ref{sec:infactibilidad}).
 
-Tres cosas quedan fuera a propósito. El motor no consulta ningún modelo de lenguaje, y quién produjo las restricciones le resulta indiferente. No valida clínicamente el resultado: esa auditoría es un paso posterior e independiente (sección~\ref{sec:validador}). Y no decide la estructura del plan: el número de días y de comidas son parámetros de entrada.
+Cuatro cosas quedan fuera a propósito. El motor no consulta ningún modelo de lenguaje, y quién produjo las restricciones le resulta indiferente. No valida clínicamente el resultado: esa auditoría es un paso posterior e independiente (sección~\ref{sec:validador}). No decide la estructura del plan: el número de días y de comidas son parámetros de entrada. Y no compone recetas ni modela sustituciones entre alimentos: trabaja con alimentos sueltos, y el plan se expresa en alimentos con sus gramos. El estado real de esos dos requisitos se trata en los capítulos~\ref{cap:analisisRequisitos} y~\ref{cap:conclusiones}.
 
 \subsection{Elección de tecnología}
 
@@ -33,13 +42,13 @@ La notación del resto del capítulo es independiente de la herramienta; la impl
 Se definen cuatro conjuntos base:
 
 \begin{itemize}
-    \item $F$: alimentos del catálogo visible para la generación (los globales más los propios del nutricionista). Cada alimento lleva su composición nutricional por cada 100\,g, un conjunto de etiquetas (familias, alérgenos, roles y franjas) y un perfil de ración con sus gramos mínimos y máximos por aparición.
+    \item $F = \{\text{alimento}_1, \dots, \text{alimento}_n\}$: los alimentos del catálogo visible para la generación (los globales más los propios del nutricionista). Cada alimento lleva su composición nutricional por cada 100\,g, un conjunto de etiquetas (familias, alérgenos, roles y franjas) y un perfil de ración con sus gramos mínimos y máximos por aparición.
     \item $D = \{1, \dots, \texttt{duration\_days}\}$: días del plan.
     \item $M = \{1, \dots, \texttt{meals\_per\_day}\}$: comidas de un día. Cada comida $m$ lleva asociado un código de franja $c(m)$ (desayuno, comida, cena, merienda).
-    \item $N$: códigos de nutriente presentes en el catálogo (energía, proteína, hidratos, grasa, sodio, calcio y el resto de nutrientes cargados).
+    \item $N = \{\text{energía}, \text{proteína}, \text{hidratos}, \dots\}$: los códigos de nutriente presentes en el catálogo (grasa, sodio, calcio y el resto de nutrientes cargados).
 \end{itemize}
 
-El tamaño del problema queda fijado por $|F| \cdot |D| \cdot |M|$. La duración y el número de comidas son la dimensión del problema, no algo que el solver decida: entran como argumentos de la función.
+Internamente, cada elemento de estos conjuntos se corresponde con un entero: el modelo indexa alimentos, días, comidas y nutrientes por posición, y los nombres solo existen fuera del solver. El tamaño del problema queda fijado por $|F| \cdot |D| \cdot |M|$. La duración y el número de comidas son la dimensión del problema, no algo que el solver decida: entran como argumentos de la función.
 
 Antes de construir el modelo se precalculan en Python los parámetros de entrada. Los que hacen falta para seguir el capítulo son:
 
@@ -55,15 +64,17 @@ Antes de construir el modelo se precalculan en Python los parámetros de entrada
 
 Al plantear las variables consideré dos formulaciones. La primera era una única variable entera de gramos por cada alimento, día y comida, donde el cero significaba que el alimento no está. La segunda, conseguía separar la presencia de la cantidad: una variable booleana que dice si el alimento aparece en esa comida y una entera con sus gramos. Así que elegí la segunda porque gran parte del modelo razona sobre presencia (prohibiciones, variedad, repeticiones) y expresar esas condiciones sobre una booleana es más directo; los gramos solo importan cuando el alimento está presente.
 
-\begin{equation*}
-x[f,d,m] \in \{0, 1\}, \qquad g[f,d,m] \in \{0, 1, \dots, \text{max}_f\}, \qquad \forall f \in F,\ d \in D,\ m \in M
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] \in \{0, 1\}, \qquad \text{gramos\_alimento}[f,d,m] \in \{0, 1, \dots, \text{max}_f\}, \\
+\forall f \in F,\ d \in D,\ m \in M
+\end{gather*}
 
 Las dos familias se enlazan para que los gramos sean cero si el alimento no está, y una ración dentro de su perfil si lo está:
 
-\begin{equation*}
-x[f,d,m] = 1 \;\Rightarrow\; g[f,d,m] \ge \text{min}_f, \qquad x[f,d,m] = 0 \;\Rightarrow\; g[f,d,m] = 0
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] = 1 \;\Rightarrow\; \text{gramos\_alimento}[f,d,m] \ge \text{min}_f, \\
+\text{ha\_consumido}[f,d,m] = 0 \;\Rightarrow\; \text{gramos\_alimento}[f,d,m] = 0
+\end{gather*}
 
 El mínimo del enlace importa más de lo que parece. En la primera versión bastaba con un gramo para contar como presente, y el solver lo aprovechaba metiendo alimentos a 1\,g solo para cumplir la presencia mínima por comida o para sumar variedad barata. Por ello existe un suelo absoluto de presencia de 10\,g, y desde la capa de plausibilidad el mínimo y el máximo reales de cada alimento son los de su perfil de ración (sección~\ref{sec:plausibilidad}).
 
@@ -74,7 +85,7 @@ Los alimentos que se sirven por piezas (un huevo, un yogur) llevan además una v
 CP-SAT opera sobre dominios enteros, y mantener todo el modelo en enteros es la forma natural de trabajar con él. Los valores nutricionales, que en las tablas de composición vienen con decimales, se escalan a entero multiplicándolos por una constante $s = 10$ y redondeando. Así, la suma de un nutriente $n$ en un día $d$,
 
 \begin{equation*}
-\text{nut}_{d,n} \;=\; \sum_{m \in M}\ \sum_{f \in F} \text{nut100}(f, n) \cdot g[f,d,m],
+\text{nut}_{d,n} \;=\; \sum_{m \in M}\ \sum_{f \in F} \text{nut100}(f, n) \cdot \text{gramos\_alimento}[f,d,m],
 \end{equation*}
 
 representa la cantidad real del nutriente multiplicada por $100 \cdot s$: los coeficientes son por 100\,g y no se divide dentro del modelo. Para comparar esa suma con un valor real $v$ (un objetivo calórico, un mínimo de proteína), se lleva $v$ a la misma escala y se comparan dos enteros.
@@ -101,6 +112,8 @@ Todas son duras: acotan el espacio de soluciones, y un plan que las incumpla no 
     \item \textbf{R7. Variedad diaria.} Cada día usa al menos 4 alimentos distintos.
     \item \textbf{R8. Variedad semanal.} Cada ventana de 7 días usa al menos 10 alimentos distintos.
 \end{itemize}
+
+El tope de R2 evita comidas con una lista interminable de ingredientes minúsculos. Lo fijé en cuatro buscando el equilibrio entre una comida completa y la complejidad del modelo, porque cada alimento admitido por comida multiplica las combinaciones que el solver explora. El valor concreto es revisable: una ensalada normal lo supera si se cuentan el tomate, la cebolla o la lechuga, y distinguir esos acompañantes para que no consuman el tope queda como trabajo futuro (capítulo~\ref{cap:conclusiones}). Además, sobre esta cota se apoyan los dominios de la función objetivo (sección~\ref{sec:objetivoResolucion}).
 
 El suelo calórico de R3 es el metabolismo basal, no el gasto energético total. El basal se estima con la ecuación de Mifflin-St Jeor~\citep{mifflin1990} a partir del peso $w_c$ (kg), la altura $h_c$ (cm) y la edad $a_c$ del cliente:
 
@@ -134,6 +147,8 @@ Máximo de apariciones de un alimento en el plan & 10 & 5 \\
 \label{tab:reglasBase}
 \end{table}
 
+Las ocho reglas comparten una asunción que conviene dejar explícita: se asumen válidas para la población general, y permitir al profesional anularlas caso a caso es trabajo futuro (capítulo~\ref{cap:conclusiones}). Pablo puso el ejemplo que enseña el límite: una dieta renal de 45\,g de proteína diaria para un cliente de 70\,kg queda en 0,64\,g/kg, por debajo del suelo de R4, y el motor la declararía infactible aunque esté prescrita a conciencia. La filosofía es la misma que la del suelo calórico: estas reglas son seguridad de último recurso, no una recomendación, y por eso se eligieron lo más inofensivas posible. La modularidad clínica existe en otro plano: las restricciones duras del profesional se incluyen o no en cada resolución según lo que él configure, sin tocar el motor (sección~\ref{sec:catalogoClinico}).
+
 \subsection{La capa de plausibilidad del catálogo}
 \label{sec:plausibilidad}
 
@@ -151,7 +166,7 @@ Un alimento sin perfil (típicamente uno dado de alta a mano por un profesional)
 Con los perfiles llegan las siete reglas de la capa, que continúan la numeración estructural. Las dos primeras ya se han visto: \textbf{R9} es el propio enlace presencia-gramos con los límites del perfil, y \textbf{R10} es la cuantización por unidades. Los alimentos con gramos por unidad $\text{gpu}(f)$ solo admiten piezas y medias piezas,
 
 \begin{equation*}
-2 \cdot g[f,d,m] = k[f,d,m] \cdot \text{gpu}(f),
+2 \cdot \text{gramos\_alimento}[f,d,m] = k[f,d,m] \cdot \text{gpu}(f),
 \end{equation*}
 
 con $k$ entero contando medias piezas ($k = 3$ son 1,5 piezas), y un pequeño grupo que no se parte (huevo, yogur) solo admite piezas enteras. Los gramos por unidad se eligieron pares para que las medias piezas caigan en gramos enteros. En base de datos el plan sigue guardando gramos; las unidades son a la vez una restricción del modelo y la forma natural de enseñar esos alimentos en pantalla.
@@ -168,9 +183,10 @@ Las otras cinco reglas se apoyan en dos vocabularios nuevos del catálogo, monta
 
 Como muestra del patrón, R13 se expresa acotando cada condimento por la suma de sus posibles acompañantes:
 
-\begin{equation*}
-x[f,d,m] \;\le\; \sum_{f' \in F \setminus \text{COND}} x[f',d,m], \qquad \forall f \in \text{COND},\ d \in D,\ m \in M
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] \;\le\; \sum_{f' \in F \setminus \text{COND}} \text{ha\_consumido}[f',d,m], \\
+\forall f \in \text{COND},\ d \in D,\ m \in M
+\end{gather*}
 
 donde COND son los alimentos con rol de condimento. Las siete formulaciones completas están en el Anexo~\ref{apendice:formalizacion}.
 
@@ -243,7 +259,7 @@ Dos de los 16 tipos son estructurales (número de comidas y duración del plan):
 El patrón de cada tipo se ve con dos ejemplos. Una prohibición de etiqueta (el mecanismo de las alergias e intolerancias) es dura por defecto y fija a cero todas las apariciones de los alimentos afectados:
 
 \begin{equation*}
-x[f,d,m] = 0, \qquad \forall f \in \text{miembros}(t),\ d \in D,\ m \in M
+\text{ha\_consumido}[f,d,m] = 0, \qquad \forall f \in \text{miembros}(t),\ d \in D,\ m \in M
 \end{equation*}
 
 Un objetivo calórico es blando por defecto: no acota el espacio de soluciones, penaliza en la función objetivo la desviación absoluta de la energía diaria respecto al valor pedido, con la linealización de la sección~\ref{sec:objetivoResolucion}. Si el profesional lo marca como duro, pasa a ser una igualdad exacta por día.
@@ -267,11 +283,13 @@ Acercarse a un objetivo es minimizar $|\text{suma} - \text{objetivo}|$, que no e
 \text{suma} - \text{objetivo} = \text{over} - \text{under}, \qquad |\text{suma} - \text{objetivo}| = \text{over} + \text{under}
 \end{equation*}
 
-Un detalle de este patrón resultó importante en la práctica: las cotas de las variables de exceso y defecto se derivan del catálogo real (el exceso llega como mucho a la cota superior del nutriente menos el objetivo, y el defecto como mucho al objetivo) en vez de usar una holgura fija. Con una cota fija, al crecer el catálogo el rango real de las sumas la superaba y el solver rechazaba el modelo entero; acotar ajustado además mejora la propagación.
+Un detalle de este patrón resultó importante en la práctica: las cotas de las variables de exceso y defecto se derivan del catálogo real (el exceso llega como mucho a la cota superior del nutriente menos el objetivo, y el defecto como mucho al objetivo) en vez de usar una holgura fija. Con una cota fija, al crecer el catálogo el rango real de las sumas la superaba y el solver rechazaba el modelo entero; acotar ajustado además mejora la propagación. La cota superior de cada nutriente se apoya en la propia R2: como una comida lleva a lo sumo cuatro alimentos, basta sumar las cuatro mayores aportaciones individuales que el catálogo puede dar (la ración máxima de cada alimento por su densidad), en vez de suponer el catálogo entero coincidiendo en una comida. El techo resultante es entre uno y dos órdenes de magnitud menor sin excluir ninguna solución; su efecto sobre los tiempos se mide en el capítulo~\ref{cap:evaluacion}.
 
-$P_{\text{variety}}$ penaliza suavemente cada alimento del catálogo que no se use en todo el plan, para favorecer usar más alimentos distintos cuando nada más lo decide. $P_{\text{spread}}$ es la tercera regla de sentido común de la sección~\ref{sec:estructurales}: penaliza que un alimento supere un tope de apariciones en el plan (unas 4 en una semana), para que la ingesta se reparta en vez de concentrarse.
+$P_{\text{variety}}$ penaliza suavemente cada alimento del catálogo que no se use en todo el plan, para favorecer usar más alimentos distintos cuando nada más lo decide. $P_{\text{spread}}$ es la tercera regla de sentido común de la sección~\ref{sec:estructurales}: penaliza que un alimento supere un tope de apariciones en el plan, para que la ingesta se reparta en vez de concentrarse. El tope es proporcional a la duración, 0,6 apariciones por día de plan: en una semana un alimento puede aparecer unas cuatro veces antes de penalizar, frente a las diez que llegaron a verse sin la regla (tabla~\ref{tab:reglasBase}).
 
-Cada término lleva un peso efectivo que es el producto de dos niveles: un peso fijo por familia (10 el objetivo calórico, 8 la proteína, 4 las preferencias; el resto está en el Anexo~\ref{apendice:formalizacion}) y el peso de 1 a 10 de la fila concreta. Un objetivo calórico con peso de fila 7 pesa 70; una preferencia de familia con peso 4 pesa 16. Esto da una regla de prioridad clara sin exponer al profesional un panel de ajuste global.
+Cada término lleva un peso efectivo que es el producto de dos niveles: un peso fijo por familia (10 el objetivo calórico, 8 la proteína, $4\,000$ las preferencias; el resto está en el Anexo~\ref{apendice:formalizacion}) y el peso de 1 a 10 de la fila concreta. Los pesos de las familias no nutricionales llevan incorporado un factor de 1\,000 que compensa la escala entera de las desviaciones: una desviación nutricional se mide en unidades escaladas (una kcal son 1\,000 unidades) y una preferencia o un alimento sin usar se cuentan de uno en uno, así que sin ese factor mover una familia estructural entera no compensaba ni una kcal de desviación. El análisis de magnitudes que destapó ese desequilibrio se enseña en el capítulo~\ref{cap:evaluacion}. Esto da una regla de prioridad clara sin exponer al profesional un panel de ajuste global.
+
+El reparto calórico por comidas es la excepción documentada: su linealización por multiplicación cruzada arrastra un factor de 1\,000 propio, así que cuando el profesional lo activa su término domina la función objetivo. Igualar su escala exigiría renormalizar el término entero, y queda como trabajo futuro (capítulo~\ref{cap:conclusiones}).
 
 El modelo se resuelve con un límite de tiempo de 90 segundos, una brecha relativa del 2\,\% y un número de hilos de búsqueda configurable por entorno. Los tres parámetros cuentan lo mismo: un borrador editable no necesita el óptimo demostrado. El solver para al llegar al 2\,\% de la cota inferior y, si el tiempo expira, devuelve la mejor solución factible encontrada, distinguiendo en las métricas el óptimo demostrado del factible. El límite de tiempo está calibrado contra la CPU del alojamiento gratuito donde corre el backend, no contra la máquina de desarrollo. Y los hilos son 8 en desarrollo y 2 en ese alojamiento: cada hilo mantiene su propia copia del estado de búsqueda, y con 8 hilos el proceso superó el límite de memoria de la instancia. Adecuar el paralelismo a los recursos es una decisión de despliegue, no del modelo; el coste asumido es que más casos terminan en factible en vez de en óptimo, con la misma calidad de plan útil. Las medidas están en el capítulo~\ref{cap:evaluacion}.
 

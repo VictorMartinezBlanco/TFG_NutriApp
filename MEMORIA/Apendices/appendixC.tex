@@ -1,7 +1,7 @@
 \chapter{Formalización completa del motor de generación}
 \label{apendice:formalizacion}
 
-Este anexo recoge la formalización completa del modelo del capítulo~\ref{cap:motorGeneracion}: los umbrales con sus valores, las 15 reglas invariantes, los 16 tipos configurables con su formulación y el mapa de cada elemento formal a su función en el código. La notación es la del capítulo: $x[f,d,m]$ y $g[f,d,m]$ son la presencia y los gramos del alimento $f$ en la comida $m$ del día $d$; $\text{nut}_{d,n}$ es la suma escalada del nutriente $n$ en el día $d$; y $\text{scale\_target}(v) = \text{round}(v \cdot s \cdot 100)$ lleva un valor real a la escala entera del modelo, con $s = 10$. Siguiendo el convenio habitual, una variable booleana dentro de un sumatorio aporta 1 si la condición se cumple y 0 en caso contrario.
+Este anexo recoge la formalización completa del modelo del capítulo~\ref{cap:motorGeneracion}: los umbrales con sus valores, las 15 reglas invariantes, los 16 tipos configurables con su formulación y el mapa de cada elemento formal a su función en el código. La notación es la del capítulo: $\text{ha\_consumido}[f,d,m]$ y $\text{gramos\_alimento}[f,d,m]$ son la presencia y los gramos del alimento $f$ en la comida $m$ del día $d$; $\text{nut}_{d,n}$ es la suma escalada del nutriente $n$ en el día $d$; y $\text{scale\_target}(v) = \text{round}(v \cdot s \cdot 100)$ lleva un valor real a la escala entera del modelo, con $s = 10$. Siguiendo el convenio habitual, una variable booleana dentro de un sumatorio aporta 1 si la condición se cumple y 0 en caso contrario.
 
 \section{Umbrales y pesos del modelo}
 \label{sec:anexoUmbrales}
@@ -58,20 +58,22 @@ Todos los umbrales son constantes con nombre en la configuración del solver.
 \label{tab:anexoUmbrales}
 \end{table}
 
-Los pesos por familia de la función objetivo son $w_{\text{kcal}} = 10$, $w_{\text{protein}} = 8$, $w_{\text{carb}} = 6$, $w_{\text{fat}} = 6$, $w_{\text{no\_repeat}} = 5$, $w_{\text{variety}} = 5$, $w_{\text{prefer}} = 4$ y $w_{\text{spread}} = 4$. Sobre ellos, cada fila de restricción modula con su peso propio de 1 a 10 (sección~\ref{sec:anexoObjetivo}).
+Los pesos por familia de la función objetivo son $w_{\text{kcal}} = 10$, $w_{\text{protein}} = 8$, $w_{\text{carb}} = 6$, $w_{\text{fat}} = 6$, $w_{\text{no\_repeat}} = 5\,000$, $w_{\text{variety}} = 5\,000$, $w_{\text{prefer}} = 4\,000$ y $w_{\text{spread}} = 4\,000$. Las familias no nutricionales llevan incorporado un factor de $1\,000$ que compensa la escala entera: sus términos se cuentan en unidades de 1 (una aparición, un alimento sin usar) mientras que las desviaciones nutricionales se miden en unidades escaladas, donde una kcal son $1\,000$ (capítulo~\ref{cap:motorGeneracion}). Sobre estos pesos, cada fila de restricción modula con su peso propio de 1 a 10 (sección~\ref{sec:anexoObjetivo}).
 
 \section{Variables y enlace}
 \label{sec:anexoVariables}
 
 Dos familias de variables por cada terna alimento, día y comida, más una tercera para los alimentos que se sirven por piezas:
 
-\begin{equation*}
-x[f,d,m] \in \{0, 1\}, \qquad g[f,d,m] \in \{0, 1, \dots, \text{max}_f\}, \qquad \forall f \in F,\ d \in D,\ m \in M
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] \in \{0, 1\}, \qquad \text{gramos\_alimento}[f,d,m] \in \{0, 1, \dots, \text{max}_f\}, \\
+\forall f \in F,\ d \in D,\ m \in M
+\end{gather*}
 
-\begin{equation*}
-x[f,d,m] = 1 \;\Rightarrow\; g[f,d,m] \ge \text{min}_f, \qquad x[f,d,m] = 0 \;\Rightarrow\; g[f,d,m] = 0
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] = 1 \;\Rightarrow\; \text{gramos\_alimento}[f,d,m] \ge \text{min}_f, \\
+\text{ha\_consumido}[f,d,m] = 0 \;\Rightarrow\; \text{gramos\_alimento}[f,d,m] = 0
+\end{gather*}
 
 donde los límites por aparición salen del perfil de ración del alimento, con el suelo absoluto de presencia por debajo:
 
@@ -83,16 +85,16 @@ donde los límites por aparición salen del perfil de ración del alimento, con 
 Para los alimentos con gramos por unidad $\text{gpu}(f)$, la variable entera $k$ cuantiza los gramos a medias piezas ($k$ cuenta medias unidades: $k = 3$ son 1,5 piezas):
 
 \begin{equation*}
-k[f,d,m] \in \Big\{0, \dots, \Big\lfloor \tfrac{2 \cdot \text{max}_f}{\text{gpu}(f)} \Big\rfloor\Big\}, \qquad 2 \cdot g[f,d,m] = k[f,d,m] \cdot \text{gpu}(f)
+k[f,d,m] \in \Big\{0, \dots, \Big\lfloor \tfrac{2 \cdot \text{max}_f}{\text{gpu}(f)} \Big\rfloor\Big\}, \qquad 2 \cdot \text{gramos\_alimento}[f,d,m] = k[f,d,m] \cdot \text{gpu}(f)
 \end{equation*}
 
 y los alimentos que solo admiten piezas enteras (huevo, yogur) usan la variante sin medias:
 
 \begin{equation*}
-k[f,d,m] \in \Big\{0, \dots, \Big\lfloor \tfrac{\text{max}_f}{\text{gpu}(f)} \Big\rfloor\Big\}, \qquad g[f,d,m] = k[f,d,m] \cdot \text{gpu}(f)
+k[f,d,m] \in \Big\{0, \dots, \Big\lfloor \tfrac{\text{max}_f}{\text{gpu}(f)} \Big\rfloor\Big\}, \qquad \text{gramos\_alimento}[f,d,m] = k[f,d,m] \cdot \text{gpu}(f)
 \end{equation*}
 
-La cuantización compone con el enlace: si el alimento no está presente, $g = 0$ fuerza $k = 0$; si lo está, el perfil acota $k$ a las piezas que caben entre $\text{min}_f$ y $\text{max}_f$.
+La cuantización compone con el enlace: si el alimento no está presente, los gramos quedan a cero y fuerzan $k = 0$; si lo está, el perfil acota $k$ a las piezas que caben entre $\text{min}_f$ y $\text{max}_f$.
 
 \section{Restricciones estructurales (R1 a R8)}
 \label{sec:anexoEstructurales}
@@ -101,12 +103,12 @@ Todas duras y aplicadas siempre.
 
 \textbf{R1. Presencia mínima por comida.}
 \begin{equation*}
-\sum_{f \in F} x[f,d,m] \ge 1, \qquad \forall d \in D,\ m \in M
+\sum_{f \in F} \text{ha\_consumido}[f,d,m] \ge 1, \qquad \forall d \in D,\ m \in M
 \end{equation*}
 
 \textbf{R2. Cota de alimentos por comida.}
 \begin{equation*}
-\sum_{f \in F} x[f,d,m] \le \text{MAX\_ITEMS\_PER\_MEAL}, \qquad \forall d \in D,\ m \in M
+\sum_{f \in F} \text{ha\_consumido}[f,d,m] \le \text{MAX\_ITEMS\_PER\_MEAL}, \qquad \forall d \in D,\ m \in M
 \end{equation*}
 
 \textbf{R3. Suelo calórico diario.} Con el basal de Mifflin-St Jeor sobre el peso $w_c$ (kg), la altura $h_c$ (cm) y la edad $a_c$:
@@ -120,34 +122,38 @@ Todas duras y aplicadas siempre.
 \begin{equation*}
 \text{floor}(c) = \max\big(\text{BMR}(c),\ \text{FLOOR\_KCAL}[\text{sexo}]\big)
 \end{equation*}
-\begin{equation*}
-\sum_{m \in M}\ \sum_{f \in F} \text{kcal100}(f) \cdot g[f,d,m] \;\ge\; \text{scale\_target}(\text{floor}(c)), \qquad \forall d \in D
-\end{equation*}
+\begin{gather*}
+\sum_{m \in M}\ \sum_{f \in F} \text{kcal100}(f) \cdot \text{gramos\_alimento}[f,d,m] \;\ge\; \text{scale\_target}(\text{floor}(c)), \\
+\forall d \in D
+\end{gather*}
 
 \textbf{R4. Rango humano de proteína.} Con $\text{prot\_min}(c)$ y $\text{prot\_max}(c)$ iguales a 0.8 y 2.2 veces el peso del cliente (o el peso por defecto si falta):
-\begin{equation*}
-\text{scale\_target}(\text{prot\_min}(c)) \;\le\; \text{nut}_{d,\text{prot}} \;\le\; \text{scale\_target}(\text{prot\_max}(c)), \qquad \forall d \in D
-\end{equation*}
+\begin{gather*}
+\text{scale\_target}(\text{prot\_min}(c)) \;\le\; \text{nut}_{d,\text{prot}} \;\le\; \text{scale\_target}(\text{prot\_max}(c)), \\
+\forall d \in D
+\end{gather*}
 
 \textbf{R5. Grasa mínima por energía.} Partiendo de $\text{fat\_g} \cdot 9 \ge (\text{pct}/100) \cdot \text{kcal}$ y despejando la división con la multiplicación cruzada:
-\begin{equation*}
-\Big(\sum_{m,f} \text{nut100}(f, \text{fat}) \cdot g[f,d,m]\Big) \cdot 9 \cdot 100 \;\ge\; 15 \cdot \Big(\sum_{m,f} \text{kcal100}(f) \cdot g[f,d,m]\Big), \qquad \forall d \in D
-\end{equation*}
+\begin{gather*}
+\Big(\sum_{m,f} \text{nut100}(f, \text{fat}) \cdot \text{gramos\_alimento}[f,d,m]\Big) \cdot 9 \cdot 100 \;\ge\; \\
+15 \cdot \Big(\sum_{m,f} \text{kcal100}(f) \cdot \text{gramos\_alimento}[f,d,m]\Big), \qquad \forall d \in D
+\end{gather*}
 
 \textbf{R6. No repetir el mismo alimento dentro del día.}
-\begin{equation*}
-\sum_{m \in M} x[f,d,m] \le \text{MAX\_SAME\_FOOD\_PER\_DAY}, \qquad \forall f \in F,\ d \in D
-\end{equation*}
+\begin{gather*}
+\sum_{m \in M} \text{ha\_consumido}[f,d,m] \le \text{MAX\_SAME\_FOOD\_PER\_DAY}, \\
+\forall f \in F,\ d \in D
+\end{gather*}
 
 \textbf{R7. Variedad mínima diaria.} Con un indicador de uso diario:
 \begin{gather*}
-\text{usado\_dia}[f,d] = \max_{m \in M} x[f,d,m], \qquad \forall f \in F,\ d \in D \\
+\text{usado\_dia}[f,d] = \max_{m \in M} \text{ha\_consumido}[f,d,m], \qquad \forall f \in F,\ d \in D \\
 \sum_{f \in F} \text{usado\_dia}[f,d] \;\ge\; \min(\text{MIN\_DISTINCT\_PER\_DAY},\ |F|), \qquad \forall d \in D
 \end{gather*}
 
 \textbf{R8. Variedad mínima semanal.} Para cada ventana de 7 días, con un indicador de uso en la ventana:
 \begin{gather*}
-\text{usado\_sem}[f] = \max_{d \in \text{ventana},\, m \in M} x[f,d,m] \\
+\text{usado\_sem}[f] = \max_{d \in \text{ventana},\, m \in M} \text{ha\_consumido}[f,d,m] \\
 \sum_{f \in F} \text{usado\_sem}[f] \;\ge\; \min(\text{MIN\_DISTINCT\_PER\_WEEK},\ |F|)
 \end{gather*}
 
@@ -156,35 +162,38 @@ Todas duras y aplicadas siempre.
 
 Todas duras y sin literal de asunción: no forman parte del vocabulario que el profesional puede reducir, así que nunca aparecen en un núcleo de infactibilidad. Se usan los subconjuntos COND (alimentos con rol de condimento), DULCE (dulces), FRUTA (fruta) y, para cada alimento $f$, la lista blanca de franjas $\text{momentos}(f)$ derivada de sus etiquetas de momento; $c(m)$ es la franja de la comida $m$ y MAIN el conjunto de franjas principales (desayuno, comida, cena).
 
-\textbf{R9. Perfil de ración por aparición.} Es el enlace presencia-gramos de la sección~\ref{sec:anexoVariables}: presente implica $\text{min}_f \le g \le \text{max}_f$.
+\textbf{R9. Perfil de ración por aparición.} Es el enlace presencia-gramos de la sección~\ref{sec:anexoVariables}: presente implica $\text{min}_f \le \text{gramos\_alimento} \le \text{max}_f$.
 
 \textbf{R10. Cantidades por unidades.} Es la cuantización por piezas de la sección~\ref{sec:anexoVariables}.
 
 \textbf{R11. Lista blanca de franjas.}
-\begin{equation*}
-x[f,d,m] = 0, \qquad \forall f : \text{momentos}(f) \ne \emptyset,\ \forall d \in D,\ \forall m : c(m) \notin \text{momentos}(f)
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] = 0, \\
+\forall f : \text{momentos}(f) \ne \emptyset,\ \forall d \in D,\ \forall m : c(m) \notin \text{momentos}(f)
+\end{gather*}
 
 \textbf{R12. Composición mínima de las comidas principales.}
 \begin{gather*}
-\sum_{f \in F} x[f,d,m] \ge \min(\text{MIN\_ITEMS\_MAIN\_MEAL},\ |F|), \\
+\sum_{f \in F} \text{ha\_consumido}[f,d,m] \ge \min(\text{MIN\_ITEMS\_MAIN\_MEAL},\ |F|), \\
 \forall d \in D,\ \forall m : c(m) \in \text{MAIN}
 \end{gather*}
 
 \textbf{R13. El condimento nunca va solo.}
-\begin{equation*}
-x[f,d,m] \;\le\; \sum_{f' \in F \setminus \text{COND}} x[f',d,m], \qquad \forall f \in \text{COND},\ d \in D,\ m \in M
-\end{equation*}
+\begin{gather*}
+\text{ha\_consumido}[f,d,m] \;\le\; \sum_{f' \in F \setminus \text{COND}} \text{ha\_consumido}[f',d,m], \\
+\forall f \in \text{COND},\ d \in D,\ m \in M
+\end{gather*}
 Caso frontera: si el catálogo visible solo tuviera condimentos, la regla dejaría el problema sin solución por construcción; en ese caso degenerado se omite y se emite un aviso.
 
 \textbf{R14. Tope diario de condimentos.}
-\begin{equation*}
-\sum_{f \in \text{COND}}\ \sum_{m \in M} x[f,d,m] \;\le\; \text{CONDIMENT\_MAX\_PER\_DAY}, \qquad \forall d \in D
-\end{equation*}
+\begin{gather*}
+\sum_{f \in \text{COND}}\ \sum_{m \in M} \text{ha\_consumido}[f,d,m] \;\le\; \text{CONDIMENT\_MAX\_PER\_DAY}, \\
+\forall d \in D
+\end{gather*}
 
 \textbf{R15. Dulce y fruta como complemento.}
 \begin{gather*}
-\sum_{f \in \text{DULCE} \cup \text{FRUTA}} x[f,d,m] \;\le\; \text{SWEET\_FRUIT\_MAX\_PER\_MEAL}, \\
+\sum_{f \in \text{DULCE} \cup \text{FRUTA}} \text{ha\_consumido}[f,d,m] \;\le\; \text{SWEET\_FRUIT\_MAX\_PER\_MEAL}, \\
 \forall d \in D,\ m \in M
 \end{gather*}
 
@@ -225,17 +234,17 @@ y con cota mínima la desigualdad se invierte. La variante blanda no se modela: 
 
 \paragraph{\texttt{forbid\_food} (dura por defecto).} Prohíbe un alimento concreto:
 \begin{equation*}
-x[f_0,d,m] = 0, \qquad \forall d \in D,\ m \in M
+\text{ha\_consumido}[f_0,d,m] = 0, \qquad \forall d \in D,\ m \in M
 \end{equation*}
 
 \paragraph{\texttt{forbid\_tag} (dura por defecto).} Prohíbe todos los alimentos de una etiqueta; es el mecanismo de las alergias e intolerancias:
 \begin{equation*}
-x[f,d,m] = 0, \qquad \forall f \in \text{miembros}(t),\ d \in D,\ m \in M
+\text{ha\_consumido}[f,d,m] = 0, \qquad \forall f \in \text{miembros}(t),\ d \in D,\ m \in M
 \end{equation*}
 
 \paragraph{\texttt{prefer\_food} (blanda).} Bonifica cada aparición del alimento, opcionalmente solo en un tipo de comida:
 \begin{equation*}
-\text{bonificación} \mathrel{+}= \sum_{d \in D}\ \sum_{m \in M_{\text{ctx}}} x[f_0,d,m]
+\text{bonificación} \mathrel{+}= \sum_{d \in D}\ \sum_{m \in M_{\text{ctx}}} \text{ha\_consumido}[f_0,d,m]
 \end{equation*}
 donde $M_{\text{ctx}}$ son las comidas del tipo indicado, o todas si no se indica.
 
@@ -249,13 +258,13 @@ y $\text{over} + \text{under}$ entra como penalización; $\text{kcal}_{d,m}$ es 
 
 \paragraph{\texttt{max\_servings\_per\_period} (configurable).} Limita las apariciones de un alimento o de una etiqueta en ventanas de \texttt{window\_days} días. Como dura, para cada ventana $W$:
 \begin{equation*}
-\sum_{f \in \text{obj}}\ \sum_{d \in W}\ \sum_{m \in M} x[f,d,m] \le \text{cap}
+\sum_{f \in \text{obj}}\ \sum_{d \in W}\ \sum_{m \in M} \text{ha\_consumido}[f,d,m] \le \text{cap}
 \end{equation*}
 Como blanda, penaliza el exceso sobre el tope en cada ventana.
 
 \paragraph{\texttt{no\_repeat\_food} y \texttt{no\_repeat\_tag} (blandas por defecto).} Impiden o penalizan que el objetivo (un alimento, o cualquier alimento de una etiqueta) se repita en menos de $sep$ días. Con la presencia por día del objetivo:
 \begin{equation*}
-\text{pres}_d = \max_{f \in \text{obj},\, m \in M} x[f,d,m]
+\text{pres}_d = \max_{f \in \text{obj},\, m \in M} \text{ha\_consumido}[f,d,m]
 \end{equation*}
 la versión dura exige, en cada ventana $W$ de $sep$ días, $\sum_{d \in W} \text{pres}_d \le 1$; la blanda penaliza el exceso sobre 1 en cada ventana.
 
@@ -277,22 +286,25 @@ Cada desviación absoluta se linealiza con dos variables no negativas de exceso 
 \text{over} \ge 0, \qquad \text{under} \ge 0, \qquad \text{suma} - \text{objetivo} = \text{over} - \text{under} \\
 |\text{suma} - \text{objetivo}| = \text{over} + \text{under}
 \end{gather*}
-con las cotas ajustadas al catálogo: el exceso como mucho a la cota superior del nutriente menos el objetivo, y el defecto como mucho al objetivo. La cota superior de cada nutriente se deriva del máximo real del nutriente en el catálogo y del mayor máximo de ración de los perfiles.
+con las cotas ajustadas al catálogo: el exceso como mucho a la cota superior del nutriente menos el objetivo, y el defecto como mucho al objetivo. La cota superior de cada nutriente por comida se apoya en R2: es la suma de las \texttt{MAX\_ITEMS\_PER\_MEAL} mayores aportaciones individuales alcanzables (la ración máxima del alimento por su densidad escalada), y la cota diaria es esa suma por el número de comidas.
 
-El término de variedad penaliza cada alimento no usado en todo el plan, con $\text{usado}[f]$ el máximo de $x$ sobre el plan entero:
+El término de variedad penaliza cada alimento no usado en todo el plan, con $\text{usado}[f]$ el máximo de $\text{ha\_consumido}$ sobre el plan entero:
 \begin{equation*}
 P_{\text{variety}} = \sum_{f \in F} \big(1 - \text{usado}[f]\big)
 \end{equation*}
 
 El término de reparto penaliza el exceso de apariciones de un alimento sobre el tope $\text{cap} = \lceil \text{MAX\_APPEARANCES\_PER\_DAY\_RATIO} \cdot |D| \rceil$:
-\begin{equation*}
-\text{exceso}[f] \ge \Big(\sum_{d \in D}\sum_{m \in M} x[f,d,m]\Big) - \text{cap}, \qquad \text{exceso}[f] \ge 0, \qquad P_{\text{spread}} = \sum_{f \in F} \text{exceso}[f]
-\end{equation*}
+\begin{gather*}
+\text{exceso}[f] \ge \Big(\sum_{d \in D}\sum_{m \in M} \text{ha\_consumido}[f,d,m]\Big) - \text{cap}, \qquad \text{exceso}[f] \ge 0 \\
+P_{\text{spread}} = \sum_{f \in F} \text{exceso}[f]
+\end{gather*}
 
 El peso efectivo de cada término de restricción es el producto del peso de su familia por el peso de la fila:
 \begin{equation*}
 \text{peso efectivo} = w_{\text{familia}} \cdot \text{peso de la fila}
 \end{equation*}
+
+Un objetivo calórico con peso de fila 7 pesa $10 \cdot 7 = 70$ por unidad escalada de desviación ($70\,000$ por kcal); una preferencia de familia con peso 4 pesa $4\,000 \cdot 4 = 16\,000$ por aparición. En unidades naturales son magnitudes comparables, por el factor de $1\,000$ de la sección~\ref{sec:anexoUmbrales}.
 
 \section{Mapa de restricciones a código}
 \label{sec:anexoMapa}
@@ -306,7 +318,7 @@ Correspondencia entre cada elemento formal y su ubicación en el solver, para qu
 \hline
 \textbf{Elemento formal} & \textbf{Código} \\
 \hline
-Variables $x$, $g$, $k$ y su enlace & \texttt{model.build\_base\_model} \\
+Variables de decisión y su enlace & \texttt{model.build\_base\_model} \\
 \hline
 Perfil de ración $\text{min}_f$, $\text{max}_f$ (R9) & \texttt{model.serving\_bounds} \\
 \hline
