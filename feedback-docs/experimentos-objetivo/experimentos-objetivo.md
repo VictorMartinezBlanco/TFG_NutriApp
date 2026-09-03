@@ -200,7 +200,7 @@ Evaluación automática contra la sección 4.4, brazo a brazo:
 | 5. Bancos: solver con el criterio redefinido | 32 de 32 | 32 de 32 |
 | 5. Bancos: validador | 38 de 38 | 38 de 38 |
 
-El banco del solver pasa de 30 a 32 comprobaciones porque la redefinición de la sección 4.5 sustituye una comprobación por dos en cada uno de los casos 2 y 3. La cola asíncrona, que genera planes con el motor real a través del worker, queda en 14 de 14 con el brazo elegido. Los bancos de prechecks y traductor no dependen de la función objetivo (no llaman al solver) y el extremo a extremo se comprueba contra el despliegue tras publicar el cambio, con el mismo criterio de siempre (que las bandas dejan intacto: 50 sobre 1.500 kcal es un 3,3 por ciento).
+El banco del solver pasa de 30 a 32 comprobaciones porque la redefinición de la sección 4.5 sustituye una comprobación por dos en cada uno de los casos 2 y 3. La cola asíncrona, que genera planes con el motor real a través del worker, queda en 14 de 14 con el brazo elegido. Los bancos de prechecks y traductor no dependen de la función objetivo (no llaman al solver). El extremo a extremo contra el despliegue, pasado tras publicar el cambio, dio 29 de 29 con el mismo criterio de siempre (que las bandas dejan intacto: 50 sobre 1.500 kcal es un 3,3 por ciento); la desviación reportada en el caso con objetivo calórico pasó del 0,0 al 2,57 por ciento, señal de que el despliegue ya servía el modelo con bandas.
 
 ## 6. Veredicto
 
