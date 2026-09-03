@@ -6,7 +6,7 @@ Este anexo recoge la formalización completa del modelo del capítulo~\ref{cap:m
 \section{Umbrales y pesos del modelo}
 \label{sec:anexoUmbrales}
 
-Todos los umbrales son constantes con nombre en la configuración del solver.
+Todos los umbrales son constantes con nombre en la configuración del solver. Los cinco campos de \texttt{ObjectiveBands} son las tolerancias de los objetivos blandos de energía y macronutrientes: lo que queda dentro de ellas no penaliza (sección~\ref{sec:anexoObjetivo}).
 
 \begin{table}[H]
 \centering
@@ -46,6 +46,16 @@ Todos los umbrales son constantes con nombre en la configuración del solver.
 \texttt{FALLBACK\_MIN\_SERVING\_G} & 20\,g & mínimo de ración sin perfil \\
 \hline
 \texttt{FALLBACK\_MAX\_SERVING\_G} & 250\,g & máximo de ración sin perfil \\
+\hline
+\texttt{ObjectiveBands.kcal\_day} & 50\,kcal & banda diaria del objetivo calórico \\
+\hline
+\texttt{ObjectiveBands.kcal\_mean} & 25\,kcal & banda de la media del plan, objetivo calórico \\
+\hline
+\texttt{ObjectiveBands.macro\_day\_pct} & 5\,\% & banda diaria de los macros, sobre el objetivo \\
+\hline
+\texttt{ObjectiveBands.macro\_mean\_pct} & 2,5\,\% & banda de la media de los macros, sobre el objetivo \\
+\hline
+\texttt{ObjectiveBands.mean\_factor} & 10 & factor $K$ del ancla de la media \\
 \hline
 \texttt{SOLVE\_TIME\_LIMIT\_S} & 90\,s & límite de tiempo de resolución \\
 \hline
@@ -204,12 +214,19 @@ Cada tipo se da con su naturaleza por defecto y su formulación. Las variantes d
 
 \paragraph{\texttt{meals\_per\_day} y \texttt{plan\_duration\_days} (estructurales).} Fijan los conjuntos $M$ y $D$ y, con ellos, cuántas variables se crean. No generan restricción optimizable; llegan por la firma de la función.
 
-\paragraph{\texttt{kcal\_target} (blanda por defecto).} Acerca la energía diaria a un valor $v$. Como blanda, penaliza la desviación absoluta por día. Como dura:
+\paragraph{\texttt{kcal\_target} (blanda por defecto).} Acerca la energía diaria a un valor $v$. Como blanda, penaliza con el patrón de exceso y defecto de la sección~\ref{sec:anexoObjetivo} solo lo que sobresale de dos bandas: $T_{\text{día}} = 50$\,kcal por día y $T_{\text{media}} = 25$\,kcal sobre la media del plan, esta con un factor $K = 10$ que la hace casi obligatoria:
+\begin{gather*}
+\text{exceso\_diario}_d \;\ge\; \text{over}_d + \text{under}_d - T_{\text{día}}, \qquad \text{exceso\_diario}_d \ge 0, \qquad \forall d \in D \\
+\sum_{d \in D} \big(\text{over}_d - \text{under}_d\big) \;=\; \text{over}_S - \text{under}_S, \qquad \text{exceso\_media} \ge 0 \\
+\text{exceso\_media} \;\ge\; \text{over}_S + \text{under}_S - |D| \cdot T_{\text{media}} \\
+\text{penalización} \;=\; w_{\text{kcal}} \cdot \text{peso de la fila} \cdot \Big( \sum_{d \in D} \text{exceso\_diario}_d \;+\; K \cdot \text{exceso\_media} \Big)
+\end{gather*}
+Como dura:
 \begin{equation*}
 \text{nut}_{d,\text{kcal}} = \text{scale\_target}(v), \qquad \forall d \in D
 \end{equation*}
 
-\paragraph{\texttt{macro\_target} (blanda por defecto).} Igual que el objetivo calórico pero sobre un macronutriente (proteína, hidratos o grasa); el peso de familia se elige según el macro.
+\paragraph{\texttt{macro\_target} (blanda por defecto).} Igual que el objetivo calórico pero sobre un macronutriente (proteína, hidratos o grasa), con las bandas en porcentaje del objetivo: un 5\,\% por día y un 2,5\,\% en la media. El peso de familia se elige según el macro.
 
 \paragraph{\texttt{nutrient\_min} (configurable).} Mínimo diario de un nutriente. Como dura, $\text{nut}_{d,n} \ge \text{scale\_target}(v)$ para todo día. Como blanda, penaliza solo el defecto, con una variable por día:
 \begin{equation*}
@@ -288,6 +305,8 @@ Cada desviación absoluta se linealiza con dos variables no negativas de exceso 
 \end{gather*}
 con las cotas ajustadas al catálogo: el exceso como mucho a la cota superior del nutriente menos el objetivo, y el defecto como mucho al objetivo. La cota superior de cada nutriente por comida se apoya en R2: es la suma de las \texttt{MAX\_ITEMS\_PER\_MEAL} mayores aportaciones individuales alcanzables (la ración máxima del alimento por su densidad escalada), y la cota diaria es esa suma por el número de comidas.
 
+Los objetivos blandos de energía y macronutrientes no penalizan $\text{over} + \text{under}$ directamente: sobre ellos se aplican las dos bandas de tolerancia de la sección~\ref{sec:anexoTipos}, la diaria y la de la media del plan, y solo los excesos fuera de ellas entran en la función objetivo, el de la media multiplicado por $K$. Con las tolerancias a cero la formulación se reduce a la desviación absoluta total sin variables adicionales. Los mínimos y máximos de nutriente no llevan banda porque son umbrales de un solo lado.
+
 El término de variedad penaliza cada alimento no usado en todo el plan, con $\text{usado}[f]$ el máximo de $\text{ha\_consumido}$ sobre el plan entero:
 \begin{equation*}
 P_{\text{variety}} = \sum_{f \in F} \big(1 - \text{usado}[f]\big)
@@ -304,7 +323,7 @@ El peso efectivo de cada término de restricción es el producto del peso de su 
 \text{peso efectivo} = w_{\text{familia}} \cdot \text{peso de la fila}
 \end{equation*}
 
-Un objetivo calórico con peso de fila 7 pesa $10 \cdot 7 = 70$ por unidad escalada de desviación ($70\,000$ por kcal); una preferencia de familia con peso 4 pesa $4\,000 \cdot 4 = 16\,000$ por aparición. En unidades naturales son magnitudes comparables, por el factor de $1\,000$ de la sección~\ref{sec:anexoUmbrales}.
+Un objetivo calórico con peso de fila 7 pesa $10 \cdot 7 = 70$ por unidad escalada de desviación fuera de la banda diaria ($70\,000$ por kcal, y $700\,000$ por cada kcal que la suma de las desviaciones del plan se salga de la banda de la media, por el factor $K$); una preferencia de familia con peso 4 pesa $4\,000 \cdot 4 = 16\,000$ por aparición. En unidades naturales son magnitudes comparables, por el factor de $1\,000$ de la sección~\ref{sec:anexoUmbrales}. Dentro de las bandas la energía no cuesta nada, así que ahí deciden la estructura y las preferencias.
 
 \section{Mapa de restricciones a código}
 \label{sec:anexoMapa}
@@ -354,7 +373,7 @@ Franjas por número de comidas & \texttt{loader.\_SLOTS\_BY\_COUNT}, \texttt{loa
 \hline
 Aplicación del catálogo y asunciones & \texttt{catalog.apply\_constraints}, \texttt{catalog.hard\_enforce} \\
 \hline
-\texttt{kcal\_target} / \texttt{macro\_target} & \texttt{catalog.\_h\_kcal\_target}, \texttt{catalog.\_h\_macro\_target} \\
+\texttt{kcal\_target} / \texttt{macro\_target} & \texttt{catalog.\_h\_kcal\_target}, \texttt{\_h\_macro\_target}, \texttt{\_target\_deviation}; \texttt{config.ObjectiveBands} \\
 \hline
 \texttt{nutrient\_min} / \texttt{max} / \texttt{ratio} & \texttt{catalog.\_h\_nutrient\_min}, \texttt{\_h\_nutrient\_max}, \texttt{\_h\_nutrient\_ratio} \\
 \hline
@@ -370,7 +389,7 @@ Aplicación del catálogo y asunciones & \texttt{catalog.apply\_constraints}, \t
 \hline
 \texttt{forbid\_combination} & \texttt{catalog.\_h\_forbid\_combination} \\
 \hline
-Linealización del valor absoluto & \texttt{catalog.\_abs\_dev} \\
+Linealización del valor absoluto & \texttt{catalog.\_target\_deviation} \\
 \hline
 Función objetivo (suma ponderada) & \texttt{objective.set\_objective} \\
 \hline
