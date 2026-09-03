@@ -94,18 +94,49 @@ def apply_constraints(
 # --- helpers de expresion ---------------------------------------------------
 
 
-def _abs_dev(model: cp_model.CpModel, expr, target: int, upper: int, tag: str):
-    """Linealiza |expr - target| con dos variables no negativas over y under.
+def _target_deviation(pm, code, target, upper, band_day, band_mean, factor, tag):
+    """Desviacion penalizable de un objetivo diario sobre un nutriente.
 
-    expr - target == over - under, luego over + under = |expr - target|. over
-    solo puede llegar a upper - target (exceso maximo posible) y under a target
-    (defecto maximo); acotarlos ajustado, en vez de con una cota comun holgada,
-    ayuda a la propagacion del solver.
+    Por dia, |suma - target| se linealiza con exceso y defecto no negativos
+    (suma - target == over - under). Solo cuenta lo que sobresale de la banda
+    diaria: ex >= over + under - band_day. Sobre la suma de las desviaciones con
+    signo del plan va la banda de la media, que deja que unos dias compensen a
+    otros; su exceso entra multiplicado por factor. Las cotas de over y under
+    salen del catalogo (exceso maximo upper - target, defecto maximo target):
+    ajustadas, en vez de una holgura comun, ayudan a propagar. Con las bandas a
+    cero devuelve la desviacion absoluta total sin variables extra. None si el
+    nutriente no esta en el modelo.
     """
-    over = model.NewIntVar(0, max(upper - target, 0), f"over_{tag}")
-    under = model.NewIntVar(0, target, f"under_{tag}")
-    model.Add(expr - target == over - under)
-    return over + under
+    model = pm.model
+    over_max = max(upper - target, 0)
+    daily, signed = [], []
+    for d in pm.days:
+        dv = pm.daily_nut.get((d, code))
+        if dv is None:
+            continue
+        over = model.NewIntVar(0, over_max, f"over_{tag}_{d}")
+        under = model.NewIntVar(0, target, f"under_{tag}_{d}")
+        model.Add(dv - target == over - under)
+        if band_day > 0:
+            ex = model.NewIntVar(0, max(over_max, target), f"ex_{tag}_{d}")
+            model.Add(ex >= over + under - band_day)
+            daily.append(ex)
+        else:
+            daily.append(over + under)
+        signed.append(over - under)
+    if not daily:
+        return None
+    total = sum(daily)
+    if band_mean <= 0:
+        return total
+    n = len(signed)
+    bound = n * max(over_max, target)
+    over_s = model.NewIntVar(0, bound, f"over_{tag}_plan")
+    under_s = model.NewIntVar(0, bound, f"under_{tag}_plan")
+    model.Add(sum(signed) == over_s - under_s)
+    ex_s = model.NewIntVar(0, bound, f"ex_{tag}_plan")
+    model.Add(ex_s >= over_s + under_s - n * band_mean)
+    return total + factor * ex_s
 
 
 def _foods_with_tag(tag_members: dict[int, list[int]], tag_id: int) -> list[int]:
@@ -120,14 +151,14 @@ def _h_kcal_target(c, pm, applied, hard_enforce, tags, ncodes, mcodes, w):
         return
     target = scale_target(c.value)
     upper = pm.nut_upper.get(C.KCAL_CODE, target)
-    devs = []
-    for d in pm.days:
-        dv = pm.daily_nut.get((d, C.KCAL_CODE))
-        if dv is None:
-            continue
-        devs.append(_abs_dev(pm.model, dv, target, upper, f"kcal_{c.id}_{d}"))
-    total = sum(devs)
     if c.priority == "soft":
+        b = C.DEFAULT_BANDS
+        total = _target_deviation(
+            pm, C.KCAL_CODE, target, upper, scale_target(b.kcal_day),
+            scale_target(b.kcal_mean), b.mean_factor, f"kcal_{c.id}",
+        )
+        if total is None:
+            return
         applied.obj.add_penalty(w.w_kcal * c.weight, total)
         applied.obj.soft_devs.append((c, total))
     else:
@@ -144,14 +175,15 @@ def _h_macro_target(c, pm, applied, hard_enforce, tags, ncodes, mcodes, w):
     target = scale_target(c.value)
     upper = pm.nut_upper.get(code, target)
     wf = {C.PROTEIN_CODE: w.w_protein, C.CARB_CODE: w.w_carb, C.FAT_CODE: w.w_fat}.get(code, w.w_protein)
-    devs = []
-    for d in pm.days:
-        dv = pm.daily_nut.get((d, code))
-        if dv is None:
-            continue
-        devs.append(_abs_dev(pm.model, dv, target, upper, f"macro_{c.id}_{d}"))
-    total = sum(devs)
     if c.priority == "soft":
+        # las bandas de los macros son porcentaje del objetivo, en la misma escala.
+        b = C.DEFAULT_BANDS
+        total = _target_deviation(
+            pm, code, target, upper, round(target * b.macro_day_pct / 100),
+            round(target * b.macro_mean_pct / 100), b.mean_factor, f"macro_{c.id}",
+        )
+        if total is None:
+            return
         applied.obj.add_penalty(wf * c.weight, total)
         applied.obj.soft_devs.append((c, total))
     else:

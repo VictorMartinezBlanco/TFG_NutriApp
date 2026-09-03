@@ -26,8 +26,10 @@ from app.solver.loader import (
 
 NUTRI = "03f06edf-603e-489d-8aed-71bc93f97ef0"
 
-KCAL_TOL_PCT = 5.0
 MACRO_TOL_PCT = 10.0
+# el banco compara sumas reales y el modelo sumas cuantizadas a un decimal por
+# 100 g; el redondeo acumulado en un dia no llega a una kcal.
+QUANT_KCAL = 1.0
 
 
 async def _nutrient_codes(conn):
@@ -53,6 +55,20 @@ def _daily_nutrient(plan, foods_by_id, code, day_index=0):
         for it in meal.items:
             tot += foods_by_id[it.food_id].nutrients.get(code, 0.0) * it.grams / 100
     return tot
+
+
+def _kcal_band_checks(rep, plan, foods_by_id, target):
+    """El objetivo blando se cumple cuando cada dia queda dentro de la banda
+    diaria y la media del plan dentro de la suya."""
+    devs = [_daily_nutrient(plan, foods_by_id, "energy_kcal", i) - target
+            for i in range(len(plan.days))]
+    worst = max(abs(x) for x in devs)
+    mean = sum(devs) / len(devs)
+    b = C.DEFAULT_BANDS
+    rep.check(f"cada dia dentro de +-{b.kcal_day} kcal del objetivo",
+              worst <= b.kcal_day + QUANT_KCAL, f"peor dia {worst:.0f} kcal")
+    rep.check(f"media del plan dentro de +-{b.kcal_mean} kcal",
+              abs(mean) <= b.kcal_mean + QUANT_KCAL, f"media {mean:+.0f} kcal")
 
 
 def _plan_uses_tag(plan, foods_by_id, tag_id):
@@ -210,19 +226,16 @@ async def main() -> int:
             r = run(maria_c, 7, 5, only_kcal, m5)
             rep.check("factible", isinstance(r, FeasiblePlan))
             if isinstance(r, FeasiblePlan):
-                rep.check("desviacion kcal < 5%",
-                          (r.metrics.kcal_mean_deviation_pct or 0) < KCAL_TOL_PCT,
-                          f"{r.metrics.kcal_mean_deviation_pct}%")
-                print(f"    status={r.metrics.solve_status} time={r.metrics.solve_time_ms}ms")
+                _kcal_band_checks(rep, r, foods_by_id, only_kcal[0].value)
+                print(f"    status={r.metrics.solve_status} time={r.metrics.solve_time_ms}ms"
+                      f" dev={r.metrics.kcal_mean_deviation_pct}%")
 
             # Caso 3. Objetivo calorico + preferencia vegetariana.
             print("\nCaso 3. Maria, 7 dias, 5 comidas, kcal_target 1500 + prefer_tag vegetarian")
             r = run(maria_c, 7, 5, maria_cons, m5)
             rep.check("factible", isinstance(r, FeasiblePlan))
             if isinstance(r, FeasiblePlan):
-                rep.check("desviacion kcal < 5%",
-                          (r.metrics.kcal_mean_deviation_pct or 0) < KCAL_TOL_PCT,
-                          f"{r.metrics.kcal_mean_deviation_pct}%")
+                _kcal_band_checks(rep, r, foods_by_id, only_kcal[0].value)
                 veg = tids["vegetarian"]
                 # cuenta cuantos items son vegetarianos vs total
                 total = sum(len(m.items) for d in r.days for m in d.meals)

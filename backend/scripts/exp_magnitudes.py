@@ -104,6 +104,17 @@ def _nut_upper(foods, meals_per_day, code):
     return max_serving * len(foods) * max_100 * meals_per_day
 
 
+def banded_raw(values, target, band_day, band_mean, factor):
+    """The deviation the model actually penalizes for a daily target: per day
+    only what exceeds the day band, plus the plan mean excess outside its own
+    band times its factor. Zero bands give the plain absolute deviation."""
+    devs = [v - target for v in values]
+    raw = sum(max(0, abs(x) - band_day) for x in devs)
+    if band_mean > 0:
+        raw += factor * max(0, abs(sum(devs)) - len(devs) * band_mean)
+    return raw
+
+
 def _term(family, weight_family, weight_row, raw, raw_bound, detail=""):
     return {
         "family": family,
@@ -139,7 +150,9 @@ def measure_case(plan, constraints, foods, ncodes, mcodes, w=C.DEFAULT_WEIGHTS):
         if c.type == "kcal_target" and c.value is not None:
             target = scale_target(c.value)
             daily = _daily_scaled(plan, foods_by_id, C.KCAL_CODE)
-            raw = sum(abs(v - target) for v in daily.values())
+            b = C.DEFAULT_BANDS
+            raw = banded_raw(daily.values(), target, scale_target(b.kcal_day),
+                             scale_target(b.kcal_mean), b.mean_factor)
             upper = _nut_upper(foods, n_meals, C.KCAL_CODE)
             bound = n_days * max(upper - target, target)
             terms.append(_term("kcal_target", w.w_kcal, c.weight, raw, bound,
@@ -150,7 +163,10 @@ def measure_case(plan, constraints, foods, ncodes, mcodes, w=C.DEFAULT_WEIGHTS):
                 continue
             target = scale_target(c.value)
             daily = _daily_scaled(plan, foods_by_id, code)
-            raw = sum(abs(v - target) for v in daily.values())
+            b = C.DEFAULT_BANDS
+            raw = banded_raw(daily.values(), target,
+                             round(target * b.macro_day_pct / 100),
+                             round(target * b.macro_mean_pct / 100), b.mean_factor)
             upper = _nut_upper(foods, n_meals, code)
             bound = n_days * max(upper - target, target)
             terms.append(_term("macro_target", _macro_family_weight(code, w),

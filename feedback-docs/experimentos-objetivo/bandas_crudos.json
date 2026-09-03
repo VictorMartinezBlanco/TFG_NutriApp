@@ -1,0 +1,2852 @@
+{
+ "bank2_kcal_only": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 8.1,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 10.38,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 4.41,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 0.98,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.69,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -46.6,
+       29.8,
+       -26.1,
+       -46.1,
+       38.8,
+       -44.6,
+       -49.9
+      ],
+      "mean_signed": -20.69,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 0.94,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.69,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -46.6,
+       29.8,
+       -26.1,
+       -46.1,
+       38.8,
+       -44.6,
+       -49.9
+      ],
+      "mean_signed": -20.69,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 0.94,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.69,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -46.6,
+       29.8,
+       -26.1,
+       -46.1,
+       38.8,
+       -44.6,
+       -49.9
+      ],
+      "mean_signed": -20.69,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 0.95,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.69,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -46.6,
+       29.8,
+       -26.1,
+       -46.1,
+       38.8,
+       -44.6,
+       -49.9
+      ],
+      "mean_signed": -20.69,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 1.02,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.69,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -46.6,
+       29.8,
+       -26.1,
+       -46.1,
+       38.8,
+       -44.6,
+       -49.9
+      ],
+      "mean_signed": -20.69,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 1.05,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.69,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -46.6,
+       29.8,
+       -26.1,
+       -46.1,
+       38.8,
+       -44.6,
+       -49.9
+      ],
+      "mean_signed": -20.69,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ]
+ },
+ "bank3_kcal_prefer": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 37.74,
+    "objective_value": -2124000,
+    "objective_recomputed": -2124000,
+    "recompute_exact": true,
+    "gap": 0.0169,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 80,
+    "unused": 20,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 48.64,
+    "objective_value": -2123000,
+    "objective_recomputed": -2123000,
+    "recompute_exact": true,
+    "gap": 0.0174,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 83,
+    "unused": 17,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 29.86,
+    "objective_value": -2119000,
+    "objective_recomputed": -2119000,
+    "recompute_exact": true,
+    "gap": 0.0193,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 79,
+    "unused": 21,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 12.17,
+    "objective_value": -2122000,
+    "objective_recomputed": -2122000,
+    "recompute_exact": true,
+    "gap": 0.0179,
+    "kcal_mean_deviation_pct": 3.07,
+    "distinct": 78,
+    "unused": 22,
+    "spread_over": 2,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       34.2,
+       -49.5,
+       -48.3,
+       -48.4,
+       -45.9,
+       -50.0,
+       46.1
+      ],
+      "mean_signed": -23.1,
+      "worst_abs": 50.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 8.73,
+    "objective_value": -2126000,
+    "objective_recomputed": -2126000,
+    "recompute_exact": true,
+    "gap": 0.016,
+    "kcal_mean_deviation_pct": 2.25,
+    "distinct": 78,
+    "unused": 22,
+    "spread_over": 1,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -49.9,
+       0.4,
+       -44.8,
+       -43.8,
+       -49.5,
+       -5.0,
+       43.1
+      ],
+      "mean_signed": -21.35,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 4.84,
+    "objective_value": -2122000,
+    "objective_recomputed": -2122000,
+    "recompute_exact": true,
+    "gap": 0.0179,
+    "kcal_mean_deviation_pct": 1.7,
+    "distinct": 78,
+    "unused": 22,
+    "spread_over": 2,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       3.7,
+       1.3,
+       38.1,
+       -49.8,
+       -49.9,
+       35.7,
+       0.1
+      ],
+      "mean_signed": -2.96,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 8.64,
+    "objective_value": -21190000,
+    "objective_recomputed": -21190000,
+    "recompute_exact": true,
+    "gap": 0.0193,
+    "kcal_mean_deviation_pct": 1.7,
+    "distinct": 79,
+    "unused": 21,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -47.7,
+       -49.7,
+       4.4,
+       -49.5,
+       1.0,
+       26.5,
+       0.2
+      ],
+      "mean_signed": -16.4,
+      "worst_abs": 49.7,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 8.72,
+    "objective_value": -21220000,
+    "objective_recomputed": -21220000,
+    "recompute_exact": true,
+    "gap": 0.0179,
+    "kcal_mean_deviation_pct": 1.87,
+    "distinct": 78,
+    "unused": 22,
+    "spread_over": 2,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.1,
+       49.9,
+       -22.5,
+       49.4,
+       24.2,
+       -0.4,
+       49.9
+      ],
+      "mean_signed": 21.52,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 9.58,
+    "objective_value": -21200000,
+    "objective_recomputed": -21200000,
+    "recompute_exact": true,
+    "gap": 0.0189,
+    "kcal_mean_deviation_pct": 1.65,
+    "distinct": 76,
+    "unused": 24,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.5,
+       29.1,
+       1.3,
+       47.4,
+       49.0,
+       44.4,
+       1.6
+      ],
+      "mean_signed": 24.74,
+      "worst_abs": 49.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ]
+ },
+ "bank4_forbid_protmin": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 50.29,
+    "objective_value": 5000,
+    "objective_recomputed": 5000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 48.09,
+    "objective_value": 5000,
+    "objective_recomputed": 5000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 48.02,
+    "objective_value": 5000,
+    "objective_recomputed": 5000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 48.16,
+    "objective_value": 5000,
+    "objective_recomputed": 5000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 48.07,
+    "objective_value": 5000,
+    "objective_recomputed": 5000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 48.88,
+    "objective_value": 5000,
+    "objective_recomputed": 5000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 53.77,
+    "objective_value": 50000,
+    "objective_recomputed": 50000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 54.86,
+    "objective_value": 50000,
+    "objective_recomputed": 50000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 54.06,
+    "objective_value": 50000,
+    "objective_recomputed": 50000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 99,
+    "unused": 1,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ]
+ },
+ "bank5_forbid_sodmax": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 30.62,
+    "objective_value": 60000,
+    "objective_recomputed": 60000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 30.79,
+    "objective_value": 60000,
+    "objective_recomputed": 60000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 30.67,
+    "objective_value": 60000,
+    "objective_recomputed": 60000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 30.84,
+    "objective_value": 60000,
+    "objective_recomputed": 60000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 30.37,
+    "objective_value": 60000,
+    "objective_recomputed": 60000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 31.33,
+    "objective_value": 60000,
+    "objective_recomputed": 60000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 63.66,
+    "objective_value": 600000,
+    "objective_recomputed": 600000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 64.05,
+    "objective_value": 600000,
+    "objective_recomputed": 600000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 63.96,
+    "objective_value": 600000,
+    "objective_recomputed": 600000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ]
+ },
+ "bank8_design": {
+  "base": [
+   {
+    "status": "feasible",
+    "wall_s": 90.01,
+    "objective_value": 14482721000,
+    "objective_recomputed": 14482721000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 63,
+    "unused": 37,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 14482721000,
+    "objective_recomputed": 14482721000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 63,
+    "unused": 37,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.01,
+    "objective_value": 14482721000,
+    "objective_recomputed": 14482721000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 63,
+    "unused": 37,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "A": [
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 14482721000,
+    "objective_recomputed": 14482721000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 63,
+    "unused": 37,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 14482721000,
+    "objective_recomputed": 14482721000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 63,
+    "unused": 37,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 14482721000,
+    "objective_recomputed": 14482721000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 63,
+    "unused": 37,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "B": [
+   {
+    "status": "feasible",
+    "wall_s": 90.04,
+    "objective_value": 11484400000,
+    "objective_recomputed": 11484400000,
+    "recompute_exact": true,
+    "gap": 1.0001,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 60,
+    "unused": 40,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 11484400000,
+    "objective_recomputed": 11484400000,
+    "recompute_exact": true,
+    "gap": 1.0001,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 60,
+    "unused": 40,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 11484400000,
+    "objective_recomputed": 11484400000,
+    "recompute_exact": true,
+    "gap": 1.0001,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 60,
+    "unused": 40,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ]
+ },
+ "demo_27_david": {
+  "base": [
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 261400,
+    "objective_recomputed": 261400,
+    "recompute_exact": true,
+    "gap": 0.7513,
+    "kcal_mean_deviation_pct": 0.01,
+    "distinct": 67,
+    "unused": 33,
+    "spread_over": 1,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -0.5,
+       -0.2,
+       0.0,
+       -0.1,
+       -0.4,
+       -0.2,
+       -0.0
+      ],
+      "mean_signed": -0.19,
+      "worst_abs": 0.5,
+      "out_day": 1.3,
+      "out_mean": 0.19,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 261400,
+    "objective_recomputed": 261400,
+    "recompute_exact": true,
+    "gap": 0.7513,
+    "kcal_mean_deviation_pct": 0.01,
+    "distinct": 67,
+    "unused": 33,
+    "spread_over": 1,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -0.5,
+       -0.2,
+       0.0,
+       -0.1,
+       -0.4,
+       -0.2,
+       -0.0
+      ],
+      "mean_signed": -0.19,
+      "worst_abs": 0.5,
+      "out_day": 1.3,
+      "out_mean": 0.19,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 261400,
+    "objective_recomputed": 261400,
+    "recompute_exact": true,
+    "gap": 0.7513,
+    "kcal_mean_deviation_pct": 0.01,
+    "distinct": 67,
+    "unused": 33,
+    "spread_over": 1,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -0.5,
+       -0.2,
+       0.0,
+       -0.1,
+       -0.4,
+       -0.2,
+       -0.0
+      ],
+      "mean_signed": -0.19,
+      "worst_abs": 0.5,
+      "out_day": 1.3,
+      "out_mean": 0.19,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 41.37,
+    "objective_value": 65000,
+    "objective_recomputed": 65000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.26,
+    "distinct": 87,
+    "unused": 13,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -0.3,
+       -3.3,
+       -1.9,
+       -0.9,
+       -0.2,
+       -28.0,
+       -0.1
+      ],
+      "mean_signed": -4.97,
+      "worst_abs": 28.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 41.13,
+    "objective_value": 65000,
+    "objective_recomputed": 65000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.26,
+    "distinct": 87,
+    "unused": 13,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -0.3,
+       -3.3,
+       -1.9,
+       -0.9,
+       -0.2,
+       -28.0,
+       -0.1
+      ],
+      "mean_signed": -4.97,
+      "worst_abs": 28.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 41.13,
+    "objective_value": 65000,
+    "objective_recomputed": 65000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.26,
+    "distinct": 87,
+    "unused": 13,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -0.3,
+       -3.3,
+       -1.9,
+       -0.9,
+       -0.2,
+       -28.0,
+       -0.1
+      ],
+      "mean_signed": -4.97,
+      "worst_abs": 28.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 35.77,
+    "objective_value": 650000,
+    "objective_recomputed": 650000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.62,
+    "distinct": 87,
+    "unused": 13,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -6.1,
+       -49.1,
+       -9.1,
+       -0.4,
+       -13.8,
+       -3.7,
+       -0.3
+      ],
+      "mean_signed": -11.78,
+      "worst_abs": 49.1,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 35.52,
+    "objective_value": 650000,
+    "objective_recomputed": 650000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.62,
+    "distinct": 87,
+    "unused": 13,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -6.1,
+       -49.1,
+       -9.1,
+       -0.4,
+       -13.8,
+       -3.7,
+       -0.3
+      ],
+      "mean_signed": -11.78,
+      "worst_abs": 49.1,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 35.9,
+    "objective_value": 650000,
+    "objective_recomputed": 650000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 0.62,
+    "distinct": 87,
+    "unused": 13,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1900.0,
+      "daily_signed": [
+       -6.1,
+       -49.1,
+       -9.1,
+       -0.4,
+       -13.8,
+       -3.7,
+       -0.3
+      ],
+      "mean_signed": -11.78,
+      "worst_abs": 49.1,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ]
+ },
+ "demo_28_lucia": {
+  "base": [
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -2426000,
+    "objective_recomputed": -2426000,
+    "recompute_exact": true,
+    "gap": 0.0791,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 62,
+    "unused": 38,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -2426000,
+    "objective_recomputed": -2426000,
+    "recompute_exact": true,
+    "gap": 0.0791,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 62,
+    "unused": 38,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -2426000,
+    "objective_recomputed": -2426000,
+    "recompute_exact": true,
+    "gap": 0.0791,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 62,
+    "unused": 38,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "A": [
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -2426000,
+    "objective_recomputed": -2426000,
+    "recompute_exact": true,
+    "gap": 0.0791,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 62,
+    "unused": 38,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -2426000,
+    "objective_recomputed": -2426000,
+    "recompute_exact": true,
+    "gap": 0.0791,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 62,
+    "unused": 38,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -2426000,
+    "objective_recomputed": -2426000,
+    "recompute_exact": true,
+    "gap": 0.0791,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 62,
+    "unused": 38,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "B": [
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -24210000,
+    "objective_recomputed": -24210000,
+    "recompute_exact": true,
+    "gap": 0.0814,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 61,
+    "unused": 39,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -24210000,
+    "objective_recomputed": -24210000,
+    "recompute_exact": true,
+    "gap": 0.0814,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 61,
+    "unused": 39,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": -24210000,
+    "objective_recomputed": -24210000,
+    "recompute_exact": true,
+    "gap": 0.0814,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 61,
+    "unused": 39,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ]
+ },
+ "demo_29_sofia": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 74.58,
+    "objective_value": 45000,
+    "objective_recomputed": 45000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 74.94,
+    "objective_value": 45000,
+    "objective_recomputed": 45000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 74.16,
+    "objective_value": 45000,
+    "objective_recomputed": 45000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 73.7,
+    "objective_value": 45000,
+    "objective_recomputed": 45000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 74.75,
+    "objective_value": 45000,
+    "objective_recomputed": 45000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 73.64,
+    "objective_value": 45000,
+    "objective_recomputed": 45000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 79.03,
+    "objective_value": 450000,
+    "objective_recomputed": 450000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 74.58,
+    "objective_value": 450000,
+    "objective_recomputed": 450000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 74.98,
+    "objective_value": 450000,
+    "objective_recomputed": 450000,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 91,
+    "unused": 9,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ]
+ },
+ "demo_30_tomas": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 14.85,
+    "objective_value": 63418708584,
+    "objective_recomputed": 63418708584,
+    "recompute_exact": true,
+    "gap": 0.0183,
+    "kcal_mean_deviation_pct": 40.3,
+    "distinct": 64,
+    "unused": 36,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -0.1,
+       -0.1,
+       -0.1,
+       -0.2,
+       0.9,
+       0.1,
+       0.1
+      ],
+      "mean_signed": 0.09,
+      "worst_abs": 0.9,
+      "out_day": 1.6,
+      "out_mean": 0.09,
+      "band_day": 0.0,
+      "band_mean": 0.0
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1098.7,
+       -1241.0,
+       -1165.3,
+       -1240.7,
+       -1240.9,
+       -1237.7,
+       -1239.4
+      ],
+      "mean_signed": -1209.09,
+      "worst_abs": 1241.0,
+      "out_day": 8463.6,
+      "out_mean": 1209.09,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 10.76,
+    "objective_value": 62449028156,
+    "objective_recomputed": 62449028056,
+    "recompute_exact": false,
+    "gap": 0.003,
+    "kcal_mean_deviation_pct": 41.31,
+    "distinct": 83,
+    "unused": 17,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -22.3,
+       8.0,
+       -39.2,
+       -3.8,
+       -19.3,
+       5.3,
+       -1.3
+      ],
+      "mean_signed": -10.37,
+      "worst_abs": 39.2,
+      "out_day": 99.2,
+      "out_mean": 10.37,
+      "band_day": 0.0,
+      "band_mean": 0.0
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1240.9,
+       -1241.0,
+       -1241.0,
+       -1241.0,
+       -1241.0,
+       -1241.0,
+       -1229.1
+      ],
+      "mean_signed": -1239.26,
+      "worst_abs": 1241.0,
+      "out_day": 8674.8,
+      "out_mean": 1239.26,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 20.06,
+    "objective_value": 63517522488,
+    "objective_recomputed": 63517422688,
+    "recompute_exact": false,
+    "gap": 0.0198,
+    "kcal_mean_deviation_pct": 40.16,
+    "distinct": 71,
+    "unused": 29,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -0.3,
+       -0.0,
+       -26.8,
+       -11.9,
+       -0.1,
+       -0.1,
+       0.0
+      ],
+      "mean_signed": -5.61,
+      "worst_abs": 26.8,
+      "out_day": 39.3,
+      "out_mean": 5.61,
+      "band_day": 0.0,
+      "band_mean": 0.0
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -991.0,
+       -1241.0,
+       -1237.5,
+       -1241.0,
+       -1241.0,
+       -1241.0,
+       -1241.0
+      ],
+      "mean_signed": -1204.78,
+      "worst_abs": 1241.0,
+      "out_day": 8433.5,
+      "out_mean": 1204.78,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 18.61,
+    "objective_value": 69550695968,
+    "objective_recomputed": 69550695968,
+    "recompute_exact": true,
+    "gap": 0.0073,
+    "kcal_mean_deviation_pct": 40.94,
+    "distinct": 69,
+    "unused": 31,
+    "spread_over": 1,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -5.3,
+       -3.3,
+       7.1,
+       7.4,
+       -38.4,
+       -0.1,
+       7.7
+      ],
+      "mean_signed": -3.55,
+      "worst_abs": 38.4,
+      "out_day": 31.1,
+      "out_mean": 0.0,
+      "band_day": 7.5,
+      "band_mean": 3.75
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1241.0,
+       -1240.9,
+       -1240.3,
+       -1168.9,
+       -1225.2,
+       -1239.8,
+       -1241.0
+      ],
+      "mean_signed": -1228.15,
+      "worst_abs": 1241.0,
+      "out_day": 8247.0,
+      "out_mean": 1203.15,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 24.5,
+    "objective_value": 70303582888,
+    "objective_recomputed": 70303582888,
+    "recompute_exact": true,
+    "gap": 0.018,
+    "kcal_mean_deviation_pct": 40.46,
+    "distinct": 58,
+    "unused": 42,
+    "spread_over": 3,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       7.1,
+       7.5,
+       -36.8,
+       -52.4,
+       -31.3,
+       -41.1,
+       -21.2
+      ],
+      "mean_signed": -24.04,
+      "worst_abs": 52.4,
+      "out_day": 145.3,
+      "out_mean": 20.29,
+      "band_day": 7.5,
+      "band_mean": 3.75
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1240.8,
+       -1241.0,
+       -1224.1,
+       -1068.7,
+       -1240.8,
+       -1241.0,
+       -1240.9
+      ],
+      "mean_signed": -1213.9,
+      "worst_abs": 1241.0,
+      "out_day": 8147.3,
+      "out_mean": 1188.9,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 48.98,
+    "objective_value": 70337158048,
+    "objective_recomputed": 70337158048,
+    "recompute_exact": true,
+    "gap": 0.0184,
+    "kcal_mean_deviation_pct": 39.89,
+    "distinct": 74,
+    "unused": 26,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -11.4,
+       0.9,
+       7.5,
+       -7.3,
+       3.7,
+       5.6,
+       7.4
+      ],
+      "mean_signed": 0.91,
+      "worst_abs": 11.4,
+      "out_day": 3.9,
+      "out_mean": 0.0,
+      "band_day": 7.5,
+      "band_mean": 3.75
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1240.9,
+       -1240.5,
+       -1241.0,
+       -1205.9,
+       -967.3,
+       -1240.8,
+       -1240.9
+      ],
+      "mean_signed": -1196.76,
+      "worst_abs": 1241.0,
+      "out_day": 8027.3,
+      "out_mean": 1171.76,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 19.65,
+    "objective_value": 70210546492,
+    "objective_recomputed": 70191483848,
+    "recompute_exact": false,
+    "gap": 0.0166,
+    "kcal_mean_deviation_pct": 41.21,
+    "distinct": 73,
+    "unused": 27,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -0.3,
+       1.6,
+       -6.0,
+       7.4,
+       -6.7,
+       -25.5,
+       6.2
+      ],
+      "mean_signed": -3.31,
+      "worst_abs": 25.5,
+      "out_day": 18.0,
+      "out_mean": 0.0,
+      "band_day": 7.5,
+      "band_mean": 3.75
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1234.8,
+       -1233.9,
+       -1239.9,
+       -1233.2,
+       -1241.0,
+       -1231.4,
+       -1240.7
+      ],
+      "mean_signed": -1236.41,
+      "worst_abs": 1241.0,
+      "out_day": 8304.9,
+      "out_mean": 1211.41,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.15,
+    "objective_value": 72269246400,
+    "objective_recomputed": 72269246400,
+    "recompute_exact": true,
+    "gap": 0.0447,
+    "kcal_mean_deviation_pct": 41.36,
+    "distinct": 85,
+    "unused": 15,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       -7.4,
+       -6.5,
+       -2.7,
+       -5.4,
+       6.9,
+       -3.6,
+       -3.6
+      ],
+      "mean_signed": -3.17,
+      "worst_abs": 7.4,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 7.5,
+      "band_mean": 3.75
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1241.0,
+       -1241.0,
+       -1240.6,
+       -1241.0,
+       -1240.9,
+       -1241.0,
+       -1241.0
+      ],
+      "mean_signed": -1240.93,
+      "worst_abs": 1241.0,
+      "out_day": 8336.5,
+      "out_mean": 1215.93,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 5.62,
+    "objective_value": 70292796536,
+    "objective_recomputed": 70292795864,
+    "recompute_exact": false,
+    "gap": 0.0178,
+    "kcal_mean_deviation_pct": 41.28,
+    "distinct": 67,
+    "unused": 33,
+    "spread_over": 0,
+    "targets": {
+     "protein_g": {
+      "target": 150.0,
+      "daily_signed": [
+       7.6,
+       7.5,
+       7.1,
+       5.4,
+       7.7,
+       -18.5,
+       7.8
+      ],
+      "mean_signed": 3.5,
+      "worst_abs": 18.5,
+      "out_day": 11.5,
+      "out_mean": 0.0,
+      "band_day": 7.5,
+      "band_mean": 3.75
+     },
+     "kcal": {
+      "target": 3000.0,
+      "daily_signed": [
+       -1239.0,
+       -1240.8,
+       -1240.8,
+       -1232.8,
+       -1238.1,
+       -1240.2,
+       -1236.6
+      ],
+      "mean_signed": -1238.34,
+      "worst_abs": 1240.8,
+      "out_day": 8318.4,
+      "out_mean": 1213.34,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ]
+ },
+ "demo_31_carlos": {
+  "base": [
+   {
+    "status": "feasible",
+    "wall_s": 90.01,
+    "objective_value": 303300,
+    "objective_recomputed": 303300,
+    "recompute_exact": true,
+    "gap": 0.8846,
+    "kcal_mean_deviation_pct": 0.01,
+    "distinct": 56,
+    "unused": 44,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       0.0,
+       -0.1,
+       -0.0,
+       -0.2,
+       0.0,
+       -0.6,
+       -0.2
+      ],
+      "mean_signed": -0.17,
+      "worst_abs": 0.6,
+      "out_day": 1.2,
+      "out_mean": 0.17,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.01,
+    "objective_value": 303300,
+    "objective_recomputed": 303300,
+    "recompute_exact": true,
+    "gap": 0.8846,
+    "kcal_mean_deviation_pct": 0.01,
+    "distinct": 56,
+    "unused": 44,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       0.0,
+       -0.1,
+       -0.0,
+       -0.2,
+       0.0,
+       -0.6,
+       -0.2
+      ],
+      "mean_signed": -0.17,
+      "worst_abs": 0.6,
+      "out_day": 1.2,
+      "out_mean": 0.17,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.07,
+    "objective_value": 303300,
+    "objective_recomputed": 303300,
+    "recompute_exact": true,
+    "gap": 0.8846,
+    "kcal_mean_deviation_pct": 0.01,
+    "distinct": 56,
+    "unused": 44,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       0.0,
+       -0.1,
+       -0.0,
+       -0.2,
+       0.0,
+       -0.6,
+       -0.2
+      ],
+      "mean_signed": -0.17,
+      "worst_abs": 0.6,
+      "out_day": 1.2,
+      "out_mean": 0.17,
+      "band_day": 0,
+      "band_mean": 0
+     }
+    }
+   }
+  ],
+  "A": [
+   {
+    "status": "feasible",
+    "wall_s": 90.01,
+    "objective_value": 130000,
+    "objective_recomputed": 130000,
+    "recompute_exact": true,
+    "gap": 0.7308,
+    "kcal_mean_deviation_pct": 0.62,
+    "distinct": 74,
+    "unused": 26,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       -0.2,
+       -40.7,
+       -4.3,
+       -6.0,
+       -5.6,
+       19.9,
+       -1.6
+      ],
+      "mean_signed": -5.48,
+      "worst_abs": 40.7,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.01,
+    "objective_value": 130000,
+    "objective_recomputed": 130000,
+    "recompute_exact": true,
+    "gap": 0.7308,
+    "kcal_mean_deviation_pct": 0.62,
+    "distinct": 74,
+    "unused": 26,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       -0.2,
+       -40.7,
+       -4.3,
+       -6.0,
+       -5.6,
+       19.9,
+       -1.6
+      ],
+      "mean_signed": -5.48,
+      "worst_abs": 40.7,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 130000,
+    "objective_recomputed": 130000,
+    "recompute_exact": true,
+    "gap": 0.7308,
+    "kcal_mean_deviation_pct": 0.62,
+    "distinct": 74,
+    "unused": 26,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       -0.2,
+       -40.7,
+       -4.3,
+       -6.0,
+       -5.6,
+       19.9,
+       -1.6
+      ],
+      "mean_signed": -5.48,
+      "worst_abs": 40.7,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ],
+  "B": [
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 750000,
+    "objective_recomputed": 750000,
+    "recompute_exact": true,
+    "gap": 0.5333,
+    "kcal_mean_deviation_pct": 0.02,
+    "distinct": 85,
+    "unused": 15,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       -0.2,
+       -0.4,
+       -0.2,
+       -0.1,
+       -0.0,
+       -0.9,
+       -0.2
+      ],
+      "mean_signed": -0.3,
+      "worst_abs": 0.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 750000,
+    "objective_recomputed": 750000,
+    "recompute_exact": true,
+    "gap": 0.5333,
+    "kcal_mean_deviation_pct": 0.02,
+    "distinct": 85,
+    "unused": 15,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       -0.2,
+       -0.4,
+       -0.2,
+       -0.1,
+       -0.0,
+       -0.9,
+       -0.2
+      ],
+      "mean_signed": -0.3,
+      "worst_abs": 0.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.0,
+    "objective_value": 750000,
+    "objective_recomputed": 750000,
+    "recompute_exact": true,
+    "gap": 0.5333,
+    "kcal_mean_deviation_pct": 0.02,
+    "distinct": 85,
+    "unused": 15,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1800.0,
+      "daily_signed": [
+       -0.2,
+       -0.4,
+       -0.2,
+       -0.1,
+       -0.0,
+       -0.9,
+       -0.2
+      ],
+      "mean_signed": -0.3,
+      "worst_abs": 0.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     }
+    }
+   }
+  ]
+ },
+ "demo_32_nadia": {
+  "base": [
+   {
+    "status": "optimal",
+    "wall_s": 76.44,
+    "objective_value": -2628000,
+    "objective_recomputed": -2628000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 76.78,
+    "objective_value": -2628000,
+    "objective_recomputed": -2628000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 76.89,
+    "objective_value": -2628000,
+    "objective_recomputed": -2628000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 76.56,
+    "objective_value": -2628000,
+    "objective_recomputed": -2628000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 76.5,
+    "objective_value": -2628000,
+    "objective_recomputed": -2628000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 77.33,
+    "objective_value": -2628000,
+    "objective_recomputed": -2628000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 76.56,
+    "objective_value": -26280000,
+    "objective_recomputed": -26280000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 76.58,
+    "objective_value": -26280000,
+    "objective_recomputed": -26280000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   },
+   {
+    "status": "optimal",
+    "wall_s": 77.3,
+    "objective_value": -26280000,
+    "objective_recomputed": -26280000,
+    "recompute_exact": true,
+    "gap": 0.019,
+    "kcal_mean_deviation_pct": null,
+    "distinct": 88,
+    "unused": 12,
+    "spread_over": 0,
+    "targets": {}
+   }
+  ]
+ },
+ "design_macro": {
+  "base": [
+   {
+    "status": "feasible",
+    "wall_s": 90.1,
+    "objective_value": 10000,
+    "objective_recomputed": 10000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 98,
+    "unused": 2,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0.0,
+      "band_mean": 0.0
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.11,
+    "objective_value": 15000,
+    "objective_recomputed": 15000,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 97,
+    "unused": 3,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0.0,
+      "band_mean": 0.0
+     }
+    }
+   },
+   {
+    "status": "feasible",
+    "wall_s": 90.13,
+    "objective_value": 26064,
+    "objective_recomputed": 26064,
+    "recompute_exact": true,
+    "gap": 1.0,
+    "kcal_mean_deviation_pct": 0.0,
+    "distinct": 95,
+    "unused": 5,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0,
+      "band_mean": 0
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       -0.0,
+       0.0,
+       -0.0,
+       0.0,
+       -0.0,
+       -0.0,
+       0.0
+      ],
+      "mean_signed": 0.0,
+      "worst_abs": 0.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 0.0,
+      "band_mean": 0.0
+     }
+    }
+   }
+  ],
+  "A": [
+   {
+    "status": "optimal",
+    "wall_s": 9.71,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.23,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       48.7,
+       22.5,
+       -31.4,
+       -0.1,
+       49.8,
+       49.9,
+       32.2
+      ],
+      "mean_signed": 24.51,
+      "worst_abs": 49.9,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       -4.3,
+       -4.0,
+       4.5,
+       -2.8,
+       4.5,
+       3.8,
+       4.5
+      ],
+      "mean_signed": 0.88,
+      "worst_abs": 4.5,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 4.5,
+      "band_mean": 2.25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 5.11,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 1.89,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -26.7,
+       -48.5,
+       -49.7,
+       -0.1,
+       24.6,
+       -0.4,
+       -48.5
+      ],
+      "mean_signed": -21.34,
+      "worst_abs": 49.7,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       -0.4,
+       -4.5,
+       4.5,
+       4.3,
+       2.6,
+       -0.1,
+       3.2
+      ],
+      "mean_signed": 1.37,
+      "worst_abs": 4.5,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 4.5,
+      "band_mean": 2.25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 28.62,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 2.21,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       48.5,
+       -38.8,
+       -0.9,
+       -41.8,
+       49.8,
+       -44.8,
+       -7.4
+      ],
+      "mean_signed": -5.07,
+      "worst_abs": 49.8,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       2.9,
+       4.5,
+       4.5,
+       4.3,
+       -4.5,
+       4.5,
+       -4.5
+      ],
+      "mean_signed": 1.68,
+      "worst_abs": 4.5,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 4.5,
+      "band_mean": 2.25
+     }
+    }
+   }
+  ],
+  "B": [
+   {
+    "status": "optimal",
+    "wall_s": 13.88,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 1.37,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       50.0,
+       14.8,
+       -22.5,
+       -0.1,
+       49.8,
+       -2.5,
+       -3.8
+      ],
+      "mean_signed": 12.23,
+      "worst_abs": 50.0,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       4.0,
+       -4.2,
+       4.5,
+       -2.8,
+       4.4,
+       3.0,
+       4.5
+      ],
+      "mean_signed": 1.92,
+      "worst_abs": 4.5,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 4.5,
+      "band_mean": 2.25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 12.17,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 1.88,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       48.7,
+       -25.5,
+       -22.5,
+       -0.1,
+       49.8,
+       -2.5,
+       -48.0
+      ],
+      "mean_signed": -0.02,
+      "worst_abs": 49.8,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       -4.3,
+       -4.1,
+       4.5,
+       -2.8,
+       4.5,
+       3.0,
+       4.5
+      ],
+      "mean_signed": 0.76,
+      "worst_abs": 4.5,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 4.5,
+      "band_mean": 2.25
+     }
+    }
+   },
+   {
+    "status": "optimal",
+    "wall_s": 5.04,
+    "objective_value": 0,
+    "objective_recomputed": 0,
+    "recompute_exact": true,
+    "gap": 0.0,
+    "kcal_mean_deviation_pct": 1.89,
+    "distinct": 100,
+    "unused": 0,
+    "spread_over": 0,
+    "targets": {
+     "kcal": {
+      "target": 1500.0,
+      "daily_signed": [
+       -26.7,
+       -48.5,
+       -49.7,
+       -0.1,
+       24.6,
+       -0.4,
+       -48.5
+      ],
+      "mean_signed": -21.34,
+      "worst_abs": 49.7,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 50,
+      "band_mean": 25
+     },
+     "protein_g": {
+      "target": 90,
+      "daily_signed": [
+       -0.4,
+       -4.5,
+       4.5,
+       4.3,
+       2.6,
+       -0.1,
+       3.2
+      ],
+      "mean_signed": 1.37,
+      "worst_abs": 4.5,
+      "out_day": 0.0,
+      "out_mean": 0.0,
+      "band_day": 4.5,
+      "band_mean": 2.25
+     }
+    }
+   }
+  ]
+ }
+}

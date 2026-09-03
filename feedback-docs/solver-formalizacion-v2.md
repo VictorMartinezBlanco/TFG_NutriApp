@@ -1,6 +1,6 @@
 # Formalización matemática del solver de planes (v2)
 
-**Agosto de 2026. Formalización del modelo real tras la capa de plausibilidad del catálogo: perfiles de ración por alimento, cantidades por unidades y reglas de composición de las comidas. Actualizada en septiembre de 2026 con dos ajustes de eficiencia medidos: pesos del objetivo conmensurables (sección 2.2) y cotas de dominio apoyadas en la regla R2 (sección 8.2).**
+**Agosto de 2026. Formalización del modelo real tras la capa de plausibilidad del catálogo: perfiles de ración por alimento, cantidades por unidades y reglas de composición de las comidas. Actualizada en septiembre de 2026 con dos ajustes de eficiencia medidos: pesos del objetivo conmensurables (sección 2.2) y cotas de dominio apoyadas en la regla R2 (sección 8.2); y, también en septiembre de 2026, con las bandas de tolerancia de los objetivos blandos de energía y macronutrientes (secciones 2.2, 7.2 y 8.2).**
 
 Nota de notación: la memoria del TFG llama `ha_consumido[f,d,m]` y `gramos_alimento[f,d,m]` a las variables que este documento escribe `x[f,d,m]` y `g[f,d,m]`. Son las mismas variables; este documento conserva la notación corta.
 
@@ -99,6 +99,7 @@ Antes de construir el modelo se preparan en Python los siguientes parámetros. T
 - Umbrales estructurales, todos en `config.py`: `MIN_GRAMS_PRESENT` = 10, `MAX_ITEMS_PER_MEAL` = 4, `MAX_SAME_FOOD_PER_DAY` = 2, `MIN_DISTINCT_PER_DAY` = 4, `MIN_DISTINCT_PER_WEEK` = 10, `MAX_APPEARANCES_PER_DAY_RATIO` = 0.6, `FAT_MIN_PCT_ENERGY` = 15, rango de proteína (0.8, 2.2) g/kg.
 - Umbrales de plausibilidad, también en `config.py`: `MIN_ITEMS_MAIN_MEAL` = 2, `CONDIMENT_MAX_PER_DAY` = 2, `SWEET_FRUIT_MAX_PER_MEAL` = 1, y los fallbacks del perfil `FALLBACK_MIN_SERVING_G` = 20 y `FALLBACK_MAX_SERVING_G` = 250.
 - Pesos del objetivo por familia (`ObjectiveWeights`): w_kcal = 10, w_protein = 8, w_carb = 6, w_fat = 6, w_prefer = 4.000, w_no_repeat = 5.000, w_variety = 5.000, w_spread = 4.000. Sobre ellos, cada fila de restricción modula con su peso propio, de 1 a 10 (sección 8.4). Los pesos de las familias no nutricionales llevan incorporado un factor de 1.000 que compensa la escala entera de las desviaciones: una desviación nutricional se mide en unidades escaladas (1 kcal o 1 g son 1.000 unidades, sección 2.5) mientras que una preferencia o un alimento sin usar se miden en unidades de 1, y sin ese factor mover una familia estructural entera no compensaba ni una unidad natural de desviación. Con él, las intenciones relativas de los pesos (10 frente a 5 frente a 4) operan sobre unidades conmensurables: un alimento sin usar equivale a medio punto de kcal de desviación, no a media milésima.
+- Tolerancias de los objetivos blandos (`ObjectiveBands`): T_día = 50 kcal y T_media = 25 kcal para el objetivo calórico; 5 y 2,5 por ciento del objetivo para los macronutrientes; K = 10, factor del ancla de la media. Dentro de la banda diaria la desviación no penaliza; la media del plan lleva su propia banda, más estrecha, con un factor extra que la hace casi obligatoria (sección 8.2). Las bandas nacen de un criterio clínico medido en el segundo experimento sobre el objetivo: una desviación de decenas de kcal en un día no tiene relevancia para el profesional y penalizarla desde la primera kcal hacía que el solver gastase el presupuesto de búsqueda en clavar la energía al gramo en vez de en la estructura del plan.
 
 ### 2.3 El perfil de ración como dato del catálogo
 
@@ -333,13 +334,13 @@ Para cada tipo se da su semántica, su naturaleza por defecto y su formulación.
 
 ### 7.2 Objetivos de energía y macronutrientes
 
-**kcal_target** (blanda por defecto). Acerca la energía diaria a un valor *v*. Como blanda, penaliza la desviación absoluta con el patrón de exceso y defecto (sección 8.2). Como dura, fija la igualdad:
+**kcal_target** (blanda por defecto). Acerca la energía diaria a un valor *v*. Como blanda, penaliza la desviación absoluta con el patrón de exceso y defecto, pero solo lo que sobresale de dos bandas de tolerancia: ±50 kcal por día y ±25 kcal en la media del plan, esta última con un factor extra que la hace casi obligatoria (sección 8.2). Como dura, fija la igualdad:
 
 $$
 \text{nut}_{d,\text{kcal}} = \text{scale\_target}(v), \qquad \forall d \in D \quad (\text{si es dura})
 $$
 
-**macro_target** (blanda por defecto). Igual que kcal_target pero sobre la suma de un macronutriente (proteína, hidratos o grasa). El peso de familia del objetivo se elige según el macro (w_protein, w_carb o w_fat).
+**macro_target** (blanda por defecto). Igual que kcal_target pero sobre la suma de un macronutriente (proteína, hidratos o grasa), con las bandas en porcentaje del objetivo (±5 por ciento por día, ±2,5 por ciento en la media). El peso de familia del objetivo se elige según el macro (w_protein, w_carb o w_fat).
 
 ### 7.3 Límites de nutrientes
 
@@ -480,6 +481,20 @@ $$
 |\text{suma} - \text{objetivo}| = \text{over} + \text{under}
 $$
 
+Sobre esa linealización, los objetivos blandos de energía y macronutrientes (kcal_target y macro_target) no penalizan la desviación entera sino lo que sobresale de dos bandas de tolerancia. Para un plan de D días, con T_día y T_media las tolerancias de la sección 2.2 llevadas a la escala entera:
+
+$$
+\text{ex}_d \ge \text{over}_d + \text{under}_d - T_{\text{día}}, \qquad \text{ex}_d \ge 0
+$$
+$$
+S = \sum_{d \in D} (\text{over}_d - \text{under}_d) = \text{over}_S - \text{under}_S, \qquad \text{ex}_S \ge \text{over}_S + \text{under}_S - D \cdot T_{\text{media}}, \qquad \text{ex}_S \ge 0
+$$
+$$
+\text{penalización} = w_{\text{familia}} \cdot \text{peso de la fila} \cdot \Big( \sum_{d \in D} \text{ex}_d + K \cdot \text{ex}_S \Big)
+$$
+
+La primera banda deja libre cada día dentro de ±T_día del objetivo; la segunda actúa sobre la suma de las desviaciones con signo, es decir, sobre la media del plan, y evita que todos los días deriven hacia el mismo borde: unos días compensan a otros y la media queda a menos de T_media del objetivo. Como la minimización empuja los excesos hacia abajo, en el óptimo ex_d = max(0, |desviación_d| − T_día) y ex_S = max(0, |S| − D·T_media). Dentro de las bandas over y under pueden quedar con holgura (ambas positivas) sin afectar al objetivo. Con las tolerancias a cero la formulación se reduce a la desviación absoluta total, sin variables adicionales. Las filas duras siguen exigiendo la igualdad exacta por día, y los mínimos y máximos de nutriente no llevan banda porque son umbrales de un solo lado.
+
 Los dominios de over y under se acotan ajustados en lugar de con una cota holgada común: el exceso llega como mucho a (cota_superior − objetivo) y el defecto como mucho a objetivo. La cota superior de cada nutriente por comida se apoya en la propia regla R2: como una comida lleva a lo sumo MAX_ITEMS_PER_MEAL alimentos distintos, la cota es la suma de las MAX_ITEMS_PER_MEAL mayores aportaciones individuales alcanzables (ración máxima del alimento por su densidad escalada), y la diaria es esa cota por el número de comidas. La formulación anterior suponía el catálogo entero coincidiendo en una comida, cada alimento con la mayor ración y la mayor densidad del catálogo; la cota actual es entre uno y dos órdenes de magnitud menor sin excluir ninguna solución, y los dominios pequeños mejoran la propagación y reducen la memoria del proceso.
 
 ### 8.3 Términos estructurales de variedad y reparto
@@ -511,7 +526,7 @@ $$
 \text{peso efectivo} = w_{\text{familia}} \cdot \text{peso de la fila}
 $$
 
-Esto da una regla de prioridad clara sin necesidad de exponer un panel de ajuste global. Un objetivo calórico con peso de fila 7 pesa 10 · 7 = 70 por unidad escalada de desviación (70.000 por kcal); una preferencia de familia con peso 4 pesa 4.000 · 4 = 16.000 por aparición, que en unidades naturales son magnitudes comparables (sección 2.2).
+Esto da una regla de prioridad clara sin necesidad de exponer un panel de ajuste global. Un objetivo calórico con peso de fila 7 pesa 10 · 7 = 70 por unidad escalada de desviación fuera de la banda diaria (70.000 por kcal, y 700.000 por cada kcal que la suma del plan se salga de la banda de la media, por el factor K); una preferencia de familia con peso 4 pesa 4.000 · 4 = 16.000 por aparición, que en unidades naturales son magnitudes comparables (sección 2.2). Dentro de las bandas la energía no cuesta nada, así que ahí deciden la estructura y las preferencias.
 
 ---
 

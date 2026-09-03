@@ -133,6 +133,28 @@ class ObjectiveWeights:
 
 DEFAULT_WEIGHTS = ObjectiveWeights()
 
+
+# tolerancias de los objetivos blandos de energia y macros. dentro de la banda
+# diaria la desviacion no penaliza: 20 kcal arriba o abajo en un dia no le
+# importan al profesional, y penalizarlas hacia que el solver gastase el
+# presupuesto en clavar la energia al gramo en vez de en variar el plan. para que
+# los dias no deriven todos hacia el mismo borde, la media del plan lleva su
+# propia banda, mas estrecha y con un factor extra que la hace casi obligatoria
+# sin volver infactibles los casos de conflicto. la energia se tolera en kcal y
+# los macros en porcentaje del objetivo. con todo a cero el termino es la
+# desviacion absoluta total de siempre.
+@dataclass(frozen=True)
+class ObjectiveBands:
+    kcal_day: int = 50
+    kcal_mean: int = 25
+    macro_day_pct: float = 5.0
+    macro_mean_pct: float = 2.5
+    mean_factor: int = 10
+
+
+DEFAULT_BANDS = ObjectiveBands()
+NO_BANDS = ObjectiveBands(0, 0, 0.0, 0.0, 1)
+
 # codes de nutriente que el modelo usa por nombre.
 KCAL_CODE = "energy_kcal"
 PROTEIN_CODE = "protein_g"
