@@ -3,7 +3,7 @@
 
 Este apéndice recoge el catálogo completo de requisitos \emph{tal y como se formuló inicialmente}, antes del pivote de alcance consensuado con los directores del TFG en abril de 2026. Su función no es normativa ---el alcance que realmente se implementa es el descrito en el capítulo~\ref{cap:analisisRequisitos}---, sino \emph{histórica}: conservar la visión inicial como registro del proceso de reformulación del proyecto y facilitar la trazabilidad de cada decisión de recorte.
 
-La versión V1 contenía \textbf{61 requisitos funcionales}, \textbf{7 requisitos no funcionales} y \textbf{8 innovaciones clave}. Tras dos iteraciones de triaje, la versión implementada (V2) reduce estas cifras a 29 requisitos funcionales, 11 requisitos no funcionales (con cinco nuevos específicos del copiloto IA) y una única innovación clave centrada en la generación semi-automática de planes nutricionales por nutricionista. Las razones y el criterio de triaje que llevaron a esta reformulación se desarrollan en la sección~\ref{sec:reformulacionAlcance} del cuerpo principal.
+La versión V1 contenía \textbf{61 requisitos funcionales}, \textbf{7 requisitos no funcionales} y \textbf{8 innovaciones clave}. Tras dos iteraciones de triaje, la versión implementada (V2) reduce estas cifras a 27 requisitos funcionales, 14 requisitos no funcionales (siete de ellos específicos del copiloto IA) y una única innovación clave centrada en la generación semi-automática de planes nutricionales por nutricionista. Las razones y el criterio de triaje que llevaron a esta reformulación se desarrollan en la sección~\ref{sec:reformulacionAlcance} del cuerpo principal.
 
 Todo el contenido que sigue ---tablas de requisitos, dependencias funcionales y funcionalidades resultantes--- se presenta sin modificaciones respecto a su formulación original, incluyendo terminología, etiquetas de \emph{innovación clave} y referencias a bloques que posteriormente han sido descartados o redimensionados.
 
@@ -489,3 +489,56 @@ A partir de los requisitos V1 definidos y sus dependencias, las funcionalidades 
 %% ====================================================================
 
 El alcance efectivamente implementado en el TFG corresponde al subconjunto descrito en el capítulo~\ref{cap:analisisRequisitos} tras la reformulación recogida en la sección~\ref{sec:reformulacionAlcance}. Los requisitos aquí documentados que no forman parte del alcance final ---\textit{marketplace}, motor de automatizaciones avanzado, formularios personalizables, sistema de alertas inteligentes en su versión original, lista de la compra inteligente, reconocimiento de alimentos por imagen, videollamadas, chat entre clientes, entre otros--- se recogen como trabajo futuro con su correspondiente justificación de posposición.
+
+
+%% ====================================================================
+\section{Comparativa con la competencia en el planteamiento inicial}
+\label{sec:competidores-v1}
+%% ====================================================================
+
+El planteamiento inicial se comparó con cuatro plataformas bajo trece criterios funcionales, y la tabla~\ref{tab:competidores-v1} es la que acompañaba a la idea original. Además de Nutrium y Practice Better, analizadas en el capítulo~\ref{cap:estadoDeLaCuestion}, incluía a Healthie~\citep{healthie}, por su marketplace de recursos, y a Cronometer Pro~\citep{cronometer}, por su base de alimentos y su escáner de código de barras. La columna de NutriApp recoge lo que la V1 prometía, no lo que se entrega: la mayoría de esas filas corresponden a los bloques eliminados en la reformulación (sección~\ref{sec:reformulacionAlcance}), y la comparativa vigente es la tabla~\ref{tab:competidores}.
+
+\begin{table}[H]
+\centering
+\small
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.1cm}|c|c|c|c|c|}
+\hline
+\textbf{Funcionalidad (V1)} & \textbf{NutriApp} & \textbf{Nutrium} & \textbf{P. Better} & \textbf{Healthie} & \textbf{Cron. Pro} \\
+\hline
+Gestión de clientes              & Sí    & Sí    & Sí    & Sí    & Parc. \\
+\hline
+Calendario y citas               & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Mensajería integrada             & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Videollamada y voz en chat       & Sí    & No    & Parc. & Parc. & No    \\
+\hline
+Formularios personalizables      & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Alertas configurables por regla  & Sí    & No    & No    & No    & No    \\
+\hline
+Planes nutricionales             & Sí    & Sí    & Sí    & Sí    & No    \\
+\hline
+Lista de compra inteligente      & Sí    & Parc. & No    & No    & No    \\
+\hline
+Base de alimentos con buscador   & Sí    & Sí    & No    & No    & Sí    \\
+\hline
+Escaneo de código de barras      & Sí    & No    & No    & No    & Sí    \\
+\hline
+Reconocimiento por fotografía    & Sí    & No    & No    & No    & No    \\
+\hline
+Check-in diario gamificado       & Sí    & No    & No    & No    & No    \\
+\hline
+Marketplace de recursos          & Sí    & No    & No    & Sí    & No    \\
+\hline
+Motor de automatizaciones        & Sí    & No    & Parc. & Parc. & No    \\
+\hline
+Comunidad entre clientes         & Sí    & No    & No    & No    & No    \\
+\hline
+Disponible en castellano         & Sí    & Sí    & No    & No    & No    \\
+\hline
+\end{tabular}
+\caption{Cobertura funcional prometida por la idea inicial (V1) frente a los competidores analizados en 2025.}
+\label{tab:competidores-v1}
+\end{table}

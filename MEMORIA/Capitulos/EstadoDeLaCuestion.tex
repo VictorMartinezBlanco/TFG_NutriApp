@@ -1,150 +1,158 @@
 \chapter{Estado de la Cuestión}
 \label{cap:estadoDeLaCuestion}
 
-NutriApp no nace en un mercado vacío. Existen varias plataformas comerciales que ya intentan resolver, total o parcialmente, el problema de centralizar el flujo de trabajo de un nutricionista profesional. Antes de diseñar una propuesta propia, era razonable estudiar qué se ofrece ya, qué funciona bien, qué se ha quedado a medio camino y, sobre todo, dónde están los huecos que justifican construir algo nuevo en lugar de adoptar un producto existente.
+NutriApp no nace en un mercado vacío. Existen plataformas comerciales que ya centralizan el trabajo de un nutricionista, y algunas de ellas generan planes de forma automática. Antes de diseñar una propuesta propia convenía saber qué se ofrece ya, qué funciona bien y dónde quedan huecos.
 
-Este capítulo recoge ese análisis. Se han estudiado las cuatro plataformas más representativas del sector ---las tres principales soluciones integrales del mercado profesional y la referencia en seguimiento de alimentos--- evaluándolas con un conjunto homogéneo de criterios funcionales. No se pretende elaborar un \textit{benchmark} exhaustivo, sino tener una referencia clara que permita explicar las decisiones de diseño que se toman más adelante en los capítulos~\ref{cap:analisisRequisitos} y~\ref{cap:disenoSistema}, y dejar fundamentado por qué NutriApp incorpora ciertas funcionalidades y descarta otras de forma deliberada.
+Este capítulo recoge ese análisis en dos partes. La primera sitúa el problema de generar una dieta en la literatura académica, desde la programación lineal de los años cuarenta hasta los trabajos recientes con programación con restricciones y modelos de lenguaje. La segunda estudia cuatro plataformas comerciales con un mismo conjunto de criterios, prestando atención a cómo generan planes las que lo hacen. La comparativa se hace sobre lo que NutriApp entrega; la que acompañó a la idea inicial del proyecto, con más funcionalidades y otros competidores, se conserva en el Anexo~\ref{apendice:catalogoV1}.
+
+%% ====================================================================
+\section{La dieta como problema de optimización}
+\label{sec:literaturaDieta}
+%% ====================================================================
+
+Formular una dieta como un problema de optimización es anterior a los ordenadores. En 1945 Stigler se preguntó cuál era la dieta más barata que cubría los requerimientos nutricionales de un adulto, con 77 alimentos y 9 nutrientes, y la resolvió a mano por aproximaciones. Dos años después el mismo problema sirvió como primera prueba a gran escala del método símplex, que encontró el óptimo exacto~\citep{dantzig1990}. La formulación es programación lineal pura: una cantidad continua de cada alimento, un coste a minimizar y una desigualdad por nutriente.
+
+Dantzig contaba lo que ocurrió al aplicar el modelo a su dieta: el óptimo matemático proponía cantidades absurdas de unos pocos ingredientes. Ese es el problema de fondo que arrastra el enfoque desde entonces: cubrir los nutrientes al mínimo coste no produce comidas que alguien quiera comer. Posteriormente se corrigió añadiendo restricciones de aceptabilidad, y la revisión de \citet{gazan2018} sobre los modelos de dieta actuales sigue manifestando esa tensión entre adecuación nutricional y aceptabilidad como el eje del campo.
+
+El paso de la dieta agregada al menú concreto lo dio \citet{balintfy1964} con el primer planificador de menús por ordenador, pensado para hospitales: días, comidas y platos, con restricciones de nutrientes y de variedad entre días. \citet{petot1998} añadieron la preferencia individual con un sistema experto que combinaba reglas y casos anteriores, y \citet{kahraman2005} trataron el problema con un algoritmo genético de dos objetivos, el coste y la valoración de los platos. Las carencias que estos trabajos señalan sobre la formulación clásica son las mismas que aparecen en una consulta real: aceptabilidad de las combinaciones, variedad a lo largo de los días y preferencias de la persona.
+
+Todos estos enfoques comparten un rasgo: el problema mezcla cantidades con decisiones lógicas y de conteo (si un alimento entra o no en una comida, cuántos alimentos distintos hay, cuántas veces se repite uno en la semana), y esas decisiones no se expresan bien con desigualdades continuas. Los algoritmos evolutivos las admiten, pero no garantizan que se cumpla una restricción obligatoria ni pueden afirmar que no existe solución. La programación con restricciones trabaja directamente con variables enteras y booleanas y con restricciones lógicas, y sus solvers actuales, como CP-SAT, combinan la propagación de restricciones con técnicas SAT y de programación lineal. Para este problema tiene dos ventajas concretas: el catálogo cerrado de alimentos hace que el espacio de búsqueda sea finito, y cuando las restricciones son incompatibles el solver puede señalar un subconjunto mínimo de ellas en conflicto, que es la base de la explicación que recibe el profesional. El capítulo~\ref{cap:motorGeneracion} presenta el paradigma (sección~\ref{sec:introCP}) y la formulación de NutriApp (sección~\ref{sec:formulacionMotor}).
+
+Los modelos de lenguaje han abierto otra vía: pedir la dieta directamente a un modelo generativo. Los trabajos recientes son cautos con ella. \citet{valmeekam2023} midieron la capacidad de estos modelos para planificar y la encontraron muy limitada, y \citet{kambhampati2024} proponen usarlos como fuente de conocimiento aproximado dentro de un marco en el que la verificación la hace un componente formal externo. En nutrición, \citet{papastratis2024} combinan un modelo generativo con un optimizador que ajusta las raciones para cuadrar la energía, y en programación con restricciones \citet{michailidis2024} estudian el uso de modelos de lenguaje para traducir descripciones en texto a modelos de restricciones ejecutables. NutriApp sigue esa misma línea: el modelo de lenguaje traduce lo que escribe el profesional a restricciones formales y el plan lo construye el solver, como se describe en el capítulo~\ref{cap:copilotoIA}.
 
 %% ====================================================================
 \section{Criterios de comparación}
 \label{sec:criterios-competencia}
 %% ====================================================================
 
-Para que la comparación tenga sentido, todos los competidores se han revisado bajo el mismo conjunto de criterios funcionales:
+Las plataformas se han revisado en sus webs públicas, todas consultadas el 3 de septiembre de 2026, bajo los mismos criterios:
 
 \begin{itemize}
-    \item Gestión de clientes (perfiles, historial, notas privadas).
-    \item Calendario y citas con soporte multi-clínica.
-    \item Mensajería integrada con el cliente.
-    \item Constructor de formularios personalizables.
-    \item Sistema de alertas configurables por el profesional.
-    \item Constructor de planes nutricionales y biblioteca de recetas.
-    \item Lista de la compra generada desde el plan.
-    \item Base de datos de alimentos con buscador.
-    \item Reconocimiento automático de alimentos (código de barras, fotografía).
-    \item Marketplace de recursos educativos.
-    \item Motor de automatizaciones (reglas con disparadores).
-    \item Idioma del producto y mercado objetivo.
-    \item Modelo de precios e integraciones externas.
+    \item Gestión de clientes (perfil, mediciones, notas del profesional).
+    \item Calendario y citas.
+    \item Mensajería con el cliente.
+    \item Base de datos de alimentos, con alimentos propios del profesional.
+    \item Generación automática de planes: qué recibe como entrada, si el fabricante publica el método, si explica al profesional por qué no hay solución y si el plan pasa por una revisión antes de llegar al cliente.
+    \item Registro del cliente (comidas completadas, peso).
+    \item Idioma de la interfaz y mercado al que se dirige.
 \end{itemize}
 
-A estos criterios se añade una valoración cualitativa de la interfaz, la curva de aprendizaje y el público al que va dirigida cada plataforma, ya que son aspectos relevantes para entender las decisiones de diseño de cada producto aunque no se reflejen en una tabla de funcionalidades.
-
+A estos criterios se añade una valoración cualitativa de la interfaz y del público de cada plataforma. Cuando una web no documenta un aspecto, se dice; no se ha inferido nada de las zonas privadas de ningún producto.
 
 %% ====================================================================
 \section{Análisis de competidores}
 \label{sec:competidores}
 %% ====================================================================
 
-%% -------------------------------------------
-\subsection{Plataformas integrales}
-%% -------------------------------------------
+\subsection{Nutrium}
 
-\paragraph{Nutrium.}
-Nutrium~\citep{nutrium} es la plataforma de referencia del sector. Nace en Portugal y opera en más de cien países, con una base estimada de 120.000 profesionales. Su gran fortaleza es la solidez como herramienta integral: cuenta con una aplicación de paciente bien construida, mensajería interna, evaluaciones nutricionales completas, biblioteca de recetas, plantillas de planes y cumplimiento normativo de privacidad sanitaria. Su interfaz es limpia y profesional, lo que la convierte en la referencia visual del sector. Sus debilidades son notables para el perfil de usuario al que se dirige NutriApp: el plan completo es caro para un nutricionista autónomo, la curva de aprendizaje es alta porque incorpora muchas funcionalidades poco utilizadas en consultas pequeñas, y su sistema de notificaciones al profesional es genérico ---no permite definir reglas personalizadas sobre los formularios---. NutriApp toma de Nutrium su \textbf{lenguaje visual y la organización general del panel del nutricionista}, pero descarta su modelo de funcionalidades exhaustivas a favor de un conjunto más reducido y mejor conectado entre sí.
+Nutrium~\citep{nutrium} es la plataforma integral más extendida entre nutricionistas: opera en unos noventa países y su interfaz está disponible en seis idiomas, castellano incluido. La figura~\ref{fig:nutrium} muestra su página para profesionales.
 
-\paragraph{Practice Better.}
-Practice Better~\citep{practicebetter} es una plataforma canadiense con fuerte presencia en Estados Unidos. Está pensada como sistema integral para profesionales de la salud y la nutrición, con cumplimiento HIPAA, integraciones con Zoom, Google Calendar y Stripe, formularios personalizables y un módulo de gestión de pagos. Su mayor punto fuerte es el grado de personalización: el profesional puede construir plantillas reutilizables para casi cualquier flujo de trabajo, y dispone de un sistema básico de automatizaciones que permite encadenar acciones tras determinados eventos. Su mayor debilidad es que está pensado para el mercado norteamericano ---no existe versión en castellano y su modelo de facturación está orientado a clínicas privadas estadounidenses---, y que sus formularios, aunque flexibles, no están conectados a ningún tipo de motor de alertas: las respuestas se almacenan, pero el profesional debe revisarlas manualmente. NutriApp toma de Practice Better la idea de un \textbf{motor de automatizaciones configurable por el profesional}, lo amplía vinculándolo al sistema de alertas y lo trae a un mercado donde no existe equivalente en castellano.
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{Imagenes/Bitmap/competidor_nutrium}
+\caption{Nutrium: página pública para profesionales (nutrium.com, consultada el 3 de septiembre de 2026).}
+\label{fig:nutrium}
+\end{figure}
 
-\paragraph{Healthie.}
-Healthie~\citep{healthie} es otra plataforma estadounidense, también orientada a clínicas y consultas privadas, que destaca por su \textit{marketplace de recursos}: los profesionales pueden publicar guías, plantillas, programas y materiales formativos dentro de la propia plataforma, ofreciendo a sus clientes contenido educativo curado y, al mismo tiempo, una vía de monetización adicional para el nutricionista. Su interfaz es moderna y la integración del marketplace con el resto del flujo de trabajo es uno de sus puntos diferenciadores. Sin embargo, también tiene los problemas de Practice Better: producto exclusivamente en inglés, modelo de precios elevado y enfoque en el mercado norteamericano, además de una experiencia de cliente que se queda corta en la parte de seguimiento diario y gamificación de la adherencia. NutriApp toma de Healthie la idea del \textbf{marketplace integrado dentro del flujo}, con la particularidad de que el cliente ve una sección destacada con los recursos publicados específicamente por su propio nutricionista, no solo el catálogo general.
+Cubre con solvencia la gestión de la consulta: agenda con recordatorios, videoconsulta, mensajería, y una aplicación del paciente con diario de comidas y seguimiento del progreso. El plan lo construye el profesional a mano sobre la base de datos de alimentos, con plantillas y una biblioteca de recetas de otros profesionales, y el cálculo nutricional se actualiza al ajustar las raciones. Su única función de inteligencia artificial son las notas clínicas: genera un resumen estructurado de la videoconsulta.
 
-%% -------------------------------------------
-\subsection{Plataforma centrada en el seguimiento de alimentos}
-%% -------------------------------------------
+Sus puntos fuertes son la madurez del producto y la interfaz, limpia y bien organizada, que tomé como referencia visual para el panel del nutricionista. Sus limitaciones para este trabajo son dos: no genera planes (el tiempo de elaborar cada dieta sigue siendo del profesional) y su catálogo de funcionalidades es amplio para una consulta pequeña.
 
-\paragraph{Cronometer Pro.}
-Cronometer~\citep{cronometer} es originalmente una aplicación de \textit{food tracking} orientada al consumidor, con una versión profesional (Cronometer Pro) que permite al nutricionista vincular cuentas de clientes y revisar su registro alimentario. Su mayor fortaleza es la \textbf{base de datos de alimentos}, una de las más completas del sector, con información de micronutrientes que muchas plataformas no incluyen. También dispone de buscador por código de barras, sincronizado con bases públicas. Su debilidad principal es que es esencialmente una herramienta de tracking: no construye planes nutricionales completos, no tiene formularios personalizables, no gestiona citas y no incluye mensajería real con el profesional. Es una pieza valiosa, pero no una plataforma integral. NutriApp toma de Cronometer la idea de \textbf{integrar una base de datos de alimentos accesible y un buscador por código de barras}, y la combina con un servicio externo de reconocimiento de alimentos por fotografía mediante inteligencia artificial ---una funcionalidad presente ya en algunos productos emergentes del sector, pero todavía poco extendida en plataformas integrales como las anteriores---.
+\subsection{Practice Better y That Clean Life}
 
+Practice Better~\citep{practicebetter} es una plataforma canadiense de gestión para profesionales de la salud, con más de cincuenta mil usuarios, cumplimiento de HIPAA y RGPD, y solo en inglés (figura~\ref{fig:practicebetter}). Ofrece agenda, telesalud, mensajería, formularios de admisión, historia clínica, programas para clientes y automatizaciones de flujo, además de una aplicación móvil en la que el cliente registra comida y hábitos. Su inteligencia artificial se dedica a la documentación: resúmenes de sesiones y notas clínicas que, según su propia web, el profesional revisa y firma.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{Imagenes/Bitmap/competidor_practicebetter}
+\caption{Practice Better: página pública (practicebetter.io, consultada el 3 de septiembre de 2026).}
+\label{fig:practicebetter}
+\end{figure}
+
+La planificación de dietas no es nativa: llega por la integración con That Clean Life~\citep{thatcleanlife}, una herramienta de planes con más de ocho mil recetas y ciento cincuenta plantillas por patologías. Su generador ``crea planes en segundos a partir de calorías, macros y tipo de dieta'' y se presenta como ``un punto de partida'' que el profesional ajusta. La web no describe cómo se eligen las recetas ni qué ocurre cuando los objetivos no se pueden cumplir.
+
+\subsection{Foodzilla}
+
+Foodzilla~\citep{foodzilla} es una plataforma para dietistas, nutricionistas y entrenadores, con presencia sobre todo en Estados Unidos, Reino Unido, Australia y Nueva Zelanda (figura~\ref{fig:foodzilla}). Combina la gestión de la consulta (portal de clientes, chat cifrado, citas y videoconsulta) con una aplicación de marca propia para el cliente, en la que este registra sus comidas con reconocimiento por foto y código de barras. Su base de alimentos supera el medio millón de entradas y su recetario las cien mil, de las que unas mil quinientas están revisadas por dietistas.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{Imagenes/Bitmap/competidor_foodzilla}
+\caption{Foodzilla: página pública (foodzilla.com, consultada el 3 de septiembre de 2026).}
+\label{fig:foodzilla}
+\end{figure}
+
+Es la plataforma profesional con la generación automática más visible. El profesional fija calorías, reparto de macronutrientes, exclusiones y número de comidas al día, y el sistema ``genera el plan en menos de 60 segundos'' ensamblando recetas de su biblioteca y escalando las raciones; después se ajusta arrastrando recetas. La web insiste en que las recetas ``nunca son generadas por IA'', pero no publica cómo se seleccionan ni si el resultado se verifica contra los objetivos, y no hay un paso de revisión obligatorio antes de que el plan llegue al cliente.
+
+\subsection{Eat This Much}
+
+Eat This Much~\citep{eatthismuch} es un generador automático de planes pensado para el consumidor final, con una versión para profesionales (figura~\ref{fig:eatthismuch}). El usuario indica calorías, reparto de macronutrientes, tipo de dieta, alimentos a evitar y lo que tiene en la despensa, y la aplicación ``crea una semana completa de comidas, recetas y lista de la compra con un clic''. En la versión profesional esos parámetros se fijan por cliente desde un panel, y el cliente puede usar la aplicación como registro de lo que come.
+
+\begin{figure}[htb]
+\centering
+\includegraphics[width=0.8\textwidth]{Imagenes/Bitmap/competidor_eatthismuch}
+\caption{Eat This Much: página pública (eatthismuch.com, consultada el 3 de septiembre de 2026).}
+\label{fig:eatthismuch}
+\end{figure}
+
+Es el producto más cercano al motor de NutriApp en lo que hace: ajusta cada comida para acercarse a los objetivos del día, reparte la variedad entre días y tiene en cuenta el desperdicio al componer la lista de la compra. Sobre el cómo, la web solo habla de ``algoritmos'' y de combinar ``estrategias nutricionales establecidas con potencia de cálculo''. No hay gestión de consulta (citas, mensajería), la interfaz está en inglés y no se describe una revisión profesional antes de entregar el plan.
 
 %% ====================================================================
 \section{Resumen comparativo}
 \label{sec:tabla-competidores}
 %% ====================================================================
 
-La tabla~\ref{tab:competidores} sintetiza qué cubre cada una de las cuatro plataformas frente a NutriApp en los criterios funcionales más relevantes. Se utiliza ``Sí'' cuando la funcionalidad está presente y bien integrada, ``Parc.'' (parcial) cuando existe en una versión limitada o aislada, y ``No'' cuando la funcionalidad no está disponible.
+La tabla~\ref{tab:competidores} resume la cobertura de cada plataforma frente a NutriApp. Se usa ``Sí'' cuando la funcionalidad está presente, ``Parc.'' cuando existe de forma limitada, ``No'' cuando no está, ``n.d.'' cuando la web pública no lo documenta y ``n.a.'' cuando no aplica.
 
-\begin{table}[H]
+\begin{table}[tb]
 \centering
 \small
-\setlength{\tabcolsep}{5pt}
-\begin{tabular}{|p{5cm}|c|c|c|c|c|}
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|>{\raggedright\arraybackslash}p{4.9cm}|c|c|c|c|c|}
 \hline
-\textbf{Funcionalidad} & \textbf{NutriApp} & \textbf{Nutrium} & \textbf{P. Better} & \textbf{Healthie} & \textbf{Cron. Pro} \\
+\textbf{Criterio} & \textbf{NutriApp} & \textbf{Nutrium} & \textbf{P. Better} & \textbf{Foodzilla} & \textbf{ETM} \\
 \hline
-Gestión de clientes              & Sí    & Sí    & Sí    & Sí    & Parc. \\
+Gestión de clientes                          & Sí    & Sí    & Sí    & Sí    & Parc. \\
 \hline
-Calendario y citas               & Sí    & Sí    & Sí    & Sí    & No    \\
+Calendario y citas                           & Sí    & Sí    & Sí    & Sí    & No    \\
 \hline
-Mensajería integrada             & Sí    & Sí    & Sí    & Sí    & No    \\
+Mensajería con el cliente                    & Sí    & Sí    & Sí    & Sí    & No    \\
 \hline
-Videollamada y voz en chat       & Sí    & No    & Parc. & Parc. & No    \\
+Planes construidos a mano                    & No    & Sí    & Sí    & Sí    & No    \\
 \hline
-Formularios personalizables      & Sí    & Sí    & Sí    & Sí    & No    \\
+Alimentos propios del profesional            & Sí    & Sí    & Parc. & Sí    & n.d.  \\
 \hline
-Alertas configurables por regla  & Sí    & No    & No    & No    & No    \\
+Generación automática                        & Sí    & No    & Sí    & Sí    & Sí    \\
 \hline
-Planes nutricionales             & Sí    & Sí    & Sí    & Sí    & No    \\
+Petición en lenguaje natural                 & Sí    & No    & No    & No    & No    \\
 \hline
-Lista de compra inteligente      & Sí    & Parc. & No    & No    & No    \\
+Método publicado                             & Sí    & n.a.  & No    & No    & No    \\
 \hline
-Base de alimentos con buscador   & Sí    & Sí    & No    & No    & Sí    \\
+Explicación si no hay solución               & Sí    & n.a.  & n.d.  & n.d.  & n.d.  \\
 \hline
-Escaneo de código de barras      & Sí    & No    & No    & No    & Sí    \\
+Revisión profesional previa                  & Sí    & Sí    & Parc. & Parc. & n.d.  \\
 \hline
-Reconocimiento por fotografía    & Sí    & No    & No    & No    & No    \\
+Registro del cliente (comidas, peso)         & Sí    & Sí    & Sí    & Sí    & Sí    \\
 \hline
-Check-in diario gamificado       & Sí    & No    & No    & No    & No    \\
-\hline
-Marketplace de recursos          & Sí    & No    & No    & Sí    & No    \\
-\hline
-Motor de automatizaciones        & Sí    & No    & Parc. & Parc. & No    \\
-\hline
-Comunidad entre clientes         & Sí    & No    & No    & No    & No    \\
-\hline
-Disponible en castellano         & Sí    & Sí    & No    & No    & No    \\
+Interfaz en castellano                       & No    & Sí    & No    & Parc. & No    \\
 \hline
 \end{tabular}
-\caption{Cobertura funcional de los principales competidores frente a NutriApp.}
+\caption{Cobertura de los competidores frente a NutriApp en los criterios de la sección~\ref{sec:criterios-competencia}. ETM: Eat This Much. Practice Better se valora con That Clean Life integrado.}
 \label{tab:competidores}
 \end{table}
 
-La tabla deja a la vista varios patrones útiles para justificar el diseño. Las tres plataformas integrales cubren con solvencia las funcionalidades de gestión profesional, pero ninguna ofrece alertas configurables por regla, lista de la compra inteligente, check-in gamificado, reconocimiento de alimentos por fotografía ni canal de comunidad entre clientes. Cronometer Pro es fuerte precisamente en el bloque que las otras ignoran ---base de datos de alimentos y escáner de código de barras--- pero no es una herramienta integral para gestionar una consulta. Ninguna de las cuatro cubre simultáneamente todas las dimensiones que NutriApp aborda, y la única que está disponible en castellano es Nutrium.
-
+La tabla deja ver dos cosas. Las plataformas integrales cubren la gestión de la consulta mejor que NutriApp, que no tiene constructor manual de planes ni interfaz en castellano (la petición al copiloto sí se escribe en castellano; la interfaz está en inglés). Y las tres que generan planes lo hacen como una caja cerrada: reciben calorías, macronutrientes y exclusiones, devuelven un plan y no publican el método, ni explican qué pasa cuando los objetivos son incompatibles, ni describen una revisión profesional obligatoria.
 
 %% ====================================================================
 \section{Posicionamiento de NutriApp}
 \label{sec:posicionamiento}
 %% ====================================================================
 
-A partir de este análisis, NutriApp se posiciona como una plataforma integral pensada para el mercado hispanohablante, que toma prestados elementos de las mejores referencias del sector y los combina con un conjunto de innovaciones que ningún competidor cubre por sí solo. La conexión entre cada una de las ocho funcionalidades clave del proyecto y el hueco del mercado al que responde es directa:
+NutriApp no compite con estas plataformas en amplitud. Toma de Nutrium la organización del panel y el lenguaje visual, y de todas ellas el patrón de una aplicación del cliente con su plan y su registro diario. Su diferencia está en la generación.
 
-\begin{itemize}
-    \item El \textbf{lenguaje visual y la organización general del panel} se inspiran en Nutrium, la referencia estética del sector. NutriApp adopta su limpieza visual sin replicar su densidad funcional.
-    \item El \textbf{sistema de alertas inteligentes con reglas configurables por formulario} no existe en ninguna plataforma analizada. Este es el principal diferenciador del proyecto y emerge directamente de la observación del flujo de trabajo real del nutricionista.
-    \item El \textbf{check-in diario gamificado con rachas de adherencia} tampoco tiene equivalente en la competencia. Ninguna de las cuatro plataformas estudiadas incorpora una mecánica de gamificación real.
-    \item La \textbf{lista de la compra inteligente con sustituciones por equivalencia nutricional} es otra propuesta única. Nutrium genera listas básicas, pero ninguna plataforma sugiere alternativas inteligentes cuando un ingrediente no está disponible.
-    \item El \textbf{motor de automatizaciones configurable} se inspira en Practice Better, pero NutriApp lo amplía conectándolo al sistema de alertas: la misma estructura de reglas que dispara una alerta puede disparar también una acción automática.
-    \item El \textbf{marketplace de recursos educativos} se inspira en Healthie. NutriApp lo integra dentro del flujo del cliente con una sección destacada que muestra los recursos publicados específicamente por su propio nutricionista, no solo el catálogo general.
-    \item La \textbf{base de datos de alimentos con escáner de código de barras} se inspira en Cronometer Pro, y se complementa con un servicio de \textbf{reconocimiento de alimentos por fotografía} mediante inteligencia artificial. La combinación de ambas vías de captura no aparece en ninguna de las plataformas integrales analizadas.
-    \item El \textbf{canal de comunidad entre clientes del mismo nutricionista} es una propuesta original de NutriApp que ningún competidor analizado contempla. Funciona como apoyo entre pares, con aislamiento garantizado entre consultas de profesionales distintos.
-\end{itemize}
+Foodzilla, That Clean Life y Eat This Much generan a partir de números: calorías, macronutrientes, exclusiones. En NutriApp el profesional escribe lo que necesita en su idioma, un modelo de lenguaje lo traduce a restricciones formales de un vocabulario cerrado y el plan lo construye un solver de programación con restricciones sobre ese modelo (capítulo~\ref{cap:copilotoIA}). La distinción importa por dos motivos. El plan cumple las restricciones obligatorias por construcción, y cuando no existe ninguno que las cumpla el solver señala qué restricciones chocan, en vez de devolver un plan que las incumple en silencio (sección~\ref{sec:infactibilidad}). Y el modelo de lenguaje nunca decide qué se come: propone restricciones que el profesional acepta o descarta una a una, y el plan solo llega al cliente cuando el profesional lo firma.
 
-El conjunto resultante no es una suma de funcionalidades, sino una plataforma donde cada pieza se conecta con las demás a través de una base de datos común. Esa conexión es precisamente lo que permite que el sistema de alertas se alimente de los formularios y los check-ins, que la lista de la compra se genere automáticamente del plan, y que las automatizaciones puedan reaccionar a cualquier evento del sistema sin intervención manual del profesional.
+También hay una diferencia académica. Ninguno de los tres generadores publica cómo elige las comidas ni cómo trata los objetivos incompatibles. El capítulo~\ref{cap:motorGeneracion} documenta el modelo completo de NutriApp, con sus variables, sus restricciones y su función objetivo, y el capítulo~\ref{cap:evaluacion} mide su comportamiento; es lo que permite discutir el generador y no solo usarlo.
 
-
-%% ====================================================================
-\section{Alcance de las integraciones externas}
-\label{sec:integraciones}
-%% ====================================================================
-
-Para cerrar este capítulo conviene aclarar el alcance de las integraciones externas que el diseño contempla. Muchas plataformas profesionales del sector presumen de integraciones con ecosistemas como Apple Health, Google Fit, Fitbit o Garmin, además de servicios de videollamada de terceros y pasarelas de pago. NutriApp no descarta esas integraciones a futuro, pero las deja fuera del alcance de esta iteración del TFG: tienen sentido cuando el producto está implementado y empieza a tener tracción real, no en la fase de diseño, donde añadirían complejidad sin contribuir al eje académico del trabajo (el diseño de la base de datos en el marco de la asignatura de Ampliación de Bases de Datos).
-
-Sí entran en el diseño dos servicios externos concretos, ambos consumidos a través de APIs REST, porque su salida enriquece directamente el modelo de datos del proyecto:
-
-\begin{itemize}
-    \item \textbf{Open Food Facts}~\citep{openfoodfacts}. Base de datos abierta y colaborativa de productos alimentarios. Su API pública y gratuita permite consultar productos por código de barras o por nombre y devuelve la información nutricional en formato JSON. Es la fuente que alimenta el buscador de la base de datos de alimentos y el escáner de código de barras.
-    \item \textbf{Servicio de reconocimiento de alimentos por imagen.} El reconocimiento automático de alimentos a partir de una fotografía se resuelve con una API REST especializada (existen varios proveedores comerciales con interfaces equivalentes, como LogMeal, Passio o Foodvisor), que recibe la imagen y devuelve los alimentos identificados con sus macronutrientes estimados.
-\end{itemize}
-
-El resto de integraciones ---wearables y apps de salud, pasarelas de pago para el marketplace, servicios de videollamada de terceros para los botones del chat--- quedan documentadas como trabajo futuro y se acometerían en la fase de implementación, cuando la plataforma esté construida y empiece a probarse con usuarios reales.
+Por último, la plataforma no depende de servicios externos de datos: el catálogo de alimentos es propio y vive en la base de datos del sistema (capítulo~\ref{cap:disenoSistema}), y el único componente externo es el modelo de lenguaje, que se ejecuta en local (sección~\ref{sec:eleccionLLM}). Integraciones como wearables, pasarelas de pago o videollamada, habituales en las plataformas analizadas, quedan fuera de este trabajo.

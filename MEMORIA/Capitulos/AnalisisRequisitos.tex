@@ -23,7 +23,7 @@ Este giro obliga a reformular los requisitos en dos direcciones complementarias:
     \item \textbf{Ampliación en profundidad}. Se añaden \textbf{ocho nuevos requisitos funcionales} que describen el copiloto con el detalle necesario para su implementación (traducción de lenguaje natural a restricciones formales, validación previa del mensaje, arbitraje del profesional sobre cada propuesta, generación mediante un motor de optimización, validación clínica automatizada, explicación de infactibilidades, estilo clínico del profesional y seguimiento de generaciones asíncronas), así como \textbf{cinco nuevos requisitos no funcionales} específicos de la parte de inteligencia artificial (latencia, validación clínica obligatoria, trazabilidad, protección de datos de salud y explicabilidad).
 \end{itemize}
 
-El resultado es un catálogo final de \textbf{29 requisitos funcionales} (21 conservados del catálogo inicial, 8 nuevos del copiloto) y \textbf{14 requisitos no funcionales} (7 generales, 7 específicos de IA). La reducción global de requisitos funcionales respecto al catálogo original es del 52\,\%, mientras que la carga de trabajo real no disminuye en la misma proporción ya que cada uno de los ocho requisitos nuevos del copiloto arrastra consigo una arquitectura técnica compleja.
+El resultado es un catálogo final de \textbf{27 requisitos funcionales} (19 conservados del catálogo inicial, 8 nuevos del copiloto) y \textbf{14 requisitos no funcionales} (7 generales, 7 específicos de IA). La reducción global de requisitos funcionales respecto al catálogo original es del 56\,\%, mientras que la carga de trabajo real no disminuye en la misma proporción ya que cada uno de los ocho requisitos nuevos del copiloto arrastra consigo una arquitectura técnica compleja.
 
 De esta forma se redefine el cómputo de innovaciones clave; pasan de ser ocho inicialmente a centrar el foco en una única innovación principal de mucha mayor ambición técnica: el \textbf{copiloto de planes nutricionales per-nutricionista}. Las otras siete pasan a \textit{trabajo futuro} (formularios con reglas de alerta, lista de la compra inteligente, \textit{check-in} gamificado, base de alimentos con reconocimiento por IA, \textit{marketplace}, motor de automatizaciones y comunidad entre clientes).
 
@@ -32,11 +32,11 @@ La tabla~\ref{tab:reformulacionResumen} resume el antes y el después del alcanc
 \begin{table}[H]
 \centering
 \small
-\begin{tabular}{|p{3.1cm}|c|c|p{3.2cm}|}
+\begin{tabular}{|p{3.7cm}|p{2.4cm}|p{3.1cm}|p{3.3cm}|}
 \hline
-\textbf{Categoría} & \textbf{V1 (original)} & \textbf{V2 (final)} & \textbf{Variación} \\
+\textbf{Categoría} & \textbf{V1}\newline\textbf{(original)} & \textbf{V2}\newline\textbf{(final)} & \textbf{Variación} \\
 \hline
-Requisitos funcionales & 61 & 29 & $-52$\,\% \\
+Requisitos funcionales & 61 & 27 & $-56$\,\% \\
 \hline
 Requisitos no funcionales & 7 & 14 & $+7$ ($+8$ nuevos, $-1$ eliminado) \\
 \hline
@@ -54,7 +54,7 @@ Bloques de funcionalidad & 13 & 8 (parcialmente reducidos) & $-5$ bloques elimin
 Con la solicitud por parte de los nutricionistas como referencia, cada requisito del catálogo original se ha clasificado aplicando el siguiente criterio, en este orden de prioridad:
 
 \begin{enumerate}
-    \item \textbf{¿Contribuye al funcionamiento del copiloto IA?} Requisitos como el perfil del cliente con mediciones (RF-01, RF-04, RF-05), la base de datos de alimentos (RF-25, RF-45, RF-48) o la estructura básica de planes (RF-24, RF-26, RF-27, RF-29) se mantienen porque alimentan directamente el \textit{pipeline} de generación.
+    \item \textbf{¿Contribuye al funcionamiento del copiloto IA?} Requisitos como el perfil del cliente con mediciones (RF-01, RF-04, RF-05), la base de datos de alimentos (RF-25, RF-45, RF-48) o la estructura básica de planes (RF-24, RF-29) se mantienen porque alimentan directamente el \textit{pipeline} de generación.
     \item \textbf{¿Contribuye a la evaluación experimental del copiloto?} El \textit{check-in} del cliente se conserva en versión reducida (sólo marcar qué comidas del plan se han completado) porque alimenta la métrica de adherencia, que es una de las variables clave para demostrar empíricamente en la defensa que los planes generados funcionan. Del mismo modo, la gráfica de peso se mantiene por el mismo motivo.
     \item \textbf{¿Es imprescindible para que el producto tenga sentido como aplicación?} La mensajería mínima (chat RF-12, RF-13) y el calendario reducido (RF-06, RF-09, RF-10, todas las citas en modalidad \textit{online}) se conservan porque sin ellas la plataforma no funciona como herramienta de gestión profesional coherente, aunque no contribuyan directamente al copiloto.
     \item \textbf{Todo lo demás pasa a trabajo futuro}. Los requisitos que no cumplen ninguno de los tres criterios anteriores, por valiosos que sean como producto, se documentan en el capítulo de conclusiones como extensiones naturales del TFG para una segunda versión post-defensa.
@@ -236,7 +236,7 @@ RF-13 & Permitir adjuntar archivos (documentos, imágenes, PDFs) en los mensajes
 \subsection{Planes nutricionales: estructura base}
 %% -------------------------------------------
 
-Este bloque recoge la infraestructura básica de planes nutricionales sobre la que opera el copiloto IA del bloque siguiente. Un plan es una estructura de comidas organizada por día, compuesta por ingredientes o recetas tomados de la base de datos de alimentos, con sustituciones definidas por equivalencia nutricional. El cliente consulta su plan en formato semanal. No se incluyen en V2 las plantillas reutilizables (RF-28), dado que el copiloto IA genera planes a medida por cliente y el uso de plantillas manuales deja de tener sentido; tampoco la sustitución por parte del cliente (RF-59), pospuesta para evitar complicar el flujo y su impacto en el análisis de adherencia.
+Este bloque recoge la infraestructura básica de planes nutricionales sobre la que opera el copiloto IA del bloque siguiente. Un plan es una estructura de comidas organizada por día, compuesta por alimentos de la base de datos con su cantidad en gramos. El cliente consulta su plan en formato semanal. No se incluyen en V2 las plantillas reutilizables (RF-28), dado que el copiloto IA genera planes a medida por cliente y el uso de plantillas manuales deja de tener sentido; tampoco la sustitución por parte del cliente (RF-59), pospuesta para evitar complicar el flujo y su impacto en el análisis de adherencia. Las recetas compuestas (RF-26) y las sustituciones por equivalencia (RF-27), que el catálogo inicial situaba en este bloque, pasan también a trabajo futuro: el motor de generación trabaja con alimentos sueltos (capítulo~\ref{cap:motorGeneracion}) y ningún componente del sistema las usa.
 
 \begin{table}[H]
 \centering
@@ -248,10 +248,6 @@ Este bloque recoge la infraestructura básica de planes nutricionales sobre la q
 RF-24 & Crear planes nutricionales completos organizados por día y por comida (desayuno, comida, cena, \textit{snacks}). & N \\
 \hline
 RF-25 & Gestionar una base de datos de alimentos con información nutricional (calorías, macronutrientes, categoría). & N \\
-\hline
-RF-26 & Registrar recetas compuestas por ingredientes de la base de datos de alimentos, con información nutricional agregada (sin instrucciones detalladas de preparación en esta versión). & N \\
-\hline
-RF-27 & Definir sustituciones entre alimentos del mismo grupo nutricional con equivalencia de macronutrientes. & N \\
 \hline
 RF-29 & Consultar el plan nutricional actual con vista semanal, desglose por comidas e información nutricional. & C \\
 \hline
@@ -419,6 +415,10 @@ RF-08 & Multi-clínica. & Se elimina la clínica como entidad; arquitectura \tex
 \hline
 RF-11 & Recordatorios automáticos de citas. & Depende del motor de automatizaciones, fuera del alcance. \\
 \hline
+RF-26 & Recetas compuestas por ingredientes. & El motor trabaja con alimentos sueltos; las tablas de receta existen en el modelo de datos, sin interfaz ni uso. \\
+\hline
+RF-27 & Sustituciones por equivalencia de macronutrientes. & Ningún componente las modela; el cliente tampoco sustituye comidas (RF-59). \\
+\hline
 RF-28 & Plantillas de plan reutilizables. & El copiloto IA sustituye el uso manual de plantillas. \\
 \hline
 RF-34 & Racha de \textit{check-in} gamificado. & La versión mínima de \textit{check-in} mide adherencia, no gamifica. \\
@@ -471,11 +471,11 @@ Agenda de citas \textit{online} & RF-06, RF-09, RF-10 \\
 \hline
 Mensajería profesional & RF-12, RF-13 \\
 \hline
-Estructura base de planes nutricionales & RF-24, RF-25, RF-26, RF-27, RF-29 \\
+Estructura base de planes nutricionales & RF-24, RF-25, RF-29 \\
 \hline
 Base de datos de alimentos (BEDCA + personalizada) & RF-25, RF-45, RF-48 \\
 \hline
-\textbf{Copiloto IA de planes}$^*$ & RF-01 + RF-24 + RF-25 + RF-27 + RF-45 + RF-48 + RF-62 a RF-69 \\
+\textbf{Copiloto IA de planes}$^*$ & RF-01 + RF-24 + RF-25 + RF-45 + RF-48 + RF-62 a RF-69 \\
 \hline
 Seguimiento de adherencia & RF-29, RF-33, RF-36 \\
 \hline
@@ -502,7 +502,7 @@ A partir de los requisitos V2 definidos y sus dependencias, las funcionalidades 
 
 \paragraph{Mensajería profesional} (RF-12, RF-13). Chat directo nutricionista-cliente con historial completo y adjuntos.
 
-\paragraph{Estructura base de planes nutricionales} (RF-24 a RF-27, RF-29). Constructor de planes organizados por día y por comida, base de alimentos con información nutricional oficial (BEDCA), registro de recetas como combinación de ingredientes, sistema de sustituciones por equivalencia de macronutrientes, y vista semanal del plan para el cliente. Este bloque define la estructura de datos sobre la que opera el copiloto IA.
+\paragraph{Estructura base de planes nutricionales} (RF-24, RF-25, RF-29). Planes organizados por día y por comida, base de alimentos con información nutricional y vista semanal del plan para el cliente. Este bloque define la estructura de datos sobre la que opera el copiloto IA.
 
 \paragraph{Copiloto de planes nutricionales} (RF-62 a RF-69). \textit{Innovación clave.} Sistema de generación semi-automática de planes: el nutricionista describe lo que necesita en su idioma, la inteligencia artificial lo traduce a restricciones formales, un motor de optimización construye el borrador y un validador clínico independiente lo audita. El profesional arbitra cada restricción propuesta y siempre aprueba el plan antes de entregarlo; su estilo clínico, declarado una vez, se aplica a todas sus generaciones. La arquitectura técnica se describe en el capítulo~\ref{cap:disenoSistema}.
 
