@@ -23,7 +23,6 @@ Origen: 2a ronda de feedback (finales de agosto de 2026) sobre los capitulos
 | Literatura academica de CP y menu planning | Pablo | Cap 2 (bloque 9b-5) | Seccion corta con las referencias que esperan en biblio.bib |
 | Capturas o figuras por competidor | Alejandro | Cap 2 (bloque 9b-5) | Una figura por plataforma analizada |
 | Tabla 3.1 fuera de margenes | Alejandro | Cap 3 (bloque 9b-5) | Columna partida en dos filas |
-| Material del EXP-motor (magnitudes, simetria, tamano, escalado, versiones) | Pablo y Alejandro | Cap 7 (bloque 9b-4) | Los dos ejes calidad/eficiencia con las figuras del experimento |
 | Fechas por fase en la intro y reformular informalidades | Alejandro | Intro (bloque 9b-final) | Rango temporal en el subtitulo de cada fase |
 | Pasada global de negritas en mitad de frase | Alejandro | Toda la memoria (bloque 9b-final) | Solo negritas estructurales |
 | Placements [H] y espacios en blanco | Alejandro | Toda la memoria (bloque 9b-final) | Ultima pasada de maquetacion |
@@ -37,8 +36,10 @@ Origen: 2a ronda de feedback (finales de agosto de 2026) sobre los capitulos
 | Introduccion didactica a CP | Alejandro | Cap 5, seccion nueva antes de la formulacion (9b-1b) |
 | Justificar el tope de 4 por comida y el ratio 0.6 | Pablo | Cap 5, restricciones estructurales y funcion objetivo (9b-1b) |
 | Asuncion de las reglas duras con el caso renal | Pablo | Cap 5, cierre de restricciones estructurales (9b-1b); decision de mantener R4 en 0.8 comunicada por correo |
-| Objetivo inconmensurable | Pablo y Alejandro | Motor corregido (pesos x1000, bloque EXP-motor); cap 5 al dia (9b-1b); analisis al cap 7 |
+| Objetivo inconmensurable | Pablo y Alejandro | Motor corregido (pesos x1000, bloque EXP-motor); cap 5 al dia (9b-1b); analisis en el cap 7, seccion 7.2.3, y las bandas de tolerancia como segundo paso del mismo hilo en la 7.2.4 (9b-4) |
 | Cotas de dominio del objetivo | (mejora derivada del EXP) | Motor (EXP-motor); cap 5 y Anexo C al dia (9b-1b) |
-| Rotura de simetria entre dias | Alejandro | Medida y retirada con datos (EXP-motor); se contara como experimento en el cap 7 |
-| Tabla del tamano del problema y escalado | Pablo y Alejandro | Medidos (EXP-motor); esperan al cap 7 |
+| Rotura de simetria entre dias | Alejandro | Medida y retirada con datos (EXP-motor); contada como experimento en el cap 7, seccion 7.3.3 (9b-4) |
+| Tabla del tamano del problema y escalado | Pablo y Alejandro | Medidos (EXP-motor); cap 7, secciones 7.3.1 y 7.3.2 (9b-4) |
+| Material del EXP-motor (magnitudes, simetria, tamano, escalado, versiones) | Pablo y Alejandro | Cap 7 (9b-4): eje de calidad en 7.2 (auditoria, versiones, magnitudes, bandas) y eje de eficiencia en 7.3 (tamano, escalado, simetria, cotas, alojamiento gratuito), con las figuras de los experimentos |
+| Experimentos comparativos entre versiones del modelo | Alejandro | Cap 7, seccion 7.2.2 (9b-4) |
 | Explicacion de los workers | Alejandro | Ya cubierta en caps 4 y 5; verificado en 9b-1b |
