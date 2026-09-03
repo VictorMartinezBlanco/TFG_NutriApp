@@ -25,7 +25,7 @@ Este giro obliga a reformular los requisitos en dos direcciones complementarias:
 
 El resultado es un catálogo final de \textbf{27 requisitos funcionales} (19 conservados del catálogo inicial, 8 nuevos del copiloto) y \textbf{14 requisitos no funcionales} (7 generales, 7 específicos de IA). La reducción global de requisitos funcionales respecto al catálogo original es del 56\,\%, mientras que la carga de trabajo real no disminuye en la misma proporción ya que cada uno de los ocho requisitos nuevos del copiloto arrastra consigo una arquitectura técnica compleja.
 
-De esta forma se redefine el cómputo de innovaciones clave; pasan de ser ocho inicialmente a centrar el foco en una única innovación principal de mucha mayor ambición técnica: el \textbf{copiloto de planes nutricionales per-nutricionista}. Las otras siete pasan a \textit{trabajo futuro} (formularios con reglas de alerta, lista de la compra inteligente, \textit{check-in} gamificado, base de alimentos con reconocimiento por IA, \textit{marketplace}, motor de automatizaciones y comunidad entre clientes).
+De esta forma se redefine el cómputo de innovaciones clave; pasan de ser ocho inicialmente a centrar el foco en una única innovación principal de mucha mayor ambición técnica: el \textbf{copiloto de planes nutricionales per-nutricionista}. Las otras siete quedan fuera del alcance (formularios con reglas de alerta, lista de la compra inteligente, \textit{check-in} gamificado, base de alimentos con reconocimiento por IA, \textit{marketplace}, motor de automatizaciones y comunidad entre clientes).
 
 La tabla~\ref{tab:reformulacionResumen} resume el antes y el después del alcance del TFG.
 
@@ -57,14 +57,14 @@ Con la solicitud por parte de los nutricionistas como referencia, cada requisito
     \item \textbf{¿Contribuye al funcionamiento del copiloto IA?} Requisitos como el perfil del cliente con mediciones (RF-01, RF-04, RF-05), la base de datos de alimentos (RF-25, RF-45, RF-48) o la estructura básica de planes (RF-24, RF-29) se mantienen porque alimentan directamente el \textit{pipeline} de generación.
     \item \textbf{¿Contribuye a la evaluación experimental del copiloto?} El \textit{check-in} del cliente se conserva en versión reducida (sólo marcar qué comidas del plan se han completado) porque alimenta la métrica de adherencia, que es una de las variables clave para demostrar empíricamente en la defensa que los planes generados funcionan. Del mismo modo, la gráfica de peso se mantiene por el mismo motivo.
     \item \textbf{¿Es imprescindible para que el producto tenga sentido como aplicación?} La mensajería mínima (chat RF-12, RF-13) y el calendario reducido (RF-06, RF-09, RF-10, todas las citas en modalidad \textit{online}) se conservan porque sin ellas la plataforma no funciona como herramienta de gestión profesional coherente, aunque no contribuyan directamente al copiloto.
-    \item \textbf{Todo lo demás pasa a trabajo futuro}. Los requisitos que no cumplen ninguno de los tres criterios anteriores, por valiosos que sean como producto, se documentan en el capítulo de conclusiones como extensiones naturales del TFG para una segunda versión post-defensa.
+    \item \textbf{Todo lo demás pasa a trabajo futuro}. Los requisitos que no cumplen ninguno de los tres criterios anteriores, por valiosos que sean como producto, se recogen en el capítulo~\ref{cap:conclusiones}.
 \end{enumerate}
 
 A continuación, se presentan los requisitos finales agrupados por bloque temático en secciones, manteniendo la estructura del catálogo original del Anexo~\ref{apendice:catalogoV1} para facilitar la trazabilidad.
 
 \subsection{Bloques eliminados completos y su justificación}
 
-Cinco bloques completos del catálogo original se eliminan de la implementación del TFG y se documentan como trabajo futuro en el capítulo~\ref{cap:conclusiones}. La tabla~\ref{tab:bloquesEliminados} los recoge con la razón concreta que justifica su exclusión.
+Cinco bloques completos del catálogo original se eliminan de la implementación del TFG y se recogen en el capítulo~\ref{cap:conclusiones}. La tabla~\ref{tab:bloquesEliminados} los recoge con la razón concreta que justifica su exclusión.
 
 \begin{table}[H]
 \centering
@@ -335,7 +335,7 @@ RF-36 & Visualizar la evolución del peso del cliente y del porcentaje de adhere
 \subsection{Base de datos de alimentos}
 %% -------------------------------------------
 
-La base de datos de alimentos se reduce a la búsqueda por nombre y a la posibilidad de registrar alimentos personalizados por parte del nutricionista. Se elimina la integración con Open Food Facts en favor de BEDCA (Base de Datos Española de Composición de Alimentos, de referencia académica en España), y se posponen a trabajo futuro el escaneo de códigos de barras (RF-46), el reconocimiento de alimentos por imagen (RF-47), el registro directo de consumo (RF-49) y la comparativa con objetivos diarios (RF-50). Los alimentos personalizados se conservan porque permiten al nutricionista cubrir los huecos de BEDCA con preparaciones o productos locales, y porque el copiloto IA necesita un catálogo completo cuando genera un plan.
+La base de datos de alimentos se reduce a la búsqueda por nombre y a la posibilidad de registrar alimentos personalizados por parte del nutricionista. Se elimina la integración con Open Food Facts. La fuente prevista en su lugar era BEDCA (Base de Datos Española de Composición de Alimentos, de referencia académica en España); finalmente el catálogo se construyó como un conjunto propio de alimentos con sus nutrientes (capítulo~\ref{cap:disenoSistema}) y la carga de BEDCA queda como trabajo futuro (capítulo~\ref{cap:conclusiones}). Se posponen también el escaneo de códigos de barras (RF-46), el reconocimiento de alimentos por imagen (RF-47), el registro directo de consumo (RF-49) y la comparativa con objetivos diarios (RF-50). Los alimentos personalizados se conservan porque permiten al nutricionista cubrir los huecos del catálogo con preparaciones o productos locales, y porque el copiloto IA necesita un catálogo completo cuando genera un plan.
 
 \begin{table}[H]
 \centering
@@ -344,7 +344,7 @@ La base de datos de alimentos se reduce a la búsqueda por nombre y a la posibil
 \hline
 \textbf{ID} & \textbf{Requisito} & \textbf{Actor} \\
 \hline
-RF-45 & Consultar una base de datos de alimentos con buscador por nombre, alimentada por BEDCA. & N/C \\
+RF-45 & Consultar una base de datos de alimentos con buscador por nombre, sobre un catálogo propio de alimentos con sus nutrientes. & N/C \\
 \hline
 RF-48 & Añadir alimentos personalizados a la base de datos (recetas propias o productos locales) con sus macronutrientes. & N \\
 \hline
@@ -379,7 +379,7 @@ RF-39 & Visualizar un \textit{dashboard} con métricas del copiloto IA: tasa de 
 \label{sec:rfPospuestos}
 %% ====================================================================
 
-Los requisitos del catálogo original que no forman parte del alcance implementado se posponen a trabajo futuro y se documentarán con mayor detalle en el capítulo~\ref{cap:conclusiones}. A continuación se enumeran agrupados por el bloque al que pertenecen originalmente, con una breve razón de posposición.
+Los requisitos del catálogo original que no forman parte del alcance implementado se posponen a trabajo futuro y se recogen en el capítulo~\ref{cap:conclusiones}. A continuación se enumeran agrupados por el bloque al que pertenecen originalmente, con una breve razón de posposición.
 
 \paragraph{Formularios personalizables (RF-14 a RF-17).}
 Editor visual \textit{drag-and-drop} con plantillas y asignación manual o programada. Se posponen al sustituir el concepto de diagnóstico basado en formularios por la variable más directa que alimenta al copiloto: las mediciones y restricciones clínicas registradas en el perfil del cliente.
@@ -473,7 +473,7 @@ Mensajería profesional & RF-12, RF-13 \\
 \hline
 Estructura base de planes nutricionales & RF-24, RF-25, RF-29 \\
 \hline
-Base de datos de alimentos (BEDCA + personalizada) & RF-25, RF-45, RF-48 \\
+Base de datos de alimentos (catálogo propio + personalizada) & RF-25, RF-45, RF-48 \\
 \hline
 \textbf{Copiloto IA de planes}$^*$ & RF-01 + RF-24 + RF-25 + RF-45 + RF-48 + RF-62 a RF-69 \\
 \hline
@@ -506,7 +506,7 @@ A partir de los requisitos V2 definidos y sus dependencias, las funcionalidades 
 
 \paragraph{Copiloto de planes nutricionales} (RF-62 a RF-69). \textit{Innovación clave.} Sistema de generación semi-automática de planes: el nutricionista describe lo que necesita en su idioma, la inteligencia artificial lo traduce a restricciones formales, un motor de optimización construye el borrador y un validador clínico independiente lo audita. El profesional arbitra cada restricción propuesta y siempre aprueba el plan antes de entregarlo; su estilo clínico, declarado una vez, se aplica a todas sus generaciones. La arquitectura técnica se describe en el capítulo~\ref{cap:disenoSistema}.
 
-\paragraph{Base de datos de alimentos} (RF-45, RF-48). Búsqueda por nombre sobre BEDCA y extensión con alimentos personalizados por el nutricionista (recetas propias, productos locales). Sirve de catálogo tanto para el constructor manual de planes como para el copiloto IA.
+\paragraph{Base de datos de alimentos} (RF-45, RF-48). Búsqueda por nombre sobre el catálogo propio y extensión con alimentos personalizados por el nutricionista (recetas propias, productos locales). Sirve de catálogo tanto para el constructor manual de planes como para el copiloto IA.
 
 \paragraph{Check-in mínimo de adherencia} (RF-33). El cliente marca qué comidas del plan ha completado cada día. El sistema calcula automáticamente el porcentaje de adherencia, que es la métrica principal con la que se evaluará la calidad de los planes generados por el copiloto.
 

@@ -27,6 +27,7 @@ Para alcanzar este objetivo general, se plantean los siguientes objetivos espec�
 \begin{enumerate}
     \item Analizar el flujo de trabajo real de un nutricionista profesional para extraer los requisitos funcionales del sistema. Esto implica comprender cómo trabaja en su día a día, qué herramientas utiliza actualmente, qué problemas enfrenta y qué necesita realmente. De esta forma, los requisitos no se inventan, sino que se extraen de la observación directa de un caso real, para que el diseño responda a necesidades concretas y no a suposiciones.
 
+    % Victor, revisar (9b-6): el cap 2 cubre competencia y posicionamiento, no un estudio economico de viabilidad; el cap 8 lo cuenta como cumplido a medias. Redaccion alternativa propuesta: "Realizar un estudio de mercado y analisis de la competencia en el ambito de las plataformas de nutricion, aplicando conocimientos propios de la formacion en ADE, para identificar los principales competidores, sus fortalezas y carencias, y posicionar NutriApp con una propuesta diferenciada."
     \item Realizar un estudio de mercado y análisis de la competencia en el ámbito de las plataformas de nutrición, aplicando conocimientos propios de la formación en ADE. Esto incluye identificar los principales competidores, analizar sus fortalezas y debilidades, detectar carencias y oportunidades en el mercado, y posicionar NutriApp con funcionalidades innovadoras y diferenciadoras que aporten valor real.
 
     \item Diseñar la arquitectura del sistema y su modelo de datos: dos paneles (nutricionista y cliente) sobre una misma base de datos, con el aislamiento entre profesionales garantizado en la propia capa de datos, y con una tabla de restricciones que actúa como interfaz entre quien las produce (el profesional o la IA) y el motor que las consume.
@@ -40,57 +41,57 @@ Para alcanzar este objetivo general, se plantean los siguientes objetivos espec�
 \section{Plan de trabajo}
 El desarrollo de este proyecto ha seguido un proceso iterativo en el que cada fase se apoya en los resultados de la anterior. A continuación se describen las fases, desde la investigación inicial con profesionales hasta la evaluación del sistema final.
 
-\subsection*{Fase 1 --- Investigación con nutricionistas reales}
+\subsection*{Fase 1. Investigación con nutricionistas reales (de mayo de 2025 a febrero de 2026)}
 
 El punto de partida fue entender en profundidad el problema que se quería resolver. Mantuve una serie de conversaciones con el nutricionista cuyo caso motivó el proyecto para conocer a fondo su método de trabajo: qué herramientas utilizaba, en qué puntos perdía más tiempo y qué información se le escapaba por tenerla repartida entre plataformas desconectadas.
 
 Tras consultar con los tutores, me recomendaron contactar a más nutricionistas para no basar el producto en la experiencia de una sola persona. Por ello contacté a través de LinkedIn con otros profesionales del sector y les pregunté lo mismo. Esta ronda de consultas me permitió contrastar ideas para construir una visión del producto más amplia y sólida.
 
-\subsection*{Fase 2 --- Análisis de competencia y mercado}
+\subsection*{Fase 2. Análisis de competencia y mercado (febrero y marzo de 2026)}
 
-Una vez definidas las necesidades desde el lado del usuario, era el momento de investigar el mercado. Obviamente, ya existían soluciones muy similares, así que convenía saber quiénes eran los competidores, qué ofrecían y dónde dejaban huecos sin cubrir. Analicé las principales plataformas del sector (Nutrium, Indya, Dietopro, Nutrimeal y Practice Better) estudiando sus funcionalidades, modelos de negocio, puntos fuertes y carencias, para detectar qué aspectos se habían quedado fuera del radar en la fase anterior y si las necesidades que yo había recogido estaban ya cubiertas o existía una oportunidad real. Al final de esta fase, la idea del producto estaba mucho más definida, con una propuesta de valor más clara.
+Una vez definidas las necesidades desde el lado del usuario, era el momento de investigar el mercado. Obviamente, ya existían soluciones muy similares, así que convenía saber quiénes eran los competidores, qué ofrecían y dónde dejaban huecos sin cubrir. Analicé las principales plataformas del sector (Nutrium, Indya, Dietopro, Nutrimeal y Practice Better) estudiando sus funcionalidades, modelos de negocio, puntos fuertes y carencias, para detectar qué aspectos se habían quedado fuera del radar en la fase anterior y si las necesidades que yo había recogido estaban ya cubiertas o existía una oportunidad real. Al final de esta fase, la idea del producto estaba mucho más definida, con una propuesta de valor más clara. Aquel primer análisis, hecho para el alcance inicial, se conserva en el Anexo~\ref{apendice:catalogoV1}; la comparativa definitiva, ya centrada en el copiloto, es la del capítulo~\ref{cap:estadoDeLaCuestion}.
 
-\subsection*{Fase 3 --- Diseño visual del prototipo}
+\subsection*{Fase 3. Diseño visual del prototipo (marzo de 2026)}
 
 Con los requisitos extraídos, los traduje en una interfaz concreta: los mockups de la aplicación. El objetivo de las pantallas era doble; que el nutricionista pudiera gestionar todo su trabajo desde un único punto de acceso (clientes, citas, formularios, planes, mensajes y notas) y que el cliente contara con herramientas para consultar su plan, registrar sus hábitos y seguir su progreso. Cada pantalla cubría casos de uso identificados en las fases anteriores.
 
 El conjunto de pantallas seguía el mismo sistema de diseño para mantener la coherencia visual. Se revisó lo ya diseñado para incorporar mejoras detectadas durante el análisis de requisitos, como las vistas diaria, semanal y mensual del calendario o la pantalla de ajustes del cliente. El resultado fue un primer prototipo navegable con los dos paneles interconectados y todos los requisitos funcionales iniciales presentes.
 
-\subsection*{Fase 4 --- Segunda iteración: competencia en profundidad y nuevas funcionalidades}
+\subsection*{Fase 4. Segunda iteración: competencia en profundidad y nuevas funcionalidades (abril de 2026)}
 
 Tras completar el primer prototipo, analicé por segunda vez la competencia, esta vez contrastando NutriApp con siete plataformas de referencia. De ese análisis surgieron cuatro incorporaciones al diseño: un motor de automatizaciones configurable, un marketplace de recursos educativos, una base de datos de alimentos con reconocimiento inteligente y las videollamadas integradas en el chat; además de refinamientos varios, como la ficha detallada del cliente. El resultado fue un prototipo navegable completo de veinticuatro pantallas, con los sesenta y un requisitos funcionales representados y la navegación cableada en Figma, de forma que un evaluador externo podía recorrerlo como si fuera una aplicación real.
 
-\subsection*{Fase 5 --- Validación con usuarios reales}
+\subsection*{Fase 5. Validación con usuarios reales (abril de 2026)}
 
 Con el prototipo completo, preparé dos guías de prueba de usabilidad (nutricionista y cliente), cada una con doce flujos de navegación formulados como pequeños retos (``quieres consultar la adherencia media de tus clientes, ¿a qué sección del menú lateral irías?''). El evaluador debía simular el flujo de navegación en cada caso y marcar si le resultó obvia, confusa o si directamente no sabría cómo llegar.
 
-\subsection*{Fase 6 --- Reformulación del alcance}
-Inesperadamente, el prototipo completo "final" (para el plan que había en ese momento) resultó ser la mejor herramienta para contrastar la idea de implementación. Al presentarlo a más nutricionistas y hablar más con ellos para recibir feedback, quedó claro que el valor no estaba en abarcar todas las funcionalidades posibles, sino en automatizar la elaboración de dietas a medida, la tarea que más tiempo les consume.
+\subsection*{Fase 6. Reformulación del alcance (abril de 2026)}
+Inesperadamente, el prototipo completo ``final'' (para el plan que había en ese momento) resultó ser la mejor herramienta para contrastar la idea de implementación. Al presentarlo a más nutricionistas y hablar más con ellos para recibir feedback, quedó claro que el valor no estaba en abarcar todas las funcionalidades posibles, sino en automatizar la elaboración de dietas a medida, la tarea que más tiempo les consume.
 
-Además, los tutores cuando probaron el prototipo, me hicieron ver la complejidad y cantidad de funcionalidades que quería programar yo solo. Esto me hizo bajar los pies a tierra y así darme cuenta de que debía enfocarme en cubrir la necesidad primaria de los nutricionistas y centrar mis esfuerzos en esa dirección. Así que, decidí acotar el alcance drásticamente a lo que sostiene esa tarea y concentrar el esfuerzo técnico en el copiloto de generación de planes, que es donde se encontraba el valor real. El capítulo~\ref{cap:analisisRequisitos} documenta el triaje completo y sus criterios.
+Además, los tutores cuando probaron el prototipo, me hicieron ver la complejidad y cantidad de funcionalidades que quería programar yo solo. Esto me hizo ver que debía enfocarme en cubrir la necesidad primaria de los nutricionistas y centrar mis esfuerzos en esa dirección. Así que decidí acotar el alcance drásticamente a lo que sostiene esa tarea y concentrar el esfuerzo técnico en el copiloto de generación de planes, que es donde se encontraba el valor real. El capítulo~\ref{cap:analisisRequisitos} documenta el triaje completo y sus criterios.
 
-\subsection*{Fase 7 --- Diseño e implementación de la base de datos}
+\subsection*{Fase 7. Diseño e implementación de la base de datos (mayo de 2026)}
 
-Siguiendo el orden recomendado por Alejandro y Pablo: primero la base de datos, después su conexión, por último las pantallas; se diseñó e implementó el modelo de datos completo sobre PostgreSQL gestionado: las tablas de catálogos, personas, restricciones y planes; las políticas de seguridad a nivel de fila que garantizan el aislamiento entre profesionales; y los datos de arranque necesarios para trabajar con casos realistas desde el primer día.
+Siguiendo el orden que me recomendaron Alejandro y Pablo (primero la base de datos, después su conexión y por último las pantallas), diseñé e implementé el modelo de datos completo sobre PostgreSQL gestionado: las tablas de catálogos, personas, restricciones y planes; las políticas de seguridad a nivel de fila que garantizan el aislamiento entre profesionales; y los datos de arranque necesarios para trabajar con casos realistas desde el primer día.
 
-\subsection*{Fase 8 --- Construcción de la aplicación web}
+\subsection*{Fase 8. Construcción de la aplicación web (mayo y junio de 2026)}
 
 Sobre esa base construí la aplicación en dos pasos. Primero, la conexión de las dos piezas que hablan con la base de datos: el backend en Python y el frontend en Next.js, cada uno verificado con lecturas y escrituras reales antes de dibujar una sola pantalla. Después, el panel del nutricionista sección a sección (clientes, planes, alimentos, calendario, mensajería y ajustes), siempre sobre datos reales y sin simular funcionalidad que no existiera: si una pantalla mostraba algo, había una tabla detrás que lo sostenía.
 
 La aplicación se desplegó públicamente en cuanto tuvo sus primeras secciones, siguiendo la recomendación de los tutores, lo que permitió enseñarla y probarla en condiciones reales lo antes posible. Al cerrar esta fase comparé el prototipo de Figma con lo implementado y revisé las diferencias, para no olvidarme de elementos y revisar de nuevo si algunos de ellos no eran necesarios, justificando la divergencia.
 
-\subsection*{Fase 9 --- Motor de generación de planes}
+\subsection*{Fase 9. Motor de generación de planes (junio de 2026)}
 
-El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones. Tras consultar con Alejandro cuál sería el mejor enfoque, me explicó que su implementación debería consistir en un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y me indicó que podría añadir también un diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo dentro de la propia web (creando un apartado para modificar los parámetros que se usan para generar el plan con el motor).
+El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones. Tras consultar con Alejandro cuál sería el mejor enfoque, me explicó que su implementación debería consistir en un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y me indicó que podría añadir también un diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo primero con un banco de casos y después desde la propia web (creando un apartado para modificar los parámetros que se usan para generar el plan con el motor).
 
-\subsection*{Fase 10 --- Capa de inteligencia artificial}
+\subsection*{Fase 10. Capa de inteligencia artificial (julio de 2026)}
 
-Con el motor verificado se añadió la capa que lo hace usable en lenguaje natural: el traductor que convierte las peticiones del nutricionista en restricciones formales, las validaciones previas que examinan cada mensaje antes de traducirlo, la generación asíncrona y el estilo clínico que cada profesional define una vez y se aplica a todos sus planes. Todo esto se implementó mediante consultas a la inteligencia artificial de Ollama.
+Con el motor verificado se añadió la capa que lo hace usable en lenguaje natural: el traductor que convierte las peticiones del nutricionista en restricciones formales, las validaciones previas que examinan cada mensaje antes de traducirlo, la generación asíncrona y el estilo clínico que cada profesional define una vez y se aplica a todos sus planes. Todo esto se implementó mediante consultas a un modelo de lenguaje abierto, qwen2.5, ejecutado en local con Ollama.
 
-\subsection*{Fase 11 --- Panel del cliente}
+\subsection*{Fase 11. Panel del cliente (julio de 2026)}
 
 Después desarrollé el segundo rol de la aplicación: el panel del cliente. El cliente accede a su plan una vez firmado, marca las comidas que ha completado, registra su peso y solicita citas; toda esa información vuelve al panel del nutricionista como métricas de seguimiento. Con esta fase queda cerrado el ciclo completo entre profesional y cliente y toda la información que debía ser compartida entre ambos roles ya estaba implementada.
 
-\subsection*{Fase 12 --- Evaluación}
+\subsection*{Fase 12. Evaluación (de julio a septiembre de 2026)}
 
 La evaluación acompañó a todo el desarrollo y solo le queda su última pieza. Hasta ahora incluye un estudio pre-registrado sobre el efecto del formato de los mensajes en la traducción (con un resultado negativo que evitó construir un módulo innecesario), mediciones de rendimiento del motor en el entorno de producción al crecer el catálogo de alimentos, y una auditoría sistemática de la calidad nutricional de los planes generados, cuyo antes y después justificó una capa entera de reglas nuevas del motor. Queda pendiente, con el entorno y las guías ya preparados, una prueba guiada con nutricionistas reales sobre la aplicación desplegada; sus conclusiones cerrarán el ciclo que empezó en la Fase 1: del profesional al prototipo, del prototipo al producto, y del producto de vuelta al profesional.

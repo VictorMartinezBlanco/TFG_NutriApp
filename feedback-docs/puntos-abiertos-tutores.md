@@ -13,14 +13,7 @@ Origen: 2a ronda de feedback (finales de agosto de 2026) sobre los capitulos
 
 | Punto | Quien | Destino | Que debe quedar |
 |---|---|---|---|
-| Trabajo futuro del tope de 4 alimentos por comida | Pablo | Cap 8 (trabajo futuro) | Rol de acompanante (tomate, cebolla, lechuga) que no consuma el tope; revisar el valor. El cap 5 ya lo justifica y remite |
-| Reglas estructurales no anulables (caso renal) | Pablo | Cap 8 (trabajo futuro) | Que el profesional pueda ver, editar, retirar o endurecer las reglas estructurales. El cap 5 ya documenta la asuncion con el ejemplo renal |
-| El reparto por comidas domina el objetivo | tutores (derivado del punto de inconmensurabilidad) | Cap 8 (trabajo futuro) | Renormalizar el termino de meal_kcal_ratio. El cap 5 ya lo documenta como asuncion |
-| Recetas y sustituciones (RF-26/RF-27), parte de trabajo futuro | Pablo | Cap 8 | El cap 3 ya los marca como pospuestos (9b-5); en el cap 8 va la extension (recetas con interfaz, sustituciones en el motor) |
-| Variante blanda de nutrient_ratio sin modelar | (limite propio, no de tutores; se registra por completitud) | Cap 8 (limites de v0) | Ya visible en cap 5; recogerlo en la lista de limites |
-| Fuente de la base de alimentos en el cap 3 (BEDCA) | (detectado en el 9b-5, no es de tutores) | Cap 3 (bloque 9b-final) | El cap 3 dice que RF-45 se alimenta de BEDCA; el catalogo real es el seed propio de 100 alimentos (caps 4 y 5). Alinear RF-45, tablas 3.10 y 3.13 y la seccion 3.6 |
-| RF-39 (dashboard con edit distance y coste) | (herencia del 9b-0) | Cap 8 | El cap 3 lo define tal cual; el hueco con lo implementado (dashboard con datos reales, sin edit distance ni coste) se cuenta como trabajo futuro |
-| Fechas por fase en la intro y reformular informalidades | Alejandro | Intro (bloque 9b-final) | Rango temporal en el subtitulo de cada fase |
+| Fechas por fase en la intro | Alejandro | Intro (bloque 9b-6) | Rango temporal en el subtitulo de cada fase; a la espera de las fechas de Victor para las fases 1 y 2 (las demas constan en los commits y memorias de bloque) |
 | Pasada global de negritas en mitad de frase | Alejandro | Toda la memoria (bloque 9b-final) | Solo negritas estructurales |
 | Placements [H] y espacios en blanco | Alejandro | Toda la memoria (bloque 9b-final) | Ultima pasada de maquetacion |
 
@@ -28,6 +21,17 @@ Origen: 2a ronda de feedback (finales de agosto de 2026) sobre los capitulos
 
 | Punto | Quien | Donde quedo |
 |---|---|---|
+| Trabajo futuro del tope de 4 alimentos por comida | Pablo | Cap 8, seccion 8.3.1 (9b-6): rol de acompanante que no consuma el tope, con la dependencia del catalogo |
+| Reglas estructurales no anulables (caso renal) | Pablo | Cap 8, seccion 8.2 (limitacion) y 8.3.1 (editables por el profesional) (9b-6) |
+| El reparto por comidas domina el objetivo | tutores | Cap 8, seccion 8.2 y 8.3.1 (9b-6): renormalizar con division entera y banda porcentual; razon de no medirlo |
+| Recetas y sustituciones (RF-26/RF-27), parte de trabajo futuro | Pablo | Cap 8, seccion 8.3.1 (9b-6): recetas con composicion agregada e interfaz, sustituciones con modelo de equivalencia; parrafo final de 8.3 los senala como los pospuestos con enganche |
+| Variante blanda de nutrient_ratio sin modelar | (limite propio) | Cap 8, seccion 8.2 y 8.3.1 (9b-6) |
+| Duras con elasticidad minima y tolerancia por fila | Victor (revision del 9b-1c) | Cap 8, seccion 8.2 (igualdad exacta como limitacion) y 8.3.1 (tolerancias configurables) (9b-6) |
+| Fuente de la base de alimentos en el cap 3 (BEDCA) | (detectado en el 9b-5) | Cap 3 (9b-6): parrafo de 3.6 con la historia real (BEDCA prevista, catalogo propio, carga como trabajo futuro), RF-45, tabla de dependencias y funcionalidades; cap 8 seccion 8.2 y 8.3.3 |
+| RF-39 (dashboard con edit distance y coste) | (herencia del 9b-0) | Cap 8, seccion 8.2 (no construido), 8.3.2 (depende de la edicion del plan) y 8.3.4 (metricas de uso real) (9b-6) |
+| RF-03 (notas privadas del cliente) conservado y no construido | (detectado en el 9b-6) | Cap 8, seccion 8.1 (objetivo 1), 8.2 y 8.3.3 (9b-6) |
+| Reformular informalidades de la intro | Alejandro | Intro (9b-6): fase 7 (su ejemplo literal), fase 6; fases 9 y 10 corregidas en contenido; Victor decide dejar dos expresiones suyas |
+| Coherencia del cap 3 con la narrativa del pivote ("se documentan como trabajo futuro") | (detectado en el 9b-6) | Cap 3 (9b-6): cuatro frases pasan a "se recogen en el capitulo 8" / "quedan fuera del alcance"; el cap 8 explica que los bloques eliminados no son trabajo futuro |
 | Sobreventa de la tabla 2.1 y del cap 2 | Pablo | Cap 2 reescrito entero sobre lo que la app entrega (9b-5); la tabla de la idea inicial se conserva en el Anexo A como registro |
 | Coherencia del 2.5 (BD como eje, fuente de alimentos) | Pablo | Cap 2, seccion de posicionamiento (9b-5): catalogo propio, sin Open Food Facts ni BD como eje; la seccion de integraciones desaparece |
 | Criterio de generacion por IA en la comparativa | Pablo | Cap 2, criterios y tabla 2.1 (9b-5): generacion automatica, peticion en lenguaje natural, metodo publicado, explicacion de infactibilidad y revision profesional; analizadas Foodzilla, Eat This Much y That Clean Life (via Practice Better), webs consultadas el 3-sep-2026 |
