@@ -3,7 +3,7 @@
 
 Este apéndice recoge el catálogo completo de requisitos \emph{tal y como se formuló inicialmente}, antes del pivote de alcance consensuado con los directores del TFG en abril de 2026. Su función no es normativa ---el alcance que realmente se implementa es el descrito en el capítulo~\ref{cap:analisisRequisitos}---, sino \emph{histórica}: conservar la visión inicial como registro del proceso de reformulación del proyecto y facilitar la trazabilidad de cada decisión de recorte.
 
-La versión V1 contenía \textbf{61 requisitos funcionales}, \textbf{7 requisitos no funcionales} y \textbf{8 innovaciones clave}. Tras dos iteraciones de triaje, la versión implementada (V2) reduce estas cifras a 27 requisitos funcionales, 14 requisitos no funcionales (siete de ellos específicos del copiloto IA) y una única innovación clave centrada en la generación semi-automática de planes nutricionales por nutricionista. Las razones y el criterio de triaje que llevaron a esta reformulación se desarrollan en la sección~\ref{sec:reformulacionAlcance} del cuerpo principal.
+La versión V1 contenía 61 requisitos funcionales, 7 requisitos no funcionales y 8 innovaciones clave. Tras dos iteraciones de triaje, la versión implementada (V2) reduce estas cifras a 27 requisitos funcionales, 14 requisitos no funcionales (siete de ellos específicos del copiloto IA) y una única innovación clave centrada en la generación semi-automática de planes nutricionales por nutricionista. Las razones y el criterio de triaje que llevaron a esta reformulación se desarrollan en la sección~\ref{sec:reformulacionAlcance} del cuerpo principal.
 
 Todo el contenido que sigue ---tablas de requisitos, dependencias funcionales y funcionalidades resultantes--- se presenta sin modificaciones respecto a su formulación original, incluyendo terminología, etiquetas de \emph{innovación clave} y referencias a bloques que posteriormente han sido descartados o redimensionados.
 
@@ -441,9 +441,9 @@ Informes y análisis & RF-05, RF-34, RF-36, RF-39, RF-40 \\
 \label{tab:dependencias-v1}
 \end{table}
 
-En el planteamiento original se destacaba que la combinación de \textbf{formularios personalizables con reglas de alerta asociadas} constituye una innovación en sí misma: la posibilidad de que el nutricionista defina, sobre cada formulario que crea, reglas condicionales que generen alertas automáticas al ser evaluadas. Ningún competidor analizado conecta estas dos funcionalidades de forma integrada. Esta combinación emergía de la intersección de los bloques de Formularios (RF-14 a RF-16) y Alertas (RF-18, RF-19), y era la que daba al sistema su capacidad de detección proactiva de problemas.
+En el planteamiento original se destacaba que la combinación de formularios personalizables con reglas de alerta asociadas constituye una innovación en sí misma: la posibilidad de que el nutricionista defina, sobre cada formulario que crea, reglas condicionales que generen alertas automáticas al ser evaluadas. Ningún competidor analizado conecta estas dos funcionalidades de forma integrada. Esta combinación emergía de la intersección de los bloques de Formularios (RF-14 a RF-16) y Alertas (RF-18, RF-19), y era la que daba al sistema su capacidad de detección proactiva de problemas.
 
-También se observaba que el bloque de \textbf{seguimiento y progreso} actuaba como punto de convergencia de varios sistemas: los datos del check-in diario (RF-33) alimentan el heat map (RF-37) y las métricas de adherencia (RF-36), mientras que las mediciones y fotos del cliente (RF-04) eran consultadas por el nutricionista (RF-05) para evaluar la evolución.
+También se observaba que el bloque de seguimiento y progreso actuaba como punto de convergencia de varios sistemas: los datos del check-in diario (RF-33) alimentan el heat map (RF-37) y las métricas de adherencia (RF-36), mientras que las mediciones y fotos del cliente (RF-04) eran consultadas por el nutricionista (RF-05) para evaluar la evolución.
 
 
 %% ====================================================================

@@ -2,6 +2,102 @@
 \label{cap:conclusions}
 \addcontentsline{toc}{chapter}{Conclusions and Future Work}
 
-Conclusions and future lines of work. This chapter contains the translation of Chapter \ref{cap:conclusiones}.
+% English translation of Chapter \ref{cap:conclusiones}. Re-sync with ConclusionesTrabajoFuturo.tex after its final edits (9b-final).
 
+This chapter closes the thesis. It first goes back over the objectives of the introduction one by one, with the evidence that supports each of them and what was left half done; it then collects the limitations of the system as it is delivered; and finally it groups the future work by layers, with the reason why each line did not make it into the thesis.
 
+\section*{Conclusions}
+\label{sec:conclusionsObjectives}
+
+The general objective was to design, build and evaluate a web platform for nutritionists whose core would be a plan generation copilot. The platform exists and is deployed (Section~\ref{sec:despliegue}): the professional writes what they need in Spanish, the translator converts it into formal constraints, the engine builds a draft that satisfies them, the validator audits it and the plan only reaches the client when the professional signs it (Chapters~\ref{cap:disenoSistema} to~\ref{cap:copilotoIA}). The complete product process was also covered: the idea was refined with nutritionists before writing any code, the scope was reformulated according to what they asked for, and the result was measured with criteria fixed before measuring (Chapter~\ref{cap:evaluacion}). The missing piece of that journey is the test with nutritionists on the deployed application, which is under way at the time of writing this version (Section~\ref{sec:evalUsuarios}).
+
+Regarding the specific objectives:
+
+\begin{enumerate}
+    \item \textit{To analyse the real workflow of a nutritionist in order to extract the requirements.} The requirements came out of the conversations with the nutritionist who motivated the project and with the professionals I contacted afterwards (Section~\ref{sec:reformulacionAlcance}), and the initial catalogue of 61 requirements was reduced to 27 when those same conversations showed where the bottleneck was. That cut is the part of the objective that had the most value: the copilot was not in the original idea and came from listening to the real demand. Two requirements kept in Chapter~\ref{cap:analisisRequisitos} were never built (the private notes on the client, RF-03, and the copilot metrics \textit{dashboard}, RF-39); they are collected in Section~\ref{sec:limitaciones}.
+
+    \item \textit{To carry out a market study and competitor analysis.} Chapter~\ref{cap:estadoDeLaCuestion} analyses four platforms in the sector, with their websites consulted in September 2026, and compares them with what the application delivers (Table~\ref{tab:competidores}); the comparison of the first version, broader and prior to the reformulation, is kept in Appendix~\ref{apendice:catalogoV1}. The resulting positioning is concrete: the platforms that generate plans do so from numbers and without publishing the method, and none of them explains why a plan cannot exist (Section~\ref{sec:posicionamiento}). The part of the objective that was only half met is viability: the analysis stopped at functional positioning and does not include an economic study of the product.
+
+    \item \textit{To design the system architecture and its data model.} The two panels share a single database, and the isolation between professionals and between client and professional lives in the data layer itself, through row-level security policies that the multi-actor runners check table by table (Sections~\ref{sec:capaDatos}, \ref{sec:capaSeguridad} and~\ref{sec:evalBancos}). The constraints table works as the interface between three producers (the client's form, the translator and the professional's clinical style) and a single consumer, the engine (Figure~\ref{fig:productorConsumidor}); that separation is what made it possible to build and verify the engine before the AI layer existed. This objective was met as planned.
+
+    \item \textit{To build a generation engine based on constraint programming, with an independent validator and without depending on AI.} The engine of Chapter~\ref{cap:motorGeneracion} generates, validates, persists and signs plans without any language model, and it was verified that way, first with the deterministic banks and then end to end against the deployment (Section~\ref{sec:evalBancos}). The quality of the plans was measured and corrected in layers: the audit of nonsensical plans brought the portions at the limits down from 66\,\% to 6\,\% (Section~\ref{sec:evalAuditoria}), and the objective function was rebalanced twice with data (Sections~\ref{sec:evalMagnitudes} and~\ref{sec:evalBandas}). Known limits remain: the structural rules are assumed valid for the general population and the professional cannot override them (Section~\ref{sec:estructurales}), the meal distribution term still dominates the objective function when it is active (Section~\ref{sec:objetivoResolucion}), and with the catalogue of one hundred foods the solver does not always prove the optimum within the time limit (Section~\ref{sec:evalEscalado}).
+
+    \item \textit{To integrate the AI layer that makes the engine usable in natural language.} The translator, the prior review of the message, asynchronous generation and the arbitration screen are built and integrated (Chapter~\ref{cap:copilotoIA}), and the professional decides on every proposed constraint and on every plan before it reaches the client. The model runs locally so that clinical data never leaves for any provider, and the evaluation showed what that costs: a model of seven billion parameters makes residual mistakes that the design contains but does not eliminate (Section~\ref{sec:evalModelosLocales}), and the format study ruled out with data building a module to rewrite the message (Section~\ref{sec:evalFormatos}). The part left half done is the clinical style: it is declared as rules, and learning it from the professional's corrections was not addressed.
+\end{enumerate}
+
+% 9b-final: sintesis 8.5
+The test with nutritionists is under way at the time of writing this version. Its improvement guidelines will be incorporated here and in Section~\ref{sec:evalUsuarios} when the thesis is closed.
+
+There are three things I learnt in the process that shaped the design more than any particular technology. Closing the constraint vocabulary before touching the language model made the AI a convenience layer over an engine that already worked, and not the other way round. Verifying each layer separately, with banks that are re-run when each block is closed, is what made it possible to change the engine several times over the summer without breaking what came before. And fixing the criterion before measuring gave negative results the same value as positive ones: the rewriter and the symmetry breaking were not built because the data did not support them, and the tolerance bands were kept with the deviation from the criterion documented (Section~\ref{sec:evalBandas}).
+
+\section*{Limitations}
+\label{sec:limitations}
+
+The limitations that follow are those of the system as it is delivered. Almost all of them are already stated in the chapter where the decision was taken; here they are gathered so that the reader has them in one place.
+
+In the engine, the structural rules are assumed valid for the general population and the professional cannot override them case by case, so a prescription outside those ranges, such as the renal diet that Pablo gave as an example, would be declared infeasible (Section~\ref{sec:estructurales}). The validator only rejects what the solver guarantees and warns about the rest, so a plan with a micronutrient above its cap reaches the professional as a warning and not as a rejection (Section~\ref{sec:validador}). The meal distribution term dominates the objective function when it is active, the ratio between nutrients only exists as a hard constraint (Section~\ref{sec:objetivoResolucion}), and a hard energy or macronutrient constraint demands exact equality per day, without the tolerance that soft ones do have. With the catalogue of one hundred foods the solver does not always prove the optimum within the time limit, and that limit is 90 seconds with two threads because the free hosting does not allow for more (Sections~\ref{sec:evalEscalado} and~\ref{sec:evalHosting}).
+
+The catalogue is our own: one hundred foods with their nutrients and portion profiles loaded by hand, without the BEDCA reference database that Chapter~\ref{cap:analisisRequisitos} envisaged. The foods that the professional adds have no portion profile and the engine applies a generic range to them (Section~\ref{sec:plausibilidad}); and the thresholds of the infeasibility cases in the banks have had to be recalibrated every time the catalogue grew, because with more sources of a nutrient it is harder to prove that something cannot exist.
+
+In the copilot, the language model runs locally and is small; the evaluation showed residual mistakes that the design contains but does not eliminate, such as confusing a category with a specific food (Section~\ref{sec:evalModelosLocales}). The worker that runs that model is, during development and evaluation, my own computer: if it is switched off, the whole application keeps working and the AI tasks wait in the queue (Section~\ref{sec:despliegue}).
+
+In the platform, the interface is in English even though the request to the copilot is written in Spanish, because the mockups were designed that way from the start. Two requirements that Chapter~\ref{cap:analisisRequisitos} keeps were not built: the professional's private notes on each client (RF-03) and the copilot metrics \textit{dashboard} (RF-39), which instead shows real data on clients, plans and foods. Some screens have cuts with respect to the design, messaging refreshes by polling every fifteen seconds, the creations that write to several tables from the browser are not transactional and are compensated with a soft delete if a step fails (Section~\ref{sec:capaDatos}), the demo data carry relative dates that expire (Section~\ref{sec:validacionTesting}) and the repository has no branch protection.
+
+In the evaluation, the test with nutritionists on the deployed application is under way (Section~\ref{sec:evalUsuarios}); the engine banks use hand-built cases, not real plans from professionals; and the comparison with competitors relies on what their websites said in September 2026, which will change.
+
+\section*{Future work}
+\label{sec:futureWork}
+
+The lines are grouped by the layer they belong to. Each one carries the reason why it did not make it into the thesis: time, a scope decision taken on purpose, or a dependency on another piece that does not exist either.
+
+\subsection*{Generation engine}
+\label{sec:futureEngine}
+
+\begin{itemize}
+    \item \textbf{Variety by food families.} The unused foods term is linear: going from five to six different foods is worth the same as going from fifty to fifty-one, and a plan with eighty foods a week is neither better nor easier to follow. The version that makes clinical sense rewards each family being present, with its own weight, without fixing a number of ingredients. It requires a taxonomy of families in the catalogue that today only partly exists; meanwhile, variety is controlled by the professional's clinical style (Section~\ref{sec:evalBandas}).
+    \item \textbf{Calorie distribution across meals.} Renormalise the term to remove the factor of one thousand it carries from its linearisation, with integer division and a percentage band like the one for energy. It was not measured because only two cases in the banks activate it and one of them is a deliberate conflict (Section~\ref{sec:evalMagnitudes}).
+    \item \textbf{Configurable tolerances.} That each calorie or macronutrient target row carries its own band instead of the global one, and that hard rows have a narrow tolerance instead of exact equality per day: a clinical ``must'' means around a value, not that value to the gram. It touches validation, the form and the translator at the same time; I decided not to touch the engine at the close of the project.
+    \item \textbf{Editable structural rules.} That the professional can see the eight common-sense rules, withdraw them or tighten them for a specific client, and so cover cases like the renal one without declaring them infeasible. There was no time to make them configurable; they were documented as an assumption (Section~\ref{sec:estructurales}).
+    \item \textbf{Side foods.} A side role (tomato, onion, lettuce) that does not consume the cap of four foods per meal, as Pablo pointed out when reviewing the cap; it requires marking that role in the catalogue.
+    \item \textbf{Soft ratio between nutrients.} Today it only exists as a hard constraint because penalising the deviation of a ratio forces its linearisation (Section~\ref{sec:catalogoClinico}).
+    \item \textbf{Recipes and substitutions (RF-26 and RF-27).} The engine works with individual foods by design. Recipes would require the engine to choose among preparations with their aggregated composition and an interface to define them; substitutions, an equivalence model that no piece has today.
+    \item \textbf{Validation by pathology and medication.} The validator applies general population rules. Refining it by pathology or by drug depends on extending the client's record with those variables and the catalogue with the nutrients involved, an extension that Chapter~\ref{cap:analisisRequisitos} postpones on purpose.
+    \item \textbf{Leftovers of the common-sense layer.} A breakfast made only of nuts is still possible in theory, and single-piece snacks and foods without a profile depend on generic ranges. Fine calibration awaits the guidelines from the test with nutritionists.
+\end{itemize}
+
+\subsection*{AI copilot}
+\label{sec:futureCopilot}
+
+\begin{itemize}
+    \item \textbf{Learning the professional's style.} The clinical style is declared as rules (Section~\ref{sec:arbitraje}). The ambitious version learns it from the corrections the professional makes on each draft and bootstraps it with a questionnaire. The minimal version agreed with the supervisors was built; learning also needs plan editing, which does not exist either.
+    \item \textbf{Editing the generated plan.} Today the draft is accepted or regenerated with other constraints; what is missing is being able to change a food or a quantity and have the validator audit the result again. It was left out because the generation flow replaced manual plan editing in the scope.
+    \item \textbf{Copilot metrics (RF-39).} The first-attempt approval rate and the distance between the draft and the delivered version, as Chapter~\ref{cap:analisisRequisitos} defines them, can only be measured once that editing exists; the tokens and latency of each call are already recorded in the trace (Section~\ref{sec:eleccionLLM}).
+    \item \textbf{Remote language engine.} The translator talks to the model through a minimal interface, so a remote engine with contractual guarantees of non-retention would be another implementation of that interface. It would allow comparing cost, latency and quality against the local model and repeating the format study with a larger model; it did not make it in because of the privacy decision of Section~\ref{sec:eleccionLLM} and because the local model was enough for the scope.
+    \item \textbf{Message rewriter.} This is not future work: the format study ruled out building it with data (Section~\ref{sec:evalFormatos}), and it would only be reopened if a different model changed that result.
+\end{itemize}
+
+\subsection*{Platform}
+\label{sec:futurePlatform}
+
+\begin{itemize}
+    \item \textbf{Reference catalogue.} Loading BEDCA or USDA with their nutrients, keeping the per-food portion profiles that the common-sense layer needs. The own catalogue of one hundred foods was enough to build and evaluate the engine.
+    \item \textbf{Management functions cut by the minimal version.} Editing and deleting own foods, the private notes on the client (RF-03), the weekly grid calendar, notifications and inviting clients from the professional's panel. They are screens whose table already exists or is trivial, left out for lack of time.
+    \item \textbf{Follow-up.} Carrying the weight recorded by the client over to the record with the professional's validation, and expiring pending appointment requests with a periodic process. They were left out of the scope of the client panel.
+    \item \textbf{Real-time messaging.} Polling every fifteen seconds was a deliberate decision for the volume of one professional; the database's own real-time subscriptions would remove the latency in exchange for managing persistent connections.
+    \item \textbf{Interface in Spanish.} Translating the interface, in English since the mockups, is the improvement that the professionals it is aimed at would notice the most.
+    \item \textbf{Deployment.} Moving the worker to a clinic server or to the cloud, and switching to paid hosting that allows lowering the solver's time limit and giving it back its threads (Section~\ref{sec:evalHosting}).
+    \item \textbf{Data robustness.} Moving the multi-table creations from the browser into database functions, so that they are transactional; and demo data with dates that re-anchor themselves.
+\end{itemize}
+
+\subsection*{Evaluation}
+\label{sec:futureEvaluation}
+
+The pending piece is the test with nutritionists on the deployed application, whose guidelines will feed Section~\ref{sec:evalUsuarios} and this chapter. After it, the evaluation with the most value is that of real use: the copilot metrics defined by RF-39, measured on plans from professionals instead of hand-built cases, and the comparison with a remote language engine. And a lesson of method worth carrying into any future experiment on the engine: criteria over counts must carry a tolerance the size of the solver's stopping gap, or demand optima at zero gap (Section~\ref{sec:evalBandas}).
+
+\paragraph{On the requirements of the first version.} The five blocks that Chapter~\ref{cap:analisisRequisitos} removes (forms, alerts, shopping list, marketplace and automations) and most of the individual requirements in Table~\ref{tab:rfIndividualesFuera} do not appear in the lists above on purpose. They were discarded because nutritionists did not ask for them and because they do not contribute to the copilot, and Appendix~\ref{apendice:catalogoV1} keeps them as a record of the initial idea. I only collect as future work those with a hook in what was built: recipes and substitutions, private notes and the metrics \textit{dashboard}.
+
+\section*{Closing remarks}
+\label{sec:closing}
+
+% Translation of the draft closing section; re-sync once Victor rewrites it in his own voice.
+I started this work on the condition that it would be useful for something real, and what has taught me the most is how far my first idea was from what nutritionists needed. Without the conversations with them I would have built yet another management platform, and the copilot, the part that gives the project its meaning, would not have existed. The other lesson is Alejandro and Pablo's guidance: the minimal version that applies the features, verified, is worth more than an ambitious one left half done. Applying it was hard for me at first, because it meant leaving out things I had already designed, but it is what made it possible to arrive at a deployed application with a measured engine instead of a pretty prototype. What the professionals say when they use it is what remains to be heard.

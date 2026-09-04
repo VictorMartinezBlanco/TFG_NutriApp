@@ -2,13 +2,97 @@
 \label{cap:introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-Introduction to the subject area. This chapter contains the translation of Chapter \ref{cap:introduccion}.
+% English translation of Chapter \ref{cap:introduccion}. Keep in sync with Introduccion.tex.
+
+This chapter presents the starting point of the project: the motivation behind it, the objectives it pursues and the work plan that has guided its development.
+
+\section*{Motivation}
+When I planned this Bachelor's Thesis there was one clear premise: the result had to have a real application. Solving an invented problem to meet an academic requirement did not motivate me, so I looked for a way to use the knowledge acquired during the degree and aim it at a concrete need of someone close to me. The idea was that the work would serve as a technical exercise and, at the same time, as a solution to a problem that someone experienced in their daily professional life.
+
+That someone turned out to be a friend who works as a nutritionist. In a conversation about his daily routine I found a problem that he himself did not perceive as such, because he had normalised it: his workflow was fragmented across five or more tools that did not talk to each other. He used Google Forms to collect information from his clients, Google Calendar to manage appointments, WhatsApp as a direct communication channel, a physical notebook for his private notes on each case, and his clinic's management platform for everything else. To get a complete picture of a single client he had to consult all these sources by hand and rebuild the information on his own. On top of that, a large part of his time went into answering repetitive questions: whether an ingredient could be replaced, when the next appointment should be, and countless small doubts about how to fix the plan after skipping or swapping meals; almost trivial questions that could be resolved without his direct involvement.
+
+From that conversation came the central idea of this project: to design a platform that would centralise all those scattered tools in a single place. If all client information (forms, appointments, messages, notes, nutritional plans, daily records) lived in the same database, the split between sources would disappear and new possibilities would open up, such as detecting patterns automatically, raising alerts when a client shows signs of dropping out, or building a complete profile without cross-referencing data by hand. In short, the nutritionist could spend his time on what really matters: designing diets, accompanying his clients and making the treatments work, instead of investing it in administrative tasks that a well-designed application can solve.
+
+That initial vision, a platform that would centralise the whole workflow, guided the first version of the project: everything such a tool could offer was catalogued and a complete prototype was designed with it, from customisable forms to a marketplace of educational resources. When the proposal was presented to more practising nutritionists, their concerns helped to rethink the approach. What they really demanded was not to have everything in one place, which obviously would also be a great help, but they also ran into a bottleneck with the task that takes them the most time as nutritionists: building each diet to measure. The client's record (their data, measurements and restrictions) mattered to them as support for that task; communication with the client they saw as a complement, not as the core; and centralising the rest of their processes depends, in practice, on the clinic they work in, not on the tool they choose.
+
+That contrast with the real demand led me to reformulate the project, as detailed in Chapter~\ref{cap:analisisRequisitos}. The centre stopped being the all-in-one platform and became a copilot for generating tailored nutritional plans: the nutritionist describes what they need in their own language, the system builds a draft that meets verifiable constraints, and the professional reviews it, adjusts it and signs it before it reaches the client. The platform still exists around it (clients, appointments, messages, follow-up) but as support for that core, not as an end in itself.
 
 
+\section*{Objectives}
+This Bachelor's Thesis is developed within the Double Degree in Computer Science Engineering and Business Administration, which allows it to be approached from two complementary perspectives: the technical one, ranging from the design of the database to the integration of an optimisation engine and language models; and the business one, applying the market analysis and product viability tools of the Business Administration training. The aim is not simply to meet an academic requirement, but to take advantage of this double background to build a fully functional project with a real application.
+
+The general objective of this work is to design, build and evaluate a web platform for nutritionists whose core is a copilot for generating nutritional plans: the professional expresses a client's needs in their own language, artificial intelligence translates them into formal constraints, an optimisation engine builds a draft that satisfies them and an independent validator audits it, with the final decision always remaining in the hands of the professional. The intention is to go through the complete process of a real product, refining the idea with professionals and aiming at public deployment and empirical evaluation, so that the result is technically sound and also defensible as a real tool.
+
+To achieve this general objective, the following specific objectives are set:
+
+\begin{enumerate}
+    \item To analyse the real workflow of a professional nutritionist in order to extract the functional requirements of the system. This means understanding how they work day to day, which tools they currently use, which problems they face and what they really need. In this way the requirements are not invented but extracted from direct observation of a real case, so that the design responds to concrete needs rather than assumptions.
+
+    % Mirrors objective 2 of Introduccion.tex, which may still be reworded there.
+    \item To carry out a market study and competitor analysis in the field of nutrition platforms, applying knowledge from the Business Administration training. This includes identifying the main competitors, analysing their strengths and weaknesses, detecting gaps and opportunities in the market, and positioning NutriApp with innovative and differentiating features that add real value.
+
+    \item To design the system architecture and its data model: two panels (nutritionist and client) over a single database, with the isolation between professionals guaranteed in the data layer itself, and with a constraints table that acts as the interface between whoever produces them (the professional or the AI) and the engine that consumes them.
+
+    \item To build a plan generation engine based on constraint programming, together with a deterministic and independent clinical validator, capable of working on its own without depending on any artificial intelligence component.
+
+    \item To integrate the AI layer that makes that engine usable in natural language: translation of the professional's requests into formal constraints, prior validation of the messages and asynchronous generation, keeping the professional as the arbiter of every decision.
+\end{enumerate}
 
 
+\section*{Work plan}
+The development of this project has followed an iterative process in which each phase builds on the results of the previous one. The phases are described below, from the initial research with professionals to the evaluation of the final system.
 
+\subsection*{Phase 1. Research with real nutritionists (May 2025 to February 2026)}
 
+The starting point was to understand in depth the problem to be solved. I held a series of conversations with the nutritionist whose case motivated the project to learn his working method thoroughly: which tools he used, where he lost the most time and which information slipped away because it was spread across disconnected platforms.
 
+After consulting the supervisors, they recommended that I contact more nutritionists so as not to base the product on the experience of a single person. So I contacted other professionals in the sector through LinkedIn and asked them the same questions. This round of consultations allowed me to contrast ideas and build a broader and more solid vision of the product.
 
+\subsection*{Phase 2. Competitor and market analysis (February to March 2026)}
 
+Once the needs had been defined from the user's side, it was time to research the market. Obviously, very similar solutions already existed, so it was worth knowing who the competitors were, what they offered and where they left gaps. I analysed the main platforms in the sector (Nutrium, Indya, Dietopro, Nutrimeal and Practice Better), studying their features, business models, strengths and shortcomings, to detect which aspects had stayed off the radar in the previous phase and whether the needs I had collected were already covered or there was a real opportunity. By the end of this phase the product idea was much better defined, with a clearer value proposition. That first analysis, made for the initial scope, is kept in Appendix~\ref{apendice:catalogoV1}; the definitive comparison, already focused on the copilot, is the one in Chapter~\ref{cap:estadoDeLaCuestion}.
+
+\subsection*{Phase 3. Visual design of the prototype (March 2026)}
+
+With the requirements extracted, I turned them into a concrete interface: the application mockups. The purpose of the screens was twofold: that the nutritionist could manage all their work from a single point of access (clients, appointments, forms, plans, messages and notes) and that the client had tools to consult their plan, record their habits and follow their progress. Each screen covered use cases identified in the previous phases.
+
+The set of screens followed the same design system to keep visual consistency. What had already been designed was reviewed to incorporate improvements detected during the requirements analysis, such as the daily, weekly and monthly views of the calendar or the client's settings screen. The result was a first navigable prototype with the two panels interconnected and all the initial functional requirements present.
+
+\subsection*{Phase 4. Second iteration: competitors in depth and new features (April 2026)}
+
+After completing the first prototype, I analysed the competition a second time, this time contrasting NutriApp with seven reference platforms. Four additions to the design came out of that analysis: a configurable automations engine, a marketplace of educational resources, a food database with intelligent recognition, and video calls integrated in the chat; plus several refinements, such as the detailed client record. The result was a complete navigable prototype of twenty-four screens, with the sixty-one functional requirements represented and the navigation wired in Figma, so that an external evaluator could walk through it as if it were a real application.
+
+\subsection*{Phase 5. Validation with real users (April 2026)}
+
+With the prototype complete, I prepared two usability test guides (nutritionist and client), each with twelve navigation flows phrased as small challenges (``you want to check the average adherence of your clients, which section of the side menu would you go to?''). The evaluator had to simulate the navigation flow in each case and mark whether it was obvious, confusing, or whether they simply would not know how to get there.
+
+\subsection*{Phase 6. Reformulation of the scope (April 2026)}
+Unexpectedly, the complete ``final'' prototype (for the plan that existed at that time) turned out to be the best tool for testing the implementation idea. When it was presented to more nutritionists and discussed further with them to receive feedback, it became clear that the value was not in covering every possible feature but in automating the preparation of tailored diets, the task that takes them the most time.
+
+In addition, when the supervisors tried the prototype, they made me see the complexity and the number of features I wanted to program on my own. This made me see that I had to focus on covering the primary need of nutritionists and concentrate my efforts in that direction. So I decided to cut the scope drastically down to what supports that task and to concentrate the technical effort on the plan generation copilot, which is where the real value lay. Chapter~\ref{cap:analisisRequisitos} documents the complete triage and its criteria.
+
+\subsection*{Phase 7. Design and implementation of the database (May 2026)}
+
+Following the order that Alejandro and Pablo recommended to me (first the database, then its connection and finally the screens), I designed and implemented the complete data model on managed PostgreSQL: the catalogue, people, constraints and plan tables; the row-level security policies that guarantee isolation between professionals; and the seed data needed to work with realistic cases from day one.
+
+\subsection*{Phase 8. Construction of the web application (May and June 2026)}
+
+On that base I built the application in two steps. First, the connection of the two pieces that talk to the database: the backend in Python and the frontend in Next.js, each verified with real reads and writes before drawing a single screen. Then the nutritionist's panel section by section (clients, plans, foods, calendar, messaging and settings), always on real data and without simulating functionality that did not exist: if a screen showed something, there was a table behind it to support it.
+
+The application was deployed publicly as soon as it had its first sections, following the supervisors' recommendation, which made it possible to show it and test it in real conditions as early as possible. At the end of this phase I compared the Figma prototype with what had been implemented and reviewed the differences, so as not to forget elements and to check again whether some of them were unnecessary, justifying the divergence.
+
+\subsection*{Phase 9. Plan generation engine (June 2026)}
+
+The technical heart of the project: the formalisation of the diet as a constraint satisfaction problem. After asking Alejandro which approach would be best, he explained to me that its implementation should consist of a constraint programming solver and an independent deterministic validator that audits every plan before accepting it, and he pointed out that I could also add an infeasibility diagnosis for when the requests are incompatible with each other. The engine works without any artificial intelligence component, which made it possible to verify it first with a bank of cases and then from the web itself (by creating a section to modify the parameters used to generate the plan with the engine).
+
+\subsection*{Phase 10. Artificial intelligence layer (July 2026)}
+
+With the engine verified, the layer that makes it usable in natural language was added: the translator that converts the nutritionist's requests into formal constraints, the prior checks that examine each message before translating it, asynchronous generation, and the clinical style that each professional defines once and that applies to all their plans. All of this was implemented through queries to an open language model, qwen2.5, run locally with Ollama.
+
+\subsection*{Phase 11. Client panel (July 2026)}
+
+I then developed the second role of the application: the client panel. The client accesses their plan once it has been signed, marks the meals they have completed, records their weight and requests appointments; all that information flows back to the nutritionist's panel as follow-up metrics. With this phase the complete cycle between professional and client is closed, and all the information that had to be shared between both roles was already implemented.
+
+\subsection*{Phase 12. Evaluation (July to September 2026)}
+
+The evaluation accompanied the whole development and only its last piece remains. So far it includes a pre-registered study on the effect of message format on translation (with a negative result that avoided building an unnecessary module), performance measurements of the engine in the production environment as the food catalogue grew, and a systematic audit of the nutritional quality of the generated plans, whose before and after justified a whole new layer of rules in the engine. Still pending, with the environment and the guides already prepared, is a guided test with real nutritionists on the deployed application; its conclusions will close the cycle that began in Phase 1: from the professional to the prototype, from the prototype to the product, and from the product back to the professional.
