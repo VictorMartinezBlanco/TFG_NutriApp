@@ -110,10 +110,10 @@ export default async function DashboardPage() {
     .slice(0, 5);
 
   const kpis = [
-    { label: "Active clients", value: clientsCount.count ?? 0, icon: Users },
-    { label: "Plans", value: plansCount.count ?? 0, icon: ClipboardList },
-    { label: "Drafts to sign", value: unsignedCount.count ?? 0, icon: FileClock },
-    { label: "Foods in library", value: foodsCount.count ?? 0, icon: Apple },
+    { label: "Active clients", value: clientsCount.count ?? 0, icon: Users, href: "/clients" },
+    { label: "Plans", value: plansCount.count ?? 0, icon: ClipboardList, href: "/plans" },
+    { label: "Drafts to sign", value: unsignedCount.count ?? 0, icon: FileClock, href: "/plans" },
+    { label: "Foods in library", value: foodsCount.count ?? 0, icon: Apple, href: "/foods" },
   ];
 
   return (
@@ -139,15 +139,17 @@ export default async function DashboardPage() {
         {kpis.map((kpi) => {
           const Icon = kpi.icon;
           return (
-            <Card key={kpi.label} className="flex items-center gap-4">
-              <span className="flex size-10 items-center justify-center rounded-control bg-brand-soft text-brand">
-                <Icon className="size-5" />
-              </span>
-              <div>
-                <div className="text-2xl font-bold">{kpi.value}</div>
-                <div className="text-xs text-muted-foreground">{kpi.label}</div>
-              </div>
-            </Card>
+            <Link key={kpi.label} href={kpi.href}>
+              <Card className="flex items-center gap-4 transition-colors hover:bg-muted/40">
+                <span className="flex size-10 items-center justify-center rounded-control bg-brand-soft text-brand">
+                  <Icon className="size-5" />
+                </span>
+                <div>
+                  <div className="text-2xl font-bold">{kpi.value}</div>
+                  <div className="text-xs text-muted-foreground">{kpi.label}</div>
+                </div>
+              </Card>
+            </Link>
           );
         })}
       </div>
