@@ -1,11 +1,23 @@
+const TITLES = new Set(["dr", "dra", "prof", "sr", "sra", "d", "dna"]);
+
+// "Dra. Ana Ruiz" -> ["Ana", "Ruiz"]: el tratamiento no forma parte del nombre.
+function nameWords(fullName: string) {
+  const words = fullName.split(" ").filter(Boolean);
+  while (
+    words.length > 1 &&
+    TITLES.has(words[0].replace(/\.$/, "").toLowerCase())
+  ) {
+    words.shift();
+  }
+  return words;
+}
+
 export function firstName(fullName: string) {
-  return fullName.split(" ")[0] ?? fullName;
+  return nameWords(fullName)[0] ?? fullName;
 }
 
 export function initials(name: string) {
-  return name
-    .split(" ")
-    .filter(Boolean)
+  return nameWords(name)
     .slice(0, 2)
     .map((w) => w[0]?.toUpperCase())
     .join("");
