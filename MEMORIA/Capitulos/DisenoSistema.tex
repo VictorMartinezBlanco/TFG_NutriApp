@@ -8,7 +8,7 @@ La sección~\ref{sec:arquitecturaGeneral} muestra la arquitectura y la decisión
 \section{Arquitectura general}
 \label{sec:arquitecturaGeneral}
 
-La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep{nextjs}, una base de datos PostgreSQL gestionada a través de Supabase~\citep{supabase} y un backend propio en Python. Además, se suma el worker de generación, el proceso que ejecuta los trabajos de IA. Durante el desarrollo corre en mi propio ordenador, porque ahí vive el modelo de lenguaje local; la sección~\ref{sec:despliegue} explica ese reparto y sus alternativas. La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
+La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep{nextjs}, una base de datos PostgreSQL~\citep{postgresql} gestionada a través de Supabase~\citep{supabase} y un backend propio en Python. Además, se suma el worker de generación, el proceso que ejecuta los trabajos de IA. Durante el desarrollo corre en mi propio ordenador, porque ahí vive el modelo de lenguaje local; la sección~\ref{sec:despliegue} explica ese reparto y sus alternativas. La figura~\ref{fig:arquitecturaCapas} enseña el conjunto y cómo se comunican las piezas.
 
 \begin{figure}[t]
 \begin{center}
@@ -54,11 +54,11 @@ La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep
 
 El reparto lo acordé con los tutores antes de empezar a programar, con un criterio y orden: cada pieza debía ser la opción más simple que soportara los requisitos del capítulo~\ref{cap:analisisRequisitos}, y la construcción iría de los datos hacia la interfaz (primero la base de datos, después su conexión y luego las pantallas), para que cada capa se apoyara sobre una anterior ya verificada.
 
-El backend de generación es un servicio propio con FastAPI. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cual encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
+El backend de generación es un servicio propio con FastAPI~\citep{fastapi}. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cual encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
 
 La capa de presentación usa Next.js con \textit{Server Components}: las páginas se montan en el servidor y leen directamente de la base de datos bajo la sesión del usuario, con las políticas de seguridad de la sección~\ref{sec:capaSeguridad} como filtro. Así desaparece la capa de API intermedia para casi toda la aplicación. Las escrituras sencillas (dar de alta un alimento, añadir una restricción) siguen el mismo camino con \textit{Server Actions}, funciones que corren en el servidor y validan la entrada antes de tocar los datos. Las operaciones que exigen más garantías como generar, encolar y firmar planes se delegan en el backend con una llamada de servidor a servidor autenticada por un secreto compartido, como se detalla en la sección~\ref{sec:capaServicio}.
 
-Para el sistema de diseño seguí la recomendación de uno de mis directores: Radix UI~\citep{radix}, como base de componentes accesibles sin estilos propios, y Tailwind CSS para aplicarles la paleta y tipografía del prototipo de Figma que servía de referencia.
+Para el sistema de diseño seguí la recomendación de uno de mis directores: Radix UI~\citep{radix}, como base de componentes accesibles sin estilos propios, y Tailwind CSS~\citep{tailwind} para aplicarles la paleta y tipografía del prototipo de Figma que servía de referencia.
 
 Por encima del reparto en capas hay una decisión que ordena todo el sistema: las restricciones dietéticas viven en una tabla propia, \texttt{diet\_constraint}, con un vocabulario cerrado de 16 tipos, y esa tabla es la interfaz entre quien produce las restricciones (el formulario de la ficha del cliente, el formulario del estilo clínico del nutricionista o el traductor de texto libre del capítulo~\ref{cap:copilotoIA}) y quien las consume (el motor de generación). La figura~\ref{fig:productorConsumidor} recoge el esquema.
 
@@ -218,7 +218,7 @@ Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en 
 \section{Despliegue}
 \label{sec:despliegue}
 
-El sistema desplegado tiene cuatro patas: el frontend en Netlify, la base de datos en Supabase (Fráncfort), el backend en Render (también Fráncfort) y el worker de generación en un ordenador local. Todo el alojamiento es gratuito. La figura~\ref{fig:despliegue} enseña el reparto.
+El sistema desplegado tiene cuatro patas: el frontend en Netlify~\citep{netlify}, la base de datos en Supabase (Fráncfort), el backend en Render~\citep{render} (también Fráncfort) y el worker de generación en un ordenador local. Todo el alojamiento es gratuito. La figura~\ref{fig:despliegue} enseña el reparto.
 
 \begin{figure}[t]
 \begin{center}

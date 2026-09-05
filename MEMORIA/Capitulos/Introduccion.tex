@@ -49,7 +49,7 @@ Tras consultar con los tutores, me recomendaron contactar a más nutricionistas 
 
 \subsection*{Fase 2. Análisis de competencia y mercado (febrero y marzo de 2026)}
 
-Una vez definidas las necesidades desde el lado del usuario, era el momento de investigar el mercado. Obviamente, ya existían soluciones muy similares, así que convenía saber quiénes eran los competidores, qué ofrecían y dónde dejaban huecos sin cubrir. Analicé las principales plataformas del sector (Nutrium, Indya, Dietopro, Nutrimeal y Practice Better) estudiando sus funcionalidades, modelos de negocio, puntos fuertes y carencias, para detectar qué aspectos se habían quedado fuera del radar en la fase anterior y si las necesidades que yo había recogido estaban ya cubiertas o existía una oportunidad real. Al final de esta fase, la idea del producto estaba mucho más definida, con una propuesta de valor más clara. Aquel primer análisis, hecho para el alcance inicial, se conserva en el Anexo~\ref{apendice:catalogoV1}; la comparativa definitiva, ya centrada en el copiloto, es la del capítulo~\ref{cap:estadoDeLaCuestion}.
+Una vez definidas las necesidades desde el lado del usuario, era el momento de investigar el mercado. Obviamente, ya existían soluciones muy similares, así que convenía saber quiénes eran los competidores, qué ofrecían y dónde dejaban huecos sin cubrir. Analicé las principales plataformas del sector (Nutrium~\citep{nutrium}, Indya~\citep{indya}, Dietopro~\citep{dietopro}, Nutrimeal~\citep{nutrimeal} y Practice Better~\citep{practicebetter}) estudiando sus funcionalidades, modelos de negocio, puntos fuertes y carencias, para detectar qué aspectos se habían quedado fuera del radar en la fase anterior y si las necesidades que yo había recogido estaban ya cubiertas o existía una oportunidad real. Al final de esta fase, la idea del producto estaba mucho más definida, con una propuesta de valor más clara. Aquel primer análisis, hecho para el alcance inicial, se conserva en el Anexo~\ref{apendice:catalogoV1}; la comparativa definitiva, ya centrada en el copiloto, es la del capítulo~\ref{cap:estadoDeLaCuestion}.
 
 \subsection*{Fase 3. Diseño visual del prototipo (marzo de 2026)}
 
@@ -59,7 +59,7 @@ El conjunto de pantallas seguía el mismo sistema de diseño para mantener la co
 
 \subsection*{Fase 4. Segunda iteración: competencia en profundidad y nuevas funcionalidades (abril de 2026)}
 
-Tras completar el primer prototipo, analicé por segunda vez la competencia, esta vez contrastando NutriApp con siete plataformas de referencia. De ese análisis surgieron cuatro incorporaciones al diseño: un motor de automatizaciones configurable, un marketplace de recursos educativos, una base de datos de alimentos con reconocimiento inteligente y las videollamadas integradas en el chat; además de refinamientos varios, como la ficha detallada del cliente. El resultado fue un prototipo navegable completo de veinticuatro pantallas, con los sesenta y un requisitos funcionales representados y la navegación cableada en Figma, de forma que un evaluador externo podía recorrerlo como si fuera una aplicación real.
+Tras completar el primer prototipo, analicé por segunda vez la competencia, esta vez contrastando NutriApp con siete plataformas de referencia. De ese análisis surgieron cuatro incorporaciones al diseño: un motor de automatizaciones configurable, un marketplace de recursos educativos, una base de datos de alimentos con reconocimiento inteligente y las videollamadas integradas en el chat; además de refinamientos varios, como la ficha detallada del cliente. El resultado fue un prototipo navegable completo de veinticuatro pantallas, con los sesenta y un requisitos funcionales representados y la navegación cableada en Figma~\citep{figma}, de forma que un evaluador externo podía recorrerlo como si fuera una aplicación real.
 
 \subsection*{Fase 5. Validación con usuarios reales (abril de 2026)}
 
@@ -76,7 +76,7 @@ Siguiendo el orden que me recomendaron mis directores del TFG (primero la base d
 
 \subsection*{Fase 8. Construcción de la aplicación web (mayo y junio de 2026)}
 
-Sobre esa base construí la aplicación en dos pasos. Primero, la conexión de las dos piezas que hablan con la base de datos: el backend en Python y el frontend en Next.js, cada uno verificado con lecturas y escrituras reales antes de dibujar una sola pantalla. Después, el panel del nutricionista sección a sección (clientes, planes, alimentos, calendario, mensajería y ajustes), siempre sobre datos reales y sin simular funcionalidad que no existiera: si una pantalla mostraba algo, había una tabla detrás que lo sostenía.
+Sobre esa base construí la aplicación en dos pasos. Primero, la conexión de las dos piezas que hablan con la base de datos: el backend en Python y el frontend en Next.js~\citep{nextjs}, cada uno verificado con lecturas y escrituras reales antes de dibujar una sola pantalla. Después, el panel del nutricionista sección a sección (clientes, planes, alimentos, calendario, mensajería y ajustes), siempre sobre datos reales y sin simular funcionalidad que no existiera: si una pantalla mostraba algo, había una tabla detrás que lo sostenía.
 
 La aplicación se desplegó públicamente en cuanto tuvo sus primeras secciones, siguiendo la recomendación de los tutores, lo que permitió enseñarla y probarla en condiciones reales lo antes posible. Al cerrar esta fase comparé el prototipo de Figma con lo implementado y revisé las diferencias, para no olvidarme de elementos y revisar de nuevo si algunos de ellos no eran necesarios, justificando la divergencia.
 
@@ -86,7 +86,7 @@ El corazón técnico del proyecto: la formalización de la dieta como un problem
 
 \subsection*{Fase 10. Capa de inteligencia artificial (julio de 2026)}
 
-Con el motor verificado se añadió la capa que lo hace usable en lenguaje natural: el traductor que convierte las peticiones del nutricionista en restricciones formales, las validaciones previas que examinan cada mensaje antes de traducirlo, la generación asíncrona y el estilo clínico que cada profesional define una vez y se aplica a todos sus planes. Todo esto se implementó mediante consultas a un modelo de lenguaje abierto, qwen2.5, ejecutado en local con Ollama.
+Con el motor verificado se añadió la capa que lo hace usable en lenguaje natural: el traductor que convierte las peticiones del nutricionista en restricciones formales, las validaciones previas que examinan cada mensaje antes de traducirlo, la generación asíncrona y el estilo clínico que cada profesional define una vez y se aplica a todos sus planes. Todo esto se implementó mediante consultas a un modelo de lenguaje abierto, qwen2.5, ejecutado en local con Ollama~\citep{ollama}.
 
 \subsection*{Fase 11. Panel del cliente (julio de 2026)}
 
