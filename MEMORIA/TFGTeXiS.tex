@@ -77,6 +77,9 @@ constantes,guionado,Cascaras/bibliografia,config%
 % Paquete de la plantilla
 \usepackage{TeXiS/TeXiS}
 
+% Los apéndices se llaman "Anexo" en el texto y en sus cabeceras
+\addto\captionsspanish{\renewcommand{\appendixname}{Anexo}}
+
 % Paquetes de matemáticas para la formalización del motor de generación
 \usepackage{amsmath}
 \usepackage{amssymb}
@@ -133,6 +136,7 @@ constantes,guionado,Cascaras/bibliografia,config%
 \ifx\generatoc\undefined
 \else
 \include{TeXiS/TeXiS_toc}
+\include{Cascaras/acronimos}
 \fi
 
 % Marcamos el  comienzo de  los capítulos (para  la numeración  de las
@@ -178,6 +182,7 @@ constantes,guionado,Cascaras/bibliografia,config%
 \include{Apendices/appendixC}
 \include{Apendices/appendixD}
 \include{Apendices/appendixE}
+\include{Apendices/appendixF}
 %\include{...}
 \backmatter
 

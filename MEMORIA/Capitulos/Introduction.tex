@@ -73,7 +73,7 @@ In addition, when the supervisors tried the prototype, they made me see the comp
 
 \subsection*{Phase 7. Design and implementation of the database (May 2026)}
 
-Following the order that Alejandro and Pablo recommended to me (first the database, then its connection and finally the screens), I designed and implemented the complete data model on managed PostgreSQL: the catalogue, people, constraints and plan tables; the row-level security policies that guarantee isolation between professionals; and the seed data needed to work with realistic cases from day one.
+Following the order that my thesis supervisors recommended to me (first the database, then its connection and finally the screens), I designed and implemented the complete data model on managed PostgreSQL: the catalogue, people, constraints and plan tables; the row-level security policies that guarantee isolation between professionals; and the seed data needed to work with realistic cases from day one.
 
 \subsection*{Phase 8. Construction of the web application (May and June 2026)}
 
@@ -83,7 +83,7 @@ The application was deployed publicly as soon as it had its first sections, foll
 
 \subsection*{Phase 9. Plan generation engine (June 2026)}
 
-The technical heart of the project: the formalisation of the diet as a constraint satisfaction problem. After asking Alejandro which approach would be best, he explained to me that its implementation should consist of a constraint programming solver and an independent deterministic validator that audits every plan before accepting it, and he pointed out that I could also add an infeasibility diagnosis for when the requests are incompatible with each other. The engine works without any artificial intelligence component, which made it possible to verify it first with a bank of cases and then from the web itself (by creating a section to modify the parameters used to generate the plan with the engine).
+The technical heart of the project: the formalisation of the diet as a constraint satisfaction problem. After consulting one of my supervisors about which approach would be best, I was advised that its implementation should consist of a constraint programming solver and an independent deterministic validator that audits every plan before accepting it, and that I could also add an infeasibility diagnosis for when the requests are incompatible with each other. The engine works without any artificial intelligence component, which made it possible to verify it first with a bank of cases and then from the web itself (by creating a section to modify the parameters used to generate the plan with the engine).
 
 \subsection*{Phase 10. Artificial intelligence layer (July 2026)}
 

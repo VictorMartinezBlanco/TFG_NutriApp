@@ -98,11 +98,11 @@ Además de las restricciones del cliente, el profesional mantiene en sus ajustes
 \section{De la petición al plan firmado}
 \label{sec:peticionPlan}
 
-Generar con IA es lento para una petición web: entre el modelo de lenguaje y el solver, una generación tarda desde varios segundos hasta más de un minuto. La primera versión lo hacía todo en la misma petición y bloqueaba la pantalla mientras tanto. Pablo me recomendó encolar el trabajo, responder al instante y consultar el estado periódicamente. La mecánica, con la cola en la base de datos y el worker que la consume, se describió en la sección~\ref{sec:capaServicio}.
+Generar con IA es lento para una petición web: entre el modelo de lenguaje y el solver, una generación tarda desde varios segundos hasta más de un minuto. La primera versión lo hacía todo en la misma petición y bloqueaba la pantalla mientras tanto. Uno de mis directores me recomendó encolar el trabajo, responder al instante y consultar el estado periódicamente. La mecánica, con la cola en la base de datos y el worker que la consume, se describió en la sección~\ref{sec:capaServicio}.
 
 De esta forma, para el profesional, la aplicación no se queda colgada: confirma la generación, puede irse a otra pantalla y el apartado de planes enseña cada tarea con su estado hasta que el plan aparece. Si el worker no está encendido, la interfaz avisa de que la tarea sigue esperándolo (sección~\ref{sec:despliegue}).
 
-Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{sec:infactibilidad} se convierte en una frase con los nombres reales del catálogo, algo como: el objetivo de 900\,kcal choca con el mínimo de 180\,g de proteína, y ninguna combinación de los alimentos disponibles cumple los dos. La generación fallida queda en la lista con esa explicación y el detalle del conflicto, y el profesional decide si reduce una de las dos restricciones o cambia el mensaje.
+Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{sec:infactibilidad} se convierte en una frase con los nombres reales del catálogo, algo como: ningún plan puede cumplir el objetivo de 900\,kcal con los alimentos disponibles, y conviene relajarlo. La generación fallida queda en la lista con esa explicación y el detalle del conflicto, y el profesional decide si cambia esa restricción o el mensaje.
 
 El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}).
 

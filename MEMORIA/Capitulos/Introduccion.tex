@@ -72,7 +72,7 @@ Además, los tutores cuando probaron el prototipo, me hicieron ver la complejida
 
 \subsection*{Fase 7. Diseño e implementación de la base de datos (mayo de 2026)}
 
-Siguiendo el orden que me recomendaron Alejandro y Pablo (primero la base de datos, después su conexión y por último las pantallas), diseñé e implementé el modelo de datos completo sobre PostgreSQL gestionado: las tablas de catálogos, personas, restricciones y planes; las políticas de seguridad a nivel de fila que garantizan el aislamiento entre profesionales; y los datos de arranque necesarios para trabajar con casos realistas desde el primer día.
+Siguiendo el orden que me recomendaron mis directores del TFG (primero la base de datos, después su conexión y por último las pantallas), diseñé e implementé el modelo de datos completo sobre PostgreSQL gestionado: las tablas de catálogos, personas, restricciones y planes; las políticas de seguridad a nivel de fila que garantizan el aislamiento entre profesionales; y los datos de arranque necesarios para trabajar con casos realistas desde el primer día.
 
 \subsection*{Fase 8. Construcción de la aplicación web (mayo y junio de 2026)}
 
@@ -82,7 +82,7 @@ La aplicación se desplegó públicamente en cuanto tuvo sus primeras secciones,
 
 \subsection*{Fase 9. Motor de generación de planes (junio de 2026)}
 
-El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones. Tras consultar con Alejandro cuál sería el mejor enfoque, me explicó que su implementación debería consistir en un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y me indicó que podría añadir también un diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo primero con un banco de casos y después desde la propia web (creando un apartado para modificar los parámetros que se usan para generar el plan con el motor).
+El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones. Tras consultar con uno de mis directores cuál sería el mejor enfoque, me explicó que su implementación debería consistir en un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y me indicó que podría añadir también un diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo primero con un banco de casos y después desde la propia web (creando un apartado para modificar los parámetros que se usan para generar el plan con el motor).
 
 \subsection*{Fase 10. Capa de inteligencia artificial (julio de 2026)}
 
