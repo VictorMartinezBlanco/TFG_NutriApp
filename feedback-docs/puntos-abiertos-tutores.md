@@ -1,26 +1,45 @@
 # Puntos abiertos del feedback de los tutores
 
-Registro de las sugerencias y dudas de Pablo y Alejandro que todavia no tienen
+Registro de las sugerencias y dudas de los directores que todavia no tienen
 respuesta visible, ni en la memoria ni en los correos enviados. El objetivo es
 que ninguna se quede sin concretar: cada punto lleva su destino y, cuando se
 ejecuta, se mueve a la tabla de resueltos con la ubicacion donde quedo
 reflejado.
 
-Origen: 2a ronda de feedback (finales de agosto de 2026) sobre los capitulos
-2, 3 y 5, mas los restos de la 1a ronda al borrador-indice.
+Origen: 1a ronda (agosto de 2026, borrador-indice), 2a ronda (finales de agosto,
+capitulos 2, 3 y 5) y 3a ronda (4 y 5 de septiembre, version entregable).
+Revisado el 5 de septiembre de 2026 tras el bloque 9b-8.
 
 ## Pendientes
 
 | Punto | Quien | Destino | Que debe quedar |
 |---|---|---|---|
-| Fechas por fase en la intro | Alejandro | Intro (bloque 9b-6) | Rango temporal en el subtitulo de cada fase; a la espera de las fechas de Victor para las fases 1 y 2 (las demas constan en los commits y memorias de bloque) |
-| Pasada global de negritas en mitad de frase | Alejandro | Toda la memoria (bloque 9b-final) | Solo negritas estructurales |
-| Placements [H] y espacios en blanco | Alejandro | Toda la memoria (bloque 9b-final) | Ultima pasada de maquetacion |
+| Prueba con nutricionistas: meterla y que ninguna alusion quede como to-do | Pablo (3a ronda) y 2a reunion de julio | 7.5 + parrafo 8.5 + intro fase 12 (bloque 9b-9) | Sintesis de la prueba en 7.5; hoy hay seis alusiones "en curso" (Evaluacion 7.5, cap 8 en 8.1, 8.2 y 8.4, Introduccion fase 12, y sus espejos en ingles) y dos huecos `% 9b-final: sintesis 8.5` |
+| Cero placeholders en portada y andamios | Pablo (3a ronda) | cover.tex, dedicatoria.tex, agradecimientos.tex (bloque 9b-9) | Fecha real en la portada (hoy "DIA de MES de AÑO" en rojo), colaboradores o tutores reales (hoy "Colaborador 1/2" en rojo), dedicatoria y agradecimientos (hoy "Proximamente") |
+| Placements [H] y espacios en blanco, margenes | Alejandro (2a ronda) | Toda la memoria (bloque 9b-9) | Ultima pasada de maquetacion; los 2 overfull del Anexo B (formalizacion, lineas 231 y 336); la tercera pagina del Anexo E si vuelve a quedar con dos lineas |
+| Em-dashes en el cap 3 y en el Anexo A | Alejandro (1a ronda, manierismos de IA) | Cap 3 (35 em-dashes: 17 en los titulos `\paragraph{RNF-xx --- ...}` y el resto en prosa de pospuestos y ampliacion clinica) y Anexo A (32, texto de la V1 conservado como registro) | Decidir si se limpian; el resto de la memoria esta a cero |
+| Cierre 8.4 en la voz de Victor | Victor (decision del 9b-6) | ConclusionesTrabajoFuturo.tex, seccion 8.4, y su espejo en ConclusionsFutureWork.tex | Hoy es borrador del chat con comentario LaTeX; reescribirlo y re-sincronizar el ingles |
+| Redaccion del objetivo 2 de la intro (viabilidad de producto vs estudio de competencia) | (detectado en el 9b-6) | Introduccion.tex, objetivos (comentario `% Victor, revisar (9b-6)`) y espejo en Introduction.tex | Decidir la redaccion y borrar el comentario |
+| Re-sincronizar los capitulos en ingles | (herencia del 9b-7) | Introduction.tex y ConclusionsFutureWork.tex (bloque 9b-9) | Tras las ediciones de Victor de la intro y el cap 8 |
+| Revision de Victor de caps 2 (2.2-2.5), 7 + Anexos D y E, 8 | Victor | Rondas 14+ del corpus | Sin revisar a 5-sep; el Anexo E si (ronda 14) |
+| Enviar la version final a los tutores con margen para sus ultimos comentarios | ambos (2a ronda) | Bloque 9b-final | Lectura lineal previa del PDF entero |
 
 ## Resueltos
 
 | Punto | Quien | Donde quedo |
 |---|---|---|
+| Declaracion de uso de IA con modelos e identificadores | Pablo (3a ronda) | Anexo E nuevo, ultimo del documento (9b-8): herramientas y modelos con identificadores de la documentacion oficial, tareas en general, autoria y verificacion; validado por Victor |
+| Ejemplo de 900 kcal y 180 g de proteina mal explicado | Pablo (3a ronda) | Reproducido con el solver (9b-8): la causa real es el suelo calorico R3 (basal de 1810 kcal), no la proteina; 5.6 y 6.5 reescritos con el mismo ejemplo; de paso, "nucleo minimo" corregido a "subconjunto suficiente" en 2.1, 5.1 y 5.6 |
+| Nombres de los directores en el texto | Pablo (3a ronda) | 29 menciones sustituidas por "los directores del TFG" y variantes, en castellano e ingles (9b-8); portada, bibliografia y agradecimientos intactos |
+| Cita in situ de Stigler | Pablo (3a ronda) | Cap 2, seccion 2.1 (9b-8) |
+| Citas de Supabase, Radix UI, Next.js, Ollama y Open Food Facts | Pablo (3a ronda) | Primera mencion de cada una (9b-8), ampliado por decision de Victor a todas las herramientas (PostgreSQL, FastAPI, Tailwind, Netlify, Render, Figma, BEDCA, Claude Code, MCP de Figma) y a los competidores de la intro; 28 entradas @misc con fecha de consulta |
+| Columna "Metodo publicado" de la tabla 2.1 | Pablo (3a ronda) | Fila y criterio de 2.2 retirados; 2.4, 2.5 y el objetivo 2 del cap 8 coherentes (9b-8) |
+| Anexo vs apendice | Pablo (3a ronda) | `\appendixname` redefinido a "Anexo" en el preambulo (9b-8); cabeceras e indice coherentes con la prosa |
+| Empates entre soluciones | Alejandro via Pablo (3a ronda) | Cap 8, seccion 8.3.1 y su espejo en ingles (9b-8): orden lexicografico o lista corta de alternativas para el profesional |
+| Listado de acronimos | Pablo (3a ronda, opcional) | Lista manual de 24 entradas tras el indice de tablas (9b-8) |
+| Fechas por fase en la intro | Alejandro (2a ronda) | Intro (9b-6): rango temporal en el subtitulo de cada fase con las fechas dictadas por Victor |
+| Pasada global de negritas en mitad de frase | Alejandro (2a ronda) | Toda la memoria (9b-7): 17 negritas de enfasis retiradas, solo quedan las estructurales |
+| Resumen y palabras clave acabados, traducciones al ingles, metadatos del PDF | (normativa y 1a ronda) | Cascaras y capitulos en ingles (9b-7) |
 | Trabajo futuro del tope de 4 alimentos por comida | Pablo | Cap 8, seccion 8.3.1 (9b-6): rol de acompanante que no consuma el tope, con la dependencia del catalogo |
 | Reglas estructurales no anulables (caso renal) | Pablo | Cap 8, seccion 8.2 (limitacion) y 8.3.1 (editables por el profesional) (9b-6) |
 | El reparto por comidas domina el objetivo | tutores | Cap 8, seccion 8.2 y 8.3.1 (9b-6): renormalizar con division entera y banda porcentual; razon de no medirlo |
@@ -34,20 +53,21 @@ Origen: 2a ronda de feedback (finales de agosto de 2026) sobre los capitulos
 | Coherencia del cap 3 con la narrativa del pivote ("se documentan como trabajo futuro") | (detectado en el 9b-6) | Cap 3 (9b-6): cuatro frases pasan a "se recogen en el capitulo 8" / "quedan fuera del alcance"; el cap 8 explica que los bloques eliminados no son trabajo futuro |
 | Sobreventa de la tabla 2.1 y del cap 2 | Pablo | Cap 2 reescrito entero sobre lo que la app entrega (9b-5); la tabla de la idea inicial se conserva en el Anexo A como registro |
 | Coherencia del 2.5 (BD como eje, fuente de alimentos) | Pablo | Cap 2, seccion de posicionamiento (9b-5): catalogo propio, sin Open Food Facts ni BD como eje; la seccion de integraciones desaparece |
-| Criterio de generacion por IA en la comparativa | Pablo | Cap 2, criterios y tabla 2.1 (9b-5): generacion automatica, peticion en lenguaje natural, metodo publicado, explicacion de infactibilidad y revision profesional; analizadas Foodzilla, Eat This Much y That Clean Life (via Practice Better), webs consultadas el 3-sep-2026 |
+| Criterio de generacion por IA en la comparativa | Pablo | Cap 2, criterios y tabla 2.1 (9b-5): generacion automatica, peticion en lenguaje natural, explicacion de infactibilidad y revision profesional; analizadas Foodzilla, Eat This Much y That Clean Life (via Practice Better), webs consultadas el 3-sep-2026 |
 | Literatura academica de CP y menu planning | Pablo | Cap 2, seccion 2.1 nueva (9b-5): Stigler/Dantzig, Balintfy, Petot, Kahraman, Gazan, CP-SAT, Kambhampati, Valmeekam, Papastratis, Michailidis; todas verificadas en su fuente |
 | Capturas o figuras por competidor | Alejandro | Cap 2, figuras 2.1 a 2.4 (9b-5): capturas de las webs publicas con URL y fecha en el pie |
 | Tabla 3.1 fuera de margenes | Alejandro | Cap 3, tabla 3.1 (9b-5): columnas p{} y cabecera V1/V2 a dos lineas, comprobada en el PDF |
 | Recetas y sustituciones (RF-26/RF-27) en el cap 3 | Pablo | Cap 3 (9b-5): fuera de la tabla 3.6, a la tabla 3.12 de pospuestos con su razon; recuento 29 a 27 RF y 52 a 56 %; tabla 3.13 y seccion 3.6 al dia; coherente con la exclusion de 5.2.1 |
-| Renombrar variables de decision a legibles | Alejandro | Cap 5 y Anexo C (bloque 9b-1b) |
+| Renombrar variables de decision a legibles | Alejandro | Cap 5 y Anexo B (bloque 9b-1b) |
 | Dominios explicitos de F y N | Alejandro | Cap 5, seccion de conjuntos (9b-1b) |
 | Introduccion didactica a CP | Alejandro | Cap 5, seccion nueva antes de la formulacion (9b-1b) |
 | Justificar el tope de 4 por comida y el ratio 0.6 | Pablo | Cap 5, restricciones estructurales y funcion objetivo (9b-1b) |
 | Asuncion de las reglas duras con el caso renal | Pablo | Cap 5, cierre de restricciones estructurales (9b-1b); decision de mantener R4 en 0.8 comunicada por correo |
 | Objetivo inconmensurable | Pablo y Alejandro | Motor corregido (pesos x1000, bloque EXP-motor); cap 5 al dia (9b-1b); analisis en el cap 7, seccion 7.2.3, y las bandas de tolerancia como segundo paso del mismo hilo en la 7.2.4 (9b-4) |
-| Cotas de dominio del objetivo | (mejora derivada del EXP) | Motor (EXP-motor); cap 5 y Anexo C al dia (9b-1b) |
+| Cotas de dominio del objetivo | (mejora derivada del EXP) | Motor (EXP-motor); cap 5 y Anexo B al dia (9b-1b) |
 | Rotura de simetria entre dias | Alejandro | Medida y retirada con datos (EXP-motor); contada como experimento en el cap 7, seccion 7.3.3 (9b-4) |
 | Tabla del tamano del problema y escalado | Pablo y Alejandro | Medidos (EXP-motor); cap 7, secciones 7.3.1 y 7.3.2 (9b-4) |
 | Material del EXP-motor (magnitudes, simetria, tamano, escalado, versiones) | Pablo y Alejandro | Cap 7 (9b-4): eje de calidad en 7.2 (auditoria, versiones, magnitudes, bandas) y eje de eficiencia en 7.3 (tamano, escalado, simetria, cotas, alojamiento gratuito), con las figuras de los experimentos |
 | Experimentos comparativos entre versiones del modelo | Alejandro | Cap 7, seccion 7.2.2 (9b-4) |
 | Explicacion de los workers | Alejandro | Ya cubierta en caps 4 y 5; verificado en 9b-1b |
+| Cap 3 sin la seccion de decisiones tecnologicas; cap 4 por capas con 4.5 y 4.6 reducidos; cap 5 solo solver; cap 6 con la figura del profesional; cap 7 con rendimiento y usuarios separados; remisiones de los caps 5 y 6 al cap 7 | Alejandro (1a ronda) | Ejecutado en los bloques 9b-1 a 9b-4; caps 5 y 6 remiten al cap 7 en 8 y 5 puntos respectivamente |
