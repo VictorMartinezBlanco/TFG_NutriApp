@@ -14,10 +14,7 @@ Revisado el 5 de septiembre de 2026 tras el bloque 9b-8.
 
 | Punto | Quien | Destino | Que debe quedar |
 |---|---|---|---|
-| Prueba con nutricionistas: meterla y que ninguna alusion quede como to-do | Pablo (3a ronda) y 2a reunion de julio | 7.5 + parrafo 8.5 + intro fase 12 (bloque 9b-9) | Sintesis de la prueba en 7.5; hoy hay seis alusiones "en curso" (Evaluacion 7.5, cap 8 en 8.1, 8.2 y 8.4, Introduccion fase 12, y sus espejos en ingles) y dos huecos `% 9b-final: sintesis 8.5` |
-| Cero placeholders en portada y andamios | Pablo (3a ronda) | cover.tex, dedicatoria.tex, agradecimientos.tex (bloque 9b-9) | Fecha real en la portada (hoy "DIA de MES de AÑO" en rojo), colaboradores o tutores reales (hoy "Colaborador 1/2" en rojo), dedicatoria y agradecimientos (hoy "Proximamente") |
-| Placements [H] y espacios en blanco, margenes | Alejandro (2a ronda) | Toda la memoria (bloque 9b-9) | Ultima pasada de maquetacion; los 2 overfull del Anexo B (formalizacion, lineas 231 y 336); la tercera pagina del Anexo E si vuelve a quedar con dos lineas |
-| Em-dashes en el cap 3 y en el Anexo A | Alejandro (1a ronda, manierismos de IA) | Cap 3 (35 em-dashes: 17 en los titulos `\paragraph{RNF-xx --- ...}` y el resto en prosa de pospuestos y ampliacion clinica) y Anexo A (32, texto de la V1 conservado como registro) | Decidir si se limpian; el resto de la memoria esta a cero |
+| Cero placeholders en portada y andamios | Pablo (3a ronda) | cover.tex, dedicatoria.tex, agradecimientos.tex (Victor, ultimos pasos) | Fecha real en la portada (hoy "DIA de MES de AÑO" en rojo), dedicatoria y agradecimientos (hoy "Proximamente"). El bloque de colaboradores se quito el 6-sep (decision: nadie) |
 | Cierre 8.4 en la voz de Victor | Victor (decision del 9b-6) | ConclusionesTrabajoFuturo.tex, seccion 8.4, y su espejo en ConclusionsFutureWork.tex | Hoy es borrador del chat con comentario LaTeX; reescribirlo y re-sincronizar el ingles |
 | Redaccion del objetivo 2 de la intro (viabilidad de producto vs estudio de competencia) | (detectado en el 9b-6) | Introduccion.tex, objetivos (comentario `% Victor, revisar (9b-6)`) y espejo en Introduction.tex | Decidir la redaccion y borrar el comentario |
 | Re-sincronizar los capitulos en ingles | (herencia del 9b-7) | Introduction.tex y ConclusionsFutureWork.tex (bloque 9b-9) | Tras las ediciones de Victor de la intro y el cap 8 |
@@ -28,6 +25,10 @@ Revisado el 5 de septiembre de 2026 tras el bloque 9b-8.
 
 | Punto | Quien | Donde quedo |
 |---|---|---|
+| Prueba con nutricionistas sin alusiones colgando | Pablo (3a ronda) y 2a reunion de julio | 7.5 con la prueba de dos nutricionistas (25-ago y 4-sep de 2026: 16 de 16 tareas faciles, unico pero la espera al generar), sintesis en 8.1, limitacion en 8.2, pautas en 8.3.1 y 8.3.4, intro fase 12; espejos en ingles; cero "en curso" (9b-9) |
+| Placements [H] y espacios en blanco, overfull | Alejandro (2a ronda) | 61 flotantes a [htbp] con parametros de flotantes en el preambulo: ninguna tabla en pagina propia; 0 overfull tras reordenar una frase y estrechar dos tabulares del Anexo B (9b-9) |
+| Em-dashes en el cap 3 y en el Anexo A | Alejandro (1a ronda) | Fuera de la prosa (12 frases a parentesis); se conservan solo en los titulos de los RNF y en las captions de las tablas de RF, por decision de Victor (9b-9) |
+| Colaboradores de la portada | Pablo (3a ronda, placeholders) | Bloque "Colaborador" retirado de las dos portadas: no hay colaborador en la direccion (9b-9) |
 | Declaracion de uso de IA con modelos e identificadores | Pablo (3a ronda) | Anexo E nuevo, ultimo del documento (9b-8): herramientas y modelos con identificadores de la documentacion oficial, tareas en general, autoria y verificacion; validado por Victor |
 | Ejemplo de 900 kcal y 180 g de proteina mal explicado | Pablo (3a ronda) | Reproducido con el solver (9b-8): la causa real es el suelo calorico R3 (basal de 1810 kcal), no la proteina; 5.6 y 6.5 reescritos con el mismo ejemplo; de paso, "nucleo minimo" corregido a "subconjunto suficiente" en 2.1, 5.1 y 5.6 |
 | Nombres de los directores en el texto | Pablo (3a ronda) | 29 menciones sustituidas por "los directores del TFG" y variantes, en castellano e ingles (9b-8); portada, bibliografia y agradecimientos intactos |
