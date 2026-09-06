@@ -129,7 +129,7 @@ y el suelo diario es el mayor entre ese basal y un suelo absoluto por sexo (1200
 
 R6 y R7 no estaban en el diseño inicial. Las añadí después de que los tutores probasen el motor ya desplegado y viesen que los planes salían matemáticamente válidos pero irreales: concentraban todo el pollo en un día y rellenaban el resto casi al azar, solo para cumplir los números. La tercera regla de sentido común, repartir un mismo alimento a lo largo del plan, es blanda a propósito y se cuenta con la función objetivo (sección~\ref{sec:objetivoResolucion}): si el catálogo aprieta, el solver puede concentrar algo antes que declararse infactible, y se prefiere un plan imperfecto a un fallo. R6 y R7 sí son duras porque ningún plan real las viola. La tabla~\ref{tab:reglasBase} resume su efecto sobre un mismo caso de una semana, generado con y sin las reglas.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|c|c|}
@@ -212,7 +212,7 @@ Las restricciones del profesional llegan al motor en un vocabulario cerrado de 1
 
 Dos de los 16 tipos son estructurales (número de comidas y duración del plan): fijan la dimensión del problema y no generan restricción. Los otros 14 se agrupan en objetivos de energía y macros, límites de nutrientes, prohibiciones y preferencias, reparto y frecuencia, variedad y combinaciones. La tabla~\ref{tab:catalogoClinico} los resume; las formulaciones completas están en el Anexo~\ref{apendice:formalizacion}.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|l|l|l|}

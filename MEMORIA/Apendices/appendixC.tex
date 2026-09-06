@@ -8,7 +8,7 @@ Este anexo recoge la formalización completa del modelo del capítulo~\ref{cap:m
 
 Todos los umbrales son constantes con nombre en la configuración del solver. Los cinco campos de \texttt{ObjectiveBands} son las tolerancias de los objetivos blandos de energía y macronutrientes: lo que queda dentro de ellas no penaliza (sección~\ref{sec:anexoObjetivo}).
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|c|p{5.8cm}|}
@@ -228,7 +228,7 @@ Como dura:
 
 \paragraph{\texttt{macro\_target} (blanda por defecto).} Igual que el objetivo calórico pero sobre un macronutriente (proteína, hidratos o grasa), con las bandas en porcentaje del objetivo: un 5\,\% por día y un 2,5\,\% en la media. El peso de familia se elige según el macro.
 
-\paragraph{\texttt{nutrient\_min} (configurable).} Mínimo diario de un nutriente. Como dura, $\text{nut}_{d,n} \ge \text{scale\_target}(v)$ para todo día. Como blanda, penaliza solo el defecto, con una variable por día:
+\paragraph{\texttt{nutrient\_min} (configurable).} Mínimo diario de un nutriente. Como dura, para todo día, $\text{nut}_{d,n} \ge \text{scale\_target}(v)$. Como blanda, penaliza solo el defecto, con una variable por día:
 \begin{equation*}
 \text{def}_d \ge \text{scale\_target}(v) - \text{nut}_{d,n}, \qquad \text{def}_d \ge 0
 \end{equation*}
@@ -330,10 +330,10 @@ Un objetivo calórico con peso de fila 7 pesa $10 \cdot 7 = 70$ por unidad escal
 
 Correspondencia entre cada elemento formal y su ubicación en el solver, para que el modelo sea trazable en ambos sentidos. Se citan fichero y función, no números de línea.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
-\begin{tabular}{|l|p{7.8cm}|}
+\begin{tabular}{|l|p{7.3cm}|}
 \hline
 \textbf{Elemento formal} & \textbf{Código} \\
 \hline
@@ -364,10 +364,10 @@ Franjas por número de comidas & \texttt{loader.\_SLOTS\_BY\_COUNT}, \texttt{loa
 \label{tab:anexoMapaModelo}
 \end{table}
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
-\begin{tabular}{|l|p{7.8cm}|}
+\begin{tabular}{|l|p{7.3cm}|}
 \hline
 \textbf{Elemento formal} & \textbf{Código} \\
 \hline

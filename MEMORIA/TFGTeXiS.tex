@@ -80,6 +80,13 @@ constantes,guionado,Cascaras/bibliografia,config%
 % Los apéndices se llaman "Anexo" en el texto y en sus cabeceras
 \addto\captionsspanish{\renewcommand{\appendixname}{Anexo}}
 
+% Menos páginas de flotantes sueltos: una tabla o figura solo ocupa página propia
+% si la llena, y puede compartir página con más texto
+\renewcommand{\topfraction}{0.85}
+\renewcommand{\bottomfraction}{0.6}
+\renewcommand{\textfraction}{0.1}
+\renewcommand{\floatpagefraction}{0.8}
+
 % Paquetes de matemáticas para la formalización del motor de generación
 \usepackage{amsmath}
 \usepackage{amssymb}

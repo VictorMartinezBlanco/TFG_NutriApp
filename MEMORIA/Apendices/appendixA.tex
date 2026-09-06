@@ -1,11 +1,11 @@
 \chapter{Catálogo original de requisitos (versión V1)}
 \label{apendice:catalogoV1}
 
-Este apéndice recoge el catálogo completo de requisitos \emph{tal y como se formuló inicialmente}, antes del pivote de alcance consensuado con los directores del TFG en abril de 2026. Su función no es normativa ---el alcance que realmente se implementa es el descrito en el capítulo~\ref{cap:analisisRequisitos}---, sino \emph{histórica}: conservar la visión inicial como registro del proceso de reformulación del proyecto y facilitar la trazabilidad de cada decisión de recorte.
+Este anexo recoge el catálogo completo de requisitos \emph{tal y como se formuló inicialmente}, antes del pivote de alcance consensuado con los directores del TFG en abril de 2026. Su función no es normativa (el alcance que realmente se implementa es el descrito en el capítulo~\ref{cap:analisisRequisitos}), sino \emph{histórica}: conservar la visión inicial como registro del proceso de reformulación del proyecto y facilitar la trazabilidad de cada decisión de recorte.
 
 La versión V1 contenía 61 requisitos funcionales, 7 requisitos no funcionales y 8 innovaciones clave. Tras dos iteraciones de triaje, la versión implementada (V2) reduce estas cifras a 27 requisitos funcionales, 14 requisitos no funcionales (siete de ellos específicos del copiloto IA) y una única innovación clave centrada en la generación semi-automática de planes nutricionales por nutricionista. Las razones y el criterio de triaje que llevaron a esta reformulación se desarrollan en la sección~\ref{sec:reformulacionAlcance} del cuerpo principal.
 
-Todo el contenido que sigue ---tablas de requisitos, dependencias funcionales y funcionalidades resultantes--- se presenta sin modificaciones respecto a su formulación original, incluyendo terminología, etiquetas de \emph{innovación clave} y referencias a bloques que posteriormente han sido descartados o redimensionados.
+Todo el contenido que sigue (tablas de requisitos, dependencias funcionales y funcionalidades resultantes) se presenta sin modificaciones respecto a su formulación original, incluyendo terminología, etiquetas de \emph{innovación clave} y referencias a bloques que posteriormente han sido descartados o redimensionados.
 
 %% ====================================================================
 \section{Requisitos no funcionales (V1)}
@@ -24,13 +24,13 @@ Al tratarse de una aplicación web, no requiere instalación ni configuración l
 La aplicación va a ser utilizada por profesionales de la salud en su entorno de trabajo, por lo que debe transmitir confianza y profesionalidad. Se tomó como referencia visual Nutrium, el líder del mercado identificado durante el análisis de competencia, por su interfaz limpia y orientada a productividad. El objetivo es que el nutricionista perciba la herramienta como un instrumento profesional, no como un producto genérico.
 
 \paragraph{RNF-04 --- Navegación intuitiva con sidebar permanente.}
-Al tratarse de una herramienta de uso diario, el nutricionista necesita acceder rápidamente a cualquier sección sin perder el contexto de lo que está haciendo. Un sidebar fijo y visible en todo momento ---similar al de aplicaciones como Gmail o Notion--- permite esta navegación inmediata. Se descartó el menú tipo hamburguesa porque en una interfaz de escritorio hay espacio suficiente para mantener la navegación siempre visible.
+Al tratarse de una herramienta de uso diario, el nutricionista necesita acceder rápidamente a cualquier sección sin perder el contexto de lo que está haciendo. Un sidebar fijo y visible en todo momento (similar al de aplicaciones como Gmail o Notion) permite esta navegación inmediata. Se descartó el menú tipo hamburguesa porque en una interfaz de escritorio hay espacio suficiente para mantener la navegación siempre visible.
 
 \paragraph{RNF-05 --- Separación clara entre panel de nutricionista y panel de cliente.}
 Ambos perfiles de usuario tienen necesidades completamente distintas: el nutricionista gestiona múltiples clientes, citas, formularios y planes; el cliente interactúa con sus propios datos, su plan y su progreso. Mezclar ambas experiencias en una sola interfaz generaría confusión. Por ello, cada perfil dispone de su propio panel con navegación, funcionalidades y diseño adaptados, aunque ambos paneles comparten la misma base de datos subyacente.
 
 \paragraph{RNF-06 --- Escalabilidad.}
-La arquitectura del sistema debe funcionar tanto para un nutricionista autónomo como para una clínica con varios profesionales. Esto afecta directamente al diseño de la base de datos ---la relación entre nutricionistas y clínicas se modela como N:M--- y a la estructura de permisos, que debe contemplar distintos niveles de acceso según el contexto.
+La arquitectura del sistema debe funcionar tanto para un nutricionista autónomo como para una clínica con varios profesionales. Esto afecta directamente al diseño de la base de datos (la relación entre nutricionistas y clínicas se modela como N:M) y a la estructura de permisos, que debe contemplar distintos niveles de acceso según el contexto.
 
 \paragraph{RNF-07 --- Seguridad y privacidad de datos.}
 La plataforma maneja datos de salud de los clientes, que son especialmente sensibles. El sistema debe contemplar autenticación segura, roles diferenciados y acceso restringido a la información según el perfil del usuario. Por ejemplo, las notas privadas que el nutricionista escribe sobre un cliente no deben ser visibles para dicho cliente en ningún caso.
@@ -41,13 +41,13 @@ La plataforma maneja datos de salud de los clientes, que son especialmente sensi
 \label{sec:rf-v1}
 %% ====================================================================
 
-Los requisitos funcionales describen las acciones concretas que el sistema debe permitir realizar. Se organizan por bloques temáticos, indicando para cada requisito el actor principal que lo ejecuta: el nutricionista (N), el cliente (C) o el propio sistema de forma automática (S). Aquellos bloques que constituyen innovaciones clave del proyecto ---funcionalidades no presentes en ningún competidor analizado--- se señalan expresamente.
+Los requisitos funcionales describen las acciones concretas que el sistema debe permitir realizar. Se organizan por bloques temáticos, indicando para cada requisito el actor principal que lo ejecuta: el nutricionista (N), el cliente (C) o el propio sistema de forma automática (S). Aquellos bloques que constituyen innovaciones clave del proyecto (funcionalidades no presentes en ningún competidor analizado) se señalan expresamente.
 
 %% -------------------------------------------
 \subsection{Gestión de clientes}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -75,7 +75,7 @@ RF-60 & Acceder a una ficha detallada por cliente que consolide foto, datos bás
 \subsection{Calendario y citas}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -103,7 +103,7 @@ RF-11 & Enviar recordatorios automáticos de citas próximas. & S \\
 \subsection{Mensajería}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -129,7 +129,7 @@ RF-61 & Ofrecer al cliente un canal de chat con otros clientes del mismo nutrici
 \subsection{Formularios personalizables}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -155,7 +155,7 @@ RF-17 & Ver formularios pendientes, completarlos y consultar el historial de res
 
 Este bloque constituye una de las principales innovaciones de NutriApp en su versión original. Ninguno de los competidores analizados ofrece un sistema de alertas configurables vinculado a las respuestas de formularios. Su objetivo es que el nutricionista pueda actuar de forma proactiva ante problemas de sus clientes, en lugar de enterarse solo cuando el cliente se lo comunica.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -183,7 +183,7 @@ RF-23 & Enviar un mensaje rápido al cliente directamente desde una alerta, con 
 \subsection{Planes nutricionales}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -215,7 +215,7 @@ RF-59 & Sustituir una comida del plan por una opción equivalente preconfigurada
 
 Otra innovación diferenciadora de NutriApp en su planteamiento original. Los competidores que ofrecen listas de la compra las generan de forma estática; ninguno incorpora un sistema de sustituciones inteligentes basado en equivalencia nutricional.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -239,7 +239,7 @@ RF-32 & Marcar ítems como comprados y exportar o compartir la lista. & C \\
 
 La tercera innovación clave del proyecto en su versión original. Los competidores analizados ofrecen, en el mejor de los casos, check-ins básicos sin mecánicas de gamificación ni conexión con un sistema de alertas.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -261,7 +261,7 @@ RF-35 & Configurar hábitos personalizados para cada cliente (horas de sueño, n
 \subsection{Seguimiento y progreso}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -283,7 +283,7 @@ RF-38 & Subir y comparar fotos de progreso organizadas cronológicamente. & C \\
 \subsection{Informes y análisis}
 %% -------------------------------------------
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -305,7 +305,7 @@ RF-40 & Exportar informes de clientes y métricas en formato PDF. & N \\
 
 Una de las fricciones principales detectadas durante la investigación es el tiempo que tanto el nutricionista como el cliente dedican a consultar información nutricional sobre alimentos concretos. El cliente, sobre todo, suele abandonar el registro de su dieta porque implica buscar manualmente las calorías de cada producto que consume. La propuesta original de NutriApp resolvía este punto mediante una base de datos de alimentos accesible desde ambos paneles, integrada con una API abierta como Open Food Facts, y complementada con dos mecanismos de captura rápida: el escaneo de códigos de barras y el reconocimiento de alimentos por fotografía usando un modelo de inteligencia artificial.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -335,7 +335,7 @@ RF-50 & Comparar los macronutrientes de un alimento con los objetivos nutriciona
 
 El análisis de competencia reveló que algunas plataformas profesionales como Healthie incorporan un marketplace donde los nutricionistas pueden vender contenido educativo y los clientes pueden adquirirlo. La propuesta original de NutriApp recogía esta idea y la adaptaba a sus dos paneles: el nutricionista publica sus propios recursos (guías, libros, plantillas, cursos) y gestiona sus ventas, mientras que el cliente navega el catálogo general y dispone además de una sección destacada con los recursos publicados específicamente por su propio profesional. De esta forma, la plataforma ofrecía al nutricionista una vía adicional de monetización y al cliente acceso a contenido educativo curado por alguien en quien ya confía.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -363,7 +363,7 @@ RF-55 & Visualizar una sección destacada con los recursos publicados específic
 
 La automatización de tareas repetitivas es la forma más directa de reducir la carga administrativa del nutricionista. La propuesta original ampliaba el concepto más allá del envío programado de formularios: ofrecía un motor de reglas configurables con disparadores y acciones asociadas, de forma que el profesional podía modelar procedimientos típicos de su práctica (bienvenida a nuevos clientes, seguimiento tras sesión, detección de baja adherencia, celebración de hitos) y dejar que el sistema los ejecutase sin intervención manual.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|l|p{10.5cm}|c|}
@@ -393,7 +393,7 @@ RF-58 & Ejecutar automáticamente las acciones de las reglas activas cuando se c
 
 Los requisitos funcionales no actúan de forma aislada: muchos de ellos dependen de otros para conformar las funcionalidades completas de la plataforma. La tabla~\ref{tab:dependencias-v1} muestra estas relaciones de dependencia tal y como se formularon originalmente, permitiendo trazar cada funcionalidad hasta los requisitos que la hacen posible.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \begin{tabular}{|p{5cm}|p{8.5cm}|}
@@ -488,7 +488,7 @@ A partir de los requisitos V1 definidos y sus dependencias, las funcionalidades 
 \section{Nota final sobre el alcance definitivo}
 %% ====================================================================
 
-El alcance efectivamente implementado en el TFG corresponde al subconjunto descrito en el capítulo~\ref{cap:analisisRequisitos} tras la reformulación recogida en la sección~\ref{sec:reformulacionAlcance}. Los requisitos aquí documentados que no forman parte del alcance final ---\textit{marketplace}, motor de automatizaciones avanzado, formularios personalizables, sistema de alertas inteligentes en su versión original, lista de la compra inteligente, reconocimiento de alimentos por imagen, videollamadas, chat entre clientes, entre otros--- se recogen como trabajo futuro con su correspondiente justificación de posposición.
+El alcance efectivamente implementado en el TFG corresponde al subconjunto descrito en el capítulo~\ref{cap:analisisRequisitos} tras la reformulación recogida en la sección~\ref{sec:reformulacionAlcance}. Los requisitos aquí documentados que no forman parte del alcance final (\textit{marketplace}, motor de automatizaciones avanzado, formularios personalizables, sistema de alertas inteligentes en su versión original, lista de la compra inteligente, reconocimiento de alimentos por imagen, videollamadas, chat entre clientes, entre otros) se recogen como trabajo futuro con su correspondiente justificación de posposición.
 
 
 %% ====================================================================
@@ -498,7 +498,7 @@ El alcance efectivamente implementado en el TFG corresponde al subconjunto descr
 
 El planteamiento inicial se comparó con cuatro plataformas bajo trece criterios funcionales, y la tabla~\ref{tab:competidores-v1} es la que acompañaba a la idea original. Además de Nutrium y Practice Better, analizadas en el capítulo~\ref{cap:estadoDeLaCuestion}, incluía a Healthie~\citep{healthie}, por su marketplace de recursos, y a Cronometer Pro~\citep{cronometer}, por su base de alimentos y su escáner de código de barras. La columna de NutriApp recoge lo que la V1 prometía, no lo que se entrega: la mayoría de esas filas corresponden a los bloques eliminados en la reformulación (sección~\ref{sec:reformulacionAlcance}), y la comparativa vigente es la tabla~\ref{tab:competidores}.
 
-\begin{table}[H]
+\begin{table}[htbp]
 \centering
 \small
 \setlength{\tabcolsep}{4pt}
