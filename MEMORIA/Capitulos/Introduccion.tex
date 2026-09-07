@@ -31,7 +31,7 @@ Para alcanzar este objetivo general, se plantean los siguientes objetivos espec�
 
     \item Diseñar la arquitectura del sistema y su modelo de datos: dos paneles (nutricionista y cliente) sobre una misma base de datos, con el aislamiento entre profesionales garantizado en la propia capa de datos, y con una tabla de restricciones que actúa como interfaz entre quien las produce (el profesional o la IA) y el motor que las consume.
 
-    \item Construir un motor de generación de planes basado en programación con restricciones, acompañado de un validador clínico determinista e independiente, capaz de funcionar por sí solo, sin depender de ningún componente de inteligencia artificial.
+    \item Construir un motor de generación de planes basado en técnicas de programación con restricciones, acompañado de un validador clínico determinista e independiente, capaz de funcionar por sí solo, sin depender de ningún componente de inteligencia artificial.
 
     \item Integrar la capa de IA que hace usable ese motor en lenguaje natural: traducción de las peticiones del profesional a restricciones formales, validación previa de los mensajes y generación asíncrona manteniendo al profesional como árbitro de cada decisión.
 \end{enumerate}
@@ -81,7 +81,7 @@ La aplicación se desplegó públicamente en cuanto tuvo sus primeras secciones,
 
 \subsection*{Fase 9. Motor de generación de planes (junio de 2026)}
 
-El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones. Tras consultar con uno de mis directores cuál sería el mejor enfoque, me explicó que su implementación debería consistir en un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y me indicó que podría añadir también un diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo primero con un banco de casos y después desde la propia web (creando un apartado para modificar los parámetros que se usan para generar el plan con el motor).
+El corazón técnico del proyecto: la formalización de la dieta como un problema de satisfacción de restricciones. Tras consultar con mi tutor, Alejandro, cuál sería el mejor enfoque, me explicó que su implementación debería consistir en un solver de programación con restricciones, un validador determinista independiente que audita cada plan antes de darlo por bueno, y me indicó que podría añadir también un diagnóstico de infactibilidad cuando las peticiones son incompatibles entre sí. El motor funciona sin ningún componente de inteligencia artificial, lo que permitió verificarlo primero con un banco de casos y después desde la propia web (creando un apartado para modificar los parámetros que se usan para generar el plan con el motor).
 
 \subsection*{Fase 10. Capa de inteligencia artificial (julio de 2026)}
 

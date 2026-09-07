@@ -87,7 +87,15 @@ El traductor no depende de esta elección ya que habla con el modelo a través d
 \section{Revisión y arbitraje}
 \label{sec:arbitraje}
 
-Todas las restricciones que van a alimentar una generación aparecen en la misma pantalla de revisión. Las que propuso el traductor aparecen marcadas como tales, y el profesional puede añadir otras a mano en la misma lista, con el mismo formulario de la ficha del cliente. Sobre cada restricción toma una de las tres decisiones que adelantó la sección~\ref{sec:flujoCopiloto}: guardarla en el perfil del cliente (queda en su ficha), aplicarla solo a esta generación (viaja con la tarea y no se guarda) o descartarla.
+Todas las restricciones que van a alimentar una generación aparecen en la misma pantalla de revisión. Las que propuso el traductor aparecen marcadas como tales, y el profesional puede añadir otras a mano en la misma lista, con el mismo formulario de la ficha del cliente. Sobre cada restricción toma una de las tres decisiones que adelantó la sección~\ref{sec:flujoCopiloto}: guardarla en el perfil del cliente (queda en su ficha), aplicarla solo a esta generación (viaja con la tarea y no se guarda) o descartarla. La figura~\ref{fig:copilotoRevision} enseña esa pantalla con una petición real para un cliente de demostración.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{Imagenes/Bitmap/copiloto_revision}
+\end{center}
+\caption{La pantalla de revisión en la aplicación desplegada. El profesional escribió, en castellano, que la clienta rondase las $2\,000$ kcal, llegase a 25 g de fibra, evitase los ultraprocesados y que le gusta el kéfir; el traductor propuso las cuatro restricciones marcadas como AI, con su prioridad, y el profesional añadió una quinta a mano. Sobre cada una decide si se guarda en la ficha, si vale solo para este plan o si se descarta.}
+\label{fig:copilotoRevision}
+\end{figure}
 
 Los fallos también aparecen aquí. Las peticiones que el traductor no supo aplicar se enseñan con su motivo; los veredictos de la revisión previa, con su aviso, su detalle y el mensaje precargado para corregirlo; y las generaciones fallidas quedan listadas con su explicación.
 
@@ -102,8 +110,24 @@ Generar con IA es lento para una petición web: entre el modelo de lenguaje y el
 
 De esta forma, para el profesional, la aplicación no se queda colgada: confirma la generación, puede irse a otra pantalla y el apartado de planes enseña cada tarea con su estado hasta que el plan aparece. Si el worker no está encendido, la interfaz avisa de que la tarea sigue esperándolo (sección~\ref{sec:despliegue}).
 
-Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{sec:infactibilidad} se convierte en una frase con los nombres reales del catálogo, algo como: ningún plan puede cumplir el objetivo de 900\,kcal con los alimentos disponibles, y conviene relajarlo. La generación fallida queda en la lista con esa explicación y el detalle del conflicto, y el profesional decide si cambia esa restricción o el mensaje.
+Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{sec:infactibilidad} se convierte en una frase con los nombres reales del catálogo, algo como: ningún plan puede cumplir el objetivo de 900\,kcal con los alimentos disponibles, y conviene relajarlo. La generación fallida queda en la lista con esa explicación y el detalle del conflicto, y el profesional decide si cambia esa restricción o el mensaje (figura~\ref{fig:copilotoInfactible}).
 
-El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}).
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{Imagenes/Bitmap/copiloto_infactible}
+\end{center}
+\caption{Una generación fallida en el apartado de planes: la explicación en una frase con los nombres reales del catálogo de la clienta y, desplegado, el subconjunto de restricciones que basta para el conflicto (las dos prohibiciones de su ficha y un mínimo de proteína imposible añadido a mano para provocarlo).}
+\label{fig:copilotoInfactible}
+\end{figure}
+
+El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}). La figura~\ref{fig:copilotoPlan} enseña el borrador que salió de la petición de la figura~\ref{fig:copilotoRevision}.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.72\textwidth]{Imagenes/Bitmap/copiloto_plan}
+\end{center}
+\caption{El borrador generado: la cabecera con su estado, los promedios diarios y el primer día del plan. El botón de firma es el único paso que lo convierte en el plan que ve la clienta.}
+\label{fig:copilotoPlan}
+\end{figure}
 
 Con la firma se cierra el recorrido del capítulo: de una petición escrita en el lenguaje del profesional a un plan auditado que él decidió restricción a restricción. La evaluación de las piezas de IA, con los bancos de las comprobaciones, el estudio de formatos y el comportamiento medido del modelo local, está en el capítulo~\ref{cap:evaluacion}.

@@ -7,8 +7,9 @@ ejecuta, se mueve a la tabla de resueltos con la ubicacion donde quedo
 reflejado.
 
 Origen: 1a ronda (agosto de 2026, borrador-indice), 2a ronda (finales de agosto,
-capitulos 2, 3 y 5) y 3a ronda (4 y 5 de septiembre, version entregable).
-Revisado el 5 de septiembre de 2026 tras el bloque 9b-8.
+capitulos 2, 3 y 5), 3a ronda (4 y 5 de septiembre, version entregable) y
+correo de Alejandro con marcas sobre el PDF (6 y 7 de septiembre).
+Revisado el 7 de septiembre de 2026 tras el bloque 9b-10.
 
 ## Pendientes
 
@@ -17,13 +18,19 @@ Revisado el 5 de septiembre de 2026 tras el bloque 9b-8.
 | Cero placeholders en portada y andamios | Pablo (3a ronda) | cover.tex, dedicatoria.tex, agradecimientos.tex (Victor, ultimos pasos) | Fecha real en la portada (hoy "DIA de MES de AÑO" en rojo), dedicatoria y agradecimientos (hoy "Proximamente"). El bloque de colaboradores se quito el 6-sep (decision: nadie) |
 | Cierre 8.4 en la voz de Victor | Victor (decision del 9b-6) | ConclusionesTrabajoFuturo.tex, seccion 8.4, y su espejo en ConclusionsFutureWork.tex | Hoy es borrador del chat con comentario LaTeX; reescribirlo y re-sincronizar el ingles |
 | Re-sincronizar los capitulos en ingles | (herencia del 9b-7) | Introduction.tex y ConclusionsFutureWork.tex (bloque 9b-9) | Tras las ediciones de Victor de la intro y el cap 8 |
-| Revision de Victor de caps 2 (2.2-2.5), 7 + Anexos D y E, 8 | Victor | Rondas 14+ del corpus | Sin revisar a 5-sep; el Anexo E si (ronda 14) |
+| Revision de Victor de caps 2 (2.2-2.5), 7 + Anexos D y E, 8 | Victor | Rondas 14+ del corpus | Sin revisar a 7-sep; el cap 7 se revisa ya aligerado (9b-10); el Anexo E si (ronda 14) |
+| Material adicional para el tribunal: ZIP del repo privado y direcciones del despliegue en el documento que pidan | Alejandro (correo 6/7-sep) | Bloque Entrega, cuando lleguen las instrucciones oficiales | ZIP limpio (sin `.env*`, `node_modules` ni secretos), URLs de Netlify, Render y repo; credenciales de prueba por el canal que decida Victor |
 | Enviar la version final a los tutores con margen para sus ultimos comentarios | ambos (2a ronda) | Bloque 9b-final | Lectura lineal previa del PDF entero |
 
 ## Resueltos
 
 | Punto | Quien | Donde quedo |
 |---|---|---|
+| Cap 7 muy denso: simetria, magnitudes y bandas a resumen | Alejandro (correo 6/7-sep) | 7.2.3, 7.2.4 y 7.3.3 en 2-3 parrafos (problema, abordaje, conclusion, efecto en el modelo) con una tabla o figura cada una; pre-registros, tablas por caso, hipotesis y criterios en el Anexo D (secciones D.2 a D.4 con etiquetas); 7.2.1 y 7.2.2 intactas; el cap 7 baja de 25 a 22 paginas con la tabla de casos nueva (9b-10) |
+| Nombres de personas con planes que no aparecen en ninguna tabla | Alejandro (marca pag. 84) | Tabla 7.2 de casos de evaluacion al final de 7.1 (ocho del banco, seis clientes de demostracion, caso de diseno, con perfil, restricciones y experimentos) y referencia en la primera mencion de Tomas y de los clientes demo (9b-10) |
+| Capturas de la aplicacion en el cap 6 | Alejandro (correo 6/7-sep) | Tres capturas reales de la app desplegada con generacion real para Nadia: pantalla de revision AI/Manual (6.4), generacion fallida con la infactibilidad explicada y borrador generado (6.5) (9b-10) |
+| Marcas sobre el PDF: 'tecnicas de programacion', 'mi tutor, Alejandro', hard/soft constraints en cursiva, atribuciones en 7.2.2, 7.2.3, intro de 7.3 y caso renal | Alejandro (13 marcas, 6 ya hechas por 9b-8/9b-9) | Intro objetivo 3 y fase 9 (ES y EN), cap 5.1, 5.3 (caso renal como ejemplo propio), 7.2.2, 7.2.3 y 7.3 sin atribucion, cap 8 sin 'puso de ejemplo'; Radix/Tailwind atribuido a Pablo en 4.1 (tecnologia ajena a la carrera, permitido por su correo) (9b-10) |
+| Cita de Cervantes de la plantilla en la bibliografia | Victor | Bloque `\setCitaBibliografia` eliminado de `Cascaras/bibliografia.tex` (9b-10) |
 | Prueba con nutricionistas sin alusiones colgando | Pablo (3a ronda) y 2a reunion de julio | 7.5 con la prueba de dos nutricionistas (25-ago y 4-sep de 2026: 16 de 16 tareas faciles, unico pero la espera al generar), sintesis en 8.1, limitacion en 8.2, pautas en 8.3.1 y 8.3.4, intro fase 12; espejos en ingles; cero "en curso" (9b-9) |
 | Placements [H] y espacios en blanco, overfull | Alejandro (2a ronda) | 61 flotantes a [htbp] con parametros de flotantes en el preambulo: ninguna tabla en pagina propia; 0 overfull tras reordenar una frase y estrechar dos tabulares del Anexo B (9b-9) |
 | Em-dashes en el cap 3 y en el Anexo A | Alejandro (1a ronda) | Fuera de la prosa (12 frases a parentesis); se conservan solo en los titulos de los RNF y en las captions de las tablas de RF, por decision de Victor (9b-9) |

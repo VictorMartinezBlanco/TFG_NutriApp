@@ -44,6 +44,51 @@ Extremo a extremo, panel del cliente & flujo completo del cliente contra el fron
 
 Los bancos deterministas crecieron con los bloques: el del solver pasó de 19 comprobaciones en su primera versión a 32, y el del validador de 25 a 38, porque cada capa nueva del modelo trajo sus propias garantías. Los runners de seguridad acumulan ocho tandas de evidencia; las dos últimas entran con tres actores (dos nutricionistas y un cliente) y son las que separan lo que cada rol puede leer y escribir. La prueba de extremo a extremo contra el backend en producción se repitió tras cada cambio del motor, y el 29 de 29 de la tabla corresponde al motor con bandas de tolerancia servido desde el alojamiento.
 
+Los experimentos de este capítulo se apoyan en un conjunto fijo de casos (tabla~\ref{tab:casosEvaluacion}): los ocho del banco del solver, anclados a los tres clientes de prueba (María, John y Emma); los seis clientes de demostración de la aplicación (David, Lucía, Sofía, Carlos, Nadia y Tomás), con las restricciones reales de su ficha, a 7 días y 4 comidas, que es la configuración por defecto; y un caso de diseño añadido para poder medir la banda de macronutrientes. Los nombres son seudónimos de los datos de demostración. Ninguno de los casos lleva reglas de estilo clínico del profesional; su efecto se mide aparte en la sección~\ref{sec:evalHosting}.
+
+\begin{table}[htbp]
+\centering
+\scriptsize
+\setlength{\tabcolsep}{4pt}
+\begin{tabular}{|p{1.5cm}|p{3cm}|p{1.3cm}|p{4.6cm}|p{3cm}|}
+\hline
+\textbf{Caso} & \textbf{Cliente} & \textbf{Días $\times$ comidas} & \textbf{Restricciones configurables} & \textbf{Experimentos} \\
+\hline
+banco 1 & María & 3 $\times$ 3 & ninguna & línea base \\
+\hline
+banco 2 & María & 7 $\times$ 5 & objetivo calórico blando de $1\,500$ kcal & línea base, versiones, magnitudes, bandas, simetría, cotas \\
+\hline
+banco 3 & María & 7 $\times$ 5 & objetivo calórico blando de $1\,500$ kcal y preferencia vegetariana & como el banco 2 \\
+\hline
+banco 4 & John & 7 $\times$ 5 & alergia al cacahuete dura y mínimo de proteína blando & como el banco 2 \\
+\hline
+banco 5 & Emma & 7 $\times$ 5 & intolerancia a la lactosa dura y máximo de sodio blando & como el banco 2 \\
+\hline
+banco 6 & John & 3 $\times$ 5 & 900 kcal duras y 180 g de proteína duros (infactible) & solo el banco \\
+\hline
+banco 7 & John & 3 $\times$ 3 & mínimo de proteína de 200 g duro con casi todas las fuentes prohibidas (infactible) & solo el banco \\
+\hline
+banco 8 & María & 7 $\times$ 4 & no repetir pescado en el día, carne roja dos veces por semana como máximo, reparto por comidas y preferencia por un alimento & línea base, versiones, magnitudes, bandas, cotas \\
+\hline
+David & hombre, 95 kg, sedentario; hipertensión & 7 $\times$ 4 & máximo de sodio de $1\,500$ mg duro, evitar alimentos ricos en sodio blando, objetivo de $1\,900$ kcal blando & versiones, magnitudes, bandas, simetría, cotas \\
+\hline
+Lucía & mujer, 57 kg, actividad ligera; dieta vegana & 7 $\times$ 4 & sin lácteos ni huevos (duras), preferencia vegana y mínimo de hierro de 18 mg blandos & como David, y además tamaño y escalado \\
+\hline
+Sofía & mujer, 61 kg, actividad moderada; celiaquía & 7 $\times$ 4 & sin gluten dura, mínimo de fibra de 25 g blando & como David \\
+\hline
+Carlos & hombre, 89 kg, actividad ligera; diabetes tipo 2 & 7 $\times$ 4 & sin alimentos de índice glucémico alto dura, un ultraprocesado a la semana como máximo dura, objetivo de $1\,800$ kcal blando & como David \\
+\hline
+Nadia & mujer, 54 kg, activa; alimentación halal & 7 $\times$ 4 & sin cerdo ni jamón cocido (duras), preferencia halal blanda & como David \\
+\hline
+Tomás & hombre, 72 kg, muy activo; deportista & 7 $\times$ 4 & objetivo de $3\,000$ kcal, 150 g de proteína y reparto por comidas, los tres blandos & como David \\
+\hline
+diseño macro & María & 7 $\times$ 5 & objetivo calórico blando de $1\,500$ kcal y objetivo blando de proteína de 90 g & bandas \\
+\hline
+\end{tabular}
+\caption{Casos de evaluación del capítulo: los ocho del banco del solver, los seis clientes de demostración y el caso de diseño, con sus restricciones configurables y los experimentos en que intervienen. Las reglas estructurales y de plausibilidad del capítulo~\ref{cap:motorGeneracion} se aplican en todos.}
+\label{tab:casosEvaluacion}
+\end{table}
+
 Antes de los experimentos del motor se capturó además una línea base de tiempos del banco del solver, en la máquina de desarrollo con 8 hilos y tres repeticiones (tabla~\ref{tab:lineaBase}). Dos lecturas de esa tabla condicionan el resto del capítulo. Los casos pesados viven cerca del límite de 90 segundos y el caso 5 cambia de estado entre pasadas, así que con casos al límite la reproducibilidad se define sobre veredictos y garantías. Y la dispersión entre repeticiones de un mismo caso llega al doble (caso 2), así que ningún veredicto de rendimiento de este capítulo se apoya en una pasada única.
 
 \begin{table}[htbp]
@@ -112,14 +157,14 @@ Comidas por debajo de 150 kcal & 106 (25,2\,\%) & 13 (5,2\,\%) \\
 \label{tab:auditoria}
 \end{table}
 
-El residuo de comidas de baja energía merece su propia línea, porque de él salió la decisión del número de comidas por defecto. Con la capa puesta y 5 comidas al día, las comidas por debajo de 150 kcal bajaban del 25,2 al 15,6\,\%, casi todas meriendas y medias mañanas. En vez de añadir un suelo de energía por comida, decidí bajar el defecto de 5 a 4 comidas y medirlo con los mismos nueve objetivos: las comidas de baja energía cayeron al 6,3\,\% y los tentempiés de solo frutos secos desaparecieron sin regla nueva. Al implementarlo apareció un fallo que ninguna prueba había visto: el mapeo de franjas tomaba las primeras $N$ por orden del día, así que un plan de 3 comidas se quedaba con desayuno, media mañana y comida, sin cena. El mapeo pasó a ser explícito por número de comidas. El cambio tiene un coste medido en los objetivos calóricos altos: el plan de Tomás, con 3\,000 kcal, pasó de una desviación del 11 al 41\,\% al quitarle una comida, con óptimo demostrado, porque cuatro comidas de cuatro raciones acotadas por su perfil no llegan a esa energía. El número de comidas sigue siendo editable por el profesional, y para objetivos altos se suben.
+El residuo de comidas de baja energía merece su propia línea, porque de él salió la decisión del número de comidas por defecto. Con la capa puesta y 5 comidas al día, las comidas por debajo de 150 kcal bajaban del 25,2 al 15,6\,\%, casi todas meriendas y medias mañanas. En vez de añadir un suelo de energía por comida, decidí bajar el defecto de 5 a 4 comidas y medirlo con los mismos nueve objetivos: las comidas de baja energía cayeron al 6,3\,\% y los tentempiés de solo frutos secos desaparecieron sin regla nueva. Al implementarlo apareció un fallo que ninguna prueba había visto: el mapeo de franjas tomaba las primeras $N$ por orden del día, así que un plan de 3 comidas se quedaba con desayuno, media mañana y comida, sin cena. El mapeo pasó a ser explícito por número de comidas. El cambio tiene un coste medido en los objetivos calóricos altos: el plan de Tomás (tabla~\ref{tab:casosEvaluacion}), con 3\,000 kcal, pasó de una desviación del 11 al 41\,\% al quitarle una comida, con óptimo demostrado, porque cuatro comidas de cuatro raciones acotadas por su perfil no llegan a esa energía. El número de comidas sigue siendo editable por el profesional, y para objetivos altos se suben.
 
 La capa trajo también una lección sobre el propio banco. Dos comprobaciones heredadas comparaban el plan con reglas contra una pasada con las constantes relajadas, para demostrar que las reglas cambiaban algo. Cuando los límites de ración pasaron a ser datos del catálogo, la pasada relajada dejó de existir: el mundo sin reglas ya no se puede reproducir relajando constantes, y las dos comprobaciones fallaban de forma sistemática. Se reformularon como garantías (el tope se cumple, la variedad mínima se cumple) y el banco quedó en 30 comprobaciones.
 
 \subsection{Comparativa de versiones del modelo}
 \label{sec:evalVersiones}
 
-Uno de los directores del TFG pidió comparar la primera versión del modelo con las posteriores. La comparativa reconstruye tres versiones del motor a partir de sus commits: la inicial (v0: estructura, suelos fisiológicos y catálogo de restricciones), la que añadió las reglas base de sentido común (v1) y la actual (v2: v1 más la capa de plausibilidad y los dos ajustes del objetivo de las secciones siguientes). Para aislar el efecto de las reglas, las tres se ejecutan sobre el mismo catálogo actual de 100 alimentos, los mismos 11 casos (los cinco del banco con términos blandos y los seis clientes de demostración) y la misma configuración (90 segundos, 8 hilos), con tres repeticiones por caso. Las métricas las calcula un analizador común fuera de las versiones. El catálogo también cambió entre versiones (de 28 a 100 alimentos), pero eso es una decisión de datos y aquí no se mide.
+La comparativa entre versiones responde a la pregunta de qué compró cada capa de reglas respecto al modelo inicial. Reconstruye tres versiones del motor a partir de sus commits: la inicial (v0: estructura, suelos fisiológicos y catálogo de restricciones), la que añadió las reglas base de sentido común (v1) y la actual (v2: v1 más la capa de plausibilidad y los dos ajustes del objetivo de las secciones siguientes). Para aislar el efecto de las reglas, las tres se ejecutan sobre el mismo catálogo actual de 100 alimentos, los mismos 11 casos (los cinco del banco con términos blandos y los seis clientes de demostración de la tabla~\ref{tab:casosEvaluacion}) y la misma configuración (90 segundos, 8 hilos), con tres repeticiones por caso. Las métricas las calcula un analizador común fuera de las versiones. El catálogo también cambió entre versiones (de 28 a 100 alimentos), pero eso es una decisión de datos y aquí no se mide.
 
 La expectativa registrada antes de ejecutar era que la v0 sería la más rápida y la menos plausible, y la v2 la más lenta y la más plausible: la tabla debía enseñar el precio de cada capa de realismo.
 
@@ -164,13 +209,9 @@ La única resolución sin respuesta del experimento es una repetición del caso 
 \subsection{Las magnitudes de la función objetivo}
 \label{sec:evalMagnitudes}
 
-La función objetivo de la sección~\ref{sec:objetivoResolucion} suma términos de naturaleza distinta. Las desviaciones nutricionales (objetivo calórico, macronutrientes, mínimos y máximos de nutriente) se miden en las unidades escaladas del modelo, donde una kcal son $1\,000$ unidades; multiplicadas por el peso de familia y el peso de fila, llegan a aportar $100\,000$ unidades de objetivo por cada kcal de desviación en un día. Los términos estructurales y de preferencia se cuentan de uno en uno, por alimento o por aparición: el término de variedad completo, con un catálogo de 100 alimentos y peso 5, tiene un rango total de 500.
+La función objetivo de la sección~\ref{sec:objetivoResolucion} suma términos de naturaleza distinta. Las desviaciones nutricionales se miden en las unidades escaladas del modelo, donde una kcal son $1\,000$ unidades, y multiplicadas por los pesos llegan a aportar $100\,000$ unidades de objetivo por cada kcal de desviación en un día; los términos estructurales y de preferencia se cuentan de uno en uno, por alimento o por aparición, y el de variedad completo, con 100 alimentos y peso 5, tiene un rango total de 500. Al releer la formulación con el capítulo~\ref{cap:motorGeneracion} ya escrito me preocupó que esos sumandos no fuesen conmensurables y que todo lo no nutricional hubiera quedado reducido a ruido numérico. Antes de tocar el motor dejé registrado qué contaría como desequilibrio y qué haría en cada caso. Llamo $Q$ al cociente entre el rango completo alcanzable de una familia no nutricional (preferencias, reparto del plan o variedad) y lo que cuesta una unidad natural de desviación (una kcal, un gramo o un miligramo) del término nutricional dominante del caso: si $Q<1$, mover esa familia entera de su mejor a su peor valor no compensa ni una unidad de desviación. El remedio registrado era multiplicar por $1\,000$ los pesos de las familias no nutricionales, que equivale a medir las desviaciones en unidades naturales enteras en vez de en milésimas, y solo se mantendría si los bancos seguían en verde y la nutrición no se degradaba.
 
-Al leer el capítulo~\ref{cap:motorGeneracion}, mis directores me indicaron que esos sumandos no eran conmensurables y que todo lo que no fuese nutricional podía haber quedado reducido a ruido numérico. Uno de ellos pidió medirlo antes de decidir nada, y ofreció la salida de documentarlo como limitación si la corrección exigía renormalizar la formulación a fondo. Así que antes de tocar el motor dejé escrito qué contaría como desequilibrio y qué haría en cada caso.
-
-El criterio registrado fue este: hay desequilibrio si, en la mediana de los casos con algún objetivo nutricional, el rango completo alcanzable de una familia no nutricional (preferencias, reparto del plan o variedad) es menor que lo que cuesta una unidad natural de desviación (una kcal, un gramo o un miligramo) del término nutricional dominante del caso. Llamo $Q$ al cociente entre ambas cantidades: si $Q<1$, mover esa familia entera de su mejor a su peor valor no compensa ni una unidad de desviación, y la familia es numéricamente irrelevante. El remedio también quedó registrado: multiplicar por $1\,000$ los pesos de las familias no nutricionales, que equivale a medir las desviaciones en unidades naturales enteras en vez de en milésimas, sin tocar ninguna restricción ni la escala del modelo. El ajuste solo se mantendría si los bancos seguían en verde y la desviación calórica del banco seguía por debajo del 5\,\%; si degradaba la nutrición, se retiraba y el desequilibrio quedaba documentado con la tabla de esta sección como evidencia.
-
-Para medirlo, cada caso se resuelve con el motor real y cada término del objetivo se recompone desde la solución devuelta: su valor crudo, su peso efectivo y su contribución, más una cota analítica de su rango. La recomposición se comprueba contra el valor de objetivo que reporta el solver, para que la tabla refleje la función objetivo real y no una reconstrucción. Los casos son los cinco del banco del solver que llevan términos blandos y los seis clientes de demostración con sus restricciones reales, a 7 días y 4 comidas. La recomposición coincidió con el valor reportado en 10 de los 11 casos; en el restante (Tomás) el valor reportado quedó $1\,568$ unidades por encima, sobre un objetivo de $63\,208$ millones. La diferencia es holgura de la descomposición del valor absoluto: las variables de exceso y defecto solo quedan apretadas si la minimización las empuja, y en un caso parado dentro de la brecha del 2\,\% puede sobrar holgura. Como la recomposición trabaja sobre la solución, da el valor verdadero en los 11 casos.
+Para medirlo, cada uno de los 11 casos (los cinco del banco con términos blandos y los seis clientes de demostración de la tabla~\ref{tab:casosEvaluacion}) se resuelve con el motor real y cada término del objetivo se recompone desde la solución devuelta, comprobando la recomposición contra el valor que reporta el solver. La sospecha se confirmó con margen (tabla~\ref{tab:magnitudesQ}): en la mediana, mover la familia de preferencias entera compensaba 0,032 kcal de desviación, y la de variedad 0,007 kcal. El caso más extremo es el de Tomás, que lleva un reparto calórico por comidas: ese término aporta $62\,508$ millones de unidades y la variedad 135, once órdenes de magnitud entre sumandos que conviven en la misma suma. En la práctica el objetivo se comportaba como una jerarquía lexicográfica de hecho, en la que la nutrición manda y la estructura solo desempata, sin que esa jerarquía estuviese decidida ni escrita en ningún sitio.
 
 \begin{table}[htbp]
 \centering
@@ -186,159 +227,33 @@ Reparto del plan & 0,051 & 51 \\
 Variedad & 0,007 & 7 \\
 \hline
 \end{tabular}
-\caption{Conmensurabilidad de las familias no nutricionales del objetivo, antes y después del ajuste de pesos. Mediana de los 11 casos; el detalle por caso está en el Anexo~\ref{apendice:evaluacion}.}
+\caption{Conmensurabilidad de las familias no nutricionales del objetivo, antes y después del ajuste de pesos. Mediana de los 11 casos; el criterio, el método y el detalle por caso están en la sección~\ref{sec:anexoMagnitudes} del Anexo~\ref{apendice:evaluacion}.}
 \label{tab:magnitudesQ}
 \end{table}
 
-\begin{figure}[t]
-\begin{center}
-\includegraphics[width=0.95\textwidth]{Imagenes/Vectorial/fig_magnitudes_q}
-\end{center}
-\caption{$Q$ de cada familia en cada caso, antes y después del ajuste (escala logarítmica). La línea discontinua marca $Q=1$; la barra vertical de cada serie es su mediana.}
-\label{fig:magnitudesQ}
-\end{figure}
-
-La sospecha quedó confirmada con margen (tabla~\ref{tab:magnitudesQ} y figura~\ref{fig:magnitudesQ}). En la mediana, mover la familia de preferencias entera de su mejor a su peor valor compensaba 0,032 kcal de desviación, y la de variedad, 0,007 kcal. El caso más extremo es el de Tomás, que lleva un reparto calórico por comidas: ese término aporta $62\,508$ millones de unidades y la variedad 135, once órdenes de magnitud entre sumandos que conviven en la misma suma. En los dos casos con reparto por comidas activo las tres familias caen a la diezmilésima.
-
-Una observación matiza el diagnóstico sin cambiarlo. Cuando el solver consigue desviación nutricional exactamente cero (los casos 2 y 3 del banco), lo que queda del objetivo son solo los términos pequeños, y entonces sí deciden entre soluciones nutricionalmente perfectas. El desequilibrio actúa en los casos con conflicto real, donde ceder una fracción de kcal resulta preferible a cualquier mejora estructural. En la práctica el objetivo se comportaba como una jerarquía lexicográfica de hecho, en la que la nutrición manda y la estructura solo desempata, sin que esa jerarquía estuviese decidida ni escrita en ningún sitio.
-
-Con $Q$ muy por debajo de 1 en las tres familias, apliqué el remedio registrado: las preferencias pasan de peso 4 a $4\,000$, la no repetición blanda y la variedad de 5 a $5\,000$ y el reparto del plan de 4 a $4\,000$. Las proporciones dentro de cada grupo no cambian. Tras el ajuste una kcal de desviación sigue costando el doble que dejar un alimento entero sin usar ($10\,000$ frente a $5\,000$ con pesos de fila iguales): la nutrición sigue por delante, y la estructura deja de ser invisible. La re-verificación sobre los mismos 11 casos cumplió las dos condiciones registradas. Los bancos quedaron en verde (solver 30 de 30, validador 38 de 38) con desviación calórica del 0,0\,\% en los dos casos del banco con objetivo calórico, y la desviación por caso fue idéntica antes y después (el 41\,\% de Tomás es un conflicto del propio caso, con el mismo valor en ambas pasadas). La variedad realizada mejoró o empató en 8 de los 11 casos: el caso 4 del banco pasó de 7 alimentos sin usar a 1, y de factible a óptimo probado; el 3, de 20 a 17; David, de 43 a 40; Lucía, de 46 a 43. Los dos retrocesos (Tomás de 27 a 33 y Carlos de 44 a 49) son casos que paran por límite de tiempo, donde la solución concreta oscila entre pasadas. Las medianas de $Q$ quedaron en 32, 51 y 7.
-
-Queda una limitación que el ajuste no resuelve. El término de reparto por comidas arrastra un factor de $1\,000$ propio de su formulación, porque conserva un decimal del porcentaje mediante una multiplicación cruzada, así que en los casos donde está activo sigue empequeñeciendo al resto de familias ($Q$ de 0,07 y 0,01 en los dos casos afectados). Igualarlo exigiría renormalizar la formulación del término y no solo sus pesos, que es la renormalización profunda que quedó excluida; se documenta como asunción en la sección~\ref{sec:objetivoResolucion} y como trabajo futuro en el capítulo~\ref{cap:conclusiones}. La jerarquía que quedó tras el ajuste, con la energía por delante desde la primera kcal, la cuestioné después con un criterio clínico; es el segundo paso del mismo hilo y se cuenta en la sección siguiente.
+Apliqué el remedio registrado: las preferencias pasan de peso 4 a $4\,000$, la no repetición blanda y la variedad de 5 a $5\,000$ y el reparto del plan de 4 a $4\,000$. Tras el ajuste una kcal de desviación sigue costando el doble que dejar un alimento entero sin usar, así que la nutrición sigue por delante y la estructura deja de ser invisible; las medianas de $Q$ quedaron en 32, 51 y 7. La re-verificación sobre los mismos casos cumplió las dos condiciones registradas: bancos en verde, desviación calórica idéntica antes y después, y variedad realizada que mejora o empata en 8 de los 11 casos (el detalle está en la sección~\ref{sec:anexoMagnitudes} del Anexo~\ref{apendice:evaluacion}). Queda una limitación que el ajuste no resuelve: el término de reparto por comidas arrastra un factor de $1\,000$ propio de su formulación y, en los dos casos que lo activan, sigue empequeñeciendo al resto de familias; igualarlo exigiría renormalizar el término y no solo sus pesos, y se documenta como asunción en la sección~\ref{sec:objetivoResolucion} y como trabajo futuro en el capítulo~\ref{cap:conclusiones}. La jerarquía que quedó tras el ajuste, con la energía por delante desde la primera kcal, la cuestioné después con un criterio clínico; es el segundo paso del mismo hilo y se cuenta en la sección siguiente.
 
 \subsection{La jerarquía del objetivo: bandas de tolerancia}
 \label{sec:evalBandas}
 
-Tras el reescalado, el coste de una kcal de desviación en un día es el peso de familia (10) por el peso de fila por las $1\,000$ unidades escaladas. Ninguna fila de objetivo calórico de la aplicación lleva peso 1: los clientes de demostración llevan 7, y el traductor asigna 5 por defecto. Con el peso 7, que es el habitual, la jerarquía real quedaba como enseña la tabla~\ref{tab:jerarquia}: una kcal de desviación en un solo día equivalía a 14 alimentos sin usar, y 20 kcal a 280, casi tres catálogos enteros. Los crudos del experimento anterior enseñaban la consecuencia. En los dos clientes de demostración con objetivo calórico que agotan el límite de tiempo, el solver terminaba con una desviación del 0,01\,\% y 40 y 49 alimentos sin usar de 100: gastaba el presupuesto de búsqueda en clavar la energía al gramo, que no le importa a nadie, en vez de en la variedad, que sí se ve.
+Tras el reescalado, una kcal de desviación en un día con la fila de peso 7, que es la habitual, cuesta $70\,000$ unidades de objetivo, lo mismo que 14 alimentos del catálogo sin usar, y 20 kcal equivalen a 280, casi tres catálogos enteros. Los crudos del experimento anterior enseñaban la consecuencia: en los dos clientes de demostración con objetivo calórico que agotan el límite de tiempo, el solver terminaba con una desviación del 0,01\,\% y 40 y 49 alimentos sin usar de 100, gastando el presupuesto de búsqueda en clavar la energía al gramo en vez de en la variedad. Esa jerarquía era una decisión implícita de la formulación original, y la cuestioné con un criterio clínico: decenas de kcal arriba o abajo en un día no tienen relevancia para el profesional, y un plan repetitivo sí la tiene. Deliberé las opciones con números delante (bajar el peso calórico a secas penaliza la primera kcal igual que la número cien, y una banda solo diaria deja que todos los días deriven al mismo borde) y decidí dos bandas: una diaria de $\pm 50$ kcal ($\pm 5$\,\% en macronutrientes) sin penalización, y una segunda de $\pm 25$ kcal ($\pm 2{,}5$\,\%) sobre la media del plan con un factor 10, casi obligatoria pero blanda para no volver infactibles los casos de conflicto. La formulación está en la sección~\ref{sec:objetivoResolucion}.
 
-\begin{table}[htbp]
-\centering
-\small
-\begin{tabular}{|p{8.6cm}|p{3.4cm}|}
-\hline
-\textbf{Concepto} & \textbf{Coste en unidades del objetivo} \\
-\hline
-1 kcal de desviación en un día, fila de peso 7 & $70\,000$ \\
-\hline
-1 alimento del catálogo sin usar en todo el plan & $5\,000$ \\
-\hline
-1 aparición por encima del tope de reparto & $4\,000$ \\
-\hline
-1 aparición de un alimento preferido, filas de peso 4 a 6 & $16\,000$ a $24\,000$ \\
-\hline
-1 repetición blanda prohibida, fila de peso 5 & $25\,000$ \\
-\hline
-\end{tabular}
-\caption{Jerarquía real de la función objetivo tras el reescalado de la sección~\ref{sec:evalMagnitudes}.}
-\label{tab:jerarquia}
-\end{table}
+El experimento se pre-registró antes de medir: tres brazos (la base sin bandas, A con bandas y los pesos de entonces, B con bandas y la familia estructural multiplicada por 10), los once casos anteriores más el caso de diseño de la tabla~\ref{tab:casosEvaluacion}, tres repeticiones por caso y brazo, y cinco criterios de admisión sobre estructura, nutrición fuera de banda, factibilidad, óptimos conservados y bancos. El criterio de los casos 2 y 3 del banco del solver cambió con él, de una desviación media menor del 5\,\% a cada día dentro de $\pm 50$ kcal y la media dentro de $\pm 25$, y el banco pasó de 30 a 32 comprobaciones. El efecto en los casos afectados es el previsto y grande (figura~\ref{fig:bandasVariedad}): David pasa de agotar los 90 segundos con 33 alimentos sin usar a probar el óptimo en 41 segundos con 13; el caso de diseño, de 90 segundos sin óptimo a 10 segundos con los 100 alimentos usados; el banco 2 de 8 segundos a 1 y el banco 3 de 38 a 9; Carlos, que sigue en el límite, baja de 44 a 26 alimentos sin usar. En ninguna de las 45 resoluciones de los casos limpios hay exceso fuera de la banda diaria ni de la banda de la media, los seis casos de control quedan idénticos en el brazo A, y Tomás, el caso de conflicto, sigue devolviendo plan con su desviación de siempre, que era la razón de dejar el ancla blanda. El pre-registro completo, con sus hipótesis, las tablas por caso y la evaluación criterio a criterio, está en la sección~\ref{sec:anexoBandas} del Anexo~\ref{apendice:evaluacion}.
 
-La jerarquía en la que la nutrición manda siempre fue una decisión implícita de la formulación original, que el primer experimento hizo visible pero no cuestionó. Al mirar esa tabla la cuestioné con un criterio clínico: decenas de kcal arriba o abajo en un día no tienen relevancia para el profesional, y un plan repetitivo sí la tiene. Deliberé las opciones con números delante. Bajar el peso calórico a secas penaliza la primera kcal igual que la número cien, que es justo lo que no tiene sentido; una banda muerta, que solo penaliza lo que sobresale de una tolerancia, codifica la afirmación clínica tal cual. Dentro de la banda no cabe un ``penaliza muy poco'', porque con pesos enteros el mínimo es 1, que con fila 7 son $7\,000$ por kcal, más que un alimento sin usar: dentro de la banda el coste es cero. Una banda solo diaria deja al solver pegar cada día al borde que le convenga, y un plan de $1\,300$ kcal con banda de 100 podría quedarse en $1\,400$ todos los días, que ya no es una desviación pequeña. Así que decidí dos bandas: una diaria de $\pm 50$ kcal ($\pm 5$\,\% en macronutrientes) sin penalización, y una segunda de $\pm 25$ kcal ($\pm 2{,}5$\,\%) sobre la media del plan, con un factor 10, casi obligatoria pero blanda para no volver infactibles los casos de conflicto. Unos días compensan a otros y la media queda pegada al objetivo. La formulación está en la sección~\ref{sec:objetivoResolucion}.
-
-También registré un segundo brazo que multiplicaba por 10 los pesos de la familia estructural, porque fuera de la banda la pendiente de $70\,000$ por kcal seguía aplastando a la estructura; la sesión valoró un factor 100 y lo descartó por excesivo.
-
-El pre-registro, confirmado por escrito antes de lanzar ninguna medición, comparaba tres brazos: la base (el motor sin bandas), A (bandas y ancla con los pesos de entonces) y B (lo mismo con la familia estructural multiplicada por 10). Los casos son los once del experimento anterior más uno de diseño, necesario porque ningún caso existente permitía medir la banda de macronutrientes salvo el de conflicto: María a 7 días y 5 comidas con un objetivo calórico blando de $1\,500$ kcal y un objetivo blando de proteína de 90 g. Tres repeticiones por caso y brazo, 90 segundos y 8 hilos, ejecución secuencial. Los casos se dividen en tres grupos: los afectados limpios (banco 2, banco 3, David, Carlos y el de diseño: objetivo blando de energía o macronutrientes sin conflicto), el control de conflicto (Tomás, cuya desviación del 41\,\% es del propio caso y debe seguir ahí) y el control de regresión (banco 4, banco 5, banco 8, Lucía, Sofía y Nadia: sin objetivo blando, la banda no toca su objetivo).
-
-Un brazo sería admisible si cumplía a la vez cinco criterios: (1) estructura: en al menos 3 de los 5 casos afectados limpios la mediana de alimentos sin usar baja o el caso pasa de límite a óptimo probado, y en ninguno de los 5 sube; (2) nutrición: en los óptimos el exceso fuera de bandas es exactamente cero, y en los que paran por tiempo queda acotado; (3) factibilidad: ningún caso pasa a infactible o sin respuesta; (4) tiempo: ningún caso que la base prueba óptimo en las 3 repeticiones pierde la prueba en más de 1; (5) bancos en verde. Si A y B eran admisibles se quedaba B, la jerarquía decidida en la deliberación; si solo A, se quedaba A y la reponderación se documentaba como no sostenida por los datos; si ninguno, se revertía el motor y el experimento se documentaba como hallazgo negativo, igual que la simetría de la sección~\ref{sec:evalSimetria} y el reescritor de la sección~\ref{sec:evalFormatos}. Dejé también dos hipótesis escritas: que la media con signo se quedaría dentro de su banda por construcción y se acercaría al borde superior, y que los casos que agotaban el límite afinando la energía resolverían más rápido o probarían el óptimo.
-
-El criterio del banco del solver cambió con el pre-registro. Los casos 2 y 3 comprobaban que la desviación calórica media fuese menor del 5\,\%; con la banda esa desviación sube hasta la tolerancia, y 50 sobre $1\,500$ es un 3,3\,\%, dentro del umbral antiguo, pero por casualidad de los valores. El criterio nuevo es el que dice algo sobre el modelo: cada día dentro de $\pm 50$ kcal y la media del plan dentro de $\pm 25$. El banco pasa de 30 a 32 comprobaciones.
-
-\begin{table}[htbp]
-\centering
-\footnotesize
-\begin{tabular}{|p{1.9cm}|p{1.5cm}|p{3cm}|p{3cm}|p{3cm}|}
-\hline
-\textbf{Caso} & \textbf{Grupo} & \textbf{Base} & \textbf{A} & \textbf{B} \\
-\hline
-banco 2 & afectado & 3/3; 8,1 s; 0 & 3/3; 0,9 s; 0 & 3/3; 1,0 s; 0 \\
-\hline
-banco 3 & afectado & 3/3; 37,7 s; 20 & 3/3; 8,7 s; 22 & 3/3; 8,7 s; 22 \\
-\hline
-David & afectado & 0/3; 90 s; 33 & 3/3; 41,1 s; 13 & 3/3; 35,8 s; 13 \\
-\hline
-Carlos & afectado & 0/3; 90 s; 44 & 0/3; 90 s; 26 & 0/3; 90 s; 15 \\
-\hline
-diseño macro & afectado & 0/3; 90 s; 3 & 3/3; 9,7 s; 0 & 3/3; 12,2 s; 0 \\
-\hline
-Tomás & conflicto & 3/3; 14,8 s; 29 & 3/3; 24,5 s; 31 & 2/3; 19,6 s; 27 \\
-\hline
-banco 4 & control & 3/3; 48,1 s; 1 & 3/3; 48,2 s; 1 & 3/3; 54,1 s; 1 \\
-\hline
-banco 5 & control & 3/3; 30,7 s; 12 & 3/3; 30,8 s; 12 & 3/3; 64,0 s; 12 \\
-\hline
-banco 8 & control & 0/3; 90 s; 37 & 0/3; 90 s; 37 & 0/3; 90 s; 40 \\
-\hline
-Lucía & control & 0/3; 90 s; 38 & 0/3; 90 s; 38 & 0/3; 90 s; 39 \\
-\hline
-Sofía & control & 3/3; 74,6 s; 9 & 3/3; 73,7 s; 9 & 3/3; 75,0 s; 9 \\
-\hline
-Nadia & control & 3/3; 76,8 s; 12 & 3/3; 76,6 s; 12 & 3/3; 76,6 s; 12 \\
-\hline
-\end{tabular}
-\caption{Bandas de tolerancia: óptimos probados de 3 repeticiones, mediana del tiempo y mediana de alimentos del catálogo sin usar, por caso y brazo. Las desviaciones con signo están en el Anexo~\ref{apendice:evaluacion}.}
-\label{tab:bandas}
-\end{table}
-
-\begin{figure}[t]
+\begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=0.95\textwidth]{Imagenes/Vectorial/fig_bandas_variedad}
 \end{center}
-\caption{Variedad realizada por caso y brazo, con los óptimos probados sobre cada barra.}
+\caption{Bandas de tolerancia: alimentos del catálogo sin usar por caso y brazo (base sin bandas, A con bandas, B con bandas y estructura por diez), con los óptimos probados de tres repeticiones sobre cada barra. Los tiempos y las tablas por caso están en la sección~\ref{sec:anexoBandas} del Anexo~\ref{apendice:evaluacion}.}
 \label{fig:bandasVariedad}
 \end{figure}
 
-\begin{figure}[t]
-\begin{center}
-\includegraphics[width=0.95\textwidth]{Imagenes/Vectorial/fig_bandas_tiempos}
-\end{center}
-\caption{Tiempo de resolución por caso y brazo (mediana de 3 repeticiones).}
-\label{fig:bandasTiempos}
-\end{figure}
-
-La campaña fueron 108 resoluciones (tabla~\ref{tab:bandas}, figuras~\ref{fig:bandasVariedad} y~\ref{fig:bandasTiempos}), sin ninguna repetición descartada por reloj. En los casos afectados el efecto es el previsto y grande. David pasa de agotar los 90 segundos con 33 alimentos sin usar a probar el óptimo en 41 segundos con 13; el caso de diseño, de 90 segundos sin óptimo a 10 segundos con los 100 alimentos usados; el banco 2 de 8 segundos a 1 y el banco 3 de 38 a 9; Carlos, que sigue en el límite, baja de 44 a 26 alimentos sin usar. La hipótesis registrada sobre los tiempos se cumple: al dejar de exigir la energía al gramo, los casos que gastaban el presupuesto en afinarla resuelven en una fracción del tiempo o prueban el óptimo. Los seis casos de control quedan idénticos en el brazo A, que solo cambia el objetivo donde hay un objetivo blando; en B cambian algo por el reescalado (el banco 5 tarda el doble sin perder el óptimo, Lucía y el banco 8 devuelven 1 y 3 alimentos menos en el límite, y Tomás pierde un óptimo de tres). Como en los casos limpios ningún día sale de las bandas, A y B tienen en ellos el mismo óptimo salvo escala; la diferencia entre ambos en Carlos (26 frente a 15) es un efecto del reescalado sobre la búsqueda, no de la jerarquía.
-
-El solver usa las bandas: varios días se pegan al borde de $\pm 50$ y la media se acerca al suyo de $\pm 25$. La hipótesis de que la deriva iría hacia el borde superior se cae: en el banco 2 y en David va hacia abajo en todas las repeticiones, y en el banco 3 y en el caso de diseño cambia de signo entre repeticiones. Lo que importa para el modelo es que el ancla funciona por construcción: en ninguna de las 45 resoluciones de los casos limpios con bandas hay exceso fuera de la banda diaria ni de la banda de la media. Tomás sigue devolviendo plan con su energía $1\,240$ kcal por debajo del objetivo en los tres brazos, que era la razón de dejar el ancla blanda. La recomposición externa del objetivo coincidió con el valor reportado en 104 de las 108 resoluciones; las cuatro diferencias son de Tomás, con la holgura ya explicada en la sección anterior. El pre-registro sirve también para esto: las hipótesis equivocadas quedan escritas.
-
-\begin{table}[htbp]
-\centering
-\small
-\begin{tabular}{|p{6.2cm}|p{3.4cm}|p{3.4cm}|}
-\hline
-\textbf{Criterio} & \textbf{A} & \textbf{B} \\
-\hline
-1. Estructura: 3 de 5 casos limpios mejoran & pasa (David, Carlos, diseño) & pasa (los mismos) \\
-\hline
-1. Estructura: ninguno empeora & falla: banco 3 de 20 a 22 & falla: banco 3 de 20 a 22 \\
-\hline
-2. Fuera de banda cero en óptimos, acotado en el límite & pasa (cero en todos) & pasa (cero en todos) \\
-\hline
-3. Factibilidad & pasa & pasa \\
-\hline
-4. Óptimos probados conservados & pasa & pasa (Tomás pierde 1 de 3) \\
-\hline
-5. Bancos: solver con el criterio redefinido & 32 de 32 & 32 de 32 \\
-\hline
-5. Bancos: validador & 38 de 38 & 38 de 38 \\
-\hline
-\end{tabular}
-\caption{Evaluación de los criterios pre-registrados, brazo a brazo.}
-\label{tab:bandasCriterios}
-\end{table}
-
-El veredicto tiene dos tiempos y conviene dejarlos en este orden. En la lectura estricta del pre-registro (tabla~\ref{tab:bandasCriterios}) ningún brazo es admisible: los dos cumplen la mitad exigente del criterio 1 y los dos fallan la cláusula de que ningún caso empeore, porque el banco 3 sube de 20 a 22 alimentos sin usar. Según la regla registrada eso llevaba a revertir el motor. Lo dejo escrito antes de nada porque el valor del método está en que el criterio no se reescriba después de ver los datos.
-
-Los datos dicen algo más sobre ese fallo. El banco 3 termina óptimo en las tres repeticiones de los tres brazos, pero óptimo en este motor significa dentro de la brecha relativa del 2\,\% con que para el solver. Con un objetivo de unos 2,12 millones de unidades, ese 2\,\% son $42\,000$ unidades, algo más de 8 alimentos sin usar, y la propia base oscila entre 17 y 21 alimentos sin usar según la repetición. La subida de 20 a 22 está dentro del ruido de parada del solver: el criterio se redactó sin tener en cuenta esa holgura. La lección metodológica es que un criterio sobre conteos estructurales debe llevar una tolerancia al menos del tamaño de la brecha de parada, o exigir óptimos a brecha cero; queda anotada para futuros pre-registros.
-
-Con los datos delante, y como decisión tomada a posteriori y registrada como tal, mantuve el cambio y elegí el brazo A: bandas con ancla de la media y los pesos de siempre. La desviación respecto al pre-registro es una sola y acotada, aceptar el banco 3 como neutro por estar dentro de la holgura de parada. Es el tercer caso del patrón ``criterio antes, datos después'' de este capítulo: el reescritor y la simetría fueron negativos limpios, y aquí el criterio falló por su propia redacción.
-
-Elegí A frente a B, en contra de la regla registrada que prefería B si ambos valían, por una razón que salió de mirar los resultados. Más alimentos distintos no hacen mejor una dieta: una semana con 87 alimentos diferentes es difícil de comprar y de seguir, y el término de variedad es un proxy que solo debe decidir entre planes que ya son equivalentes en lo que importa. El brazo B multiplica por diez el peso de ese proxy frente a la energía justo en el único sitio donde A y B se distinguen (cuando algún día tiene que salirse de la banda), y tiene costes medidos en los controles. A se queda con casi toda la ganancia sin tocar nada fuera de los objetivos blandos, y deja el control de la variedad en el estilo clínico del profesional, cuyas preferencias ya pesan más que la variedad: en el banco 3 la preferencia vegetariana llena los 140 huecos del plan y la variedad no se lo impide. Con el brazo A los bancos quedaron en 32 de 32, 38 de 38 y 14 de 14 en la cola asíncrona, y la prueba de extremo a extremo contra el despliegue dio 29 de 29 con el motor nuevo servido; la desviación reportada en el caso con objetivo calórico pasó del 0,0 al 2,57\,\%, señal de que producción ya servía las bandas.
-
-Las bandas conectan este eje con el siguiente. Son también la mayor mejora de tiempos del proyecto en los casos con objetivo calórico, porque el solver deja de demostrar optimalidad sobre la igualdad al gramo; el resto de la eficiencia se mide en la sección~\ref{sec:evalEficiencia}.
+El veredicto tiene dos tiempos. En la lectura estricta del pre-registro ningún brazo es admisible: los dos fallan la cláusula de que ningún caso empeore, porque el banco 3 sube de 20 a 22 alimentos sin usar, y según la regla registrada eso llevaba a revertir el motor. Los datos dicen algo más sobre ese fallo: el banco 3 termina óptimo en todas las repeticiones, pero óptimo en este motor significa dentro de la brecha relativa del 2\,\% con que para el solver, que sobre su objetivo son unas $42\,000$ unidades, algo más de 8 alimentos sin usar, y la propia base oscila entre 17 y 21 según la repetición. La subida está dentro del ruido de parada, y el criterio se redactó sin tener en cuenta esa holgura. Con los datos delante, y como decisión tomada a posteriori y registrada como tal, mantuve el cambio y elegí el brazo A, con una única desviación respecto al pre-registro: aceptar el banco 3 como neutro. Elegí A frente a B, en contra de la regla registrada que prefería B si ambos valían, porque más alimentos distintos no hacen mejor una dieta (una semana con 87 alimentos diferentes es difícil de comprar y de seguir), el término de variedad es un proxy que solo debe desempatar, y B multiplica por diez ese proxy justo en el único sitio donde A y B se distinguen, con costes medidos en los controles; el control de la variedad queda en el estilo clínico del profesional. La lección metodológica, anotada para futuros pre-registros, es que un criterio sobre conteos debe llevar una tolerancia al menos del tamaño de la brecha de parada, o exigir óptimos a brecha cero. Es el tercer caso del patrón ``criterio antes, datos después'' de este capítulo: el reescritor y la simetría fueron negativos limpios, y aquí el criterio falló por su propia redacción. Con el brazo A los bancos quedaron en 32 de 32, 38 de 38 y 14 de 14 en la cola asíncrona, y la prueba de extremo a extremo contra el despliegue dio 29 de 29 con el motor nuevo servido. Las bandas son también la mayor mejora de tiempos del proyecto en los casos con objetivo calórico, porque el solver deja de demostrar optimalidad sobre la igualdad al gramo; el resto de la eficiencia se mide en la sección~\ref{sec:evalEficiencia}.
 
 \section{La eficiencia del motor}
 \label{sec:evalEficiencia}
 
-Esta sección responde a dos preguntas de los directores del TFG sobre el rendimiento: las cifras del tamaño del problema que sostienen el argumento, y experimentos de escalado y la rotura de simetría entre días. La búsqueda de mejoras trajo además una que no estaba prevista, las cotas de dominio, y la sección cierra con lo que el alojamiento gratuito enseñó sobre el motor.
+Esta sección responde a tres preguntas sobre el rendimiento: las cifras del tamaño del problema que sostienen el argumento, cómo escala con cada dimensión y si la rotura de simetría entre días ahorra búsqueda. La búsqueda de mejoras trajo además una que no estaba prevista, las cotas de dominio, y la sección cierra con lo que el alojamiento gratuito enseñó sobre el motor.
 
 \subsection{El tamaño del problema}
 \label{sec:evalTamano}
@@ -417,53 +332,19 @@ Conviene decir por qué menos días o menos comidas no facilitan el problema en 
 \subsection{Rotura de simetría entre días}
 \label{sec:evalSimetria}
 
-Dos días de un plan son intercambiables cuando ninguna restricción los distingue: permutar sus asignaciones produce otra solución válida con el mismo objetivo, y el solver puede explorar hasta $7! = 5\,040$ variantes equivalentes de un mismo plan semanal. Uno de los directores del trabajo de fin de grado propuso romper esa simetría con un score entero de pesos $2^{F(M-m)+(F-f)}$ que ordenase los días. Ese score define un orden lexicográfico, pero materializar el número con $F$ cercano a 100 desborda cualquier entero de 64 bits, así que la adaptación implementa el mismo orden sin materializarlo: una cadena lexicográfica dura entre días consecutivos sobre el vector de presencias de cada día, con los booleanos de prefijo igual habituales en programación con restricciones. En el caso de 7 días, 4 comidas y 100 alimentos añade unos $4\,800$ booleanos auxiliares y $10\,000$ restricciones.
+Dos días de un plan son intercambiables cuando ninguna restricción los distingue: permutar sus asignaciones produce otra solución válida con el mismo objetivo, y en un plan semanal el solver puede recorrer hasta $7! = 5\,040$ variantes equivalentes. La pregunta era si imponer un orden entre los días ahorraría búsqueda en los casos que agotan el límite de tiempo. Lo medí con dos codificaciones: una cadena lexicográfica dura sobre el vector de presencias de cada día (unos $4\,800$ booleanos auxiliares y $10\,000$ restricciones en el caso de 7 días, 4 comidas y 100 alimentos) y una variante mínima con la misma semántica, energía diaria no creciente, con seis restricciones y ninguna variable nueva. Antes de implementarlas dejé registrada la condición de corrección (el orden solo se añade cuando permutar los días es una simetría verdadera del problema) y el protocolo: los diez casos que la cumplen, cinco repeticiones por brazo, y si el cambio empeoraba, los datos se presentaban antes de decidir. El diseño completo y los valores por caso están en la sección~\ref{sec:anexoSimetria} del Anexo~\ref{apendice:evaluacion}.
 
-La condición de corrección, registrada antes de implementar, es que la cadena solo se añade cuando permutar los días es una simetría verdadera del problema: plan de 7 días o menos (con más, las ventanas deslizantes de variedad semanal distinguen los días), ninguna restricción clínica de no repetición con separación mayor que un día, y toda restricción de raciones máximas por periodo con ventana de un día o de la duración entera. Si no se cumple, imponer un orden podría excluir soluciones óptimas. La rotura ordena las presencias y no los gramos; es parcial y correcta. La medición registrada fueron los diez casos que activan la condición (el caso 8 del banco queda fuera por su no repetición clínica), 5 repeticiones por brazo, comparando tiempo, estado, objetivo y desviación calórica; si el cambio empeoraba, los datos se presentaban antes de decidir.
+Ninguna de las dos mejoró de forma consistente (figura~\ref{fig:simetria}). La cadena lexicográfica empeora seis casos de diez (los dos casos pesados del banco y Nadia pierden la prueba de optimalidad que tenían, y David devuelve un incumbente 13 veces peor), mejora tres y deja dos iguales. La variante escalar tiene mejor balance (seis mejoran, el banco 3 a menos de la mitad de tiempo), pero donde falla el daño es severo (el banco 4 pasa de óptimo probado a un objetivo veinte veces peor en el límite) y no hay ningún predicado que separe a priori los casos que mejoran de los que empeoran: la hipótesis natural, que ayuda cuando hay un objetivo calórico que ancle la magnitud ordenada, muere con los datos.
 
-\begin{table}[htbp]
-\centering
-\footnotesize
-\begin{tabular}{|p{1.4cm}|p{3cm}|p{4.1cm}|p{4.1cm}|}
-\hline
-\textbf{Caso} & \textbf{Sin orden} & \textbf{Cadena lexicográfica} & \textbf{Orden escalar} \\
-\hline
-banco 2 & óptimo, 4,9 s & óptimo, 5,2 s & óptimo, 3,2 s \\
-\hline
-banco 3 & óptimo, 22,4 s & óptimo, 23,3 s & óptimo, 9,7 s \\
-\hline
-banco 4 & óptimo, 69,7 s & límite en 5 de 5, objetivo hasta 2,8 veces peor & límite en 5 de 5, objetivo 20 veces peor \\
-\hline
-banco 5 & óptimo, 66,7 s & límite en 5 de 5, objetivo 1,4 veces peor & límite en 5 de 5, objetivo 1,25 veces peor \\
-\hline
-David & límite, desviación 0,02\,\% & límite, desviación 0,56\,\%, objetivo 13 veces peor & límite, mejor incumbente \\
-\hline
-Lucía & límite & límite, algo peor & límite, algo mejor \\
-\hline
-Sofía & 1 de 5 óptimos, 80,8 s & 3 de 5 óptimos, 79,7 s, mejor objetivo & 5 de 5 óptimos, 63,5 s, mejor objetivo \\
-\hline
-Tomás & óptimo, 9,8 s & óptimo, 11,2 s & óptimo, 15,3 s \\
-\hline
-Carlos & límite & límite, mejor incumbente & límite, mejor incumbente \\
-\hline
-Nadia & óptimo, 52,9 s & 3 de 5 sin probar el óptimo, 85,6 s & óptimo, 69,8 s \\
-\hline
-\end{tabular}
-\caption{Rotura de simetría entre días en sus dos codificaciones, frente al motor sin orden (5 repeticiones por caso y brazo). Los valores de objetivo están en el Anexo~\ref{apendice:evaluacion}.}
-\label{tab:simetria}
-\end{table}
-
-\begin{figure}[t]
+\begin{figure}[htbp]
 \begin{center}
 \includegraphics[width=0.95\textwidth]{Imagenes/Vectorial/fig_simetria_tiempos}
 \end{center}
-\caption{Tiempo de resolución por caso y brazo, media y rango de las 5 repeticiones. Donde las tres barras tocan el límite, la diferencia está en el estado y en la calidad del incumbente, que recoge la tabla~\ref{tab:simetria}.}
+\caption{Tiempo de resolución por caso y brazo, media y rango de las 5 repeticiones. Donde las tres barras tocan el límite, la diferencia está en el estado y en la calidad del incumbente, que recogen las tablas de la sección~\ref{sec:anexoSimetria} del Anexo~\ref{apendice:evaluacion}.}
 \label{fig:simetria}
 \end{figure}
 
-La cadena lexicográfica salió peor (tabla~\ref{tab:simetria} y figura~\ref{fig:simetria}): seis casos empeoran (los bancos 4 y 5 y Nadia pierden la prueba de optimalidad que tenían, y David devuelve un incumbente 13 veces peor), tres mejoran (Sofía con claridad, Carlos en el incumbente) y dos quedan igual. Tras ese resultado registré y medí una variante mínima con la misma semántica de orden y coste casi nulo: energía diaria no creciente entre días consecutivos, seis restricciones lineales sobre sumas ya existentes y cero variables auxiliares. El balance es mejor (seis casos mejoran, el banco 3 a menos de la mitad de tiempo), pero los daños donde falla son severos (el banco 4 pasa de óptimo probado a un objetivo veinte veces peor en el límite) y no hay un predicado que separe a priori los casos que mejoran de los que empeoran: la hipótesis natural, que ayuda cuando hay un objetivo calórico que ancle la magnitud ordenada, muere con los datos, porque Sofía y Lucía mejoran sin objetivo calórico y Tomás empeora teniéndolo.
-
-Las dos codificaciones se retiran. La explicación es coherente con lo que hace el solver por dentro: CP-SAT ya detecta y explota simetrías en el presolve y reparte estrategias entre sus hilos de búsqueda, así que un orden manual compite con un mecanismo interno que funciona, y su efecto real es reordenar la búsqueda, a veces a favor y a veces en contra, sin patrón explotable. No se cablea nada en el motor; el código queda en el script del experimento, reproducible, y el hallazgo negativo se documenta con estas tablas. Es la misma lógica que la decisión del reescritor en el estudio de formatos: el criterio se fijó antes de medir, los datos no acompañan y la decisión se toma con ellos.
+La explicación es doble. CP-SAT ya detecta y explota simetrías en el presolve y reparte estrategias entre sus hilos de búsqueda, así que un orden impuesto a mano compite con un mecanismo interno que funciona, y su efecto real es reordenar la búsqueda, unas veces a favor y otras en contra, sin patrón explotable. Y además la simetría entre días es más rara de lo que parece: cualquier no repetición con separación mayor que un día o cualquier tope de raciones con ventana intermedia distingue unos días de otros, así que el orden solo es correcto en una parte de los casos reales (el caso 8 del banco ya queda fuera) y el motor tendría que decidir en cada resolución si aplicarlo. Las dos codificaciones se retiran y el motor no cambia; el código queda en el script del experimento, reproducible, y el hallazgo negativo se documenta con los datos del anexo, igual que la decisión del reescritor de la sección~\ref{sec:evalFormatos}.
 
 \subsection{Cotas de dominio ajustadas}
 \label{sec:evalCotas}

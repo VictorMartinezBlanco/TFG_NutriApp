@@ -80,6 +80,12 @@ constantes,guionado,Cascaras/bibliografia,config%
 % Los apéndices se llaman "Anexo" en el texto y en sus cabeceras
 \addto\captionsspanish{\renewcommand{\appendixname}{Anexo}}
 
+% El Anexo D pasa de diez tablas: el numero de dos cifras necesita mas hueco en
+% el indice de tablas
+\makeatletter
+\renewcommand*{\l@table}{\@dottedtocline{1}{1.5em}{2.8em}}
+\makeatother
+
 % Menos páginas de flotantes sueltos: una tabla o figura solo ocupa página propia
 % si la llena, y puede compartir página con más texto
 \renewcommand{\topfraction}{0.85}

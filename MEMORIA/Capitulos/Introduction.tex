@@ -33,7 +33,7 @@ To achieve this general objective, the following specific objectives are set:
 
     \item To design the system architecture and its data model: two panels (nutritionist and client) over a single database, with the isolation between professionals guaranteed in the data layer itself, and with a constraints table that acts as the interface between whoever produces them (the professional or the AI) and the engine that consumes them.
 
-    \item To build a plan generation engine based on constraint programming, together with a deterministic and independent clinical validator, capable of working on its own without depending on any artificial intelligence component.
+    \item To build a plan generation engine based on constraint programming techniques, together with a deterministic and independent clinical validator, capable of working on its own without depending on any artificial intelligence component.
 
     \item To integrate the AI layer that makes that engine usable in natural language: translation of the professional's requests into formal constraints, prior validation of the messages and asynchronous generation, keeping the professional as the arbiter of every decision.
 \end{enumerate}
@@ -83,7 +83,7 @@ The application was deployed publicly as soon as it had its first sections, foll
 
 \subsection*{Phase 9. Plan generation engine (June 2026)}
 
-The technical heart of the project: the formalisation of the diet as a constraint satisfaction problem. After consulting one of my supervisors about which approach would be best, I was advised that its implementation should consist of a constraint programming solver and an independent deterministic validator that audits every plan before accepting it, and that I could also add an infeasibility diagnosis for when the requests are incompatible with each other. The engine works without any artificial intelligence component, which made it possible to verify it first with a bank of cases and then from the web itself (by creating a section to modify the parameters used to generate the plan with the engine).
+The technical heart of the project: the formalisation of the diet as a constraint satisfaction problem. After consulting my supervisor, Alejandro, about which approach would be best, I was advised that its implementation should consist of a constraint programming solver and an independent deterministic validator that audits every plan before accepting it, and that I could also add an infeasibility diagnosis for when the requests are incompatible with each other. The engine works without any artificial intelligence component, which made it possible to verify it first with a bank of cases and then from the web itself (by creating a section to modify the parameters used to generate the plan with the engine).
 
 \subsection*{Phase 10. Artificial intelligence layer (July 2026)}
 

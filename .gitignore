@@ -249,3 +249,5 @@ generate_docx.py
 
 # Internal template notes (not part of the formal thesis)
 MEMORIA/notas-plantilla.md
+# PDF anotado por los tutores (no va al repo)
+MEMORIA/Retroalimentaci*n_tutores/
