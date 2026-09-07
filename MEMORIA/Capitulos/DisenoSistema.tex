@@ -154,7 +154,15 @@ La composición nutricional vive en una tabla propia, \texttt{food\_nutrient}, c
 
 Los planes son dos tablas: \texttt{plan} y \texttt{plan\_meal\_item}, con una fila por alimento en cada comida de cada día. No hay tabla intermedia de comidas: la jerarquía días-comidas-alimentos se reconstruye al presentar. Tampoco hay columna de estado: un plan es borrador hasta que tiene fecha de firma (\texttt{approved\_at}), y esa fecha la escribe solo la capa de servicio (sección~\ref{sec:capaServicio}).
 
-El catálogo global y los alimentos propios de cada nutricionista comparten la tabla \texttt{food}: un alimento con dueño es privado y uno sin dueño es de todos. Y los argumentos heterogéneos de las restricciones (la cantidad y unidad de un límite, la etiqueta de una exclusión) van en una columna JSONB dentro del esquema fijo de \texttt{diet\_constraint}: los 16 tipos comparten tabla y difieren en el contenido de esa columna, que la aplicación valida antes de escribir.
+El catálogo global y los alimentos propios de cada nutricionista comparten la tabla \texttt{food}: un alimento con dueño es privado y uno sin dueño es de todos. La figura~\ref{fig:catalogoAlimentos} enseña ese catálogo tal como lo ve el profesional, con el filtro de sus alimentos propios y el alta de uno nuevo. Y los argumentos heterogéneos de las restricciones (la cantidad y unidad de un límite, la etiqueta de una exclusión) van en una columna JSONB dentro del esquema fijo de \texttt{diet\_constraint}: los 16 tipos comparten tabla y difieren en el contenido de esa columna, que la aplicación valida antes de escribir.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.85\textwidth]{Imagenes/Bitmap/catalogo_alimentos}
+\end{center}
+\caption{El catálogo de alimentos en la aplicación: la base compartida y los alimentos propios del profesional en una misma lista, con búsqueda, el filtro de los suyos y el alta de un alimento nuevo, que entra con sus nutrientes, su ración típica y sus etiquetas.}
+\label{fig:catalogoAlimentos}
+\end{figure}
 
 Del resto de decisiones de modelado, las específicas de esta aplicación:
 
@@ -213,7 +221,15 @@ La persistencia es el motivo de que estas operaciones no usen la vía del navega
 
 Firmar es la operación con más peso de diseño y la más simple de código: poner la fecha en \texttt{approved\_at}. Antes de hacerlo, el endpoint vuelve a validar el plan y la propiedad del cliente; como esa fecha solo la escribe el backend, un plan firmado siempre pasó por la re-validación. Con la política de visibilidad de la sección~\ref{sec:capaSeguridad}, firmar es el acto con el que el profesional convierte su borrador en el plan que el cliente ve: la regla de que el sistema propone y el profesional decide (capítulo~\ref{cap:analisisRequisitos}) queda escrita en la capa de datos.
 
-Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en la cola \texttt{generation\_task} y responde al momento con su identificador. El worker reclama tareas pendientes con un bloqueo que impide que dos procesos cojan la misma (en SQL, \texttt{FOR UPDATE SKIP LOCKED}), ejecuta el mismo pipeline que el camino síncrono y escribe el resultado en la propia fila; el frontend consulta el estado por sondeo bajo RLS. Se usó la base de datos como cola para evitar una pieza de infraestructura nueva, y el estado de cada tarea (en cola, en curso, terminada o fallida) se consulta como cualquier otro dato.
+Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en la cola \texttt{generation\_task} y responde al momento con su identificador. El worker reclama tareas pendientes con un bloqueo que impide que dos procesos cojan la misma (en SQL, \texttt{FOR UPDATE SKIP LOCKED}), ejecuta el mismo pipeline que el camino síncrono y escribe el resultado en la propia fila; el frontend consulta el estado por sondeo bajo RLS. Se usó la base de datos como cola para evitar una pieza de infraestructura nueva, y el estado de cada tarea (en cola, en curso, terminada o fallida) se consulta como cualquier otro dato. Si el worker no está en marcha, la tarea espera en la cola y la interfaz lo dice (figura~\ref{fig:colaWorker}).
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.9\textwidth]{Imagenes/Bitmap/cola_worker}
+\end{center}
+\caption{El apartado de generaciones recientes con el worker apagado: la tarea nueva queda en cola y, pasados dos minutos, la interfaz avisa de que espera al worker; debajo, una generación anterior que falló conserva su explicación.}
+\label{fig:colaWorker}
+\end{figure}
 
 \section{Despliegue}
 \label{sec:despliegue}

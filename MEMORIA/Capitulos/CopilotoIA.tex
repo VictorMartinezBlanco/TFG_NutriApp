@@ -61,7 +61,15 @@ El copiloto es además opcional en cada paso; la misma pantalla permite saltarlo
 \section{Del texto a las restricciones}
 \label{sec:textoRestricciones}
 
-El mensaje no va directo al modelo de lenguaje. Antes pasa por una revisión previa: una comprobación determinista que descarta los idiomas que el sistema no soporta, y tres comprobaciones separadas, cada una con una llamada aislada al modelo, que valoran si la petición es del ámbito dietético, si está completa o si se contradice a sí misma. Cuando alguna falla, el profesional recibe el mensaje original con sus detalles precargado para corregirlo sin reescribirlo.
+El mensaje no va directo al modelo de lenguaje. Antes pasa por una revisión previa: una comprobación determinista que descarta los idiomas que el sistema no soporta, y tres comprobaciones separadas, cada una con una llamada aislada al modelo, que valoran si la petición es del ámbito dietético, si está completa o si se contradice a sí misma. Cuando alguna falla, el profesional recibe el mensaje original con sus detalles precargado para corregirlo sin reescribirlo. La figura~\ref{fig:revisionPrevia} enseña uno de esos frenos.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.85\textwidth]{Imagenes/Bitmap/copiloto_revision_previa}
+\end{center}
+\caption{La revisión previa frena un mensaje fuera de ámbito (una petición sobre un gimnasio y una rutina de entrenamiento): el aviso, el detalle que devuelve el modelo y el botón para corregir el mensaje, que vuelve precargado al formulario.}
+\label{fig:revisionPrevia}
+\end{figure}
 
 Cada comprobación usa el modelo más pequeño que hace bien ese trabajo. Al medirlas por separado con un banco de mensajes propio, el tamaño necesario resultó distinto en cada una: el modelo que basta para juzgar el ámbito falla la completitud, y ningún modelo único daba buen resultado en las tres. La matriz de esa medición se enseña en el capítulo~\ref{cap:evaluacion}.
 
@@ -101,7 +109,15 @@ Los fallos también aparecen aquí. Las peticiones que el traductor no supo apli
 
 Los tutores pidieron además que todo esto hablara el idioma del profesional, es decir, que los mensajes mostrados no fuesen confusos o relativos a la base de datos. Por ello, una restricción se enseña siempre como una frase (nunca incluir gluten, unas 2000 kcal al día) y su prioridad como obligatoria o preferible, sin los nombres internos de la base de datos. Las frases salen de una única función compartida por la ficha del cliente, los ajustes y esta pantalla, para que la misma fila se lea igual en toda la aplicación. También el formulario manual se renombró por intención (fijar un objetivo, evitar un alimento o una familia, dar forma a las comidas) en vez de por el nombre técnico de cada tipo.
 
-Además de las restricciones del cliente, el profesional mantiene en sus ajustes sus reglas de estilo: las que aplica a todos sus planes, como no repetir carne roja en días seguidos. Usan el mismo vocabulario y el mismo formulario, y el motor las une con las del cliente en cada generación; es el tercer productor de la figura~\ref{fig:productorConsumidor}. La versión ambiciosa de esta idea, aprender el estilo del profesional a partir de sus correcciones, queda como trabajo futuro en el capítulo~\ref{cap:conclusiones}.
+Además de las restricciones del cliente, el profesional mantiene en sus ajustes sus reglas de estilo: las que aplica a todos sus planes, como no repetir carne roja en días seguidos. Usan el mismo vocabulario y el mismo formulario, y el motor las une con las del cliente en cada generación; es el tercer productor de la figura~\ref{fig:productorConsumidor}. La versión ambiciosa de esta idea, aprender el estilo del profesional a partir de sus correcciones, queda como trabajo futuro en el capítulo~\ref{cap:conclusiones}. La figura~\ref{fig:estiloClinico} enseña esas reglas en los ajustes del segundo nutricionista de demostración.
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.85\textwidth]{Imagenes/Bitmap/estilo_clinico}
+\end{center}
+\caption{El estilo clínico en los ajustes del profesional: reglas que se aplican a todos sus planes, escritas con el mismo vocabulario y el mismo formulario que las de cada cliente. Es el tercer productor de la tabla de restricciones.}
+\label{fig:estiloClinico}
+\end{figure}
 
 \section{De la petición al plan firmado}
 \label{sec:peticionPlan}
@@ -120,7 +136,7 @@ Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{s
 \label{fig:copilotoInfactible}
 \end{figure}
 
-El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}). La figura~\ref{fig:copilotoPlan} enseña el borrador que salió de la petición de la figura~\ref{fig:copilotoRevision}.
+El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}). La figura~\ref{fig:copilotoPlan} enseña el borrador que salió de la petición de la figura~\ref{fig:copilotoRevision}, y la figura~\ref{fig:planClienta}, un plan ya firmado tal como lo ve la clienta en su panel.
 
 \begin{figure}[htbp]
 \begin{center}
@@ -128,6 +144,14 @@ El borrador que sí existe llega auditado por el validador de la sección~\ref{s
 \end{center}
 \caption{El borrador generado: la cabecera con su estado, los promedios diarios y el primer día del plan. El botón de firma es el único paso que lo convierte en el plan que ve la clienta.}
 \label{fig:copilotoPlan}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.72\textwidth]{Imagenes/Bitmap/plan_clienta}
+\end{center}
+\caption{Un plan firmado tal como lo ve la clienta en su panel: la adherencia acumulada, los promedios diarios y cada comida con su casilla para marcarla como hecha. De esas marcas sale la adherencia que ve el profesional en la ficha.}
+\label{fig:planClienta}
 \end{figure}
 
 Con la firma se cierra el recorrido del capítulo: de una petición escrita en el lenguaje del profesional a un plan auditado que él decidió restricción a restricción. La evaluación de las piezas de IA, con los bancos de las comprobaciones, el estudio de formatos y el comportamiento medido del modelo local, está en el capítulo~\ref{cap:evaluacion}.

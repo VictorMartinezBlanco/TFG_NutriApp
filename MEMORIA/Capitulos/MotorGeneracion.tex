@@ -210,7 +210,23 @@ La frontera delimita también la responsabilidad ante un plan malo: si viola una
 
 Las restricciones del profesional llegan al motor en un vocabulario cerrado de 16 tipos. De hecho, se cerró ese vocabulario antes de tocar ningún modelo de lenguaje para ordenar las dos mitades del sistema: cualquier productor tiene que expresarse en estos tipos, y el motor solo entiende de ellos. Cada fila trae el tipo, su objetivo (un alimento, una etiqueta, un nutriente, un valor), la prioridad que la hace dura o blanda y un peso de 1 a 10 que gradúa su importancia si es blanda.
 
-Dos de los 16 tipos son estructurales (número de comidas y duración del plan): fijan la dimensión del problema y no generan restricción. Los otros 14 se agrupan en objetivos de energía y macros, límites de nutrientes, prohibiciones y preferencias, reparto y frecuencia, variedad y combinaciones. La tabla~\ref{tab:catalogoClinico} los resume; las formulaciones completas están en el Anexo~\ref{apendice:formalizacion}.
+Dos de los 16 tipos son estructurales (número de comidas y duración del plan): fijan la dimensión del problema y no generan restricción. Los otros 14 se agrupan en objetivos de energía y macros, límites de nutrientes, prohibiciones y preferencias, reparto y frecuencia, variedad y combinaciones. La tabla~\ref{tab:catalogoClinico} los resume; las formulaciones completas están en el Anexo~\ref{apendice:formalizacion}. En la aplicación el profesional no ve los tipos por su nombre técnico: la ficha del cliente enseña cada fila como una frase, con su prioridad (figura~\ref{fig:fichaReglas}), y el formulario de alta se organiza por intención, con los campos que cambian según lo que se quiera fijar (figura~\ref{fig:formularioRestriccion}).
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.85\textwidth]{Imagenes/Bitmap/ficha_cliente_reglas}
+\end{center}
+\caption{Las reglas dietéticas de un cliente de demostración en su ficha: cada fila del catálogo se enseña como una frase agrupada por lo que fija, con su prioridad (obligatoria o preferible). Es el primer productor de la tabla de restricciones.}
+\label{fig:fichaReglas}
+\end{figure}
+
+\begin{figure}[htbp]
+\begin{center}
+\includegraphics[width=0.8\textwidth]{Imagenes/Bitmap/formulario_restriccion}
+\end{center}
+\caption{El formulario de alta de una restricción, organizado por intención. Al elegir qué se quiere fijar aparecen solo los campos de ese tipo (aquí, la familia de alimentos a excluir), y la prioridad se decide con dos opciones en lenguaje llano.}
+\label{fig:formularioRestriccion}
+\end{figure}
 
 \begin{table}[htbp]
 \centering
