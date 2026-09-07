@@ -156,7 +156,7 @@ Los planes son dos tablas: \texttt{plan} y \texttt{plan\_meal\_item}, con una fi
 
 El catálogo global y los alimentos propios de cada nutricionista comparten la tabla \texttt{food}: un alimento con dueño es privado y uno sin dueño es de todos. La figura~\ref{fig:catalogoAlimentos} enseña ese catálogo tal como lo ve el profesional, con el filtro de sus alimentos propios y el alta de uno nuevo. Y los argumentos heterogéneos de las restricciones (la cantidad y unidad de un límite, la etiqueta de una exclusión) van en una columna JSONB dentro del esquema fijo de \texttt{diet\_constraint}: los 16 tipos comparten tabla y difieren en el contenido de esa columna, que la aplicación valida antes de escribir.
 
-\begin{figure}[htbp]
+\begin{figure}[b]
 \begin{center}
 \includegraphics[width=0.85\textwidth]{Imagenes/Bitmap/catalogo_alimentos}
 \end{center}
@@ -223,7 +223,7 @@ Firmar es la operación con más peso de diseño y la más simple de código: po
 
 Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en la cola \texttt{generation\_task} y responde al momento con su identificador. El worker reclama tareas pendientes con un bloqueo que impide que dos procesos cojan la misma (en SQL, \texttt{FOR UPDATE SKIP LOCKED}), ejecuta el mismo pipeline que el camino síncrono y escribe el resultado en la propia fila; el frontend consulta el estado por sondeo bajo RLS. Se usó la base de datos como cola para evitar una pieza de infraestructura nueva, y el estado de cada tarea (en cola, en curso, terminada o fallida) se consulta como cualquier otro dato. Si el worker no está en marcha, la tarea espera en la cola y la interfaz lo dice (figura~\ref{fig:colaWorker}).
 
-\begin{figure}[htbp]
+\begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{Imagenes/Bitmap/cola_worker}
 \end{center}
@@ -236,7 +236,7 @@ Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en 
 
 El sistema desplegado tiene cuatro patas: el frontend en Netlify~\citep{netlify}, la base de datos en Supabase (Fráncfort), el backend en Render~\citep{render} (también Fráncfort) y el worker de generación en un ordenador local. Todo el alojamiento es gratuito. La figura~\ref{fig:despliegue} enseña el reparto.
 
-\begin{figure}[t]
+\begin{figure}[htbp]
 \begin{center}
 \begin{tikzpicture}[
   font=\footnotesize,
