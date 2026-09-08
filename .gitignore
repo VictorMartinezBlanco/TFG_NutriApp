@@ -251,3 +251,6 @@ generate_docx.py
 MEMORIA/notas-plantilla.md
 # PDF anotado por los tutores (no va al repo)
 MEMORIA/Retroalimentaci*n_tutores/
+
+# logs del worker local (no van al repo)
+backend/worker.local.log*
