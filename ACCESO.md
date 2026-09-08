@@ -10,7 +10,9 @@ Doble Grado en Ingeniería Informática y Administración de Empresas, Facultad 
 - API del motor de generación: https://tfg-nutriapp.onrender.com, con comprobación de estado en https://tfg-nutriapp.onrender.com/health
 - Repositorio privado: https://github.com/VictorMartinezBlanco/TFG_NutriApp
 - Memoria en PDF dentro del material adjunto: `MEMORIA/TFGTeXiS.pdf`
-- Prototipo de Figma: las 25 pantallas de la versión 2 están exportadas en `MOCK-UP V2/` y las 24 de la versión 1 en `MOCK-UP V1/`
+- Prototipo navegable en Figma, público en solo lectura: https://www.figma.com/proto/NoxrgqUAFGwA4JQ2jgz9DR/NutriApp?node-id=567-2&page-id=546%3A2&starting-point-node-id=567%3A2&scaling=min-zoom&content-scaling=fixed
+  Abre en el selector de versión, desde donde se recorren tanto la versión 1 como la 2. El fichero de diseño, con el lienzo y las capas, está en https://www.figma.com/design/NoxrgqUAFGwA4JQ2jgz9DR/NutriApp
+- Capturas del prototipo, por si el enlace no estuviera disponible: las 25 pantallas de la versión 2 en `MOCK-UP V2/` y las 24 de la versión 1 en `MOCK-UP V1/`
 
 ## Cuentas de prueba
 

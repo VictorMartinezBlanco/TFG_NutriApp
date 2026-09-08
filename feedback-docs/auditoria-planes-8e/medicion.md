@@ -93,10 +93,10 @@ La figura FINAL del bloque se tomara re-ejecutando `audit_plans.py` sobre los
 planes demo regenerados y persistidos, cuando se cierre la revision y se pueda
 tocar la base de datos (ventana 8.5).
 
-## Decision de Victor sobre el residuo: 4 comidas por defecto (medida)
+## El residuo: 4 comidas por defecto (medida)
 
-En vez de un suelo de kcal por comida, Victor decidio bajar el defecto de 5 a
-3/4 comidas. Al implementarlo aflora un fallo del mapeo original: "las
+En vez de un suelo de kcal por comida, bajo el defecto de 5 a 3/4
+comidas. Al implementarlo aflora un fallo del mapeo original: "las
 primeras N franjas por default_order" dejaba un plan de 3 comidas en
 desayuno/media manana/comida, SIN CENA. Arreglado con un mapeo explicito en el
 loader (3 = desayuno/comida/cena; 4 = + merienda; 5 = + media manana; 6 = +
@@ -114,13 +114,13 @@ Re-medicion con 4 comidas (mismos 9 objetivos, en memoria): 9/9 factibles,
 | Comidas de solo frutos secos | 18 | 10 | 0 |
 | Items en el suelo / techo global | 35,3% / 31,0% | 2,1% / 3,4% | 1,9% / 3,5% |
 
-La hipotesis de Victor se confirma: el residuo de comidas de baja energia baja
+La hipotesis se confirma: el residuo de comidas de baja energia baja
 a un tercio y el desayuno de solo frutos secos desaparece sin regla nueva.
 Salida completa en `preview-despues-4-comidas.txt`.
 
 ## La figura final (planes regenerados y PERSISTIDOS, 4 comidas)
 
-Tras el OK de Victor: borrados los 9 planes demo del 8c (48-56, respetando los
+Confirmado el cambio: borrados los 9 planes demo del 8c (48-56, respetando los
 3 heredados 11-13), regenerados con `seed_demo_plans` (9/9 factibles, firmas
 segun objetivo, planes 78-86) y fechas reancladas con el 0017. Auditoria final
 con `audit_plans.py 78` (el filtro nuevo deja fuera los heredados pre-capa):

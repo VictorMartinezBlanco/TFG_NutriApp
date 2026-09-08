@@ -237,7 +237,7 @@ Tres versiones del motor, reconstruidas por commit en worktrees de git:
 |---|---|---|
 | v0 | e076526 | modelo inicial: estructura, suelos fisiológicos y catálogo de restricciones |
 | v1 | dbb9b23 | v0 más las reglas base de sentido común (no repetir en el día, variedad diaria, reparto) |
-| v2 | actual | v1 más la capa de plausibilidad del catálogo (perfiles de ración, unidades, franjas, roles) y los dos ajustes de este bloque (pesos conmensurables y cotas top-4) |
+| v2 | actual | v1 más la capa de plausibilidad del catálogo (perfiles de ración, unidades, franjas, roles) y los dos ajustes de este experimento (pesos conmensurables y cotas top-4) |
 
 Para aislar el efecto de las reglas, las tres versiones se ejecutan con el mismo catálogo actual, los mismos clientes y los mismos casos: el harness carga las entradas una sola vez con el cargador actual, las vuelca a JSON, y un runner mínimo por worktree reconstruye los tipos de su versión y llama a su generate_plan con el mismo límite de tiempo (90 s, por parámetro de la firma, estable desde la v0) y los mismos 8 hilos. Las métricas (tiempo, status, desviación calórica, raciones en los límites del perfil, variedad) las calcula un analizador común fuera de las versiones. El catálogo histórico también cambió entre versiones (de 28 a 100 alimentos), pero eso es una decisión de datos, no de modelo, y aquí no se mide.
 

@@ -1,6 +1,6 @@
 # Propuesta de perfiles de racion (fase 2 del Bloque 8e)
 
-Borrador asistido para revision POR LOTES de Victor. Cada alimento lleva su
+Primer borrador, pensado para revisarlo POR LOTES. Cada alimento lleva su
 perfil de racion (minimo y maximo de gramos por aparicion en una comida, y
 gramos por unidad si se sirve por piezas), su rol si lo tiene (condiment,
 sweet) y sus franjas horarias permitidas (sin franjas = todas).

@@ -41,7 +41,7 @@ La conclusión global es que la investigación **confirma las quince decisiones 
 
 ## 1. Introducción y propósito
 
-NutriApp es el TFG de Víctor Martínez Blanco (Doble Grado Ingeniería Informática + ADE, UCM). La pieza estrella es un copiloto IA que asiste al nutricionista en la creación de planes nutricionales aprendiendo de su estilo clínico. Tras una primera fase de pivote y una auditoría externa con tres perspectivas independientes (`auditoria-bd-ia.md`), las decisiones de modelado de la base de datos quedaron cerradas con el cuerpo de quince decisiones, pero condicionadas a una investigación posterior que cerrase varias preguntas técnicas: si convenía apoyarse en una base oficial (BEDCA, USDA), una API comercial (Edamam, Spoonacular), una mezcla, qué hacían los competidores reales, y qué literatura académica sostiene cada elección arquitectónica.
+NutriApp es mi TFG (Doble Grado en Ingeniería Informática y ADE, UCM). La pieza estrella es un copiloto IA que asiste al nutricionista en la creación de planes nutricionales aprendiendo de su estilo clínico. Tras una primera fase de pivote y una auditoría externa con tres perspectivas independientes (`auditoria-bd-ia.md`), las decisiones de modelado de la base de datos quedaron cerradas con el cuerpo de quince decisiones, pero condicionadas a una investigación posterior que cerrase varias preguntas técnicas: si convenía apoyarse en una base oficial (BEDCA, USDA), una API comercial (Edamam, Spoonacular), una mezcla, qué hacían los competidores reales, y qué literatura académica sostiene cada elección arquitectónica.
 
 Este documento es esa investigación. Los datos se han recogido consultando directamente las fuentes (sitios oficiales, documentación de APIs, papers en revistas con DOI verificable, reseñas de software en plataformas independientes como Capterra y G2). Cuando una afirmación no se ha podido verificar contra una fuente primaria, se indica explícitamente.
 
@@ -465,4 +465,4 @@ Antes de arrancar Fase B queda por cerrar una decisión de infraestructura. Las 
 
 ---
 
-*Investigación realizada en junio de 2026 con cuatro investigadores independientes en paralelo, cada uno con un bloque temático asignado, y síntesis posterior por el autor del TFG. La metodología (auditoría externa con perspectivas independientes + investigación documentada con bibliografía verificable) constituye en sí misma una aportación procedimental que se incluirá íntegra como Anexo F de la memoria del TFG.*
+*Investigación realizada en junio de 2026, repartida en cuatro bloques temáticos trabajados por separado y con una síntesis posterior. Toda la bibliografía citada es verificable.*
