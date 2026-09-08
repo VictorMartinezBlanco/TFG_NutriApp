@@ -3,7 +3,7 @@
 Aplicación web en Next.js 14 (App Router) que lee la base de datos de Supabase
 con la clave pública y la RLS. El backend de Python sigue en `../backend`.
 
-## Qué hace por ahora
+## Qué hace
 
 Un único login para los dos roles de la aplicación. Tras entrar, la raíz reparte:
 el nutricionista va a su panel y el cliente al suyo.
@@ -13,11 +13,12 @@ el nutricionista va a su panel y el cliente al suyo.
 - Layout con sidebar colapsable y header.
 - Dashboard con datos reales de la BD (clientes, planes, borradores sin firmar,
   alimentos del catálogo).
-- Clientes (lista + ficha): datos del cliente y sus restricciones bajo RLS, en
-  solo lectura.
-- Planes (lista + ficha): la lista muestra los planes del nutri con su cliente,
-  estado y fechas; la ficha despliega las comidas agrupadas por día con sus
-  items, también solo lectura.
+- Clientes (lista + ficha + alta): datos del cliente y sus restricciones bajo
+  RLS, con buscador por nombre y alta de restricciones en lenguaje llano.
+- Planes (lista + ficha + generación): la lista muestra los planes del nutri con
+  su cliente, estado y fechas; la ficha despliega las comidas agrupadas por día
+  con sus items y el botón de firma; la generación con IA (`/plans/generate`)
+  encola la tarea en el backend y sigue su estado por sondeo.
 - Alimentos (catálogo + ficha + alta custom): la lista busca por nombre y filtra
   por alimentos propios, la ficha muestra el perfil nutricional (macros y micros
   desde `food_nutrient`) y las tags, y el alta crea un alimento custom con sus
@@ -31,22 +32,23 @@ el nutricionista va a su panel y el cliente al suyo.
 
 ### Panel del cliente
 
-Bajo `/my`, en solo lectura:
+Bajo `/my`:
 
 - Dashboard: saludo, las comidas del día que le toca hoy en su plan, la próxima
   cita y el último mensaje de su hilo.
 - My Plan: el plan completo (días, comidas, alimentos con gramos y macros
-  diarios medios).
+  diarios medios) con la casilla para marcar cada comida como hecha.
+- Peso, citas (solicitud y cancelación) y mensajes con su nutricionista.
 
 El cliente solo ve planes **firmados**: un borrador del profesional no le llega,
-y no porque la pantalla lo filtre, sino porque la policy no lo entrega. Las
-secciones de citas y mensajes aparecen en su sidebar marcadas como próximas.
+y no porque la pantalla lo filtre, sino porque la policy no lo entrega.
 
 Todo se lee con la publishable key, así que la RLS decide qué filas devuelve
 según quién esté logueado. Las escrituras del nutricionista (alta de alimento,
 citas, mensajes, perfil, disponibilidad) van también con la publishable key: las
 policies de INSERT/UPDATE obligan a que `nutritionist_id` sea el del usuario
-logueado. El cliente no escribe en nada todavía.
+logueado. El cliente escribe solo en sus propias filas (marcas de comida, peso, citas y
+mensajes), con policies de escritura propias.
 
 ## Estructura
 
@@ -70,8 +72,8 @@ src/
     (app)/             # shell con sidebar + header, guard de sesion
       layout.tsx
       dashboard/       # pantalla viva con datos reales
-      clients/         # lista + ficha [id] (solo lectura, datos reales)
-      plans/           # lista + ficha [id] (solo lectura, datos reales)
+      clients/         # lista + ficha [id] + alta de restricciones
+      plans/           # lista + ficha [id] + generación con IA (generate)
       foods/           # catalogo + ficha [id] + alta custom (new, server action)
       calendar/        # lista de citas + alta por dialogo (server action)
       messages/        # conversaciones + hilo con sondeo cada 15s
@@ -133,7 +135,7 @@ Las credenciales de los usuarios de prueba (dos nutricionistas y el cliente de
 demostración) están en `.test-user.local.md`, que no se sube al repo. El panel
 muestra datos solo si hay clientes y planes; el juego de demostración se siembra
 desde `../backend/migrations/sql/0004_seed_demo.sql` y siguientes, y
-`0013_seed_demo_refresh.sql` vuelve a acercar sus fechas al día de hoy cuando la
+`0017_seed_demo_refresh.sql` vuelve a acercar sus fechas al día de hoy cuando la
 demo se queda atrás. La cuenta del cliente se crea y vincula con
 `../backend/scripts/create_demo_client.py`.
 
@@ -154,8 +156,8 @@ demo se queda atrás. La cuenta del cliente se crea y vincula con
 
 ## Production deployment
 
-La app pública vive en https://nutriapp-tfg.netlify.app (panel del nutri, sin la
-parte de IA, que correrá aparte en el backend de Python). Es un prototipo
+La app pública vive en https://nutriapp-tfg.netlify.app (los dos paneles; la parte
+de IA corre en el backend de Python desplegado en Render y en el worker local). Es un prototipo
 académico: las credenciales del nutri demo se entregan por canal seguro a
 tutores y revisores, no van en el repo.
 

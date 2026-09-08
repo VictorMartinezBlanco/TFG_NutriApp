@@ -193,7 +193,7 @@ La firma es además una frontera de visibilidad: para el cliente solo existen lo
 \begin{tikzpicture}[
   font=\footnotesize,
   actor/.style={draw, rounded corners=2pt, align=center, minimum height=8mm, inner sep=5pt, fill=white},
-  tablab/.style={draw, align=left, inner sep=5pt, fill=white, text width=52mm},
+  tablab/.style={draw, align=left, inner sep=5pt, fill=white, text width=57mm},
   fl/.style={-{Latex[length=2.2mm]}, shorten >=1pt, shorten <=1pt},
   etiqfl/.style={font=\scriptsize, align=center, fill=white, inner sep=1.5pt}
 ]
@@ -221,6 +221,8 @@ La persistencia es el motivo de que estas operaciones no usen la vía del navega
 
 Firmar es la operación con más peso de diseño y la más simple de código: poner la fecha en \texttt{approved\_at}. Antes de hacerlo, el endpoint comprueba la propiedad del plan y que sigue siendo un borrador; la validación clínica ocurrió al generarlo, antes de persistirlo, y como esa fecha solo la escribe el backend, un plan firmado siempre pasó por el validador. Con la política de visibilidad de la sección~\ref{sec:capaSeguridad}, firmar es el acto con el que el profesional convierte su borrador en el plan que el cliente ve: la regla de que el sistema propone y el profesional decide (capítulo~\ref{cap:analisisRequisitos}) queda escrita en la capa de datos.
 
+Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en la cola \texttt{generation\_task} y responde al momento con su identificador. El worker reclama tareas pendientes con un bloqueo que impide que dos procesos cojan la misma (en SQL, \texttt{FOR UPDATE SKIP LOCKED}), ejecuta el mismo pipeline que el camino síncrono y escribe el resultado en la propia fila; el frontend consulta el estado por sondeo bajo RLS. Se usó la base de datos como cola para evitar una pieza de infraestructura nueva, y el estado de cada tarea (en cola, en curso, terminada o fallida) se consulta como cualquier otro dato. Si el worker no está en marcha, la tarea espera en la cola y la interfaz lo dice, como enseña la figura~\ref{fig:colaWorker}.
+
 \begin{figure}[H]
 \begin{center}
 \includegraphics[width=0.9\textwidth]{Imagenes/Bitmap/cola_worker}
@@ -228,8 +230,6 @@ Firmar es la operación con más peso de diseño y la más simple de código: po
 \caption{El apartado de generaciones recientes con el worker apagado: la tarea nueva queda en cola y, pasados dos minutos, la interfaz avisa de que espera al worker; debajo, una generación anterior que falló conserva su explicación.}
 \label{fig:colaWorker}
 \end{figure}
-
-Los trabajos de IA no se ejecutan durante la petición: la API deja una fila en la cola \texttt{generation\_task} y responde al momento con su identificador. El worker reclama tareas pendientes con un bloqueo que impide que dos procesos cojan la misma (en SQL, \texttt{FOR UPDATE SKIP LOCKED}), ejecuta el mismo pipeline que el camino síncrono y escribe el resultado en la propia fila; el frontend consulta el estado por sondeo bajo RLS. Se usó la base de datos como cola para evitar una pieza de infraestructura nueva, y el estado de cada tarea (en cola, en curso, terminada o fallida) se consulta como cualquier otro dato. Si el worker no está en marcha, la tarea espera en la cola y la interfaz lo dice, como enseña la figura~\ref{fig:colaWorker}.
 
 \section{Despliegue}
 \label{sec:despliegue}

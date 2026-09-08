@@ -1,14 +1,15 @@
 # Backend NutriApp
 
-Base de datos y backend de Python: el solver CP-SAT, el validador y la API HTTP
-que los expone. El traductor LLM llega más adelante.
+Base de datos y backend de Python: el solver CP-SAT, el validador, el traductor
+LLM con sus comprobaciones previas, el worker de generación y la API HTTP que
+los expone.
 
 ## Base de datos
 
 Postgres gestionado en Supabase (región de Frankfurt). El esquema y los datos
 iniciales están en `migrations/sql/`:
 
-- `0001_initial.sql`: las 16 tablas, tipos enum, índices, CHECKs y políticas RLS.
+- `0001_initial.sql`: las 16 tablas iniciales (las migraciones posteriores llegan a 22), tipos enum, índices, CHECKs y políticas RLS.
 - `0002_seed.sql`: catálogos iniciales (12 nutrientes, 20 tags, 6 tipos de
   comida, 7 unidades).
 - `0003_auth_trigger.sql`: crea la fila `nutritionist` al registrarse un usuario.
@@ -186,9 +187,3 @@ La conexión desde Next.js con la SDK de Supabase está en `../frontend` (login
 real de un nutri, lectura bajo RLS y la llamada server-side a esta API para
 generar planes). Ver su README.
 
-## Siguiente
-
-- Traductor LLM (texto libre -> filas de `diet_constraint`), que produce las
-  mismas restricciones que este pipeline ya consume.
-- Carga masiva BEDCA + USDA en una migration aparte (`source_id` +
-  `external_food_mapping`).

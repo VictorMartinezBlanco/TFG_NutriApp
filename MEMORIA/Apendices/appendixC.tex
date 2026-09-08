@@ -27,11 +27,11 @@ Todos los umbrales son constantes con nombre en la configuración del solver. Lo
 \hline
 \texttt{MIN\_DISTINCT\_PER\_WEEK} & 10 & variedad mínima semanal (R8) \\
 \hline
-\texttt{MAX\_APPEARANCES\_PER\_DAY\_RATIO} & 0.6 & tope de reparto por día de plan \\
+\texttt{MAX\_APPEARANCES\_PER\_DAY\_RATIO} & 0,6 & tope de reparto por día de plan \\
 \hline
-\texttt{FLOOR\_KCAL} & 1200 / 1500 & suelo calórico absoluto (mujeres / hombres, R3) \\
+\texttt{FLOOR\_KCAL} & 1\,200 / 1\,500 & suelo calórico absoluto (mujeres / hombres, R3) \\
 \hline
-\texttt{PROTEIN\_G\_PER\_KG} & 0.8 -- 2.2 & rango humano de proteína en g/kg (R4) \\
+\texttt{PROTEIN\_G\_PER\_KG} & 0,8 -- 2,2 & rango humano de proteína en g/kg (R4) \\
 \hline
 \texttt{DEFAULT\_WEIGHT\_KG} & 70 & peso por defecto si falta la antropometría \\
 \hline
@@ -59,7 +59,7 @@ Todos los umbrales son constantes con nombre en la configuración del solver. Lo
 \hline
 \texttt{SOLVE\_TIME\_LIMIT\_S} & 90\,s & límite de tiempo de resolución \\
 \hline
-\texttt{SOLVE\_RELATIVE\_GAP} & 0.02 & brecha relativa de parada \\
+\texttt{SOLVE\_RELATIVE\_GAP} & 0,02 & brecha relativa de parada \\
 \hline
 \texttt{SOLVE\_WORKERS} & 8 / 2 & hilos de búsqueda (desarrollo / despliegue) \\
 \hline
@@ -70,6 +70,7 @@ Todos los umbrales son constantes con nombre en la configuración del solver. Lo
 
 Los pesos por familia de la función objetivo son $w_{\text{kcal}} = 10$, $w_{\text{protein}} = 8$, $w_{\text{carb}} = 6$, $w_{\text{fat}} = 6$, $w_{\text{no\_repeat}} = 5\,000$, $w_{\text{variety}} = 5\,000$, $w_{\text{prefer}} = 4\,000$ y $w_{\text{spread}} = 4\,000$. Las familias no nutricionales llevan incorporado un factor de $1\,000$ que compensa la escala entera: sus términos se cuentan en unidades de 1 (una aparición, un alimento sin usar) mientras que las desviaciones nutricionales se miden en unidades escaladas, donde una kcal son $1\,000$ (capítulo~\ref{cap:motorGeneracion}). Sobre estos pesos, cada fila de restricción modula con su peso propio de 1 a 10 (sección~\ref{sec:anexoObjetivo}).
 
+\FloatBarrier
 \section{Variables y enlace}
 \label{sec:anexoVariables}
 
@@ -137,7 +138,7 @@ Todas duras y aplicadas siempre.
 \forall d \in D
 \end{gather*}
 
-\textbf{R4. Rango humano de proteína.} Con $\text{prot\_min}(c)$ y $\text{prot\_max}(c)$ iguales a 0.8 y 2.2 veces el peso del cliente (o el peso por defecto si falta):
+\textbf{R4. Rango humano de proteína.} Con $\text{prot\_min}(c)$ y $\text{prot\_max}(c)$ iguales a 0,8 y 2,2 veces el peso del cliente (o el peso por defecto si falta):
 \begin{gather*}
 \text{scale\_target}(\text{prot\_min}(c)) \;\le\; \text{nut}_{d,\text{prot}} \;\le\; \text{scale\_target}(\text{prot\_max}(c)), \\
 \forall d \in D

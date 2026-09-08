@@ -107,8 +107,8 @@ def fig_magnitudes() -> None:
             y += 1
         y += 0.5
     ax.axvline(1.0, color="#D55E00", linewidth=1.2, linestyle="--")
-    ax.text(1.15, yticks[0] - 0.55, "Q = 1", color="#D55E00", fontsize=9,
-            va="bottom")
+    ax.text(1.15, yticks[-1] + 0.45, "Q = 1", color="#D55E00", fontsize=9,
+            va="top")
     ax.set_xscale("log")
     ax.set_yticks(yticks)
     ax.set_yticklabels(ylabels, fontsize=8)
@@ -122,6 +122,20 @@ def fig_magnitudes() -> None:
         ax.legend(frameon=False, fontsize=8, loc="lower right")
     ax.set_title("Conmensurabilidad de las familias del objetivo, por caso")
     _save(fig, "fig_magnitudes_q")
+
+
+DEMO_NAMES = {"david": "David", "lucia": "Lucía", "sofia": "Sofía", "tomas": "Tomás",
+              "carlos": "Carlos", "nadia": "Nadia", "maria": "María"}
+
+
+def _case_name(key: str) -> str:
+    """Case label as the thesis names it: banco N or the demo client name."""
+    if key.startswith("bank"):
+        return "banco " + key[4:].split("_", 1)[0]
+    if key.startswith("demo_"):
+        tail = key.split("_")[-1]
+        return DEMO_NAMES.get(tail, tail)
+    return key.replace("_", "\n", 1)
 
 
 def fig_simetria() -> None:
@@ -139,7 +153,7 @@ def fig_simetria() -> None:
     if not cases:
         print("  (simetria sin casos completos, se salta)")
         return
-    labels = [k.replace("_", "\n", 1) for k, _ in cases]
+    labels = [_case_name(k) for k, _ in cases]
     x = range(len(cases))
     width = 0.27
     fig, ax = plt.subplots(figsize=(9.2, 3.6))
@@ -268,7 +282,7 @@ def fig_versiones() -> None:
     _style(ax2)
 
     fig.suptitle("Tres versiones del modelo sobre el mismo catálogo y los "
-                 "mismos casos", fontsize=11)
+                 "mismos casos", fontsize=11, y=1.04)
     _save(fig, "fig_versiones")
 
 

@@ -116,7 +116,7 @@ Carlos & -- & 0,0514 & 0,0071 \\
 mediana & 0,0320 & 0,0514 & 0,0071 \\
 \hline
 \end{tabular}
-\caption{$Q$ por caso antes del ajuste de pesos. Tras multiplicar por $1\,000$ los pesos no nutricionales, cada valor se multiplica por $1\,000$ (medianas 32, 51 y 7).}
+\caption{$Q$ por caso antes del ajuste de pesos. Tras multiplicar por $1\,000$ los pesos no nutricionales, cada valor se multiplica por $1\,000$ (medianas 32, 51 y 7). Nadia, el undécimo caso, no entró en este cálculo del documento fuente.}
 \label{tab:anexoQ}
 \end{table}
 
@@ -162,7 +162,7 @@ David & límite, desviación 0,02\,\% & límite, desviación 0,56\,\%, objetivo 
 \hline
 Lucía & límite & límite, algo peor & límite, algo mejor \\
 \hline
-Sofía & 1 de 5 óptimos, 80,8 s & 3 de 5 óptimos, 79,7 s, mejor objetivo & 5 de 5 óptimos, 63,5 s, mejor objetivo \\
+Sofía & 1 de 5 óptimos, 80,8~s & 3 de 5 óptimos, 79,7~s, mejor objetivo & 5 de 5 óptimos, 63,5~s, mejor objetivo \\
 \hline
 Tomás & óptimo, 9,8 s & óptimo, 11,2 s & óptimo, 15,3 s \\
 \hline
@@ -293,7 +293,7 @@ David & afectado & 0/3; 90 s; 33 & 3/3; 41,1 s; 13 & 3/3; 35,8 s; 13 \\
 \hline
 Carlos & afectado & 0/3; 90 s; 44 & 0/3; 90 s; 26 & 0/3; 90 s; 15 \\
 \hline
-diseño macro & afectado & 0/3; 90 s; 3 & 3/3; 9,7 s; 0 & 3/3; 12,2 s; 0 \\
+diseño\newline macro & afectado & 0/3; 90 s; 3 & 3/3; 9,7 s; 0 & 3/3; 12,2 s; 0 \\
 \hline
 Tomás & conflicto & 3/3; 14,8 s; 29 & 3/3; 24,5 s; 31 & 2/3; 19,6 s; 27 \\
 \hline
@@ -322,7 +322,7 @@ Nadia & control & 3/3; 76,8 s; 12 & 3/3; 76,6 s; 12 & 3/3; 76,6 s; 12 \\
 \label{fig:bandasTiempos}
 \end{figure}
 
-El solver usa las bandas: varios días se pegan al borde de $\pm 50$ y la media se acerca al suyo de $\pm 25$. La hipótesis de que la deriva iría hacia el borde superior se cae: en el banco 2 y en David va hacia abajo en todas las repeticiones, y en el banco 3 y en el caso de diseño cambia de signo entre repeticiones. Lo que importa para el modelo es que el ancla funciona por construcción: en ninguna de las 45 resoluciones de los casos limpios con bandas hay exceso fuera de la banda diaria ni de la banda de la media. Tomás sigue devolviendo plan con su energía $1\,240$ kcal por debajo del objetivo en los tres brazos, que era la razón de dejar el ancla blanda. La recomposición externa del objetivo coincidió con el valor reportado en 104 de las 108 resoluciones; las cuatro diferencias son de Tomás, con la holgura explicada en la sección~\ref{sec:anexoMagnitudes}. El pre-registro sirve también para esto: las hipótesis equivocadas quedan escritas. La tabla~\ref{tab:anexoBandasDesv} y la figura~\ref{fig:anexoBandasDesv} dan las desviaciones con signo por caso afectado, brazo y repetición.
+El solver usa las bandas: varios días se pegan al borde de $\pm 50$ y la media se acerca al suyo de $\pm 25$. La hipótesis de que la deriva iría hacia el borde superior se cae: en el banco 2 y en David va hacia abajo en todas las repeticiones, y en el banco 3 y en el caso de diseño cambia de signo entre repeticiones. Lo que importa para el modelo es que el ancla funciona por construcción: en ninguna de las 45 resoluciones de los casos limpios hay exceso fuera de la banda diaria ni de la banda de la media. Tomás sigue devolviendo plan con su energía $1\,240$ kcal por debajo del objetivo en los tres brazos, que era la razón de dejar el ancla blanda. La recomposición externa del objetivo coincidió con el valor reportado en 104 de las 108 resoluciones; las cuatro diferencias son de Tomás, con la holgura explicada en la sección~\ref{sec:anexoMagnitudes}. El pre-registro sirve también para esto: las hipótesis equivocadas quedan escritas. La tabla~\ref{tab:anexoBandasDesv} y la figura~\ref{fig:anexoBandasDesv} dan las desviaciones con signo por caso afectado, brazo y repetición.
 
 \begin{table}[htbp]
 \centering
@@ -422,7 +422,7 @@ Telegráfico & lista de viñetas & - alergia: cacahuete / - proteína: mínimo 1
 \hline
 Plantilla & campos con etiqueta legible & Objetivo: ganar músculo. Evitar: cacahuete (alergia). Mínimos: 140 g de proteína al día. \\
 \hline
-Clave-valor & pares casi de configuración & alergia=cacahuete; proteina\_min=140g/dia; objetivo=ganar\_musculo \\
+Clave-valor & pares casi de configuración & \raggedright\arraybackslash alergia=cacahuete; proteina\_min=140g/dia; objetivo=ganar\_musculo \\
 \hline
 Verboso & conversacional con contexto irrelevante de consulta & Este chico entrena fuerza cuatro días a la semana y me pregunta mucho por los batidos... quiero que llegue al menos a 140 g de proteína al día, y mucho cuidado porque es alérgico al cacahuete. \\
 \hline
@@ -446,7 +446,7 @@ Plantilla & 17,5 s (d.t. 3,8) & $1\,555$ & 63 \\
 \hline
 Clave-valor & 15,9 s (d.t. 2,7) & $1\,547$ & 64 \\
 \hline
-Verboso & 16,0 s (d.t. 2,5) & $1\,588$ & 64 \\
+Verboso & 16,0 s (d.t. 2,5) & $1\,587$ & 64 \\
 \hline
 \end{tabular}
 \caption{Latencia y tokens por llamada al traductor, por formato, en el equipo local.}

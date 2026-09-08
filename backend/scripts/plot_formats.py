@@ -58,7 +58,7 @@ def _save(fig, name: str) -> None:
 def _bar_labels(ax, bars, fmt: str = "{:.1f}") -> None:
     for b in bars:
         ax.annotate(
-            fmt.format(b.get_height()),
+            fmt.format(b.get_height()).replace(".", ","),
             (b.get_x() + b.get_width() / 2, b.get_height()),
             ha="center", va="bottom", fontsize=9, xytext=(0, 2),
             textcoords="offset points",
