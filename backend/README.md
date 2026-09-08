@@ -164,17 +164,34 @@ python -m scripts.load_foods                     # catálogo de 100 alimentos
 python -m scripts.seed_demo_plans                # genera y firma los planes
 ```
 
-Antes de cada demostración o prueba con un usuario, **un solo comando** reancla
-todo lo que lleva fecha (los planes caducan: se sembraron relativos al día de la
-carga):
+Antes de cada demostración o prueba con un usuario hay que reanclar todo lo que
+lleva fecha, porque se sembró relativo al día de la carga y caduca. Son dos
+ficheros SQL **en este orden**:
 
 ```
 migrations/sql/0017_seed_demo_refresh.sql
+migrations/sql/0019_seed_demo_activity.sql
 ```
 
-Es idempotente y re-ejecutable. Sucede a `0013_seed_demo_refresh.sql`, que solo
-cubría cuatro clientes; el 0013 se queda por historia y ya no hace falta
-aplicarlo.
+El 0017 mueve al pasado los planes viejos y deja la base de lo fechado. El 0019
+va encima y es el que pone la actividad al día: afina la fecha de inicio del plan
+vigente de cada cliente, reescribe las citas con tres semanas de horizonte y solo
+en días laborables, refresca los hilos de mensajes, amplía las series de peso a
+nueve clientes, regenera las comidas marcadas y siembra un historial de tareas de
+generación ya cerradas.
+
+Los dos son idempotentes y re-ejecutables: todas las fechas salen de
+`CURRENT_DATE` y `now()`, y cada sección borra antes lo que ella misma crea.
+Lanzarlos dos veces seguidas deja los mismos conteos.
+
+Los planes duran siete días, así que el margen antes de que el primero caduque es
+de un día y el del más fresco de cinco. Conviene volver a lanzarlos **una vez por
+semana** mientras la aplicación esté a la vista de alguien, y también la víspera
+de una demostración. De paso, cada ejecución escribe en la base y con eso evita
+que el proyecto de Supabase se pause por siete días sin actividad.
+
+`0013_seed_demo_refresh.sql` se queda por historia: cubría solo cuatro clientes y
+lo sucedió el 0017, así que ya no hace falta aplicarlo.
 
 Las dos cuentas de acceso de cliente se dan de alta con
 `scripts/create_demo_client.py`, que elige a quién vincular con
