@@ -16,16 +16,19 @@ La aplicación pública está en:
 
 La API del motor de generación está en https://tfg-nutriapp.onrender.com (comprobación de estado en `/health`).
 
-Es un prototipo académico. Las credenciales del nutricionista de demostración se entregan por canal seguro a tutores y revisores; no están en el repositorio.
+Es un prototipo académico. Las direcciones, las cuentas de prueba, un recorrido de diez minutos por la aplicación y los avisos sobre el alojamiento están en [ACCESO.md](ACCESO.md).
+
+La memoria completa en PDF está en [MEMORIA/TFGTeXiS.pdf](MEMORIA/TFGTeXiS.pdf).
 
 ## Estructura del repositorio
 
 ```
 frontend/         Aplicación Next.js 14 (paneles del nutricionista y del cliente). Ver frontend/README.md
 backend/          Motor CP-SAT, validador, traductor LLM, worker y API en Python. Ver backend/README.md
-MEMORIA/          Memoria del TFG (LaTeX, plantilla TFGTeXiS - UCM)
+MEMORIA/          Memoria del TFG (LaTeX, plantilla TFGTeXiS - UCM) y el PDF compilado
 MOCK-UP V1/       Capturas del prototipo inicial en Figma
-feedback-docs/    Documentos de trabajo: especificación y formalización del motor, experimentos con sus datos, guía de la prueba con nutricionistas
+MOCK-UP V2/       Capturas del prototipo tras el giro hacia el copiloto
+feedback-docs/    Documentos de trabajo: especificación y formalización del motor, experimentos con sus datos, guía de la prueba con nutricionistas, histórico del diseño de la base de datos
 ```
 
 ## Cómo correr en local
