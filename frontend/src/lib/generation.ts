@@ -32,6 +32,7 @@ export type InfeasibleCoreItem = {
   type: string;
   value: number | null;
   target: string | null;
+  unit?: string | null;
 };
 
 export type InfeasibleInfo = {
@@ -141,6 +142,7 @@ export function coreLine(item: InfeasibleCoreItem): string {
   const target = item.target ?? undefined;
   if (item.type.startsWith("nutrient_") || item.type === "macro_target") {
     parts.nutrient = target;
+    parts.unit = item.unit ?? undefined;
   } else if (item.type.endsWith("_tag")) {
     parts.tag = target;
   } else {

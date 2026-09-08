@@ -54,7 +54,7 @@ La aplicación tiene tres piezas principales: un frontend web con Next.js~\citep
 
 El reparto lo acordé con los tutores antes de empezar a programar, con un criterio y orden: cada pieza debía ser la opción más simple que soportara los requisitos del capítulo~\ref{cap:analisisRequisitos}, y la construcción iría de los datos hacia la interfaz (primero la base de datos, después su conexión y luego las pantallas), para que cada capa se apoyara sobre una anterior ya verificada.
 
-El backend de generación es un servicio propio con FastAPI~\citep{fastapi}. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cual encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio es el único que guarda la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
+El backend de generación es un servicio propio con FastAPI~\citep{fastapi}. La razón principal es que tanto el solver del capítulo~\ref{cap:motorGeneracion} como el ecosistema de acceso a modelos de lenguaje viven de forma natural en Python; y también porque el solver necesita un proceso con límites de tiempo largos, lo cual encaja mal en las funciones \textit{serverless} de las plataformas donde se despliega el frontend. Además, este servicio y el worker son los únicos que guardan la clave privilegiada de la base de datos, que nunca viaja al navegador (sección~\ref{sec:capaSeguridad}).
 
 La capa de presentación usa Next.js con \textit{Server Components}: las páginas se montan en el servidor y leen directamente de la base de datos bajo la sesión del usuario, con las políticas de seguridad de la sección~\ref{sec:capaSeguridad} como filtro. Así desaparece la capa de API intermedia para casi toda la aplicación. Las escrituras sencillas (dar de alta un alimento, añadir una restricción) siguen el mismo camino con \textit{Server Actions}, funciones que corren en el servidor y validan la entrada antes de tocar los datos. Las operaciones que exigen más garantías como generar, encolar y firmar planes se delegan en el backend con una llamada de servidor a servidor autenticada por un secreto compartido, como se detalla en la sección~\ref{sec:capaServicio}.
 
@@ -96,7 +96,7 @@ Del resto de decisiones de la capa de presentación, las que más condicionaron 
 
 \begin{itemize}
     \item Un único inicio de sesión para los dos roles: la aplicación lleva a cada usuario a su panel, y el panel del cliente vive bajo su propio prefijo de rutas, con guardas equivalentes en cada sección.
-    \item Los 13 tipos de restricción se pueden dar de alta desde la interfaz mediante un único formulario que sirve en tres contextos distintos (la ficha del cliente, el estilo clínico y la pantalla de generación) cambiando sus propiedades.
+    \item Trece de los 16 tipos de restricción se pueden dar de alta desde la interfaz mediante un único formulario que sirve en tres contextos distintos (la ficha del cliente, el estilo clínico y la pantalla de generación) cambiando sus propiedades.
     \item Las pantallas que esperan datos nuevos se actualizan por sondeo (cada 15 segundos en la mensajería, cada 4 durante una generación), no es necesario gastar recursos en mantener una conexión abierta, esos tiempos son bastante aceptables.
     \item Los totales nutricionales de un plan se calculan en la presentación, agregando el modelo alimento-nutriente de la sección~\ref{sec:capaDatos} y avisando cuando falta algún dato de composición.
 \end{itemize}
@@ -135,7 +135,7 @@ El esquema tiene 22 tablas. La figura~\ref{fig:modeloDatos} enseña las que sopo
 \draw[rel] (mealtype) -- (pmi) node[card, midway, right] {1..N};
 \draw[rel] (food) -- (fn) node[card, midway, left] {1..N};
 \draw[rel] (fn) -- (nutriente) node[card, midway, above] {N..1};
-\draw[rel] (food) -- (tagt) node[card, midway, left] {N..M};
+\draw[rel] (food) -- (tagt) node[card, midway, left] {N..M \texttt{food\_tag}};
 \draw[rel] (food.east) -- (pmi.west) node[card, pos=0.35, above] {1..N};
 \draw[rel] (dc.west) -- (nutri.south) node[card, pos=0.6, left] {ámbito};
 \draw[rel] (dc.east) -- (cliente.south) node[card, pos=0.6, right] {ámbito};
@@ -169,7 +169,7 @@ Del resto de decisiones de modelado, las específicas de esta aplicación:
 \begin{itemize}
     \item Claves primarias naturales compuestas donde el propio esquema debe impedir duplicados: una marca de comida por plan, día y comida, y un peso por cliente y día.
     \item La adherencia no se guarda: se calcula a partir de las marcas al leerla, con el mismo criterio en los dos paneles.
-    \item El vínculo entre la ficha del cliente y su cuenta de acceso admite nulos y se rompe sin borrar la ficha si la cuenta desaparece; un disparador crea la fila de perfil que toca al registrarse una cuenta, según su rol.
+    \item El vínculo entre la ficha del cliente y su cuenta de acceso admite nulos y se rompe sin borrar la ficha si la cuenta desaparece; un disparador crea la fila de nutricionista al registrarse una cuenta con ese rol, y las cuentas de cliente se vinculan después a su ficha.
     \item Las familias de alimentos son etiquetas, con el dato ausente permitido: un alimento sin clasificar no rompe nada, simplemente no participa en las reglas que dependen de su familia.
 \end{itemize}
 
@@ -182,7 +182,7 @@ La capa de acceso desde el frontend impone dos límites que condicionaron el dis
 
 La seguridad tiene tres líneas. La sesión viaja en una cookie e identifica al usuario en cada petición. Las guardas de cada sección comprueban el rol y redirigen si no corresponde. Y la última palabra la tiene la base de datos: cada tabla lleva políticas de fila (RLS) que filtran por el usuario de la sesión, así que forzar la URL de un cliente ajeno devuelve cero filas; el filtro lo aplica la propia base de datos, no la pantalla.
 
-Los dos roles conviven sobre las mismas tablas solo con políticas. Como las políticas permisivas se combinan con O lógico, el panel del cliente se añadió escribiendo sus políticas de lectura sin tocar las del nutricionista. Cuando una operación mezcla columnas del actor con columnas que no le pertenecen (el cliente marca una comida, pero el plan es del nutricionista), la política no basta: la escritura pasa por una función con privilegios del sistema que valida la fila y escribe solo lo permitido.
+Los dos roles conviven sobre las mismas tablas solo con políticas. Como las políticas permisivas se combinan con O lógico, el panel del cliente se añadió escribiendo sus políticas de lectura sin tocar las del nutricionista. Cuando una operación mezcla columnas del actor con columnas que no le pertenecen (el cliente cancela una cita, pero la cita es del nutricionista), la política no basta: la escritura pasa por una función con privilegios del sistema que valida la fila y escribe solo lo permitido.
 
 Dos criterios atraviesan todas las políticas. El primero es qué dato puede autorizar: nunca uno que el propio usuario pueda editar; el vínculo entre cuenta y ficha vive en una tabla que solo escribe el servidor. El segundo es que la política también encierra reglas de negocio: el cliente no puede marcar comidas de días futuros ni de comidas que no están en su plan, y los campos que dicen quién envió un mensaje los fija el servidor.
 
@@ -199,7 +199,7 @@ La firma es además una frontera de visibilidad: para el cliente solo existen lo
 ]
 \node[tablab] (tplan) {\texttt{plan}: el nutricionista ve los suyos;\\el cliente, solo los firmados};
 \node[tablab, below=3mm of tplan] (tmsg) {\texttt{message}: cada uno su conversación;\\el remitente lo fija el servidor};
-\node[tablab, below=3mm of tmsg] (tcheck) {\texttt{meal\_check}: el cliente escribe\\a través de una función con privilegios};
+\node[tablab, below=3mm of tmsg] (tcheck) {\texttt{appointment}: el cliente cancela\\a través de una función con privilegios};
 \node[actor, left=13mm of tmsg] (nutri) {Nutricionista\\(sesión)};
 \node[actor, right=13mm of tmsg] (cli) {Cliente\\(sesión)};
 \draw[fl] (nutri) -- (tmsg.west) node[etiqfl, midway, above=2.5mm] {políticas\\de su rol};
@@ -219,7 +219,7 @@ La capa de servicio son el backend FastAPI y el worker de generación. La API es
 
 La persistencia es el motivo de que estas operaciones no usen la vía del navegador. Guardar un plan generado son decenas de filas en dos tablas, y aquí sí hay transacción: o se escriben todas o ninguna, mientras que las mutaciones del frontend van fila a fila (sección~\ref{sec:capaDatos}).
 
-Firmar es la operación con más peso de diseño y la más simple de código: poner la fecha en \texttt{approved\_at}. Antes de hacerlo, el endpoint vuelve a validar el plan y la propiedad del cliente; como esa fecha solo la escribe el backend, un plan firmado siempre pasó por la re-validación. Con la política de visibilidad de la sección~\ref{sec:capaSeguridad}, firmar es el acto con el que el profesional convierte su borrador en el plan que el cliente ve: la regla de que el sistema propone y el profesional decide (capítulo~\ref{cap:analisisRequisitos}) queda escrita en la capa de datos.
+Firmar es la operación con más peso de diseño y la más simple de código: poner la fecha en \texttt{approved\_at}. Antes de hacerlo, el endpoint comprueba la propiedad del plan y que sigue siendo un borrador; la validación clínica ocurrió al generarlo, antes de persistirlo, y como esa fecha solo la escribe el backend, un plan firmado siempre pasó por el validador. Con la política de visibilidad de la sección~\ref{sec:capaSeguridad}, firmar es el acto con el que el profesional convierte su borrador en el plan que el cliente ve: la regla de que el sistema propone y el profesional decide (capítulo~\ref{cap:analisisRequisitos}) queda escrita en la capa de datos.
 
 \begin{figure}[H]
 \begin{center}

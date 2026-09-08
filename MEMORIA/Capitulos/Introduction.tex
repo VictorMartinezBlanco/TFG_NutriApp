@@ -2,7 +2,6 @@
 \label{cap:introduction}
 \addcontentsline{toc}{chapter}{Introduction}
 
-% English translation of Chapter \ref{cap:introduccion}. Keep in sync with Introduccion.tex.
 
 This chapter presents the starting point of the project: the motivation behind it, the objectives it pursues and the work plan that has guided its development.
 
@@ -15,11 +14,11 @@ From that conversation came the central idea of this project: to design a platfo
 
 That initial vision, a platform that would centralise the whole workflow, guided the first version of the project: everything such a tool could offer was catalogued and a complete prototype was designed with it, from customisable forms to a marketplace of educational resources. When the proposal was presented to more practising nutritionists, their concerns helped to rethink the approach. What they really demanded was not to have everything in one place, which obviously would also be a great help, but they also ran into a bottleneck with the task that takes them the most time as nutritionists: building each diet to measure. The client's record (their data, measurements and restrictions) mattered to them as support for that task; communication with the client they saw as a complement, not as the core; and centralising the rest of their processes depends, in practice, on the clinic they work in, not on the tool they choose.
 
-That contrast with the real demand led me to reformulate the project, as detailed in Chapter~\ref{cap:analisisRequisitos}. The centre stopped being the all-in-one platform and became a copilot for generating tailored nutritional plans: the nutritionist describes what they need in their own language, the system builds a draft that meets verifiable constraints, and the professional reviews it, adjusts it and signs it before it reaches the client. The platform still exists around it (clients, appointments, messages, follow-up) but as support for that core, not as an end in itself.
+That contrast with the real demand led me to reformulate the project, as detailed in Chapter~\ref{cap:analisisRequisitos}. The centre stopped being the all-in-one platform and became a copilot for generating tailored nutritional plans: the nutritionist describes what they need in their own language, the system builds a draft that meets verifiable constraints, and the professional reviews it and signs it before it reaches the client. The platform still exists around it (clients, appointments, messages, follow-up) but as support for that core, not as an end in itself.
 
 
 \section*{Objectives}
-This Bachelor's Thesis is developed within the Double Degree in Computer Science Engineering and Business Administration, which allows it to be approached from two complementary perspectives: the technical one, ranging from the design of the database to the integration of an optimisation engine and language models; and the business one, applying the market analysis and product viability tools of the Business Administration training. The aim is not simply to meet an academic requirement, but to take advantage of this double background to build a fully functional project with a real application.
+This Bachelor's Thesis is developed within the Double Degree in Computer Science Engineering and Business Administration, which allows it to be approached from two complementary perspectives: the technical one, ranging from the design of the database to the integration of an optimisation engine and language models; and the business one, applying the market analysis tools of the Business Administration training. The aim is not simply to meet an academic requirement, but to take advantage of this double background to build a fully functional project with a real application.
 
 The general objective of this work is to design, build and evaluate a web platform for nutritionists whose core is a copilot for generating nutritional plans: the professional expresses a client's needs in their own language, artificial intelligence translates them into formal constraints, an optimisation engine builds a draft that satisfies them and an independent validator audits it, with the final decision always remaining in the hands of the professional. The intention is to go through the complete process of a real product, refining the idea with professionals and aiming at public deployment and empirical evaluation, so that the result is technically sound and also defensible as a real tool.
 
@@ -28,7 +27,6 @@ To achieve this general objective, the following specific objectives are set:
 \begin{enumerate}
     \item To analyse the real workflow of a professional nutritionist in order to extract the functional requirements of the system. This means understanding how they work day to day, which tools they currently use, which problems they face and what they really need. In this way the requirements are not invented but extracted from direct observation of a real case, so that the design responds to concrete needs rather than assumptions.
 
-    % Mirrors objective 2 of Introduccion.tex, which may still be reworded there.
     \item To carry out a market study and competitor analysis in the field of nutrition platforms, applying knowledge from the Business Administration training, to identify the main competitors, their strengths and shortcomings, and to position NutriApp with a differentiated proposal.
 
     \item To design the system architecture and its data model: two panels (nutritionist and client) over a single database, with the isolation between professionals guaranteed in the data layer itself, and with a constraints table that acts as the interface between whoever produces them (the professional or the AI) and the engine that consumes them.

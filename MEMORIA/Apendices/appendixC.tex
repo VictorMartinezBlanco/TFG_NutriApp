@@ -249,12 +249,12 @@ Se pondera con el peso calórico, por ser el de referencia para límites no atad
 \end{equation*}
 y con cota mínima la desigualdad se invierte. La variante blanda no se modela: cuando llega, el motor la omite con un aviso.
 
-\paragraph{\texttt{forbid\_food} (dura por defecto).} Prohíbe un alimento concreto:
+\paragraph{\texttt{forbid\_food} (dura).} Prohíbe un alimento concreto:
 \begin{equation*}
 \text{ha\_consumido}[f_0,d,m] = 0, \qquad \forall d \in D,\ m \in M
 \end{equation*}
 
-\paragraph{\texttt{forbid\_tag} (dura por defecto).} Prohíbe todos los alimentos de una etiqueta; es el mecanismo de las alergias e intolerancias:
+\paragraph{\texttt{forbid\_tag} (dura).} Prohíbe todos los alimentos de una etiqueta; es el mecanismo de las alergias e intolerancias:
 \begin{equation*}
 \text{ha\_consumido}[f,d,m] = 0, \qquad \forall f \in \text{miembros}(t),\ d \in D,\ m \in M
 \end{equation*}
@@ -267,7 +267,7 @@ donde $M_{\text{ctx}}$ son las comidas del tipo indicado, o todas si no se indic
 
 \paragraph{\texttt{prefer\_tag} (blanda).} Como la anterior, bonificando cada aparición de un alimento de la etiqueta.
 
-\paragraph{\texttt{meal\_kcal\_ratio} (blanda por defecto).} Reparte la energía diaria entre las comidas según porcentajes deseados. Para cada comida con porcentaje objetivo $pct$ (escalado por 10 para conservar un decimal), la desviación se linealiza con la multiplicación cruzada:
+\paragraph{\texttt{meal\_kcal\_ratio} (blanda).} Reparte la energía diaria entre las comidas según porcentajes deseados. Para cada comida con porcentaje objetivo $pct$ (escalado por 10 para conservar un decimal), la desviación se linealiza con la multiplicación cruzada:
 \begin{equation*}
 \text{kcal}_{d,m} \cdot 1000 - \text{round}(pct \cdot 10) \cdot \text{nut}_{d,\text{kcal}} = \text{over}_{d,m} - \text{under}_{d,m}
 \end{equation*}
@@ -285,7 +285,7 @@ Como blanda, penaliza el exceso sobre el tope en cada ventana.
 \end{equation*}
 la versión dura exige, en cada ventana $W$ de $sep$ días, $\sum_{d \in W} \text{pres}_d \le 1$; la blanda penaliza el exceso sobre 1 en cada ventana.
 
-\paragraph{\texttt{forbid\_combination} (dura por defecto).} Prohíbe que dos alimentos, o un alimento y una etiqueta, coincidan en la misma comida. Con indicadores de presencia de cada grupo en la comida ($a$ y $b$, máximos de cada grupo):
+\paragraph{\texttt{forbid\_combination} (dura).} Prohíbe que dos alimentos, o un alimento y una etiqueta, coincidan en la misma comida. Con indicadores de presencia de cada grupo en la comida ($a$ y $b$, máximos de cada grupo):
 \begin{equation*}
 a_{d,m} + b_{d,m} \le 1, \qquad \forall d \in D,\ m \in M
 \end{equation*}

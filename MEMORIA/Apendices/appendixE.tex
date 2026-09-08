@@ -1,7 +1,7 @@
 \chapter{Evaluación experimental: tablas completas}
 \label{apendice:evaluacion}
 
-Este anexo recoge el detalle de los experimentos del capítulo~\ref{cap:evaluacion} que en el cuerpo se resumen: los criterios pre-registrados, el método, las tablas por caso y las figuras secundarias, más la lista de casos de los bancos. Todo se regenera desde el repositorio: cada experimento tiene su documento, sus resultados crudos en JSON y el script que produce tablas y figuras, en la carpeta \texttt{feedback-docs} del repositorio (subcarpetas \texttt{experimentos-motor}, \texttt{experimentos-objetivo}, \texttt{estudio-formatos} y \texttt{auditoria-planes-8e}), con los harness en \texttt{backend/scripts}.
+Este anexo recoge el detalle de los experimentos del capítulo~\ref{cap:evaluacion} que en el cuerpo se resumen: los criterios pre-registrados, el método, las tablas por caso y las figuras secundarias, más la lista de casos de los bancos. Todo se regenera desde el repositorio: cada experimento tiene su documento, sus resultados crudos en JSON (salvo la línea base de tiempos y las dos matrices de modelos, que solo están en tabla) y el script que produce tablas y figuras, en la carpeta \texttt{feedback-docs} del repositorio (subcarpetas \texttt{experimentos-motor}, \texttt{experimentos-objetivo}, \texttt{estudio-formatos} y \texttt{auditoria-planes-8e}), con los harness en \texttt{backend/scripts}.
 
 \section{Casos de los bancos}
 \label{sec:anexoCasosBancos}
@@ -38,7 +38,7 @@ La prueba de extremo a extremo contra el backend desplegado corre doce casos por
 \item Sintético, 7 días y 5 comidas, mínimo alto de calcio con las familias ricas en calcio prohibidas. Infactible.
 \end{enumerate}
 
-A los doce se suman el flujo de firma de un plan y el rechazo de una petición sin token, hasta las 29 comprobaciones.
+A los doce se suman el flujo de firma de un plan y el rechazo de una petición sobre un cliente ajeno, hasta las 29 comprobaciones.
 
 \section{Magnitudes de la función objetivo: criterio, método y detalle por caso}
 \label{sec:anexoMagnitudes}
@@ -239,12 +239,12 @@ Nadia & óptimo, 52,9 s & óptimo, 69,8 s \\
 \label{tab:anexoSimetriaEscalar}
 \end{table}
 
-La cadena lexicográfica salió peor: seis casos empeoran (los bancos 4 y 5 y Nadia pierden la prueba de optimalidad que tenían, y David devuelve un incumbente 13 veces peor), tres mejoran (Sofía con claridad, Carlos en el incumbente) y dos quedan igual. La variante escalar tiene mejor balance (seis casos mejoran, el banco 3 a menos de la mitad de tiempo), pero los daños donde falla son severos (el banco 4 pasa de óptimo probado a un objetivo veinte veces peor en el límite) y no hay un predicado que separe a priori los casos que mejoran de los que empeoran: la hipótesis natural, que ayuda cuando hay un objetivo calórico que ancle la magnitud ordenada, muere con los datos, porque Sofía y Lucía mejoran sin objetivo calórico y Tomás empeora teniéndolo. El código de las dos codificaciones queda en el script del experimento, fuera del motor.
+La cadena lexicográfica salió peor: seis casos empeoran (los bancos 4 y 5 y Nadia pierden la prueba de optimalidad que tenían, y David devuelve un incumbente 13 veces peor), dos mejoran (Sofía con claridad, Carlos en el incumbente) y dos quedan igual. La variante escalar tiene mejor balance (seis casos mejoran, el banco 3 a menos de la mitad de tiempo), pero los daños donde falla son severos (el banco 4 pasa de óptimo probado a un objetivo veinte veces peor en el límite) y no hay un predicado que separe a priori los casos que mejoran de los que empeoran: la hipótesis natural, que ayuda cuando hay un objetivo calórico que ancle la magnitud ordenada, muere con los datos, porque Sofía y Lucía mejoran sin objetivo calórico y Tomás empeora teniéndolo. El código de las dos codificaciones queda en el script del experimento, fuera del motor.
 
 \section{Bandas de tolerancia: pre-registro, resultados y veredicto}
 \label{sec:anexoBandas}
 
-Detalle de la sección~\ref{sec:evalBandas}. Tras el reescalado de la sección~\ref{sec:evalMagnitudes}, el coste de una kcal de desviación en un día es el peso de familia (10) por el peso de fila por las $1\,000$ unidades escaladas. Ninguna fila de objetivo calórico de la aplicación lleva peso 1: los clientes de demostración llevan 7, y el traductor asigna 5 por defecto. La tabla~\ref{tab:jerarquia} enseña la jerarquía real con el peso 7.
+Detalle de la sección~\ref{sec:evalBandas}. Tras el reescalado de la sección~\ref{sec:evalMagnitudes}, el coste de una kcal de desviación en un día es el peso de familia (10) por el peso de fila por las $1\,000$ unidades escaladas. Ninguna fila de objetivo calórico de la aplicación lleva peso 1: los clientes de demostración llevan 7 (uno lleva 8), y el traductor asigna 5 por defecto. La tabla~\ref{tab:jerarquia} enseña la jerarquía real con el peso 7.
 
 \begin{table}[htbp]
 \centering

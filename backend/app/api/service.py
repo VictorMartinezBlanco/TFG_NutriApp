@@ -154,8 +154,10 @@ async def run_generation(
         tag_members=tag_members,
     )
 
+    # a draft the validator rejects never reaches the professional: it is not
+    # persisted and the caller sees the hard failures in findings.
     plan_id = None
-    if persist:
+    if persist and validation.passed:
         plan_id = await persistence.persist_plan(
             conn, nutritionist_id, client_id, result,
             duration_days, date.today(),

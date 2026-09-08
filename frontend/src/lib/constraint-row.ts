@@ -131,6 +131,7 @@ export function buildConstraintRow(
     if (denom === row.target_nutrient_id) return fail("Numerator and denominator must be different nutrients.");
     const bound = String(formData.get("ratio_bound") ?? "max").trim();
     row.operator = bound === "min" ? "min" : "max";
+    context.bound = row.operator;
     context.denominator_nutrient_id = denom;
   }
   if (type === "max_servings_per_period") {

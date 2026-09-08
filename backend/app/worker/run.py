@@ -200,6 +200,9 @@ async def _run_generate(
         return None, result.explanation or result.suggestion, trace
 
     trace["findings"] = [f.model_dump() for f in result.findings]
+    if not result.validation.passed:
+        hard = [f.message for f in result.findings if f.severity == "hard_fail"]
+        return None, "The validator rejected the draft: " + "; ".join(hard), trace
     return result.plan_id, None, trace
 
 
@@ -215,13 +218,14 @@ async def _infeasible_out(
     core = []
     for r in result.unsat_core:
         target = None
+        unit = None
         if r.target_food_id is not None:
             target = names.food(r.target_food_id)
         elif r.target_tag_id is not None:
             target = names.tag(r.target_tag_id)
         elif r.target_nutrient_id is not None:
-            target = names.nutrient(r.target_nutrient_id)[0]
-        core.append({"type": r.type, "value": r.value, "target": target})
+            target, unit = names.nutrient(r.target_nutrient_id)
+        core.append({"type": r.type, "value": r.value, "target": target, "unit": unit})
     return {"explanation": result.explanation, "core": core}
 
 

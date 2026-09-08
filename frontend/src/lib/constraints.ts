@@ -224,7 +224,7 @@ export const CONSTRAINT_TYPES: ConstraintTypeMeta[] = [
     needsValue: false,
     needsUnit: false,
     defaultPriority: "hard",
-    priorityLocked: false,
+    priorityLocked: true,
     hint: "This food never appears in the plan.",
   },
   {
@@ -248,7 +248,7 @@ export const CONSTRAINT_TYPES: ConstraintTypeMeta[] = [
     needsValue: false,
     needsUnit: false,
     defaultPriority: "hard",
-    priorityLocked: false,
+    priorityLocked: true,
     hint: "No food from this family. Use it for allergies and intolerances.",
   },
   {
@@ -272,7 +272,7 @@ export const CONSTRAINT_TYPES: ConstraintTypeMeta[] = [
     needsValue: false,
     needsUnit: false,
     defaultPriority: "hard",
-    priorityLocked: false,
+    priorityLocked: true,
     hint: "Two items that must not share a meal.",
   },
   {

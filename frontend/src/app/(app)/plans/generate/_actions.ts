@@ -18,7 +18,7 @@ export async function startTranslation(
   const clientId = Number(formData.get("client_id"));
   const text = String(formData.get("input_text") ?? "").trim();
   const durationDays = Number(formData.get("duration_days")) || 7;
-  const mealsPerDay = Number(formData.get("meals_per_day")) || 5;
+  const mealsPerDay = Number(formData.get("meals_per_day")) || 4;
   const manual = String(formData.get("mode") ?? "") === "manual";
 
   if (!Number.isInteger(clientId) || clientId <= 0) {
@@ -77,7 +77,7 @@ export async function confirmGeneration(
 ): Promise<ConfirmState> {
   const clientId = Number(formData.get("client_id"));
   const durationDays = Number(formData.get("duration_days")) || 7;
-  const mealsPerDay = Number(formData.get("meals_per_day")) || 5;
+  const mealsPerDay = Number(formData.get("meals_per_day")) || 4;
   const raw = String(formData.get("items") ?? "[]");
 
   if (!Number.isInteger(clientId) || clientId <= 0) {

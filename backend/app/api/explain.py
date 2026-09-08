@@ -115,7 +115,7 @@ def explain_infeasible(core: list[ConstraintRef], names: NameIndex) -> str:
     parts = [describe_ref(r, names) for r in core]
     if len(parts) == 1:
         return (
-            f"No plan can satisfy {parts[0]} with the available foods. "
+            f"No plan can satisfy {parts[0]} with the available foods and the base rules of the plan. "
             "Consider relaxing it."
         )
     if len(parts) == 2:

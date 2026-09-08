@@ -86,7 +86,7 @@ Este reparto hace además al traductor poco sensible a cómo esté redactado el 
 
 Decidí ejecutar el modelo de lenguaje en local. Es la decisión de privacidad que la sección~\ref{sec:despliegue} dejaba remitida a este capítulo: los mensajes del profesional hablan de datos clínicos de personas concretas, y uno de los requisitos no funcionales del capítulo~\ref{cap:analisisRequisitos} fija que ese dato no se envía a ningún proveedor de IA. Con un modelo abierto ejecutado en la propia máquina, el texto no sale del entorno del profesional; la consecuencia sobre el despliegue, que el worker corre donde corre el modelo, ya se contó en la sección~\ref{sec:despliegue}.
 
-El modelo es qwen2.5~\citep{qwen25}, una familia abierta con variantes de varios tamaños, y lo ejecuto con el entorno de Ollama, que sirve modelos en local y admite salida con esquema. El traductor usa la variante 7B ajustada a instrucciones; las comprobaciones de la revisión previa usan variantes más pequeñas, elegidas como se contó en la sección~\ref{sec:textoRestricciones}.
+El modelo es qwen2.5~\citep{qwen25}, una familia abierta con variantes de varios tamaños, y lo ejecuto con el entorno de Ollama, que sirve modelos en local y admite salida con esquema. El traductor usa la variante 7B ajustada a instrucciones; dos de las tres comprobaciones de la revisión previa usan una variante más pequeña, elegida como se contó en la sección~\ref{sec:textoRestricciones}.
 
 A la privacidad se suma el coste: cada consulta a un modelo local cuesta cero, y eso permitió medir, probar y repetir durante todo el desarrollo sin presupuesto. En cambio, con las API gratuitas en la nube, en sus planes sin coste, el proveedor puede usar los mensajes para entrenar, justo lo que el requisito de privacidad prohíbe.
 
@@ -136,7 +136,7 @@ Cuando el motor no encuentra ningún plan, el diagnóstico de la sección~\ref{s
 \label{fig:copilotoInfactible}
 \end{figure}
 
-El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos se enseñan junto al plan: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend vuelve a validar el plan y la propiedad del cliente (sección~\ref{sec:capaServicio}). La figura~\ref{fig:copilotoPlan} enseña el borrador que salió de la petición de la figura~\ref{fig:copilotoRevision}, y la figura~\ref{fig:planClienta}, un plan ya firmado tal como lo ve la clienta en su panel.
+El borrador que sí existe llega auditado por el validador de la sección~\ref{sec:validador}, y sus avisos quedan registrados con la generación: un aviso no bloquea, y es el profesional quien decide si el plan vale así. La firma es el último paso y el único que convierte el borrador en el plan que ve el cliente; antes de escribirla, el backend comprueba la propiedad del plan y que sigue siendo un borrador (sección~\ref{sec:capaServicio}). La figura~\ref{fig:copilotoPlan} enseña el borrador que salió de la petición de la figura~\ref{fig:copilotoRevision}, y la figura~\ref{fig:planClienta}, un plan ya firmado tal como lo ve la clienta en su panel.
 
 \begin{figure}[htbp]
 \begin{center}
