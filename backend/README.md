@@ -174,7 +174,8 @@ migrations/sql/0019_seed_demo_activity.sql
 ```
 
 El 0017 mueve al pasado los planes viejos y deja la base de lo fechado. El 0019
-va encima y es el que pone la actividad al día: afina la fecha de inicio del plan
+va encima y es el que pone la actividad al día: retira las dos fichas que quedaron
+sin rellenar en la prueba con nutricionistas, afina la fecha de inicio del plan
 vigente de cada cliente, reescribe las citas con tres semanas de horizonte y solo
 en días laborables, refresca los hilos de mensajes, amplía las series de peso a
 nueve clientes, regenera las comidas marcadas y siembra un historial de tareas de

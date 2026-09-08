@@ -3,13 +3,14 @@
 --
 -- Se ejecuta DESPUES de 0017_seed_demo_refresh.sql, que es quien empuja los
 -- planes viejos al pasado. Este fichero se ocupa de lo que caduca rapido:
---   1. afina la fecha de inicio del plan vigente de cada cliente
---   2. reescribe las citas con horizonte de tres semanas, solo en laborables
---   3. reescribe los hilos de mensajes, con tres conversaciones vivas
---   4. regenera las series de peso, ampliadas a nueve clientes
---   5. regenera las comidas marcadas, dejando el dia de hoy libre en la cuenta
+--   1. retira las fichas que dejo sueltas la prueba con nutricionistas
+--   2. afina la fecha de inicio del plan vigente de cada cliente
+--   3. reescribe las citas con horizonte de tres semanas, solo en laborables
+--   4. reescribe los hilos de mensajes, con tres conversaciones vivas
+--   5. regenera las series de peso, ampliadas a nueve clientes
+--   6. regenera las comidas marcadas, dejando el dia de hoy libre en la cuenta
 --      de cliente que se entrega para probar la aplicacion
---   6. siembra un historial de tareas de generacion, todas cerradas
+--   7. siembra un historial de tareas de generacion, todas cerradas
 --
 -- Idempotente y re-anclable: todas las fechas se calculan desde CURRENT_DATE y
 -- now(), y cada seccion borra antes lo que ella misma crea. Ejecutarlo dos
@@ -27,7 +28,34 @@ DECLARE
 BEGIN
   SELECT id INTO v_nutri2 FROM nutritionist WHERE full_name = 'Dr. Second Tester';
 
-  -- ===== 1. Fecha de inicio del plan vigente =====
+  -- ===== 1. Fichas sueltas de la prueba con nutricionistas =====
+  -- Dos altas de aquella sesion que se quedaron sin rellenar, sin plan, sin
+  -- citas y sin seguimiento. Encabezaban la lista de clientes recientes del
+  -- panel, que ordena por fecha de alta, asi que lo primero que se veia al
+  -- entrar eran dos fichas vacias.
+  --
+  -- Se retiran como retira la aplicacion cualquier otra fila, marcando
+  -- deleted_at: no se pierde nada y todas las consultas ya filtran por ahi. La
+  -- restriccion que cuelga de una de ellas se retira con la ficha, para no
+  -- dejarla viva apuntando a un cliente que ya no se lista.
+  --
+  -- El nombre se compara exacto para no alcanzar a 'Maria Gonzalez'. En una base
+  -- recien cargada esto no encuentra nada.
+  UPDATE diet_constraint dc
+     SET deleted_at = now()
+    FROM client c
+   WHERE c.id = dc.scope_client_id
+     AND c.nutritionist_id = v_nutri1
+     AND c.full_name_pseudonym IN ('Maria', 'J. Fernando Gonzalez')
+     AND dc.deleted_at IS NULL;
+
+  UPDATE client
+     SET deleted_at = now()
+   WHERE nutritionist_id = v_nutri1
+     AND full_name_pseudonym IN ('Maria', 'J. Fernando Gonzalez')
+     AND deleted_at IS NULL;
+
+  -- ===== 2. Fecha de inicio del plan vigente =====
   -- Reparto amplio: el mas fresco empieza ayer y el mas veterano hace cinco
   -- dias, de modo que la adherencia se mide sobre varios dias y la lista de
   -- planes no ensena una docena de fechas identicas.
@@ -76,7 +104,7 @@ BEGIN
    ORDER BY p.start_date DESC, p.id DESC
    LIMIT 1;
 
-  -- ===== 2. Citas =====
+  -- ===== 3. Citas =====
   -- Horizonte de tres semanas hacia delante y un mes hacia atras. El CASE
   -- empuja al lunes lo que caiga en sabado o domingo, asi que el reparto sigue
   -- siendo laborable sea cual sea el dia en que se lance esto, y las horas
@@ -151,7 +179,7 @@ BEGIN
      WHERE c.deleted_at IS NULL;
   END IF;
 
-  -- ===== 3. Mensajes =====
+  -- ===== 4. Mensajes =====
   -- read_at significa "leido por el destinatario", y quien es el destinatario lo
   -- dice sender. Un mensaje del cliente sin leer enciende el aviso del
   -- profesional; uno del profesional sin leer enciende el del cliente.
@@ -221,7 +249,7 @@ BEGIN
      WHERE c.deleted_at IS NULL;
   END IF;
 
-  -- ===== 4. Peso declarado =====
+  -- ===== 5. Peso declarado =====
   -- El ultimo registro coincide con client.weight_kg a proposito: la serie es lo
   -- que declara el cliente y aquella columna la valida el profesional. El signo
   -- del incremento semanal cuenta la historia: positivo significa que venia de
@@ -254,7 +282,7 @@ BEGIN
    CROSS JOIN generate_series(0, 8) AS g
    WHERE g <= t.weeks;
 
-  -- ===== 5. Comidas marcadas =====
+  -- ===== 6. Comidas marcadas =====
   -- Solo de planes firmados y vivos, y solo de dias ya transcurridos, que es lo
   -- que la policy del cliente permite y lo que la adherencia cuenta.
   DELETE FROM meal_check mc
@@ -325,7 +353,7 @@ BEGIN
     ) s
    WHERE (s.pos * s.pct) / 100 > ((s.pos - 1) * s.pct) / 100;
 
-  -- ===== 6. Historial de tareas de generacion =====
+  -- ===== 7. Historial de tareas de generacion =====
   -- Todas cerradas. Ni queued ni in_progress: una tarea abierta se quedaria
   -- colgada si el worker local no esta levantado, y la interfaz la ensenaria
   -- esperando indefinidamente.
