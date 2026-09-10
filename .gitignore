@@ -254,3 +254,7 @@ MEMORIA/Retroalimentaci*n_tutores/
 
 # logs del worker local (no van al repo)
 backend/worker.local.log*
+
+# Presentacion de la defensa: vive solo en local, fuera del repo entregado
+# (incluye el deck de un companero, que no se versiona en ningun caso)
+PRESENTACI*N/
