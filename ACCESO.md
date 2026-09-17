@@ -8,8 +8,8 @@ Doble Grado en Ingeniería Informática y Administración de Empresas, Facultad 
 
 - Aplicación web: https://nutriapp-tfg.netlify.app
 - API del motor de generación: https://tfg-nutriapp.onrender.com, con comprobación de estado en https://tfg-nutriapp.onrender.com/health
-- Repositorio privado: https://github.com/VictorMartinezBlanco/TFG_NutriApp
-- Memoria en PDF dentro del material adjunto: `MEMORIA/TFGTeXiS.pdf`
+- Repositorio en GitHub: https://github.com/VictorMartinezBlanco/TFG_NutriApp
+- Memoria completa en PDF: [`MEMORIA/TFGTeXiS.pdf`](MEMORIA/TFGTeXiS.pdf)
 - Prototipo navegable en Figma, público en solo lectura: https://www.figma.com/proto/NoxrgqUAFGwA4JQ2jgz9DR/NutriApp?node-id=567-2&page-id=546%3A2&starting-point-node-id=567%3A2&scaling=min-zoom&content-scaling=fixed
   Abre en el selector de versión, desde donde se recorren tanto la versión 1 como la 2. El fichero de diseño, con el lienzo y las capas, está en https://www.figma.com/design/NoxrgqUAFGwA4JQ2jgz9DR/NutriApp
 - Capturas del prototipo, por si el enlace no estuviera disponible: las 25 pantallas de la versión 2 en `MOCK-UP V2/` y las 24 de la versión 1 en `MOCK-UP V1/`
@@ -19,14 +19,16 @@ Doble Grado en Ingeniería Informática y Administración de Empresas, Facultad 
 Nutricionista:
 
 - usuario: `nutri.test@nutriapp.dev`
-- contraseña: `NutriTest400a68757adb!`
+- contraseña: `NutriDemo84e24af494b8!`
 
 Clienta (panel del cliente, Lucía Fernández):
 
 - usuario: `lucia.client@nutriapp.dev`
-- contraseña: `Lucia5b87feb1c9e31eca!`
+- contraseña: `LuciaDemo9f7347e8025c!`
 
 Son cuentas de demostración de un prototipo académico, sin datos de personas reales. Para cambiar de una a otra hay que cerrar sesión y volver a entrar.
+
+Como el repositorio es público, estas credenciales lo son también. Solo dan acceso a datos ficticios y cada cuenta ve únicamente lo suyo, porque la base de datos aísla por usuario con Row Level Security. Si alguien deja la demostración desordenada, se repuebla con las migraciones de `backend/migrations/sql/`.
 
 ## Qué ver en diez minutos
 
@@ -43,11 +45,11 @@ Son cuentas de demostración de un prototipo académico, sin datos de personas r
 
 **Arranque en frío de la API.** El alojamiento del backend es un plan gratuito que duerme el servicio tras un rato sin uso. La primera petición tarda entre 20 y 30 segundos en responder; las siguientes son inmediatas. Se puede despertar de antemano abriendo la dirección de `/health`.
 
-**Generación de planes.** El modelo de lenguaje corre en un worker en mi ordenador, y no en la nube, para que los datos clínicos no salgan del sistema. Lo mantengo encendido durante el periodo de evaluación. Si en el momento de la prueba estuviera apagado o el equipo suspendido, la petición no se pierde: se queda en cola, la interfaz lo indica con el mensaje "Waiting for the generation worker to pick this up" y se procesa en cuanto el worker vuelve. Esto afecta igual a las dietas pedidas con el asistente y a las configuradas a mano, porque las dos pasan por la misma cola. El resto de la aplicación funciona siempre.
+**Generación de planes.** El modelo de lenguaje corre en un worker en mi ordenador, y no en la nube, para que los datos clínicos no salgan del sistema. Eso significa que no está encendido siempre. Si al pedir un plan estuviera apagado, la petición no se pierde: se queda en cola, la interfaz lo indica con el mensaje "Waiting for the generation worker to pick this up" y se procesa en cuanto el worker vuelve. Esto afecta igual a las dietas pedidas con el asistente y a las configuradas a mano, porque las dos pasan por la misma cola. El resto de la aplicación funciona siempre.
 
 **Tiempo de generación.** Con el worker activo, generar una dieta semanal tarda uno o dos minutos: el traductor llama al modelo y después el motor de optimización busca la solución.
 
-**Base de datos.** El proyecto de Supabase se pausa solo tras siete días sin actividad. Lo mantengo activo durante la evaluación; si aun así la aplicación diera un error de conexión, basta con avisarme y lo reactivo en un minuto.
+**Base de datos.** El proyecto de Supabase está en plan gratuito y se pausa solo tras siete días sin actividad. Si la aplicación diera un error de conexión, es eso: basta con avisarme y lo reactivo en un minuto.
 
 **Idioma.** La interfaz está en inglés y la memoria en castellano, tal y como se explica en el capítulo 4.
 
@@ -55,7 +57,7 @@ Son cuentas de demostración de un prototipo académico, sin datos de personas r
 
 Requisitos: Python 3.11 o superior, Node 20, un proyecto de Supabase con las migraciones de `backend/migrations/sql/` aplicadas en orden, y Ollama con los modelos `qwen2.5:7b-instruct` y `qwen2.5:3b-instruct` si se quiere probar la parte de inteligencia artificial.
 
-1. Clonar el repositorio o descomprimir el zip.
+1. Clonar el repositorio.
 2. En `backend/`, crear un entorno virtual, instalar `requirements.txt` y copiar `.env.example` a `.env.local` con la URL del pooler de Supabase y un token para la API.
 3. Arrancar la API con `uvicorn app.api.main:app --reload --port 8000`.
 4. Arrancar el worker con `python -m app.worker.run`, o con `--fake` para recorrer el flujo sin Ollama.

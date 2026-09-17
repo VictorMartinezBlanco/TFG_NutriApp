@@ -1,0 +1,24 @@
+Memoria del Trabajo de Fin de Grado "Desarrollo de una Plataforma Web
+Inteligente para Nutricionistas"
+
+Copyright (c) 2026 Víctor Martínez Blanco
+
+Esta carpeta contiene la memoria del trabajo: las fuentes LaTeX, las figuras y
+el PDF compilado. No se distribuye bajo la licencia MIT del código, sino bajo
+Creative Commons Reconocimiento-NoComercial-SinObraDerivada 4.0 Internacional
+(CC BY-NC-ND 4.0).
+
+Eso significa que puedes leerla, descargarla, compartirla y citarla libremente
+siempre que reconozcas la autoría, pero no puedes usarla con fines comerciales
+ni distribuir versiones modificadas.
+
+Resumen de la licencia:
+  https://creativecommons.org/licenses/by-nc-nd/4.0/deed.es
+Texto legal completo:
+  https://creativecommons.org/licenses/by-nc-nd/4.0/legalcode.es
+
+La plantilla TFGTeXiS incluida en TeXiS/ es obra de sus autores y mantiene sus
+propias condiciones de uso.
+
+El código fuente del proyecto, fuera de esta carpeta, se distribuye bajo la
+licencia MIT que acompaña al repositorio.

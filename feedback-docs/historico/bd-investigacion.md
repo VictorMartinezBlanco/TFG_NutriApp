@@ -385,7 +385,7 @@ La Fase A queda cerrada con este documento. La Fase B (diseño BD v0) se planifi
 
 **Semana 2**: script SQL completo de creación con migrations Alembic. Carga de los seeds: USDA SR Legacy completo, BEDCA subset curado, AESAN INR 2019, SENC 2016. Validación con un compañero del grado o un profesor sobre el modelo (auditor BD interno).
 
-**Semana 3**: validación clínica con un nutricionista colegiado (no Jaime) sobre las variables del cliente, las restricciones soportadas y los guardrails AESAN/SENC. Iteración del modelo según feedback. Cierre de la Fase B con commit del script SQL definitivo y del `bd-diseño-v0.md` actualizado.
+**Semana 3**: validación clínica con un nutricionista colegiado distinto del que venía colaborando sobre las variables del cliente, las restricciones soportadas y los guardrails AESAN/SENC. Iteración del modelo según feedback. Cierre de la Fase B con commit del script SQL definitivo y del `bd-diseño-v0.md` actualizado.
 
 Entregables de la Fase B:
 - `bd-diseño-v0.md` con diagrama ER, decisiones documentadas, y queries SQL del *test del nutricionista* del bloque 2.1.5 de la auditoría.
